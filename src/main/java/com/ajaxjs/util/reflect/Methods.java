@@ -342,9 +342,20 @@ public class Methods {
     }
 
     /**
+     * 通过反射调用接口的默认方法。
+     * <p>
+     * 此方法旨在提供一种通过反射机制调用Java 8及以上版本接口中默认方法的手段。
+     * 它绕过了直接调用默认方法需要实例化一个类的限制，通过MethodHandles和反射机制实现。
+     * <p>
      * 调用 Interface 的 default 方法
      * <a href="https://www.jianshu.com/p/63691220f81f">...</a>
      * <a href="https://link.jianshu.com/?t=http://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-refletively">...</a>
+     *
+     * @param proxy  接口的代理实例，用于调用默认方法。
+     * @param method 要调用的默认方法的Method对象。
+     * @param args   调用方法时所需的参数数组。
+     * @return 调用默认方法后的返回值。
+     * @throws RuntimeException 如果在调用过程中发生任何异常，将会抛出运行时异常。
      */
     public static Object executeDefault(Object proxy, Method method, Object[] args) {
         try {

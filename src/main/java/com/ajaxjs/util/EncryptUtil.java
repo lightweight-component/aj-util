@@ -285,6 +285,7 @@ public class EncryptUtil {
      * PBE 解密
      *
      * @param key  密钥
+     * @param salt 盐值
      * @param data 需要解密的数据
      * @return 解密结果
      */
@@ -347,6 +348,7 @@ public class EncryptUtil {
      *
      * @param res 需要解密的密文
      * @param key 秘钥
+     * @return 结果
      */
     public String XOR_decode(String res, String key) {
         byte[] bs = StreamHelper.parseHexStr2Byte(res);

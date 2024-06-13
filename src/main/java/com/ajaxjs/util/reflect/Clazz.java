@@ -40,6 +40,7 @@ public class Clazz {
      *
      * @param clzName 类全称
      * @param clz     要转换的目标类型
+     * @param <T>     类引用
      * @return 类对象
      */
     @SuppressWarnings("unchecked")
@@ -160,8 +161,9 @@ public class Clazz {
     /**
      * 遍历一个 Java Bean
      *
-     * @param bean Java Bean
-     * @param fn   执行的任务，参数有 key, value, property
+     * @param bean  Java Bean
+     * @param props 属性集合
+     * @param fn    执行的任务，参数有 key, value, property
      */
     public static void eachField(Object bean, PropertyDescriptor[] props, EachFieldArg fn) {
         try {

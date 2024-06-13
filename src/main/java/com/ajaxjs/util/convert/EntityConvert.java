@@ -53,10 +53,10 @@ public class EntityConvert {
     }
 
     /**
-     * 将 List<?> 类型的 beanList 转换成 List<Map<String, Object>> 类型
+     * 将 List&lt;?&gt; 类型的 beanList 转换成 List&lt;Map&lt;String, Object&gt;&gt; 类型
      *
      * @param beanList 要转换的 beanList
-     * @return 转换后的 List<Map<String, Object>> 类型
+     * @return 转换后的 List&lt;Map&lt;String, Object&gt;&gt; 类型
      */
     public static List<Map<String, Object>> bean2MapSimple(List<?> beanList) {
         List<Map<String, Object>> list = new ArrayList<>();

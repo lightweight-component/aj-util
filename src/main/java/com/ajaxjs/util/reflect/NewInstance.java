@@ -19,6 +19,7 @@ public class NewInstance {
      *
      * @param clz  类对象
      * @param args 获取指定参数类型的构造函数，这里传入我们想调用的构造函数所需的参数。可以不传。
+     * @param <T>  类引用
      * @return 对象实例
      */
     public static <T> T newInstance(Class<T> clz, Object... args) {
@@ -46,6 +47,7 @@ public class NewInstance {
      *
      * @param constructor 类构造器
      * @param args        获取指定参数类型的构造函数，这里传入我们想调用的构造函数所需的参数。可以不传。
+     * @param <T>         类引用
      * @return 对象实例
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
