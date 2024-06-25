@@ -46,5 +46,4 @@ public abstract class AbstractReplaceCallBack implements ReplaceCallBack {
 
         return data == null ? "" : data;
     }
-
 }

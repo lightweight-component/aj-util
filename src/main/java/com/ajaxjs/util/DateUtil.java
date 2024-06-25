@@ -22,6 +22,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,6 +31,7 @@ import org.springframework.util.StringUtils;
  *
  * @author sp42 frank@ajaxjs.com
  */
+@Slf4j
 public class DateUtil {
     /**
      * 常见的日期格式
@@ -132,7 +134,7 @@ public class DateUtil {
                 else
                     return simpleDateFormatFactory(DATE_FORMAT_SHORT).parse(str);
             } catch (ParseException e) {
-                e.printStackTrace();
+                log.warn("处理日期时候异常。", e);
             }
 
             // 输入日期不合法，不能转为日期类型。请重新输入日期字符串格式类型，或考虑其他方法。
@@ -190,7 +192,7 @@ public class DateUtil {
         try {
             return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(format));
         } catch (DateTimeParseException e) {
-            e.printStackTrace();
+            log.warn("处理日期时候异常。", e);
             return null;
         }
     }
@@ -243,5 +245,4 @@ public class DateUtil {
     public static Date string2dateShort(String str) {
         return localDateTime2Date(string2localDateShort(str));
     }
-
 }

@@ -111,5 +111,4 @@ public class TestHelper {
 
         return EntityConvert.map2Bean(map, beanClz, true);
     }
-
 }
