@@ -115,7 +115,7 @@ public class Resources {
     /**
      * 从 classpath 获取资源文件的内容
      *
-     * @param path 资源文件路径
+     * @param path 资源文件路径，例如 application.yml
      * @return 资源文件的内容
      */
     public static String getResourceText(String path) {
