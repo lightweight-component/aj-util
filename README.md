@@ -26,6 +26,8 @@
 
 <!-- | sdk_free     | 各种云厂商都为开发者提供各种 SDK 方便调用其 API，完成各种服务。但是又依赖洁癖的我痛恨“依赖地狱”。各种服务调用无非 HTTP 协议下去调用 API。API 接口是基础。于是我尝试收集各厂商的纯 HTTP API 调用例子，免除依赖。可能功能不是最全的，只是提供了基础的调用，以后希望通过不断完善来增强。 | [文档](https://gitee.com/sp42_admin/aj-utils/wikis/%E7%AE%80%E4%BB%8B?sort_id=4385414)                                                                | -->
 
+Java Documents: https://dev.ajaxjs.com/docs/javadoc/aj-util/.
+
 # 安装
 
 要求 Java 1.8+。 Maven 坐标：
@@ -38,12 +40,3 @@
     <version>1.1.5</version>
 </dependency>
 ```
-
-# 鸣谢
-
-本人水平有限，该项目中引用了下面的源码。
-
-- 日志组件引用了 Tomcat 的 FileHandler 源码。
-- 使用了 Twitter 的分布式自增 ID 算法 Snowflake：雪花生成器。
-- 数据层参考了开源项目：[memory](https://gitee.com/bitprince/memory)
-
