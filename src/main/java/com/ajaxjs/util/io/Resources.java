@@ -135,6 +135,9 @@ public class Resources {
     /**
      * 可以在 JAR 中获取资源文件
      * <a href="https://www.cnblogs.com/coderxx/p/13566423.html">...</a>
+     *
+     * @param path 资源的路径。可以是类路径上的相对路径或文件系统中的绝对路径
+     * @return 找到的资源的输入流，如果找不到则返回 null
      */
     public static InputStream getResource(String path) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

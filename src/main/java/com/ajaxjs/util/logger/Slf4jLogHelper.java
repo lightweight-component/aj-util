@@ -321,9 +321,13 @@ public class Slf4jLogHelper extends LogHelper implements org.slf4j.Logger, Seria
 
     }
 
-
     /**
-     * 反序列化时，返回同一个实例
+     * 在反序列化时，重载此方法以返回一个新实例而不是原始实例。
+     * 该方法的目的是在对象被反序列化时，替换默认的反序列化行为，以返回一个新的、共享的实例。
+     * 对于日志记录器来说，这确保了反序列化过程中获得的日志记录器实例是活跃的，并且与原始实例相同。
+     *
+     * @return 返回一个新的、共享的日志记录器实例，该实例与原始日志记录器具有相同的名称和配置。
+     * @throws ObjectStreamException 如果反序列化过程中发生错误，将抛出此异常。
      */
     protected Object readResolve() throws ObjectStreamException {
         return LoggerFactory.getLogger(getName());

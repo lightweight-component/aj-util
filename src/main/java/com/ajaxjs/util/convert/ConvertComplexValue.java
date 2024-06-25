@@ -45,16 +45,27 @@ public abstract class ConvertComplexValue extends ConvertBasicValue {
 
     /**
      * 输入 JSON 字符串，转换为 Map
+     *
+     * @param value JSON String
+     * @return Map
      */
     protected abstract Map<String, Object> parseJsonAsMap(String value);
 
     /**
      * 输入 JSON String，转换为 Java Bean
+     *
+     * @param value JSON String
+     * @param clz   类
+     * @param <T>   类引用
+     * @return Java Bean
      */
     protected abstract <T> T parseJsonMapAsBean(String value, Class<T> clz);
 
     /**
      * 输入 JSON String，转换为 List
+     *
+     * @param value JSON String
+     * @return List
      */
     protected abstract List<Map<String, Object>> parseList(String value);
 
@@ -64,7 +75,7 @@ public abstract class ConvertComplexValue extends ConvertBasicValue {
      *
      * @param value 要转换的值
      * @param clz   目标类型
-     * @return 转换后的值，如果转换不成功返回null
+     * @return 转换后的值，如果转换不成功返回 null
      */
     public Object convert(Object value, Class<?> clz) {
         Object converted = basicConvert(value, clz);

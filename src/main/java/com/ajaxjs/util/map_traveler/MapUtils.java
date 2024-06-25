@@ -83,10 +83,11 @@ public class MapUtils {
     /**
      * 为每个 Map 加上 path 和 level 字段，分别是路径和深度
      *
-     * @param list  输入的 ListMap
-     * @param id    map 的表示字段
-     * @param path  map 的路径字段
-     * @param level map 的深度
+     * @param list       输入的 ListMap
+     * @param id         map 的表示字段
+     * @param path       map 的路径字段
+     * @param level      map 的深度
+     * @param saveSupers 是否保存父节点
      */
     public static void buildPath(List<Map<String, Object>> list, String id, String path, String level, boolean saveSupers) {
         MapTraveler traveler = new MapTraveler();

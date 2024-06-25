@@ -298,8 +298,11 @@ public class StreamHelper {
 
     /**
      * char 数组转 byte 数组
-     * 将char数组转换为byte数组需要考虑编码方式的问题
+     * 将 char 数组转换为 byte 数组需要考虑编码方式的问题
      * <a href="https://houbb.github.io/2023/06/05/java-perf-02-chars-to-bytes">...</a>
+     *
+     * @param chars 输入的字符数组。
+     * @return 转换后的字节数组。
      */
     public static byte[] charToByte(char[] chars) {
         ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(CharBuffer.wrap(chars));

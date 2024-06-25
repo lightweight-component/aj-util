@@ -29,9 +29,11 @@ public class ObjectHelper {
     /**
      * 创建一个新的 HashMap
      *
-     * @param k1 键1
-     * @param v1 值1
-     * @return 新创建的HashMap
+     * @param k1  键1
+     * @param v1  值1
+     * @param <K> k1 类型
+     * @param <V> v1 类型
+     * @return 新创建的 HashMap
      */
     public static <K, V> Map<K, V> hashMap(K k1, V v1) {
         Map<K, V> map = new HashMap<>();
@@ -44,11 +46,13 @@ public class ObjectHelper {
     /**
      * 创建一个新的 HashMap
      *
-     * @param k1 键1
-     * @param v1 值1
-     * @param k2 键2
-     * @param v2 值2
-     * @return 新创建的HashMap
+     * @param k1  键1
+     * @param v1  值1
+     * @param k2  键2
+     * @param v2  值2
+     * @param <K> k1 类型
+     * @param <V> v1 类型
+     * @return 新创建的 HashMap
      */
     public static <K, V> Map<K, V> hashMap(K k1, V v1, K k2, V v2) {
         Map<K, V> map = new HashMap<>();
@@ -62,12 +66,14 @@ public class ObjectHelper {
     /**
      * 创建一个新的 HashMap
      *
-     * @param k1 键1
-     * @param v1 值1
-     * @param k2 键2
-     * @param v2 值2
-     * @param k3 键3
-     * @param v3 值3
+     * @param k1  键1
+     * @param v1  值1
+     * @param k2  键2
+     * @param v2  值2
+     * @param k3  键3
+     * @param v3  值3
+     * @param <K> k1 类型
+     * @param <V> v1 类型
      * @return 新创建的 HashMap
      */
     public static <K, V> Map<K, V> hashMap(K k1, V v1, K k2, V v2, K k3, V v3) {

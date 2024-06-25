@@ -29,6 +29,7 @@ public abstract class AbstractReplaceCallBack implements ReplaceCallBack {
      * @param text    指定的字符串
      * @param index   替换的次序
      * @param matcher Matcher 对象
+     * @return 字符串
      */
     public abstract String doReplace(String text, int index, Matcher matcher);
 
@@ -36,6 +37,9 @@ public abstract class AbstractReplaceCallBack implements ReplaceCallBack {
      * 获得 matcher 中的组数据，等同于 matcher.group(group)
      * <p>
      * 该函数只能在{@link #doReplace(String, int, Matcher)} 中调用
+     *
+     * @param group 指定的匹配组索引，从1开始计数。
+     * @return 指定组的匹配字符串，如果匹配失败或组不存在，则返回空字符
      */
     protected String $(int group) {
         String data = matcher.group(group);

@@ -11,6 +11,11 @@ import java.util.Map;
  * 单元测试的辅助工具类
  */
 public class TestHelper {
+    /**
+     * 打印 JSON 方便了解对象结构
+     *
+     * @param obj 要打印的对象
+     */
     public static void json(Object obj) {
         System.out.println("---------------");
         System.out.println(ConvertToJson.toJson(obj));
@@ -18,6 +23,8 @@ public class TestHelper {
 
     /**
      * 打印 JSON 方便了解对象结构
+     *
+     * @param obj 要打印的对象
      */
     public static void printJson(Object obj) {
         System.out.println("---------------");
@@ -25,9 +32,9 @@ public class TestHelper {
     }
 
     /**
-     * 将传入的对象转换为JSON字符串并打印
+     * 将传入的对象转换为 JSON 字符串并打印
      *
-     * @param obj 要转换为JSON的对象
+     * @param obj 要转换为 JSON 的对象
      */
     public static void printJson2(Object obj) {
         System.out.println(ConvertToJson.toJson(obj));
@@ -46,6 +53,8 @@ public class TestHelper {
 
     /**
      * 检测是否在运行单元测试
+     *
+     * @return true=运行单元测试
      */
     public static Boolean isRunningTest() {
         if (isRunningTest == null) {
@@ -89,12 +98,12 @@ public class TestHelper {
     }
 
     /**
-     * 将JSON字符串转换为指定类型的Java对象
+     * 将 JSON 字符串转换为指定类型的 Java 对象
      *
-     * @param jsonStr JSON字符串
-     * @param beanClz Java对象的类型
-     * @param <T>     Java对象的类型
-     * @return 转换后的Java对象
+     * @param jsonStr JSON 字符串
+     * @param beanClz Java 对象的类型
+     * @param <T>     Java 对象的类型
+     * @return 转换后的 Jav a对象
      */
     public static <T> T jsonStr2Bean(String jsonStr, Class<T> beanClz) {
         jsonStr = ConvertToJson.removeCr(jsonStr);

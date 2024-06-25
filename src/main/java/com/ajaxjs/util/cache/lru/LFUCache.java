@@ -9,8 +9,8 @@ import java.util.Map;
 /**
  * LFU 最少使用率策略
  *
- * @param <K>
- * @param <V>
+ * @param <K> Key
+ * @param <V> Value
  */
 public class LFUCache<K, V> implements Cache<K, V> {
     /**

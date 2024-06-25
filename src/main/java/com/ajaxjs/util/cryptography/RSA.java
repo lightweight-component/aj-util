@@ -15,183 +15,182 @@ import java.util.Map;
  * RSA 非对称加密/解密
  */
 public class RSA extends Common {
-	private static final LogHelper LOGGER = LogHelper.getLog(RSA.class);
+    private static final LogHelper LOGGER = LogHelper.getLog(RSA.class);
 
-	/**
-	 * 定义加密方式
-	 */
-	private final static String KEY_RSA = "RSA";// "RSA/ECB/PKCS1Padding"
+    /**
+     * 定义加密方式
+     */
+    private final static String KEY_RSA = "RSA";// "RSA/ECB/PKCS1Padding"
 
-	/**
-	 * 定义签名算法
-	 */
-	private final static String KEY_RSA_SIGNATURE = "MD5withRSA";
+    /**
+     * 定义签名算法
+     */
+    private final static String KEY_RSA_SIGNATURE = "MD5withRSA";
 
-	/**
-	 * 定义公钥算法
-	 */
-	private final static String KEY_RSA_PUBLIC_KEY = "RSAPublicKey";
+    /**
+     * 定义公钥算法
+     */
+    private final static String KEY_RSA_PUBLIC_KEY = "RSAPublicKey";
 
-	/**
-	 * 定义私钥算法
-	 */
-	private final static String KEY_RSA_PRIVATE_KEY = "RSAPrivateKey";
+    /**
+     * 定义私钥算法
+     */
+    private final static String KEY_RSA_PRIVATE_KEY = "RSAPrivateKey";
 
-	/**
-	 * 初始化密钥
-	 * 
-	 * 注意这里是生成密钥对 KeyPair，再由密钥对获取公私钥
-	 * 
-	 * @return 密钥对
-	 */
-	public static Map<String, byte[]> init() {
-		return getKeyPair(KEY_RSA, 1024, KEY_RSA_PUBLIC_KEY, KEY_RSA_PRIVATE_KEY);
-	}
+    /**
+     * 初始化密钥
+     * <p>
+     * 注意这里是生成密钥对 KeyPair，再由密钥对获取公私钥
+     *
+     * @return 密钥对
+     */
+    public static Map<String, byte[]> init() {
+        return getKeyPair(KEY_RSA, 1024, KEY_RSA_PUBLIC_KEY, KEY_RSA_PRIVATE_KEY);
+    }
 
-	/**
-	 * 用私钥对信息生成数字签名
-	 * 
-	 * @param data       加密数据
-	 * @param privateKey 私钥
-	 * @return
-	 */
-	public static String sign(byte[] data, String privateKey) {
-		// 用私钥对信息生成数字签名
-		try {
-			Signature signature = Signature.getInstance(KEY_RSA_SIGNATURE);
-			signature.initSign((PrivateKey) restoreKey(false, privateKey));
-			signature.update(data);
+    /**
+     * 用私钥对信息生成数字签名
+     *
+     * @param data       加密数据
+     * @param privateKey 私钥
+     * @return 数字签名
+     */
+    public static String sign(byte[] data, String privateKey) {
+        // 用私钥对信息生成数字签名
+        try {
+            Signature signature = Signature.getInstance(KEY_RSA_SIGNATURE);
+            signature.initSign((PrivateKey) restoreKey(false, privateKey));
+            signature.update(data);
 
-			return Base64Utils.encodeToString(signature.sign());
-		} catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-			LOGGER.warning(e);
-			return null;
-		}
-	}
+            return Base64Utils.encodeToString(signature.sign());
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            LOGGER.warning(e);
+            return null;
+        }
+    }
 
-	/**
-	 * 校验数字签名
-	 * 
-	 * @param data      加密数据
-	 * @param publicKey 公钥
-	 * @param sign      数字签名
-	 * @return 校验成功返回true，失败返回false
-	 */
-	public static boolean verify(byte[] data, String publicKey, String sign) {
-		try {
-			Signature signature = Signature.getInstance(KEY_RSA_SIGNATURE);
-			signature.initVerify((PublicKey) restoreKey(true, publicKey));
-			signature.update(data);
+    /**
+     * 校验数字签名
+     *
+     * @param data      加密数据
+     * @param publicKey 公钥
+     * @param sign      数字签名
+     * @return 校验成功返回true，失败返回 false
+     */
+    public static boolean verify(byte[] data, String publicKey, String sign) {
+        try {
+            Signature signature = Signature.getInstance(KEY_RSA_SIGNATURE);
+            signature.initVerify((PublicKey) restoreKey(true, publicKey));
+            signature.update(data);
 
-			return signature.verify(Base64Utils.decodeFromString(sign));
-		} catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-			LOGGER.warning(e);
-			return false;
-		}
-	}
+            return signature.verify(Base64Utils.decodeFromString(sign));
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            LOGGER.warning(e);
+            return false;
+        }
+    }
 
-	// --------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------
 
-	/**
-	 * 还原公钥/私钥
-	 * 
-	 * @param isPublic 是否公钥，反之私钥
-	 * @param key
-	 * @return
-	 */
-	private static Key restoreKey(boolean isPublic, String key) {
-		byte[] bytes = Base64Utils.decodeFromString(key);
+    /**
+     * 还原公钥/私钥
+     *
+     * @param isPublic 是否公钥，反之私钥
+     * @param key      公钥或私钥的字符串表示
+     * @return 还原后的公钥或私钥对象，如果还原失败则返回null
+     */
+    private static Key restoreKey(boolean isPublic, String key) {
+        byte[] bytes = Base64Utils.decodeFromString(key);
 
-		try {
-			KeyFactory f = KeyFactory.getInstance(KEY_RSA);
-			return isPublic ? f.generatePublic(new X509EncodedKeySpec(bytes)) : f.generatePrivate(new PKCS8EncodedKeySpec(bytes));
-		} catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-			LOGGER.warning(e);
-			return null;
-		}
-	}
+        try {
+            KeyFactory f = KeyFactory.getInstance(KEY_RSA);
+            return isPublic ? f.generatePublic(new X509EncodedKeySpec(bytes)) : f.generatePrivate(new PKCS8EncodedKeySpec(bytes));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            LOGGER.warning(e);
+            return null;
+        }
+    }
 
-	// ------------------------- PUBLIC KEY ------------------------
+    // ------------------------- PUBLIC KEY ------------------------
 
-	/**
-	 * 处理公钥
-	 * 
-	 * @param isEncrypt 是否加密(true)，反之为解密（false）
-	 * @param data
-	 * @param key
-	 * @return
-	 */
-	private static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
-		int mode = isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
-		return EncryptUtil.doCipher(KEY_RSA, mode, restoreKey(isPublic, key), null, data);
-	}
+    /**
+     * 处理公钥
+     *
+     * @param isEncrypt 是否加密(true)，反之为解密（false）
+     * @param data      需要加密或解密的数据
+     * @param key       公钥或私钥的字符串表示
+     * @return 加密或解密后的字节数据
+     */
+    private static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
+        int mode = isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
+        return EncryptUtil.doCipher(KEY_RSA, mode, restoreKey(isPublic, key), null, data);
+    }
 
-	/**
-	 * 公钥加密
-	 * 
-	 * @param data 待加密数据
-	 * @param key  公钥
-	 * @return
-	 */
-	public static byte[] encryptByPublicKey(byte[] data, String key) {
-		return action(true, true, data, key);
-	}
+    /**
+     * 公钥加密
+     *
+     * @param data 待加密数据
+     * @param key  公钥
+     * @return 加密后的字节数组
+     */
+    public static byte[] encryptByPublicKey(byte[] data, String key) {
+        return action(true, true, data, key);
+    }
 
-	/**
-	 * 公钥解密
-	 * 
-	 * @param data 加密数据
-	 * @param key  公钥
-	 * @return
-	 */
-	public static byte[] decryptByPublicKey(byte[] data, String key) {
-		return action(false, true, data, key);
-	}
+    /**
+     * 公钥解密
+     *
+     * @param data 加密数据
+     * @param key  公钥
+     * @return 解密后的字节数组
+     */
+    public static byte[] decryptByPublicKey(byte[] data, String key) {
+        return action(false, true, data, key);
+    }
 
-	// ------------------------- PRIVATE KEY ------------------------
+    // ------------------------- PRIVATE KEY ------------------------
 
-	/**
-	 * 私钥加密
-	 * 
-	 * @param data 待加密数据
-	 * @param key  私钥
-	 * @return
-	 */
-	public static byte[] encryptByPrivateKey(byte[] data, String key) {
-		return action(true, false, data, key);
-	}
+    /**
+     * 私钥加密
+     *
+     * @param data 待加密数据
+     * @param key  私钥
+     * @return 加密后的字节数组
+     */
+    public static byte[] encryptByPrivateKey(byte[] data, String key) {
+        return action(true, false, data, key);
+    }
 
-	/**
-	 * 私钥解密
-	 * 
-	 * @param data 加密数据
-	 * @param key  私钥
-	 * @return
-	 */
-	public static byte[] decryptByPrivateKey(byte[] data, String key) {
-		return action(false, false, data, key);
-	}
+    /**
+     * 私钥解密
+     *
+     * @param data 加密数据
+     * @param key  私钥
+     * @return 解密后的字节数组
+     */
+    public static byte[] decryptByPrivateKey(byte[] data, String key) {
+        return action(false, false, data, key);
+    }
 
-	// ------------------------- GET KEY AS STRING ------------------------
+    // ------------------------- GET KEY AS STRING ------------------------
 
-	/**
-	 * 获取公钥
-	 * 
-	 * @param map
-	 * @return
-	 */
-	public static String getPublicKey(Map<String, byte[]> map) {
-		return getKey(KEY_RSA_PUBLIC_KEY, map);
-	}
+    /**
+     * 获取公钥
+     *
+     * @param map 个字符串到字节数组的映射，包含密钥对等信息
+     * @return 公钥
+     */
+    public static String getPublicKey(Map<String, byte[]> map) {
+        return getKey(KEY_RSA_PUBLIC_KEY, map);
+    }
 
-	/**
-	 * 获取私钥
-	 * 
-	 * @param map
-	 * @return
-	 */
-	public static String getPrivateKey(Map<String, byte[]> map) {
-		return getKey(KEY_RSA_PRIVATE_KEY, map);
-	}
-
+    /**
+     * 获取私钥
+     *
+     * @param map 个字符串到字节数组的映射，包含密钥对等信息
+     * @return 私钥
+     */
+    public static String getPrivateKey(Map<String, byte[]> map) {
+        return getKey(KEY_RSA_PRIVATE_KEY, map);
+    }
 }

@@ -75,6 +75,7 @@ public class EntityConvert {
      * @param clz         实体 Java Bean 的类
      * @param isTransform 是否尝试转换值
      * @param isChild     是否处理子对象
+     * @param <T>         类引用
      * @return 实体 bean 对象
      */
     @SuppressWarnings("unchecked")
@@ -195,6 +196,7 @@ public class EntityConvert {
      *
      * @param map 原始数据
      * @param clz 实体 bean 的类
+     * @param <T> 类引用
      * @return 实体 bean 对象
      */
     public static <T> T map2Bean(Map<String, ?> map, Class<T> clz) {
@@ -312,6 +314,7 @@ public class EntityConvert {
      *
      * @param json JSON 字符串
      * @param clz  实体 bean 的类
+     * @param <T>  类引用
      * @return Java Bean 实体
      */
     public static <T> T json2bean(String json, Class<T> clz) {

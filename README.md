@@ -6,7 +6,7 @@
 
 
 # AJAXJS Util 工具包
-工具库/助手包是框架的基础构成部分之一，英文多见于 Utils、Helpers、Tools。本项目定位为轻量级工具库，jar 体积不过 200k 左右，尽量避免第三方依赖。鉴于 Spring 普及，于是就依赖他的工具方法（仅依赖 `Spring Core`）直接使用，如常见的 `StringUtils.isEmpty()` 等等。
+工具库/助手包是框架的基础构成部分之一，英文多见于 Utils、Helpers、Tools。本项目定位为轻量级工具库，jar 体积不过 150k 左右，尽量避免第三方依赖。鉴于 Spring 普及，于是就依赖他的工具方法（仅依赖 `Spring Core`）直接使用，如常见的 `StringUtils.isEmpty()` 等等。
 
 本框架由下面若干模块所组成。
 

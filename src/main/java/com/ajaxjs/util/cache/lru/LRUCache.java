@@ -20,8 +20,8 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author <a href="https://blog.csdn.net/a921122/article/details/51992713">...</a>
  *
- * @param <K>
- * @param <V>
+ * @param <K> Key
+ * @param <V> Value
  */
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 	private static final long serialVersionUID = -952299094512767664L;

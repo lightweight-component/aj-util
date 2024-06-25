@@ -50,6 +50,7 @@ public class FileHelper extends StreamHelper {
      * @param target    源文件
      * @param dest      目的文件/目录，如果最后一个为目录，则不改名，如果最后一个为文件名，则改名
      * @param isReplace 是否替换已存在的文件，true = 覆盖
+     * @throws IOException IO 异常
      */
     public static void copy(String target, String dest, boolean isReplace) throws IOException {
         Path source = Paths.get(target);
@@ -57,18 +58,18 @@ public class FileHelper extends StreamHelper {
 
         if (isReplace)
             Files.copy(source, _dest, StandardCopyOption.REPLACE_EXISTING);
-        else
-            Files.copy(source, _dest);
+        else Files.copy(source, _dest);
     }
 
     /**
      * 移动文件
      *
-     * @param target 源文件
-     * @param dest   目的文件/目录，如果最后一个为目录，则不改名，如果最后一个为文件名，则改名
+     * @param source 源文件
+     * @param target 目的文件/目录，如果最后一个为目录，则不改名，如果最后一个为文件名，则改名   目的文件/目录，如果最后一个为目录，则不改名，如果最后一个为文件名，则改名
+     * @throws IOException IO 异常
      */
-    public static void move(String target, String dest) throws IOException {
-        Files.copy(Paths.get(target), Paths.get(dest));
+    public static void move(String source, String target) throws IOException {
+        Files.copy(Paths.get(source), Paths.get(target));
     }
 
     /**
@@ -85,8 +86,7 @@ public class FileHelper extends StreamHelper {
                 delete(f);
         }
 
-        if (!file.delete())
-            log.warn("文件 {} 删除失败！", file);
+        if (!file.delete()) log.warn("文件 {} 删除失败！", file);
     }
 
     /**
@@ -111,8 +111,7 @@ public class FileHelper extends StreamHelper {
         Path path = Paths.get(filePath);
 
         try {
-            if (Files.isDirectory(path))
-                throw new IOException("参数 full path：" + filePath + " 不能是目录，请指定文件");
+            if (Files.isDirectory(path)) throw new IOException("参数 full path：" + filePath + " 不能是目录，请指定文件");
         } catch (IOException e) {
             log.warn("ERROR>>", e);
             return null;
@@ -173,15 +172,11 @@ public class FileHelper extends StreamHelper {
         }
 
         try {
-            if (!isOverwrite && file.exists())
-                throw new IOException(file + "文件已经存在，禁止覆盖！");
+            if (!isOverwrite && file.exists()) throw new IOException(file + "文件已经存在，禁止覆盖！");
 
-            if (file.isDirectory())
-                throw new IOException(file + " 不能是目录，请指定文件");
+            if (file.isDirectory()) throw new IOException(file + " 不能是目录，请指定文件");
 
-            if (!file.exists())
-                if (file.createNewFile())
-                    log.info("不会走到这一步");
+            if (!file.exists()) if (file.createNewFile()) log.info("不会走到这一步");
 
             Files.write(file.toPath(), data);
         } catch (IOException e) {
@@ -271,8 +266,7 @@ public class FileHelper extends StreamHelper {
      * @param file 必须是文件，不是目录
      */
     public static void initFolder(File file) {
-        if (file.isDirectory())
-            throw new IllegalArgumentException("参数必须是文件，不是目录");
+        if (file.isDirectory()) throw new IllegalArgumentException("参数必须是文件，不是目录");
 
         mkDir(file.getParent());
     }
@@ -314,8 +308,7 @@ public class FileHelper extends StreamHelper {
         mkDirByFileName(filePath);
 
         File file = new File(filePath);
-        if (!isOverwrite && file.exists())
-            throw new IOException("文件已经存在，禁止覆盖！");
+        if (!isOverwrite && file.exists()) throw new IOException("文件已经存在，禁止覆盖！");
 
         return file;
     }
@@ -343,9 +336,7 @@ public class FileHelper extends StreamHelper {
      * @return 如 /2008/10/15/ 格式的字符串
      */
     public static String getDirNameByDate() {
-        String datetime = DateUtil.now(DateUtil.DATE_FORMAT_SHORTER),
-                year = datetime.substring(0, 4), mouth = datetime.substring(5, 7),
-                day = datetime.substring(8, 10);
+        String datetime = DateUtil.now(DateUtil.DATE_FORMAT_SHORTER), year = datetime.substring(0, 4), mouth = datetime.substring(5, 7), day = datetime.substring(8, 10);
 
         return SEPARATOR + year + SEPARATOR + mouth + SEPARATOR + day + SEPARATOR;
     }
@@ -384,6 +375,10 @@ public class FileHelper extends StreamHelper {
 
     /**
      * 列出某个目录下的所有文件，不包括文件夹，不递归子目录
+     *
+     * @param directory 目录的路径。
+     * @return 包含指定目录下所有文件的列表。如果目录不存在或无法访问，则返回 null。
+     * @throws UnsupportedOperationException 如果指定的路径不是目录，则抛出此异常。
      */
     public static List<File> listFile(String directory) {
         Path path = Paths.get(directory);
@@ -446,16 +441,16 @@ public class FileHelper extends StreamHelper {
     /**
      * 读取大文件
      * 通过文件流式传输，此解决方案将遍历文件中的所有行-允许处理每行-无需将其保留在内存中
+     *
+     * @param path 文件的路径。这个路径指向要读取的文件。
+     * @param fn   这是一个函数接口，代表对每行数据执行的操作。每读取一行，就会调用这个接口的accept方法，将该行作为参数传递给它。
      */
     public static void readLargeFileContent(String path, Consumer<String> fn) {
-        try (FileInputStream inputStream = new FileInputStream(path);
-             Scanner sc = new Scanner(inputStream, StrUtil.UTF8_SYMBOL)) {
-            while (sc.hasNextLine())
-                fn.accept(sc.nextLine());
+        try (FileInputStream inputStream = new FileInputStream(path); Scanner sc = new Scanner(inputStream, StrUtil.UTF8_SYMBOL)) {
+            while (sc.hasNextLine()) fn.accept(sc.nextLine());
 
             // note that Scanner suppresses exceptions
-            if (sc.ioException() != null)
-                throw sc.ioException();
+            if (sc.ioException() != null) throw sc.ioException();
         } catch (IOException e) {
             log.warn("ERROR>>", e);
         }
