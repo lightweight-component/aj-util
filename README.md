@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.1.5-brightgreen.svg?)](https://dev.ajaxjs.com/docs/javadoc/aj-util/)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.1.6-brightgreen.svg?)](https://dev.ajaxjs.com/docs/javadoc/aj-util/)
 ![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
@@ -26,6 +26,8 @@
 | regexp       | 类似 js 的正则表达式 API                                       |    |
 
 <!-- | sdk_free     | 各种云厂商都为开发者提供各种 SDK 方便调用其 API，完成各种服务。但是又依赖洁癖的我痛恨“依赖地狱”。各种服务调用无非 HTTP 协议下去调用 API。API 接口是基础。于是我尝试收集各厂商的纯 HTTP API 调用例子，免除依赖。可能功能不是最全的，只是提供了基础的调用，以后希望通过不断完善来增强。 | [文档](https://gitee.com/sp42_admin/aj-utils/wikis/%E7%AE%80%E4%BB%8B?sort_id=4385414)                                                                | -->
+
+Tutorial: https://framework.ajaxjs.com/docs/aj/?section=utils.
 
 Java Documents: https://dev.ajaxjs.com/docs/javadoc/aj-util/.
 
