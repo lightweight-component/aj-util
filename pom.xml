@@ -5,13 +5,13 @@
     <artifactId>ajaxjs-util</artifactId>
     <name>aj-util</name>
     <description>Small Java Utils Library with many powerful components</description>
-    <version>1.1.6</version>
+    <version>1.1.7</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>com.ajaxjs</groupId>
         <artifactId>ajaxjs-parent</artifactId>
-        <version>1.18</version>
+        <version>1.21</version>
         <relativePath/>
     </parent>
 
