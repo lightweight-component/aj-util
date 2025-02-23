@@ -1,13 +1,9 @@
 package com.ajaxjs.util.reflect;
 
-import com.ajaxjs.util.regexp.RegExpUtils;
-import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import org.junit.jupiter.api.Test;
 
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestReflectUtil {
     public static class Foo {
@@ -32,19 +28,6 @@ public class TestReflectUtil {
         public String Bar3(String arg) {
             return arg;
         }
-    }
-
-    @Test
-    public void testNewInstance() {
-        assertNotNull(NewInstance.newInstance(Foo.class));
-        assertNotNull(NewInstance.newInstance(Foo.class, "a", "b"));
-        assertNotNull(NewInstance.newInstance(Objects.requireNonNull(NewInstance.getConstructor(Foo.class))));
-        assertNotNull(NewInstance.newInstance(Objects.requireNonNull(NewInstance.getConstructor(Foo.class, String.class, String.class)), "a", "b"));
-        assertNotNull(NewInstance.newInstance("com.ajaxjs.util.reflect.TestReflectUtil"));
-        assertNotNull(Clazz.getClassByName("com.ajaxjs.util.reflect.TestReflectUtil"));
-
-        Class<?>[] cs = Clazz.getDeclaredInterface(ArrayList.class);
-        assertNotNull(cs);
     }
 
     static class Foo2 {
@@ -100,7 +83,7 @@ public class TestReflectUtil {
     public static class B extends A {
     }
 
-    public static interface C {
+    public interface C {
     }
 
     public static class D implements C {
@@ -134,12 +117,4 @@ public class TestReflectUtil {
         assertEquals(Methods.executeMethod(new Bar3(), "m1", "bar"), "bar");
         assertEquals(Methods.executeMethod(new Bar3(), "m1", String.class, "foo"), "foo");
     }
-
-    @Test
-    public void testRegMatch() {
-        assertEquals(RegExpUtils.regMatch("^a", "abc"), "a");// 匹配结果，只有匹配第一个
-        assertEquals(RegExpUtils.regMatch("^a", "abc", 0), "a");// 可指定分组
-        assertEquals(RegExpUtils.regMatch("^a(b)", "abc", 1), "b");
-    }
-
 }

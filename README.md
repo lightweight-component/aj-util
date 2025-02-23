@@ -1,45 +1,47 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.1.6-brightgreen.svg?)](https://dev.ajaxjs.com/docs/javadoc/aj-util/)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.1.8-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
 ![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
 [![QQ群](https://framework.ajaxjs.com/static/qq.svg)](https://shang.qq.com/wpa/qunwpa?idkey=3877893a4ed3a5f0be01e809e7ac120e346102bd550deb6692239bb42de38e22)
 
-# AJAXJS Util 工具包
+# AJ Utilities
 
-工具库/助手包是框架的基础构成部分之一，英文多见于 Utils、Helpers、Tools。本项目定位为轻量级工具库，jar 体积不过 150k 左右，尽量避免第三方依赖。鉴于 Spring
-普及，于是就依赖他的工具方法（仅依赖 `Spring Core`）直接使用，如常见的 `StringUtils.isEmpty()` 等等。
+Small Java Utils Library with many powerful components. The size of jar is around 60kb.
 
-本框架由下面若干模块所组成。
+| Class/Package 模块    | Detail 说明                     | Memo 备注 |
+|---------------------|-------------------------------|---------|
+| BytesHelper         | 字节数组工具类                       |         |
+| CollUtils           | 集合工具类                         |         |
+| ConvertBasicValue   | 尝试转换目标类型，注意并不是所有的类型都可以进行转换    |         |
+| DateHelper          | 日期工具类                         |         |
+| EncodeTools         | String URL/Base64 encoder     |         |
+| MessageDigestHelper | MD5/SHA1/SHA256/384/512 加密工具类 |         |
+| ObjectHelper        | A helper for Java Object.     |         |
+| RandomTools         | Random Numbers and Strings    |         |
+| RegExpUtils         | 正则表达式工具类                      |         |
+| StrUtil             | 字符串工具类                        |         |
+| XmlHelper           | XML 处理工具类                     |         |
+| cryptography        | AES/RSA 加密解密包                 |         |
+| io                  | 文件、资源、流工具包                    |         |
+| reflect             | 反射工具包                         |         |
 
-| 模块           | 说明                                                     | 备注 |
-|--------------|--------------------------------------------------------|----|
-| util         | 常规工具包，有字符串工具类、编码工具类、常用日期处理类、XML 工具类等等                  |    |
-| io           | 文件磁盘处理、流处理工具类、资源扫描器、Zip 解压缩                            |    |
-| reflect      | 反射工具包                                                  |    |
-| convert      | 值处理工具类、键对值转换                                           |    |
-| cache        | 轻量级缓存服务，定时缓存、LRU/LFU 缓存                                |    |
-| cryptography | 摘要算法：MD5/SHA；加密解密工具包： DES/AES/3D_DES/PBE/RSA/DH        |    |
-| logger       | 基于`java.util.logger`封装的日志组件                            |    |                                                                                                                                          | [文档](https://gitee.com/sp42_admin/aj-utils/wikis/%E5%8F%AF%E7%83%AD%E6%9B%B4%E6%96%B0%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83?sort_id=4390527) |
-| map_traveler | 键值对遍历器，转换器                                             |    |                                                                                                                                          | [文档](https://gitee.com/sp42_admin/aj-utils/wikis/%E5%8F%AF%E7%83%AD%E6%9B%B4%E6%96%B0%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83?sort_id=4390527) |
-| regexp       | 类似 js 的正则表达式 API                                       |    |
+## Source code
 
-<!-- | sql          | 类似于 Apache DBUtils 的数据库工具程序，并提供类似于 MyBatis 基于注解的 ORM 层 |    |
-| sdk_free     | 各种云厂商都为开发者提供各种 SDK 方便调用其 API，完成各种服务。但是又依赖洁癖的我痛恨“依赖地狱”。各种服务调用无非 HTTP 协议下去调用 API。API 接口是基础。于是我尝试收集各厂商的纯 HTTP API 调用例子，免除依赖。可能功能不是最全的，只是提供了基础的调用，以后希望通过不断完善来增强。 | [文档](https://gitee.com/sp42_admin/aj-utils/wikis/%E7%AE%80%E4%BB%8B?sort_id=4385414)                                                                | -->
+[Github](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [GitCode](https://gitcode.com/zhangxin09/aj-framework/tree/master/aj-public/aj-util)
 
-Tutorial: https://framework.ajaxjs.com/docs/aj/?section=utils.
+## Link
 
-Java Documents: https://dev.ajaxjs.com/docs/javadoc/aj-util/.
+[Tutorials](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [Web Site](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
-# 安装
+## Install
 
-要求 Java 1.8+。 Maven 坐标：
+Runs on Java 11+. Maven:
 
 ```xml
-
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.8</version>
 </dependency>
 ```

@@ -1,31 +1,60 @@
-/**
- * Copyright Sp42 frank@ajaxjs.com
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ * Copyright (C) 2025 Frank Cheung<frank@ajaxjs.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.ajaxjs.util;
 
+import java.io.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
- * 处理对象一些相关函数
+ * A helper for Java Object.
  */
 public class ObjectHelper {
+    /**
+     * 对象深度克隆
+     *
+     * @param <T> 对象泛型参数
+     * @param obj 待克隆的对象
+     * @return 克隆后的对象
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Serializable> T clone(T obj) {
+        try (ByteArrayOutputStream bout = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bout)) {
+            oos.writeObject(obj);
+
+            try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray()))) {
+                // 说明：调用 ByteArrayInputStream 或 ByteArrayOutputStream 对象的 close 方法没有任何意义
+                // 这两个基于内存的流只要垃圾回收器清理对象就能够释放资源，这一点不同于对外部资源（如文件流）的释放
+                return (T) ois.readObject();
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("对象深度克隆 Error.", e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("对象深度克隆 Error. 找不到类", e);
+        }
+    }
+
+    /**
+     * Dummy Map
+     */
+    public static final Map<String, Object> EMPTY_PARAMS_MAP = Collections.unmodifiableMap(new HashMap<>());
+
     /**
      * 创建一个新的 HashMap
      *
@@ -35,9 +64,8 @@ public class ObjectHelper {
      * @param <V> v1 类型
      * @return 新创建的 HashMap
      */
-    public static <K, V> Map<K, V> hashMap(K k1, V v1) {
+    public static <K, V> Map<K, V> mapOf(K k1, V v1) {
         Map<K, V> map = new HashMap<>();
-
         map.put(k1, v1);
 
         return map;
@@ -54,9 +82,8 @@ public class ObjectHelper {
      * @param <V> v1 类型
      * @return 新创建的 HashMap
      */
-    public static <K, V> Map<K, V> hashMap(K k1, V v1, K k2, V v2) {
+    public static <K, V> Map<K, V> mapOf(K k1, V v1, K k2, V v2) {
         Map<K, V> map = new HashMap<>();
-
         map.put(k1, v1);
         map.put(k2, v2);
 
@@ -76,9 +103,8 @@ public class ObjectHelper {
      * @param <V> v1 类型
      * @return 新创建的 HashMap
      */
-    public static <K, V> Map<K, V> hashMap(K k1, V v1, K k2, V v2, K k3, V v3) {
-        Map<K, V> map = new HashMap<>();
-
+    public static <K, V> Map<K, V> mapOf(K k1, V v1, K k2, V v2, K k3, V v3) {
+        Map<K, V> map = mapOf(3);
         map.put(k1, v1);
         map.put(k2, v2);
         map.put(k3, v3);
@@ -87,53 +113,22 @@ public class ObjectHelper {
     }
 
     /**
-     * 挂起当前线程
+     * Creates a HashMap with a specified expected number of entries.
+     * The initial capacity and load factor are calculated to minimize resizing.
      *
-     * @param timeout  挂起的时长
-     * @param timeUnit 时长单位
+     * @param expectedSize the expected number of entries in the map
+     * @return a new HashMap with optimal initial capacity and load factor
      */
-    public static void sleep(Number timeout, TimeUnit timeUnit) {
-        try {
-            timeUnit.sleep(timeout.longValue());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+    public static <K, V> Map<K, V> mapOf(int expectedSize) {
+        // Calculate the initial capacity as the next power of two greater than or equal to expectedSize / default_load_factor
+        float defaultLoadFactor = 0.75f;
+        int initialCapacity = (int) Math.ceil(expectedSize / defaultLoadFactor);
+        initialCapacity = Integer.highestOneBit(initialCapacity - 1) << 1;
 
-    /**
-     * 基于一个数值和时间单位来使当前线程休眠指定的时间。
-     *
-     * @param timeout 要休眠的数值，以秒为单位
-     */
-    public static void sleep(Number timeout) {
-        sleep(timeout, TimeUnit.SECONDS);
-    }
+        // Ensure that the initial capacity is at least 16 (the default capacity)
+        if (initialCapacity < 16)
+            initialCapacity = 16;
 
-
-    private static ScheduledExecutorService scheduledThreadPool;
-
-    /**
-     * 设置一个定时任务
-     *
-     * @param command 待执行任务
-     * @param delay   延迟时间，单位秒
-     * @return 任务结果
-     */
-    public static ScheduledFuture<?> setTimeout(Runnable command, long delay) {
-        if (scheduledThreadPool == null)
-            scheduledThreadPool = Executors.newScheduledThreadPool(5);
-
-        return scheduledThreadPool.schedule(command, delay, TimeUnit.SECONDS);
-    }
-
-    /**
-     * 开启一个轮询任务
-     *
-     * @param job          待执行任务
-     * @param initialDelay 初始延迟时间，单位分钟
-     * @param period       轮询间隔，单位分钟
-     */
-    public static void timeout(Runnable job, int initialDelay, int period) {
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(job, 1, 1, TimeUnit.MINUTES);
+        return new HashMap<>(initialCapacity, defaultLoadFactor);// Create and return the HashMap with the calculated initial capacity and default load factor
     }
 }

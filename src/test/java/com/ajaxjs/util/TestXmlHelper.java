@@ -1,7 +1,7 @@
 package com.ajaxjs.util;
 
 import com.ajaxjs.util.io.Resources;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class TestXmlHelper {
@@ -23,9 +23,6 @@ public class TestXmlHelper {
         // 测试 initBuilder 方法是否能够返回非空的 DocumentBuilder 实例
         DocumentBuilder builder = XmlHelper.initBuilder();
         assertNotNull(builder);
-
-        // 验证返回的 DocumentBuilder 是否是有效的实例
-        assertTrue(builder instanceof DocumentBuilder);
 
         // 测试 initBuilder 在异常情况下的行为，是否返回 null
         // 我们将通过反射禁用工厂来模拟 ParserConfigurationException
@@ -39,12 +36,11 @@ public class TestXmlHelper {
             System.out.println("Expected ParserConfigurationException to be thrown");
         } catch (Exception e) {
             // 我们期望在调用 factory.newDocumentBuilder() 时捕获异常
-            assertTrue(e.getCause() instanceof ParserConfigurationException);
+            assertInstanceOf(ParserConfigurationException.class, e.getCause());
         }
     }
 
-    private Consumer<Node> mockConsumer = mock(Consumer.class);
-    ;
+    private final Consumer<Node> mockConsumer = mock(Consumer.class);
 
     @Test
     public void testXPathWithValidXmlAndXPath() {
@@ -95,7 +91,7 @@ public class TestXmlHelper {
     @Test
     public void testNodeAsMapWithValidXmlAndXPath() {
         String xpath = "/root/element";
-        Map<String, String> expectedMap = ObjectHelper.hashMap("attr1", "value1", "attr2", "value2");
+        Map<String, String> expectedMap = ObjectHelper.mapOf("attr1", "value1", "attr2", "value2");
 
         Map<String, String> result = XmlHelper.nodeAsMap(Resources.getResourcesFromClasspath("test2.xml"), xpath);
 

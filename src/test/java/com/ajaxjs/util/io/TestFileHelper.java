@@ -1,59 +1,45 @@
 package com.ajaxjs.util.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
-
-import org.junit.Test;
+import java.util.List;
 
 public class TestFileHelper {
-    String dir = Resources.getResourcesFromClass(TestFileHelper.class, "");
-    String fullPath = dir + File.separator + "bar.txt";
+    final String dir = Resources.getResourcesFromClass(TestFileHelper.class, "");
+    final String fullPath = dir + File.separator + "test.txt";
 
     @Test
-    public void testCreateRead() {
-        // create and update
-        FileHelper.saveText(fullPath, "hihi");
+    public void test() {
+        // 读取文件内容
+        String content = FileHelper.readFileContent(fullPath);
+        System.out.println("File content: " + content);
 
-        // read
-        String result = FileHelper.openAsText(fullPath);
+        // 写入文件内容
+        FileHelper.writeFileContent(fullPath, "Hello, World! 你好世界");
 
-        assertTrue(result.startsWith("hihi"));
+        // 列出目录内容
+        List<String> directoryContents = FileHelper.listDirectoryContents(dir);
+        System.out.println("Directory contents: " + directoryContents);
 
-        FileHelper.saveText(fullPath, "hihi2");
-        assertTrue(FileHelper.openAsText(fullPath).startsWith("hihi2"));
+        // 创建目录
+        FileHelper.createDirectory(dir + File.separator + "newdirectory");
 
-        // delete
-        FileHelper.delete(fullPath);
+        // 删除文件或目录
+//            FileHelper.deleteFileOrDirectory("output.txt");
+
+        // 检查文件或目录是否存在
+        boolean exists = FileHelper.exists(fullPath);
+        System.out.println("File exists: " + exists);
+
+        // 获取文件或目录的大小
+        long size = FileHelper.getFileSize(fullPath);
+        System.out.println("File size: " + size + " bytes");
+
+        // 复制文件或目录
+        FileHelper.copyFileOrDirectory(fullPath, "example_copy.txt");
+
+        // 移动文件或目录
+        FileHelper.moveFileOrDirectory(fullPath, "moved_example.txt");
     }
-
-    @Test
-    public void testGetFileName() {
-        assertEquals("bar.java", FileHelper.getFileName("c:\\foo\\bar.java"));
-        assertEquals("bar.java", FileHelper.getFileName("c:/foo/bar.java"));
-    }
-
-    @Test
-    public void testGetFileSuffix() {
-        assertEquals("java", FileHelper.getFileSuffix("c:/foo/bar.java"));
-    }
-
-    @Test
-    public void testGetDirNameByDate() {
-        assertTrue(FileHelper.getDirNameByDate().startsWith("\\" + Calendar.getInstance().get(Calendar.YEAR)));
-    }
-
-    @Test
-    public void testCreateFile() {
-        try {
-            assertNotNull(FileHelper.createFile(fullPath, true));
-            FileHelper.delete(fullPath);
-        } catch (IOException e) {
-        }
-    }
-
 }

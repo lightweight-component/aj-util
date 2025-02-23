@@ -1,12 +1,14 @@
 package com.ajaxjs.util.reflect;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestTypes {
     @Test
@@ -31,8 +33,8 @@ public class TestTypes {
         Type[] actualType = Types.getActualType(type);
 
         assert actualType != null;
-        Assert.assertEquals(actualType.length, 1);
-        Assert.assertEquals(actualType[0], String.class);
+        assertEquals(actualType.length, 1);
+        assertEquals(actualType[0], String.class);
     }
 
     @Test
@@ -40,8 +42,8 @@ public class TestTypes {
         Method method = TestTypes.class.getMethods()[0];
         Type[] actualType = Types.getGenericReturnType(method);
 
-        Assert.assertEquals(actualType.length, 1);
-        Assert.assertEquals(actualType[0], String.class);
+        assertEquals(actualType.length, 1);
+        assertEquals(actualType[0], String.class);
     }
 
     @Test
@@ -49,7 +51,7 @@ public class TestTypes {
         Method method = TestTypes.class.getMethods()[0];
         Class<?> actualType = Types.getGenericFirstReturnType(method);
 
-        Assert.assertEquals(actualType, String.class);
+        assertEquals(actualType, String.class);
     }
 
     @Test
@@ -57,8 +59,8 @@ public class TestTypes {
         Class<?> clz = TestTypes.class;
         Type[] actualType = Types.getActualType(clz);
 
-        Assert.assertEquals(actualType.length, 1);
-        Assert.assertEquals(actualType[0], String.class);
+        assertEquals(actualType.length, 1);
+        assertEquals(actualType[0], String.class);
     }
 
     @Test
@@ -66,7 +68,7 @@ public class TestTypes {
         Class<?> clz = TestTypes.class;
         Class<?> actualClass = Types.getActualClass(clz);
 
-        Assert.assertEquals(actualClass, String.class);
+        assertEquals(actualClass, String.class);
     }
 
     @Test
@@ -90,6 +92,6 @@ public class TestTypes {
 
         Class<?> actualClass = Types.type2class(type);
 
-        Assert.assertEquals(actualClass, List.class);
+        assertEquals(actualClass, List.class);
     }
 }

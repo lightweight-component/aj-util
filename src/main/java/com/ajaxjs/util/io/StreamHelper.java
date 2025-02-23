@@ -15,20 +15,15 @@
  */
 package com.ajaxjs.util.io;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
  * 流操作助手类
+ * 如不满足 可参考 Spring StreamUtils/ResourceUtils/FileCopyUtils/FileSystemUtils
  */
-@Slf4j
 public class StreamHelper {
     /**
      * 读输入的字节流转换到字符流，将其转换为文本（多行）的字节流转换为字符串
@@ -36,8 +31,8 @@ public class StreamHelper {
      * @param in 输入流，无须手动关闭
      * @return 字符串
      */
-    public static String byteStream2string(InputStream in) {
-        return byteStream2string_Charset(in, StandardCharsets.UTF_8);
+    public static String copyToString(InputStream in) {
+        return copyToString(in, StandardCharsets.UTF_8);
     }
 
     /**
@@ -47,10 +42,10 @@ public class StreamHelper {
      * @param encode 字符编码
      * @return 字符串
      */
-    public static String byteStream2string_Charset(InputStream in, Charset encode) {
-        StringBuilder result = new StringBuilder();
+    public static String copyToString(InputStream in, Charset encode) {// 等价 Spring copyToString.copy(in, charset)
+        StringBuffer result = new StringBuffer();
 
-        read(new InputStreamReader(in, encode), line -> {
+        read(in, encode, line -> {
             result.append(line);
             result.append('\n');
         });
@@ -59,38 +54,44 @@ public class StreamHelper {
     }
 
     /**
-     * 从输入流中读取数据，并对每行数据应用提供的消费函数。
+     * 从输入流中读取数据，并对每行数据应用提供的消费函数
      *
-     * @param in 输入流，从中读取数据。
-     * @param fn 消费函数，用于处理读取到的每行数据。
+     * @param in     输入流读取器，用于读取数据
+     * @param encode 字符编码
+     * @param fn     消费函数，接收一行数据作为参数，对每行数据进行处理
      */
-    public static void read(InputStream in, Consumer<String> fn) {
-        read(new InputStreamReader(in, StandardCharsets.UTF_8), fn);
+    public static void read(InputStream in, Charset encode, Consumer<String> fn) {
+        /*
+         * 装饰器模式，又称为包装器，可以在不修改被包装类的情况下动态添加功能（例如缓冲区功能）
+         * 这里使用 BufferedReader 为输入流添加缓冲功能
+         */
+        try (InputStreamReader inReader = new InputStreamReader(in, encode);
+             BufferedReader reader = new BufferedReader(inReader)) {
+            String line;
+
+            while ((line = reader.readLine()) != null) // 一次读入一行，直到读入 null 表示文件结束
+                // 指定编码集的另外一种写法 line = new String(line.getBytes(), encodingSet);
+                fn.accept(line);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**
-     * 从 InputStreamReader 中读取数据，并逐行消费。
+     * 输入流复制到输出流
+     * New JDK 9 新特性，直接复制流，不用自己写循环了
      *
-     * @param inReader 输入流读取器，用于读取数据。
-     * @param fn       消费函数，接收一行数据作为参数，对每行数据进行处理。
+     * @param in  输入流
+     * @param out 输出流
+     * @return 复制了多少字节
      */
-    public static void read(InputStreamReader inReader, Consumer<String> fn) {
-        try (
-                /*
-                 * 装饰器模式，又称为包装器，可以在不修改被包装类的情况下动态添加功能（例如缓冲区功能）
-                 * 这里使用BufferedReader为输入流添加缓冲功能
-                 */
-                BufferedReader reader = new BufferedReader(inReader)) {
-            String line;
-
-            while ((line = reader.readLine()) != null) { // 一次读入一行，直到读入 null 表示文件结束
-                // 指定编码集的另外一种写法 line = new String(line.getBytes(), encodingSet);
-                fn.accept(line);
-            }
-        } catch (IOException e) {
-            log.warn("ERROR>>", e);
-        }
-    }
+//    public static long write(InputStream in, OutputStream out) {
+//        try {
+//            return in.transferTo(out); // 等价 Spring StreamUtils.copy(in, out)
+//        } catch (IOException e) {
+//            throw new RuntimeException("复制流的时候失败", e);
+//        }
+//    }
 
     /**
      * 1K 的数据块
@@ -127,26 +128,29 @@ public class StreamHelper {
                 out.flush();
             }
         } catch (IOException e) {
-            log.warn("ERROR>>", e);
+            throw new UncheckedIOException(e);
         }
     }
 
+    public static void write(InputStream in, OutputStream out) {
+        write(in, out, true);
+    }
+
     /**
-     * 使用内存操作流，读取二进制，也就是将流转换为内存的数据。 InputStream 转换到 byte[]. 从输入流中获取数据， 转换到 byte[]
+     * 使用内存操作流，读取二进制，也就是将流转换为内存的数据。
+     * InputStream 转换到 byte[]. 从输入流中获取数据， 转换到 byte[]
      * 也就是 in 转到内存。虽然大家可能都在内存里面了但还不能直接使用，要转换
      *
      * @param in 输入流
-     * @return 返回本实例供链式调用
+     * @return 内存的数据
      */
-    public static byte[] inputStream2Byte(InputStream in) {
-        // 使用内存操作流，读取二进制
+    public static byte[] inputStream2Byte(InputStream in) { // 等价于 Spring StreamUtils.copyToByteArray(InputStream in)：将输入流的内容复制到字节数组
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            write(in, out, true);
+            write(in, out);
 
             return out.toByteArray();
         } catch (IOException e) {
-            log.warn("ERROR>>", e);
-            return null;
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -174,7 +178,7 @@ public class StreamHelper {
     public static void bytes2output(OutputStream out, byte[] data, boolean isBuffered, int off, int length) {
         try {
             if (isBuffered)
-                out = new BufferedOutputStream(out, BUFFER_SIZE);
+                out = new BufferedOutputStream(out, 1024);
 
             if (off == 0 && length == 0)
                 out.write(data);
@@ -183,132 +187,7 @@ public class StreamHelper {
 
             out.flush();
         } catch (IOException e) {
-            log.warn("ERROR>>", e);
+            throw new UncheckedIOException("byte[] 转换为输出流时候错误", e);
         }
-    }
-
-    /**
-     * 在字节数组中截取指定长度数组
-     *
-     * @param data   输入的数据
-     * @param off    偏移
-     * @param length 长度
-     * @return 指定 范围的字节数组
-     */
-    public static byte[] subBytes(byte[] data, int off, int length) {
-        byte[] bs = new byte[length];
-        System.arraycopy(data, off, bs, 0, length);
-
-        return bs;
-    }
-
-    /**
-     * 在字节数组里查找某个字节数组，找到返回&lt;=0，未找到返回-1
-     *
-     * @param data   被搜索的内容
-     * @param search 要搜索内容
-     * @param start  搜索起始位置
-     * @return 目标位置，找不到返回-1
-     */
-    public static int byteIndexOf(byte[] data, byte[] search, int start) {
-        int len = search.length;
-
-        for (int i = start; i < data.length; i++) {
-            int temp = i, j = 0;
-
-            while (data[temp] == search[j]) {
-                temp++;
-                j++;
-
-                if (j == len)
-                    return i;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
-     * 在字节数组里查找某个字节数组，找到返回 &lt;=0，未找到返回 -1
-     *
-     * @param data   被搜索的内容
-     * @param search 要搜索内容
-     * @return 目标位置，找不到返回 -1
-     */
-    public static int byteIndexOf(byte[] data, byte[] search) {
-        return byteIndexOf(data, search, 0);
-    }
-
-    /**
-     * 合并两个字节数组
-     *
-     * @param a 数组a
-     * @param b 数组b
-     * @return 新合并的数组
-     */
-    public static byte[] concat(byte[] a, byte[] b) {
-        byte[] c = new byte[a.length + b.length];
-        System.arraycopy(a, 0, c, 0, a.length);
-        System.arraycopy(b, 0, c, a.length, b.length);
-
-        return c;
-    }
-
-    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
-
-    /**
-     * byte[] 转化为 16 进制字符串输出
-     *
-     * @param bytes 字节数组
-     * @return 16 进制字符串
-     */
-    public static String bytesToHexStr(byte[] bytes) {
-        byte[] hexChars = new byte[bytes.length * 2];
-
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-        }
-
-        return new String(hexChars, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * 将16进制转换为二进制
-     *
-     * @param hexStr 16进制字符串
-     * @return 二进制数组
-     */
-    public static byte[] parseHexStr2Byte(String hexStr) {
-        if (hexStr.length() < 1) return null;
-        byte[] result = new byte[hexStr.length() / 2];
-
-        for (int i = 0; i < hexStr.length() / 2; i++) {
-            // 获取高位和低位的16进制数
-            int high = Integer.parseInt(hexStr.substring(i * 2, i * 2 + 1), 16);
-            int low = Integer.parseInt(hexStr.substring(i * 2 + 1, i * 2 + 2), 16);
-            // 计算二进制数
-            result[i] = (byte) (high * 16 + low);
-        }
-
-        return result;
-    }
-
-    /**
-     * char 数组转 byte 数组
-     * 将 char 数组转换为 byte 数组需要考虑编码方式的问题
-     * <a href="https://houbb.github.io/2023/06/05/java-perf-02-chars-to-bytes">...</a>
-     *
-     * @param chars 输入的字符数组。
-     * @return 转换后的字节数组。
-     */
-    public static byte[] charToByte(char[] chars) {
-        ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(CharBuffer.wrap(chars));
-        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
-        Arrays.fill(byteBuffer.array(), (byte) 0);
-
-        return bytes;
     }
 }

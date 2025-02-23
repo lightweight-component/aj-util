@@ -1,12 +1,9 @@
 package com.ajaxjs.util.reflect;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-@Slf4j
 public class Types {
     /**
      * 获取泛型类型数组。
@@ -15,14 +12,12 @@ public class Types {
      * @return 返回泛型类型数组。如果指定的 Type 对象不是 ParameterizedType 类型，则返回 null。
      */
     public static Type[] getActualType(Type type) {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType pt = (ParameterizedType) type;
-
-            return pt.getActualTypeArguments();
+        if (type instanceof ParameterizedType)
+            return ((ParameterizedType) type).getActualTypeArguments();
+        else {
+            System.err.println(type + " 很可能不是一个泛型");
+            return null;
         }
-
-        log.warn(type + " 很可能不是一个泛型");
-        return null;
     }
 
     /**
@@ -80,4 +75,9 @@ public class Types {
     public static Class<?> type2class(Type type) {
         return type instanceof Class ? (Class<?>) type : null;
     }
+
+    /*
+        从 Spring 4.0 开始 Spring 中添加了 ResolvableType 工具，这个类可以更加方便的用来回去泛型信息。
+        Ref: https://my.oschina.net/qq596392912/blog/3028409
+     */
 }
