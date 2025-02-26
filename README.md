@@ -7,24 +7,24 @@
 
 # AJ Utilities
 
-Small Java Utils Library with many powerful components. The size of jar is around 60kb.
+Small Java Utils Library with many powerful components. The size of jar is around 60kb. It contains the following modules:
 
-| Class/Package 模块    | Detail 说明                     | Memo 备注 |
-|---------------------|-------------------------------|---------|
-| BytesHelper         | 字节数组工具类                       |         |
-| CollUtils           | 集合工具类                         |         |
-| ConvertBasicValue   | 尝试转换目标类型，注意并不是所有的类型都可以进行转换    |         |
-| DateHelper          | 日期工具类                         |         |
-| EncodeTools         | String URL/Base64 encoder     |         |
-| MessageDigestHelper | MD5/SHA1/SHA256/384/512 加密工具类 |         |
-| ObjectHelper        | A helper for Java Object.     |         |
-| RandomTools         | Random Numbers and Strings    |         |
-| RegExpUtils         | 正则表达式工具类                      |         |
-| StrUtil             | 字符串工具类                        |         |
-| XmlHelper           | XML 处理工具类                     |         |
-| cryptography        | AES/RSA 加密解密包                 |         |
-| io                  | 文件、资源、流工具包                    |         |
-| reflect             | 反射工具包                         |         |
+| Class/Package Module | Detail Description                | Memo         |
+|----------------------|-----------------------------------|--------------|
+| BytesHelper          | Byte array utility class          |              |
+| CollUtils            | Collection utility class          |              |
+| ConvertBasicValue    | Attempts to convert target type, note that not all types can be converted |              |
+| DateHelper           | Date utility class                |              |
+| EncodeTools          | String URL/Base64 encoder         |              |
+| MessageDigestHelper  | MD5/SHA1/SHA256/384/512 encryption utility class |              |
+| ObjectHelper         | A helper for Java Object          |              |
+| RandomTools          | Random Numbers and Strings        |              |
+| RegExpUtils          | Regular expression utility class  |              |
+| StrUtil              | String utility class              |              |
+| XmlHelper            | XML processing utility class      |              |
+| Cryptography         | AES/RSA encryption and decryption package |              |
+| IO                   | File, resource, stream utility package |              |
+| Reflection              | Reflection utility package        |              |
 
 ## Source code
 
