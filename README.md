@@ -28,11 +28,11 @@ Small Java Utils Library with many powerful components. The size of jar is aroun
 
 ## Source code
 
-[Github](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [GitCode](https://gitcode.com/zhangxin09/aj-framework/tree/master/aj-public/aj-util)
+[Github](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
 
 ## Link
 
-[Tutorials](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [Web Site](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+[Tutorials](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) 
 
 ## Install
 
