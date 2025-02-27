@@ -4,6 +4,9 @@ import com.ajaxjs.util.StrUtil;
 
 import java.util.Optional;
 
+/**
+ * EnumsUtil 类提供了一种基于代码检索枚举实例及其关联消息（或其他值）的方法
+ */
 public class EnumsUtil {
     /**
      * 根据枚举代码获取对应的枚举对象
