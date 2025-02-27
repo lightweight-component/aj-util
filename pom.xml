@@ -7,18 +7,18 @@
     <parent>
         <groupId>com.ajaxjs</groupId>
         <artifactId>ajaxjs-parent</artifactId>
-        <version>1.23</version>
+        <version>1.24</version>
         <relativePath/>
     </parent>
 
     <artifactId>ajaxjs-util</artifactId>
     <name>aj-util</name>
     <description>Small Java Utils Library with many powerful components</description>
-    <version>1.1.8</version>
+    <version>1.1.9</version>
     <packaging>jar</packaging>
 
     <scm>
-        <url>https://gitcode.com/zhangxin09/aj-framework/tree/master/aj-public/aj-util</url>
+        <url>https://github.com/lightweight-component/aj-util</url>
 <!--        <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>-->
     </scm>
 
