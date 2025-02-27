@@ -32,7 +32,7 @@ Small Java Utils Library with many powerful components. The size of jar is aroun
 
 ## Link
 
-[Tutorials](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) 
+[Tutorials](https://framework.ajaxjs.com/aj-util/) | [Tutorials(Chinese)](https://framework.ajaxjs.com/aj-util/cn/) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util) 
 
 ## Install
 
