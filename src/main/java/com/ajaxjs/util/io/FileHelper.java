@@ -1,5 +1,7 @@
 package com.ajaxjs.util.io;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,6 +16,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * 文件操作工具类，提供了一些文件操作的常用方法。
+ */
+@Slf4j
 public class FileHelper {
     /**
      * 读取文件内容并返回为字符串。
@@ -39,7 +45,8 @@ public class FileHelper {
 
             return sb.toString();
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("读取文件 " + filePath + "时发生错误", e);
+            throw new UncheckedIOException("读取文件 " + filePath + "时发生错误", e);
         }
     }
 
@@ -54,7 +61,8 @@ public class FileHelper {
         try {
             Files.write(Paths.get(filePath), content.getBytes());
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("将字符串内容写入文件", e);
+            throw new UncheckedIOException("将字符串内容写入文件", e);
         }
     }
 
@@ -77,7 +85,8 @@ public class FileHelper {
             } else
                 Files.delete(path);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("删除文件或目录 " + filePath, e);
+            throw new UncheckedIOException("删除文件或目录", e);
         }
     }
 
@@ -92,7 +101,8 @@ public class FileHelper {
         try (Stream<Path> stream = Files.list(Paths.get(directoryPath))) {
             return stream.map(p -> p.getFileName().toString()).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("列出目录内容 " + directoryPath, e);
+            throw new UncheckedIOException("列出目录内容", e);
         }
     }
 
@@ -106,7 +116,8 @@ public class FileHelper {
         try {
             Files.createDirectories(Paths.get(directoryPath));
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("创建目录 " + directoryPath, e);
+            throw new UncheckedIOException("创建目录", e);
         }
     }
 
@@ -133,7 +144,8 @@ public class FileHelper {
 
             return attrs.size();
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("获取文件或目录的大小 " + filePath, e);
+            throw new UncheckedIOException("获取文件或目录的大小", e);
         }
     }
 
@@ -158,14 +170,16 @@ public class FileHelper {
                         try {
                             Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
                         } catch (IOException e) {
-                            throw new UncheckedIOException(e);
+                            log.error("复制文件或目录", e);
+                            throw new UncheckedIOException("复制文件或目录", e);
                         }
                     });
                 }
             } else
                 Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("复制文件或目录 ", e);
+            throw new UncheckedIOException("复制文件或目录", e);
         }
     }
 
@@ -183,7 +197,8 @@ public class FileHelper {
         try {
             Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            log.error("移动文件或目录 ", e);
+            throw new UncheckedIOException("移动文件或目录", e);
         }
     }
 }

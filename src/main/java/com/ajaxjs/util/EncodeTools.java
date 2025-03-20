@@ -16,6 +16,8 @@
  */
 package com.ajaxjs.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -25,6 +27,7 @@ import java.util.Base64;
 /**
  * String URL/Base64 encoder
  */
+@Slf4j
 public class EncodeTools {
     /**
      * URL 网址的中文乱码处理。 如果 Tomcat 过滤器设置了 UTF-8 那么这里就不用重复转码了
@@ -64,6 +67,7 @@ public class EncodeTools {
         try {
             return URLEncoder.encode(str, UTF8_SYMBOL);
         } catch (UnsupportedEncodingException e) {
+            log.warn("URL 编码", e);
             throw new RuntimeException(e);
         }
     }
@@ -78,6 +82,7 @@ public class EncodeTools {
         try {
             return URLDecoder.decode(str, UTF8_SYMBOL);
         } catch (UnsupportedEncodingException e) {
+            log.warn("URL 解码", e);
             throw new RuntimeException(e);
         }
     }

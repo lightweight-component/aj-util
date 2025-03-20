@@ -2,6 +2,7 @@ package com.ajaxjs.util;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
@@ -19,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
  */
 @Data
 @Accessors(chain = true)
+@Slf4j
 public class MessageDigestHelper {
     /**
      * 定义摘要的算法，可选以下多种算法
@@ -63,6 +65,7 @@ public class MessageDigestHelper {
         try {
             md = MessageDigest.getInstance(algorithmName);
         } catch (NoSuchAlgorithmException e) {
+            log.warn("No Such Algorithm: {}", algorithmName, e);
             throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
         }
 
@@ -210,8 +213,10 @@ public class MessageDigestHelper {
 
             return BytesHelper.bytesToHexStr(digest.digest());
         } catch (NoSuchAlgorithmException e) {
+            log.warn("No Such Algorithm: MD5", e);
             throw new RuntimeException("No Such Algorithm: MD5", e);
         } catch (IOException e) {
+            log.warn("Calc File MD5 IO Error.", e);
             throw new UncheckedIOException("Calc File MD5 IO Error.", e);
         }
     }

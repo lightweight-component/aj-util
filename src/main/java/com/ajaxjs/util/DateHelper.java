@@ -173,8 +173,8 @@ public class DateHelper {
     private static ZonedDateTime getZone(Date date) {
         Instant instant;
         /*
-            java.sql.Date仅支持日期组件（日期、月份、年份）。它不支持时间组件（小时、分钟、秒、毫秒）。
-            toInstant需要 Date 和 Time 组件，
+            java.sql.Date 仅支持日期组件（日期、月份、年份）。它不支持时间组件（小时、分钟、秒、毫秒）。
+            toInstant 需要 Date 和 Time 组件，
             因此 java.sql.Date 实例上的 toInstant 会引发 UnsupportedOperationException 异常
         */
         if (date instanceof java.sql.Date)

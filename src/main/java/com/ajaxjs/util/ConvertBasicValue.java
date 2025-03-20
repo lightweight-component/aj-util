@@ -1,6 +1,7 @@
 package com.ajaxjs.util;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -12,6 +13,7 @@ import java.util.List;
  * 尝试转换目标类型，注意并不是所有的类型都可以进行转换
  */
 @Data
+@Slf4j
 public class ConvertBasicValue {
     /**
      * 字符串转换为数组时候，所使用的分隔符，默认为 ,
@@ -71,7 +73,7 @@ public class ConvertBasicValue {
             if (value instanceof String || value instanceof Number)
                 return new BigDecimal(value.toString());
             else
-                System.err.println(StrUtil.print("value: [{}] type:[{}] can not be converted to BigDecimal", value, value.getClass().getName()));
+                log.warn("value: [{}] type:[{}] can not be converted to BigDecimal", value, value.getClass().getName());
         } else if (clz.isArray())
             return toArray(value, clz);
         else if (clz.isEnum()) {
@@ -105,7 +107,7 @@ public class ConvertBasicValue {
             } else if (value instanceof String)
                 return ((String) value).split(diver);// 用于数组的分隔符
             else
-                System.err.println(StrUtil.print("value: [{}] type:[{}] can not be converted to {}", value, value.getClass().getName(), clz));
+                log.warn("value: [{}] type:[{}] can not be converted to {}", value, value.getClass().getName(), clz);
         } else if (clz == int[].class /*|| clz == Integer[].class*/) {
             // 复数
             if (value instanceof String)
@@ -113,11 +115,10 @@ public class ConvertBasicValue {
             else if (value instanceof List)
                 return CollUtils.intList2Arr((List<Integer>) value);
             else
-                System.err.println(StrUtil.print("value: [{}] type:[{}] can‘t be converted to {}", value, value.getClass().getName(), clz));
-
+                log.warn("value: [{}] type:[{}] can‘t be converted to {}", value, value.getClass().getName(), clz);
         }
 
-        System.err.println("More array type is on the way.");
+        log.warn("More array type is on the way.");
 
         return null;
     }

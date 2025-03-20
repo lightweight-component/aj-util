@@ -104,6 +104,7 @@ public class StrUtil {
             } catch (IndexOutOfBoundsException e) {
                 buffer.append("null"); // 数组越界时对应占位符填null
             }
+
             beginIndex = endIndex + DELIM_STR.length();
         }
 

@@ -1,9 +1,12 @@
 package com.ajaxjs.util.reflect;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+@Slf4j
 public class Types {
     /**
      * 获取泛型类型数组。
@@ -15,7 +18,7 @@ public class Types {
         if (type instanceof ParameterizedType)
             return ((ParameterizedType) type).getActualTypeArguments();
         else {
-            System.err.println(type + " 很可能不是一个泛型");
+            log.warn("{} 很可能不是一个泛型", type);
             return null;
         }
     }

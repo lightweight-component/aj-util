@@ -10,6 +10,7 @@
  */
 package com.ajaxjs.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
@@ -38,6 +39,7 @@ import java.util.function.Consumer;
  *
  * @author sp42 frank@ajaxjs.com
  */
+@Slf4j
 public class XmlHelper {
     /**
      * XML 转换需要的对象
@@ -48,6 +50,7 @@ public class XmlHelper {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {
+            log.warn("Parser Configuration Exception", e);
             throw new RuntimeException("Parser Configuration Exception", e);
         }
     }
@@ -70,6 +73,7 @@ public class XmlHelper {
             for (int i = 0; i < nodes.getLength(); i++)
                 fn.accept(nodes.item(i));
         } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e) {
+            log.warn("Get a node from XML err. XPath: {}", xpath, e);
             throw new RuntimeException("Get a node from XML err. XPath: " + xpath, e);
         }
     }
@@ -90,6 +94,7 @@ public class XmlHelper {
                 fn.accept(node, nodeList);
             }
         } catch (SAXException | IOException e) {
+            log.warn("Parsed this XML err. {}", xml, e);
             throw new RuntimeException("Parsed this XML err." + xml, e);
         }
     }
@@ -104,6 +109,7 @@ public class XmlHelper {
         try (InputStream in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
             return Objects.requireNonNull(initBuilder()).parse(in).getDocumentElement();
         } catch (SAXException | IOException e) {
+            log.warn("Get the root of this XML err. {}", xml, e);
             throw new RuntimeException("Get the root of this XML err." + xml, e);
         }
     }
@@ -129,7 +135,8 @@ public class XmlHelper {
             }
         });
 
-        if (map.isEmpty()) return null;
+        if (map.isEmpty())
+            return null;
 
         return map;
     }
@@ -166,7 +173,9 @@ public class XmlHelper {
 
         for (int i = 0; i < attrs.getLength(); i++) {
             Attr attr = (Attr) attrs.item(i);
-            if (attr.getNodeName().equals(attrName)) return attr.getValue();
+
+            if (attr.getNodeName().equals(attrName))
+                return attr.getValue();
         }
 
         return null;
@@ -185,8 +194,10 @@ public class XmlHelper {
         if (attributes != null && attributes.getLength() > 0) {
             Node namedItem = attributes.getNamedItem(attrName);
 
-            if (namedItem != null) return namedItem.getNodeValue();
-            else return null;// LOGGER.warning("找不到属性 " + attrName);
+            if (namedItem != null)
+                return namedItem.getNodeValue();
+            else
+                return null;// LOGGER.warning("找不到属性 " + attrName);
 
         } else return null;
     }
