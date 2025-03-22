@@ -51,6 +51,25 @@ public class FileHelper {
     }
 
     /**
+     * 通过文件路径读取文件内容并以字节数组形式返回
+     * 该方法使用 NIO 文件通道来高效读取文件内容，适用于处理大文件或需要字节级操作的场景
+     *
+     * @param filePath 文件路径，指定要读取的文件
+     * @return 文件内容的字节数组如果文件读取时发生错误，则抛出 RuntimeException
+     * @throws RuntimeException 当文件读取过程中发生 IO 错误时
+     */
+    public static byte[] readFileBytes(String filePath) {
+        Path path = Paths.get(filePath);
+
+        try {
+            return Files.readAllBytes(path);
+        } catch (IOException e) {
+            log.error("读取文件 " + filePath + "(byes) 时发生错误", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * 将字符串内容写入文件。
      *
      * @param filePath 文件路径
@@ -85,7 +104,7 @@ public class FileHelper {
             } else
                 Files.delete(path);
         } catch (IOException e) {
-            log.error("删除文件或目录 " + filePath, e);
+            log.error("删除文件或目录 {}", filePath, e);
             throw new UncheckedIOException("删除文件或目录", e);
         }
     }
@@ -101,7 +120,7 @@ public class FileHelper {
         try (Stream<Path> stream = Files.list(Paths.get(directoryPath))) {
             return stream.map(p -> p.getFileName().toString()).collect(Collectors.toList());
         } catch (IOException e) {
-            log.error("列出目录内容 " + directoryPath, e);
+            log.error("列出目录内容 {}", directoryPath, e);
             throw new UncheckedIOException("列出目录内容", e);
         }
     }
