@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JSON Utils based on Jackson
+ * Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List.
  */
 @Slf4j
 public class JsonUtil {
