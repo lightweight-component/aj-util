@@ -7,7 +7,7 @@
 
 # AJ Utilities
 
-Small Java Utils Library with many powerful components. The size of jar is around 60kb. It contains the following modules:
+Small Java Utils Library with many powerful components. The size of jar is around 90kb. It contains the following modules:
 
 | Class/Package Module | Detail Description                                                        | Memo |
 |----------------------|---------------------------------------------------------------------------|------|
@@ -18,6 +18,7 @@ Small Java Utils Library with many powerful components. The size of jar is aroun
 | EncodeTools          | String URL/Base64 encoder                                                 |      |
 | MessageDigestHelper  | MD5/SHA1/SHA256/384/512 encryption utility class                          |      |
 | ObjectHelper         | A helper for Java Object                                                  |      |
+| HTTP Request         | A Small HTTP Request Component                                            |      |
 | RandomTools          | Random Numbers and Strings                                                |      |
 | RegExpUtils          | Regular expression utility class                                          |      |
 | StrUtil              | String utility class                                                      |      |
@@ -43,6 +44,6 @@ Runs on Java 8+. Maven:
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
 </dependency>
 ```
