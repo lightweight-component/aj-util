@@ -2,6 +2,9 @@ package com.ajaxjs.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.ajaxjs.util.EncodeTools.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,5 +26,12 @@ public class TestEncodeTools {
      void testUrlChinese() {
 		assertEquals("%E4%B8%AD%E5%9B%BD", urlEncode("中国"));
 		assertEquals("中国", urlDecode("%E4%B8%AD%E5%9B%BD"));
+    }
+
+    @Test
+    public void testParseStringToMap() {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("bar", "baz");
+        assertEquals(expected, parseStringToMap("foo&bar=baz"));
     }
 }

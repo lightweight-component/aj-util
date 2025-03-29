@@ -10,4 +10,8 @@ public interface HttpConstants {
     String DELETE = "DELETE";
 
     String CONTENT_TYPE = "Content-Type";
+
+    String CONTENT_TYPE_JSON = "application/json";
+
+    String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 }

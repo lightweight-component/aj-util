@@ -23,6 +23,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * String URL/Base64 encoder
@@ -73,6 +75,20 @@ public class EncodeTools {
     }
 
     /**
+     * URL 编码
+     *
+     * @param value str
+     * @return encode str
+     */
+    public static String urlEncodeSafe(String value) {
+        if (value == null)
+            return "";
+
+        String encoded = urlEncode(value);
+        return encoded.replace("+", "%20").replace("*", "%2A").replace("~", "%7E").replace("/", "%2F");
+    }
+
+    /**
      * URL 解码
      *
      * @param str 输入的字符串
@@ -85,6 +101,31 @@ public class EncodeTools {
             log.warn("URL 解码", e);
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 字符串转 Map，格式为 {@code xxx=xxx&xxx=xxx}
+     *
+     * @param accessTokenStr 待转换的字符串
+     * @return map
+     */
+    public static Map<String, String> parseStringToMap(String accessTokenStr) {
+        Map<String, String> res;
+
+        if (accessTokenStr.contains("&")) {
+            String[] fields = accessTokenStr.split("&");
+            res = new HashMap<>((int) (fields.length / 0.75 + 1));
+
+            for (String field : fields) {
+                if (field.contains("=")) {
+                    String[] keyValue = field.split("=");
+                    res.put(urlDecode(keyValue[0]), keyValue.length == 2 ? urlDecode(keyValue[1]) : null);
+                }
+            }
+        } else
+            res = new HashMap<>(0);
+
+        return res;
     }
 
     // ---------------------- ENCODE Base64 -----------------------------
