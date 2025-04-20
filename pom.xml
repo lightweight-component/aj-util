@@ -17,14 +17,14 @@
     <version>1.2.2</version>
     <packaging>jar</packaging>
 
+    <url>https://aj-util.ajaxjs.com/</url>
     <scm>
         <url>https://github.com/lightweight-component/aj-util</url>
-       <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
+        <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
     </scm>
-
     <issueManagement>
         <system>GitCode Issues</system>
-        <url>https://gitcode.com/zhangxin09/aj-framework/issues</url>
+        <url>https://github.com/lightweight-component/aj-util/issues</url>
     </issueManagement>
 
     <dependencies>
