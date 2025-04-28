@@ -37,8 +37,8 @@
 
 - [教程（英文）](https://framework.ajaxjs.com/aj-util/)
 - [教程（中文）](https://framework.ajaxjs.com/aj-util/cn/)
+- [Deepseek 教程](https://deepwiki.com/lightweight-component/aj-util) 
 - [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
--
 
 ## 安装
 
