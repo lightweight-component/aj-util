@@ -16,13 +16,12 @@
     <description>Small Java Utils Library with many powerful components</description>
     <version>1.2.3</version>
     <packaging>jar</packaging>
-    <url>https://framework.ajaxjs.com/aj-util</url>
 
+    <url>https://aj-util.ajaxjs.com/</url>
     <scm>
         <url>https://github.com/lightweight-component/aj-util</url>
         <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
     </scm>
-
     <issueManagement>
         <system>Github Issues</system>
         <url>https://github.com/lightweight-component/aj-util/issues</url>
