@@ -18,11 +18,11 @@ import java.util.Map;
  */
 @Slf4j
 public class JsonUtil {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
 //        objectMapper.registerModule(new JavaTimeModule()); // 用于处理 Java 8 时间日期类型（如 LocalDate、LocalDateTime 等）的序列化和反序列化。
-        objectMapper.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION); // 如果 JSON 中存在重复的键，将抛出异常
+        OBJECT_MAPPER.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION); // 如果 JSON 中存在重复的键，将抛出异常
     }
 
     /**
@@ -33,7 +33,7 @@ public class JsonUtil {
      */
     public static String toJson(Object obj) {
         try {
-            return objectMapper.writeValueAsString(obj);
+            return OBJECT_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             log.warn("Converts a Java object to a JSON string.", e);
             throw new RuntimeException("Failed to convert object to JSON", e);
@@ -48,7 +48,7 @@ public class JsonUtil {
      */
     public static String toJsonPretty(Object obj) {
         try {
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+            return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             log.warn("Java Bean, list, array converts to pretty json string.", e);
             throw new RuntimeException("序列化异常", e);
@@ -66,7 +66,7 @@ public class JsonUtil {
      */
     public static <T> T fromJson(String json, Class<T> valueType) {
         try {
-            return objectMapper.readValue(json, valueType);
+            return OBJECT_MAPPER.readValue(json, valueType);
         } catch (Exception e) {
             log.warn("Converts a JSON string to an object of the specified type.", e);
             throw new RuntimeException("Failed to convert JSON to object", e);
@@ -86,7 +86,7 @@ public class JsonUtil {
      */
     public static <T> T fromJson(String json, JavaType valueType) {
         try {
-            return objectMapper.readValue(json, valueType);
+            return OBJECT_MAPPER.readValue(json, valueType);
         } catch (Exception e) {
             log.warn("Converts a JSON string to a Java object.", e);
             throw new RuntimeException("Failed to convert JSON to object", e);
@@ -102,7 +102,7 @@ public class JsonUtil {
      * @return Returns a Map containing keys of type String and values of the specified JavaBean type
      */
     public static <T> Map<String, T> json2map(String jsonStr, Class<T> clazz) {
-        JavaType type = objectMapper.getTypeFactory().constructParametricType(Map.class, String.class, clazz);
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(Map.class, String.class, clazz);
 
         return fromJson(jsonStr, type);
     }
@@ -119,7 +119,7 @@ public class JsonUtil {
      * @return Returns a LinkedHashMap containing String keys and JavaBean values of the specified type
      */
     public static <T> LinkedHashMap<String, T> json2sortMap(String jsonStr, Class<T> clazz) {
-        JavaType type = objectMapper.getTypeFactory().constructParametricType(LinkedHashMap.class, String.class, clazz);
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(LinkedHashMap.class, String.class, clazz);
 
         return fromJson(jsonStr, type);
     }
@@ -157,14 +157,14 @@ public class JsonUtil {
      * @return Returns a list of Java Bean objects converted from the JSON array string
      */
     public static <T> List<T> json2list(String jsonArrayStr, Class<T> clazz) {
-        JavaType type = objectMapper.getTypeFactory().constructParametricType(List.class, clazz);
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(List.class, clazz);
 
         return fromJson(jsonArrayStr, type);
     }
 
     public static List<Map<String, Object>> json2mapList(String jsonArrayStr) {
         try {
-            return objectMapper.readValue(jsonArrayStr, new TypeReference<List<Map<String, Object>>>() {
+            return OBJECT_MAPPER.readValue(jsonArrayStr, new TypeReference<List<Map<String, Object>>>() {
             });
         } catch (JsonProcessingException e) {
             log.warn("json2mapList.", e);
@@ -183,7 +183,7 @@ public class JsonUtil {
      * @return Returns an object of the converted target type
      */
     public static <T> T convertValue(Object obj, Class<T> clazz) {
-        return objectMapper.convertValue(obj, clazz);
+        return OBJECT_MAPPER.convertValue(obj, clazz);
     }
 
     /**
@@ -207,13 +207,13 @@ public class JsonUtil {
      * @return Returns a map converted from the Java Bean, with String as the key and the specified generic type as the value
      */
     public static <T> Map<String, T> pojo2map(Object obj, Class<T> clazz) {
-        JavaType type = objectMapper.getTypeFactory().constructParametricType(Map.class, String.class, clazz);
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(Map.class, String.class, clazz);
 
-        return objectMapper.convertValue(obj, type);
+        return OBJECT_MAPPER.convertValue(obj, type);
     }
 
     public static <T> T map2pojo(Map<String, Object> map, Class<T> clazz) {
-        return objectMapper.convertValue(map, clazz);
+        return OBJECT_MAPPER.convertValue(map, clazz);
     }
 
     /**
@@ -224,7 +224,7 @@ public class JsonUtil {
      */
     public static JsonNode json2Node(String json) {
         try {
-            return objectMapper.readTree(json);
+            return OBJECT_MAPPER.readTree(json);
         } catch (IOException e) {
             log.warn("JSON string converts to node.", e);
             throw new RuntimeException(e);

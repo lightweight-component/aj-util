@@ -14,17 +14,18 @@
     <artifactId>ajaxjs-util</artifactId>
     <name>aj-util</name>
     <description>Small Java Utils Library with many powerful components</description>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <packaging>jar</packaging>
+    <url>https://framework.ajaxjs.com/aj-util</url>
 
     <scm>
         <url>https://github.com/lightweight-component/aj-util</url>
-       <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
+        <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
     </scm>
 
     <issueManagement>
-        <system>GitCode Issues</system>
-        <url>https://gitcode.com/zhangxin09/aj-framework/issues</url>
+        <system>Github Issues</system>
+        <url>https://github.com/lightweight-component/aj-util/issues</url>
     </issueManagement>
 
     <dependencies>
