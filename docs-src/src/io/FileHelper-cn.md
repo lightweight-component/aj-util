@@ -9,6 +9,7 @@ layout: layouts/aj-util-cn.njk
 ---
 
 # FileHelper
+
 `FileHelper` 类简化了常见的文件系统操作，例如读取和写入文件内容、删除文件或目录、列出目录内容、创建目录以及检查文件或目录是否存在。 它利用 `java.nio.file` 包来实现高效且现代的文件 I/O。
 
 ## 方法
@@ -17,10 +18,10 @@ layout: layouts/aj-util-cn.njk
 
 将文件的全部内容读取到字符串中。
 
-*   **参数：**
-    *   `filePath`：文件的路径。
-*   **返回值：** 文件的内容，以字符串形式表示。
-*   **抛出：** 如果在文件读取期间发生错误，则抛出 `UncheckedIOException`。
+* **参数：**
+    * `filePath`：文件的路径。
+* **返回值：** 文件的内容，以字符串形式表示。
+* **抛出：** 如果在文件读取期间发生错误，则抛出 `UncheckedIOException`。
 
 **示例：**
 
@@ -33,10 +34,10 @@ System.out.println(content);
 
 将字符串写入文件，覆盖任何现有内容。
 
-*   **参数：**
-    *   `filePath`：文件的路径。
-    *   `content`：要写入文件的字符串。
-*   **抛出：** 如果在文件写入期间发生错误，则抛出 `UncheckedIOException`。
+* **参数：**
+    * `filePath`：文件的路径。
+    * `content`：要写入文件的字符串。
+* **抛出：** 如果在文件写入期间发生错误，则抛出 `UncheckedIOException`。
 
 **示例：**
 
@@ -48,9 +49,9 @@ FileHelper.writeFileContent("path/to/my/file.txt", "你好，世界！");
 
 删除文件或目录。 如果路径是目录，它将递归删除其中的所有文件和子目录。
 
-*   **参数：**
-    *   `filePath`：文件或目录的路径。
-*   **抛出：** 如果在删除期间发生错误，则抛出 `UncheckedIOException`。
+* **参数：**
+    * `filePath`：文件或目录的路径。
+* **抛出：** 如果在删除期间发生错误，则抛出 `UncheckedIOException`。
 
 **示例：**
 
@@ -63,10 +64,10 @@ FileHelper.deleteFileOrDirectory("path/to/my/directory");
 
 列出目录中文件和子目录的名称。
 
-*   **参数：**
-    *   `directoryPath`：目录的路径。
-*   **返回值：** 字符串列表，其中每个字符串是文件或子目录的名称。
-*   **抛出：** 如果在目录列表期间发生错误，则抛出 `UncheckedIOException`。
+* **参数：**
+    * `directoryPath`：目录的路径。
+* **返回值：** 字符串列表，其中每个字符串是文件或子目录的名称。
+* **抛出：** 如果在目录列表期间发生错误，则抛出 `UncheckedIOException`。
 
 **示例：**
 
@@ -81,9 +82,9 @@ for (String item : contents) {
 
 创建目录，包括任何必要的父目录。
 
-*   **参数：**
-    *   `directoryPath`：要创建的目录的路径。
-*   **抛出：** 如果在目录创建期间发生错误，则抛出 `UncheckedIOException`。
+* **参数：**
+    * `directoryPath`：要创建的目录的路径。
+* **抛出：** 如果在目录创建期间发生错误，则抛出 `UncheckedIOException`。
 
 **示例：**
 
@@ -95,9 +96,9 @@ FileHelper.createDirectory("path/to/my/new/directory");
 
 检查文件或目录是否存在。
 
-*   **参数：**
-    *   `filePath`：文件或目录的路径。
-*   **返回值：** 如果文件或目录存在，则返回 `true`；否则返回 `false`。
+* **参数：**
+    * `filePath`：文件或目录的路径。
+* **返回值：** 如果文件或目录存在，则返回 `true`；否则返回 `false`。
 
 **示例：**
 

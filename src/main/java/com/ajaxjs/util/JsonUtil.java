@@ -58,7 +58,7 @@ public class JsonUtil {
     /**
      * Converts a JSON string to an object of the specified type.
      *
-     * @param jsonStr      The JSON string representing the data to be converted.
+     * @param jsonStr   The JSON string representing the data to be converted.
      * @param valueType The class type of the target object.
      * @param <T>       The generic type parameter indicating the type of the returned object.
      * @return The converted object of type T.

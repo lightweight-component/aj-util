@@ -18,9 +18,9 @@ layout: layouts/aj-util-cn.njk
 
 生成一个具有指定位数的随机整数。
 
-*   **参数说明：**
-    *   `numDigits`: 随机数的位数。
-*   **返回值:** 具有指定位数的随机整数。
+* **参数说明：**
+    * `numDigits`: 随机数的位数。
+* **返回值:** 具有指定位数的随机整数。
 
 **示例:**
 
@@ -33,7 +33,7 @@ int randomNumber = RandomTools.generateRandomNumber(6);
 
 生成一个6位的随机整数。
 
-*   **返回值:** 一个6位的随机整数。
+* **返回值:** 一个6位的随机整数。
 
 **示例:**
 
@@ -46,9 +46,9 @@ int randomNumber = RandomTools.generateRandomNumber();
 
 生成一个具有指定长度的随机字符串。
 
-*   **参数说明：**
-    *   `length`: 随机字符串的长度。
-*   **返回值:** 具有指定长度的随机字符串。
+* **参数说明：**
+    * `length`: 随机字符串的长度。
+* **返回值:** 具有指定长度的随机字符串。
 
 **示例:**
 
@@ -61,7 +61,7 @@ String randomString = RandomTools.generateRandomString(6);
 
 生成一个6字符的随机字符串。
 
-*   **返回值:** 一个6字符的随机字符串。
+* **返回值:** 一个6字符的随机字符串。
 
 **示例:**
 

@@ -7,7 +7,9 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # Methods
+
 The `Methods` class provides methods for dynamically retrieving and invoking methods, as well as handling method parameters. These methods facilitate efficient and convenient manipulation of Java methods at runtime.
 
 ## Methods
@@ -16,10 +18,10 @@ The `Methods` class provides methods for dynamically retrieving and invoking met
 
 Retrieves a declared method of a class by its name.
 
-*   **Parameters:**
-    *   `clz`: The class to retrieve the method from.
-    *   `methodName`: The name of the method.
-*   **Returns:** The retrieved method, or `null` if the method does not exist.
+* **Parameters:**
+    * `clz`: The class to retrieve the method from.
+    * `methodName`: The name of the method.
+* **Returns:** The retrieved method, or `null` if the method does not exist.
 
 **Example:**
 
@@ -32,11 +34,11 @@ Method method = Methods.getDeclaredMethod(String.class, "length");
 
 Retrieves a method of a class or an instance by its name and parameter types.
 
-*   **Parameters:**
-    *   `obj`: The instance or class to retrieve the method from.
-    *   `method`: The name of the method.
-    *   `args`: The parameter types of the method.
-*   **Returns:** The retrieved method, or `null` if the method does not exist.
+* **Parameters:**
+    * `obj`: The instance or class to retrieve the method from.
+    * `method`: The name of the method.
+    * `args`: The parameter types of the method.
+* **Returns:** The retrieved method, or `null` if the method does not exist.
 
 **Example:**
 
@@ -49,11 +51,11 @@ Method method = Methods.getMethod(String.class, "substring", int.class, int.clas
 
 Retrieves a method of a class or an instance by its name and parameters.
 
-*   **Parameters:**
-    *   `obj`: The instance or class to retrieve the method from.
-    *   `method`: The name of the method.
-    *   `args`: The parameters of the method.
-*   **Returns:** The retrieved method, or `null` if the method does not exist.
+* **Parameters:**
+    * `obj`: The instance or class to retrieve the method from.
+    * `method`: The name of the method.
+    * `args`: The parameters of the method.
+* **Returns:** The retrieved method, or `null` if the method does not exist.
 
 **Example:**
 
@@ -66,11 +68,11 @@ Method method = Methods.getMethod("example", "substring", 1, 3);
 
 Searches for a method by its name and parameter, automatically upcasting the parameter type.
 
-*   **Parameters:**
-    *   `clz`: The class to search for the method in.
-    *   `method`: The name of the method.
-    *   `arg`: The parameter of the method.
-*   **Returns:** The retrieved method, or `null` if the method does not exist.
+* **Parameters:**
+    * `clz`: The class to search for the method in.
+    * `method`: The name of the method.
+    * `arg`: The parameter of the method.
+* **Returns:** The retrieved method, or `null` if the method does not exist.
 
 **Example:**
 
@@ -83,11 +85,11 @@ Method method = Methods.getMethodByUpCastingSearch(List.class, "add", "example")
 
 Retrieves a declared method of a class by its name and parameter, automatically upcasting the parameter type.
 
-*   **Parameters:**
-    *   `clz`: The class to retrieve the method from.
-    *   `method`: The name of the method.
-    *   `arg`: The parameter of the method.
-*   **Returns:** The retrieved method, or `null` if the method does not exist.
+* **Parameters:**
+    * `clz`: The class to retrieve the method from.
+    * `method`: The name of the method.
+    * `arg`: The parameter of the method.
+* **Returns:** The retrieved method, or `null` if the method does not exist.
 
 **Example:**
 
@@ -224,4 +226,5 @@ public class TestReflectUtil {
 
 ## Conclusion
 
-The `Methods` class provides a set of useful utilities for working with Java methods through reflection. By using these methods, you can simplify your code and handle method operations more efficiently. Remember to consult the library's Javadoc for the most up-to-date information and additional methods.
+The `Methods` class provides a set of useful utilities for working with Java methods through reflection. By using these methods, you can simplify your code and handle method operations more efficiently. Remember to
+consult the library's Javadoc for the most up-to-date information and additional methods.

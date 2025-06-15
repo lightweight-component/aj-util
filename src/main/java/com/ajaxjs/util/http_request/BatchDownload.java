@@ -49,7 +49,7 @@ public class BatchDownload {
      */
     public BatchDownload(String[] arr, String saveFolder, Supplier<String> newFileNameFn) {
         latch = new CountDownLatch(arr.length);
-        
+
         this.arr = arr;
         this.saveFolder = saveFolder;
         this.newFileNameFn = newFileNameFn;

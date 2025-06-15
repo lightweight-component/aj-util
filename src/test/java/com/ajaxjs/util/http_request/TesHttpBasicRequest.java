@@ -3,8 +3,8 @@ package com.ajaxjs.util.http_request;
 import org.junit.jupiter.api.Test;
 
 public class TesHttpBasicRequest {
-	@Test
-	public void testGet() {
+    @Test
+    public void testGet() {
 //        String html = HttpBasicRequest.simpleGET(url), html2 = NetUtil.get(url);
 //        assertEquals(html, html2);// 两种方法作用相同
 
@@ -16,55 +16,55 @@ public class TesHttpBasicRequest {
 //		Object bean = ApiTool.get("https://beta.bingolink.biz/iamapi/user/af38ddf7-dd53-4bad-bee9-0d81abefb817?access_token=bG9jYWw6RUxFQ2Y2aEZnY206R2VESE1SQmZtVQ",
 //				ErrorResult.class, ErrorResult.class);
 //		System.out.println("Bean: " + ((ErrorResult) bean).getError());
-	}
+    }
 
-	/**
-	 * OAuth2 标准接口统一错误响应规范
-	 *
-	 * @author Frank Cheung
-	 */
-	public static class ErrorResult {
-		/**
-		 * HTTP 响应状态码
-		 */
-		private Integer http_code;
+    /**
+     * OAuth2 标准接口统一错误响应规范
+     *
+     * @author Frank Cheung
+     */
+    public static class ErrorResult {
+        /**
+         * HTTP 响应状态码
+         */
+        private Integer http_code;
 
-		/**
-		 * 错误码，按照标准oauth2定义
-		 */
-		private String error;
+        /**
+         * 错误码，按照标准oauth2定义
+         */
+        private String error;
 
-		/**
-		 * 错误代码，具体的错误原因代码(扩展)
-		 */
-		private String error_description;
+        /**
+         * 错误代码，具体的错误原因代码(扩展)
+         */
+        private String error_description;
 
-		public Integer getHttp_code() {
-			return http_code;
-		}
+        public Integer getHttp_code() {
+            return http_code;
+        }
 
-		public void setHttp_code(Integer http_code) {
-			this.http_code = http_code;
-		}
+        public void setHttp_code(Integer http_code) {
+            this.http_code = http_code;
+        }
 
-		public String getError() {
-			return error;
-		}
+        public String getError() {
+            return error;
+        }
 
-		public void setError(String error) {
-			this.error = error;
-		}
+        public void setError(String error) {
+            this.error = error;
+        }
 
-		public String getError_description() {
-			return error_description;
-		}
+        public String getError_description() {
+            return error_description;
+        }
 
-		public void setError_description(String error_description) {
-			this.error_description = error_description;
-		}
-	}
+        public void setError_description(String error_description) {
+            this.error_description = error_description;
+        }
+    }
 
-	// @Test
+    // @Test
 //  public void combo() {
 //      String html = NetUtil.get("https://gitee.com/sp42_admin/ajaxjs", true, conn -> {
 //          HttpBasicRequest.setUserAgentDefault.accept(conn);

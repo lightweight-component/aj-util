@@ -7,9 +7,11 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
- # RegExpUtils Tutorial
 
-The `RegExpUtils` class provides methods for matching strings against regular expressions, extracting matched groups, and finding all matches in a string. These methods can be used for validating input, parsing text, and more.
+# RegExpUtils Tutorial
+
+The `RegExpUtils` class provides methods for matching strings against regular expressions, extracting matched groups, and finding all matches in a string. These methods can be used for validating input, parsing text, and
+more.
 
 ## Methods
 
@@ -17,10 +19,10 @@ The `RegExpUtils` class provides methods for matching strings against regular ex
 
 Checks if a string matches a given regular expression pattern.
 
-*   **Parameters:**
-    *   `pattern`: The regular expression pattern.
-    *   `str`: The string to match against the pattern.
-*   **Returns:** `true` if the string matches the pattern, `false` otherwise.
+* **Parameters:**
+    * `pattern`: The regular expression pattern.
+    * `str`: The string to match against the pattern.
+* **Returns:** `true` if the string matches the pattern, `false` otherwise.
 
 **Example:**
 
@@ -34,11 +36,11 @@ boolean matches = RegExpUtils.isMatch(pattern, "abc");
 
 Finds a match in a string using a regular expression and returns the specified group.
 
-*   **Parameters:**
-    *   `regexp`: The regular expression.
-    *   `str`: The string to match against.
-    *   `groupIndex`: The group index to return. If -1, returns the last group.
-*   **Returns:** The matched group, or `null` if no match is found.
+* **Parameters:**
+    * `regexp`: The regular expression.
+    * `str`: The string to match against.
+    * `groupIndex`: The group index to return. If -1, returns the last group.
+* **Returns:** The matched group, or `null` if no match is found.
 
 **Example:**
 
@@ -51,10 +53,10 @@ String match = RegExpUtils.regMatch("^a(b)", "abc", 1);
 
 Finds a match in a string using a regular expression and returns the first group.
 
-*   **Parameters:**
-    *   `regexp`: The regular expression.
-    *   `str`: The string to match against.
-*   **Returns:** The matched group, or `null` if no match is found.
+* **Parameters:**
+    * `regexp`: The regular expression.
+    * `str`: The string to match against.
+* **Returns:** The matched group, or `null` if no match is found.
 
 **Example:**
 
@@ -67,10 +69,10 @@ String match = RegExpUtils.regMatch("^a", "abc");
 
 Finds all matches in a string using a regular expression and returns them as an array.
 
-*   **Parameters:**
-    *   `regexp`: The regular expression.
-    *   `str`: The string to match against.
-*   **Returns:** An array of all matched groups.
+* **Parameters:**
+    * `regexp`: The regular expression.
+    * `str`: The string to match against.
+* **Returns:** An array of all matched groups.
 
 **Example:**
 

@@ -7,8 +7,10 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # StreamHelper
- The `StreamHelper` class provides static methods to perform common operations on Java streams.  It focuses on simplifying the conversion of input streams to strings and efficiently copying data between streams.
+
+The `StreamHelper` class provides static methods to perform common operations on Java streams. It focuses on simplifying the conversion of input streams to strings and efficiently copying data between streams.
 
 ## Methods
 
@@ -16,9 +18,9 @@ layout: layouts/aj-util.njk
 
 Reads an input stream and converts it to a string using the default UTF-8 charset.
 
-*   **Parameters:**
-    *   `in`: The input stream to read from. The stream is not closed by this method.
-*   **Returns:** The content of the input stream as a string.
+* **Parameters:**
+    * `in`: The input stream to read from. The stream is not closed by this method.
+* **Returns:** The content of the input stream as a string.
 
 **Example:**
 
@@ -32,10 +34,10 @@ System.out.println(content); // Output: Hello, World!\n
 
 Reads an input stream and converts it to a string using the specified charset.
 
-*   **Parameters:**
-    *   `in`: The input stream to read from.  The stream is not closed by this method.
-    *   `encode`: The charset to use for decoding the input stream.
-*   **Returns:** The content of the input stream as a string.
+* **Parameters:**
+    * `in`: The input stream to read from. The stream is not closed by this method.
+    * `encode`: The charset to use for decoding the input stream.
+* **Returns:** The content of the input stream as a string.
 
 **Example:**
 
@@ -49,10 +51,10 @@ System.out.println(content); // Output: 你好，世界！\n
 
 Reads the input stream line by line and applies the given consumer function to each line.
 
-*   **Parameters:**
-    *   `in`: The input stream to read from. The stream is closed within the method.
-    *   `encode`: The charset to use for decoding the input stream.
-    *   `fn`: A `Consumer` that accepts a string (a line from the input stream) and performs an action.
+* **Parameters:**
+    * `in`: The input stream to read from. The stream is closed within the method.
+    * `encode`: The charset to use for decoding the input stream.
+    * `fn`: A `Consumer` that accepts a string (a line from the input stream) and performs an action.
 
 **Example:**
 

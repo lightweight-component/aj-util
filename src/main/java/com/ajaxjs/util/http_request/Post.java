@@ -226,7 +226,7 @@ public class Post extends Base implements HttpConstants {
      * @return 返回一个JSON字符串，表示给定对象的数据。
      */
     static String toJsonStr(Object params) {
-        String json =  JsonUtil.toJson(params);
+        String json = JsonUtil.toJson(params);
         json = json.replaceAll("[\\r\\n]", ""); // 不要换行，否则会不承认这个格式
         log.info(json);
 

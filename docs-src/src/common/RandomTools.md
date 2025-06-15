@@ -7,6 +7,7 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # RandomTools Tutorial
 
 The `RandomTools` class provides methods for generating random integers and strings. These methods can be used when you need random values for testing, simulations, or other purposes.
@@ -17,9 +18,9 @@ The `RandomTools` class provides methods for generating random integers and stri
 
 Generates a random integer with the specified number of digits.
 
-*   **Parameters:**
-    *   `numDigits`: The number of digits for the random number.
-*   **Returns:** A random integer with the specified number of digits.
+* **Parameters:**
+    * `numDigits`: The number of digits for the random number.
+* **Returns:** A random integer with the specified number of digits.
 
 **Example:**
 
@@ -32,7 +33,7 @@ int randomNumber = RandomTools.generateRandomNumber(6);
 
 Generates a random integer with 6 digits.
 
-*   **Returns:** A random 6-digit integer.
+* **Returns:** A random 6-digit integer.
 
 **Example:**
 
@@ -45,9 +46,9 @@ int randomNumber = RandomTools.generateRandomNumber();
 
 Generates a random string with the specified length.
 
-*   **Parameters:**
-    *   `length`: The length of the random string.
-*   **Returns:** A random string with the specified length.
+* **Parameters:**
+    * `length`: The length of the random string.
+* **Returns:** A random string with the specified length.
 
 **Example:**
 
@@ -60,7 +61,7 @@ String randomString = RandomTools.generateRandomString(6);
 
 Generates a random string with 6 characters.
 
-*   **Returns:** A random 6-character string.
+* **Returns:** A random 6-character string.
 
 **Example:**
 

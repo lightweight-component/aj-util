@@ -23,9 +23,9 @@ public class TestEncodeTools {
     }
 
     @Test
-     void testUrlChinese() {
-		assertEquals("%E4%B8%AD%E5%9B%BD", urlEncode("中国"));
-		assertEquals("中国", urlDecode("%E4%B8%AD%E5%9B%BD"));
+    void testUrlChinese() {
+        assertEquals("%E4%B8%AD%E5%9B%BD", urlEncode("中国"));
+        assertEquals("中国", urlDecode("%E4%B8%AD%E5%9B%BD"));
     }
 
     @Test

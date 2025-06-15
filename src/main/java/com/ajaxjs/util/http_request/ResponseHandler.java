@@ -108,7 +108,7 @@ public abstract class ResponseHandler {
             if (resp.getEx() != null) {
                 map = new HashMap<>();
                 map.put(Base.ERR_MSG, resp.getEx().getMessage());
-            } else map =  JsonUtil.json2map(resp.getResponseText());
+            } else map = JsonUtil.json2map(resp.getResponseText());
 
             list = new ArrayList<>();
             list.add(map);

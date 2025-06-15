@@ -7,9 +7,12 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # EnumsUtil
 
-This tutorial provides an overview of the `EnumsUtil` class, which is part of the `lightweight-component/aj-util` library. The `EnumsUtil` class provides a way to retrieve enum instances and their associated messages (or other values) based on a code, when the enums implement the `IEnum` interface. This is particularly useful when you have enums where each constant has a code and a corresponding descriptive message, and you need to look up the enum by its code.
+This tutorial provides an overview of the `EnumsUtil` class, which is part of the `lightweight-component/aj-util` library. The `EnumsUtil` class provides a way to retrieve enum instances and their associated messages (or
+other values) based on a code, when the enums implement the `IEnum` interface. This is particularly useful when you have enums where each constant has a code and a corresponding descriptive message, and you need to look
+up the enum by its code.
 
 ## The `IEnum` Interface
 
@@ -26,8 +29,8 @@ public interface IEnum<E, V> {
 
 Where:
 
-*   `E` is the type of the code (e.g., `String`, `Integer`).
-*   `V` is the type of the message (or associated value).
+* `E` is the type of the code (e.g., `String`, `Integer`).
+* `V` is the type of the message (or associated value).
 
 ## Methods
 
@@ -35,10 +38,10 @@ Where:
 
 Retrieves an `Optional<T>` containing the enum instance that matches the given code.
 
-*   **Parameters:**
-    *   `code`: The code to search for.
-    *   `clz`: The `Class` object representing the enum type.
-*   **Returns:** An `Optional<T>` containing the enum instance if found, or `Optional.empty()` if no matching enum is found.
+* **Parameters:**
+    * `code`: The code to search for.
+    * `clz`: The `Class` object representing the enum type.
+* **Returns:** An `Optional<T>` containing the enum instance if found, or `Optional.empty()` if no matching enum is found.
 
 **Example:**
 
@@ -56,10 +59,10 @@ if (type.isPresent()) {
 
 Retrieves the message (or associated value) of the enum instance that matches the given code.
 
-*   **Parameters:**
-    *   `code`: The code to search for.
-    *   `cla`: The `Class` object representing the enum type.
-*   **Returns:** The message (or associated value) of the enum instance, or `null` if no matching enum is found.
+* **Parameters:**
+    * `code`: The code to search for.
+    * `cla`: The `Class` object representing the enum type.
+* **Returns:** The message (or associated value) of the enum instance, or `null` if no matching enum is found.
 
 **Example:**
 
@@ -161,6 +164,8 @@ public class TestEnumsUtil {
 
 ## Conclusion
 
-The `EnumsUtil` class provides a convenient way to work with enums that implement the `IEnum` interface, allowing you to easily retrieve enum instances and their associated values based on a code. This can be particularly useful in applications where you need to map codes to enum values and their corresponding messages.
+The `EnumsUtil` class provides a convenient way to work with enums that implement the `IEnum` interface, allowing you to easily retrieve enum instances and their associated values based on a code. This can be
+particularly useful in applications where you need to map codes to enum values and their corresponding messages.
 
-**Important Note:** The search results may be incomplete. To view more results, you can use this link: [https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil](https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil) in the GitHub UI.
+**Important Note:** The search results may be incomplete. To view more results, you can use this
+link: [https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil](https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil) in the GitHub UI.

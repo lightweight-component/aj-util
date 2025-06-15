@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestObjectHelper {
 

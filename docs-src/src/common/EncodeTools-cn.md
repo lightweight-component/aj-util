@@ -18,9 +18,9 @@ layout: layouts/aj-util-cn.njk
 
 使用 URL 编码对字符串进行编码。
 
-*   **参数说明：**
-    *   `str`: 要编码的输入字符串。
-*   **返回值:** URL 编码后的字符串。
+* **参数说明：**
+    * `str`: 要编码的输入字符串。
+* **返回值:** URL 编码后的字符串。
 
 **示例:**
 
@@ -33,9 +33,9 @@ String encoded = EncodeTools.urlEncode("Hello World!");
 
 解码 URL 编码的字符串。
 
-*   **参数说明：**
-    *   `str`: 要解码的 URL 编码字符串。
-*   **返回值:** 解码后的字符串。
+* **参数说明：**
+    * `str`: 要解码的 URL 编码字符串。
+* **返回值:** 解码后的字符串。
 
 **示例:**
 
@@ -48,9 +48,9 @@ String decoded = EncodeTools.urlDecode("Hello%20World%21");
 
 使用 Base64 编码对字节数组进行编码。
 
-*   **参数说明：**
-    *   `bytes`: 要编码的字节数组。
-*   **返回值:** Base64 编码后的字节数组。
+* **参数说明：**
+    * `bytes`: 要编码的字节数组。
+* **返回值:** Base64 编码后的字节数组。
 
 **示例:**
 
@@ -63,9 +63,9 @@ byte[] encodedBytes = EncodeTools.base64Encode("Hello World!".getBytes());
 
 使用 Base64 编码对字节数组进行编码，并返回结果字符串。
 
-*   **参数说明：**
-    *   `bytes`: 要编码的字节数组。
-*   **返回值:** Base64 编码后的字符串。
+* **参数说明：**
+    * `bytes`: 要编码的字节数组。
+* **返回值:** Base64 编码后的字符串。
 
 **示例:**
 
@@ -78,9 +78,9 @@ String encodedString = EncodeTools.base64EncodeToString("Hello World!".getBytes(
 
 解码 Base64 编码的字符串。
 
-*   **参数说明：**
-    *   `str`: 要解码的 Base64 编码字符串。
-*   **返回值:** 解码后的字节数组。
+* **参数说明：**
+    * `str`: 要解码的 Base64 编码字符串。
+* **返回值:** 解码后的字节数组。
 
 **示例:**
 
@@ -93,9 +93,9 @@ byte[] decodedBytes = EncodeTools.base64Decode("SGVsbG8gV29ybGQh");
 
 解码 Base64 编码的字符串，并返回结果字符串。
 
-*   **参数说明：**
-    *   `str`: 要解码的 Base64 编码字符串。
-*   **返回值:** 解码后的字符串。
+* **参数说明：**
+    * `str`: 要解码的 Base64 编码字符串。
+* **返回值:** 解码后的字符串。
 
 **示例:**
 

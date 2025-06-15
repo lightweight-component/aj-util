@@ -7,8 +7,11 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # Clazz
-The `Clazz` class provides methods for dynamically creating class instances, getting constructors, and checking if a class has constructors with parameters. These methods facilitate efficient and convenient handling of Java classes at runtime.
+
+The `Clazz` class provides methods for dynamically creating class instances, getting constructors, and checking if a class has constructors with parameters. These methods facilitate efficient and convenient handling of
+Java classes at runtime.
 
 ## Methods
 
@@ -16,16 +19,16 @@ The `Clazz` class provides methods for dynamically creating class instances, get
 
 Creates an instance of a class using the specified constructor and arguments.
 
-*   **Parameters:**
-    *   `constructor`: The constructor to use for creating the instance.
-    *   `args`: The arguments to pass to the constructor.
-*   **Returns:** The created instance of type `T`.
+* **Parameters:**
+    * `constructor`: The constructor to use for creating the instance.
+    * `args`: The arguments to pass to the constructor.
+* **Returns:** The created instance of type `T`.
 
 **Example:**
 
 ```java
-Constructor<String> constructor = String.class.getConstructor(String.class);
-String instance = Clazz.newInstance(constructor, "Hello");
+Constructor<String> constructor=String.class.getConstructor(String.class);
+        String instance=Clazz.newInstance(constructor,"Hello");
 // instance will be "Hello"
 ```
 
@@ -33,14 +36,14 @@ String instance = Clazz.newInstance(constructor, "Hello");
 
 Determines if a class has any constructors with parameters.
 
-*   **Parameters:**
-    *   `clz`: The class to check.
-*   **Returns:** `true` if the class has constructors with parameters, `false` otherwise.
+* **Parameters:**
+    * `clz`: The class to check.
+* **Returns:** `true` if the class has constructors with parameters, `false` otherwise.
 
 **Example:**
 
 ```java
-boolean hasArgsCon = Clazz.hasArgsCon(String.class);
+boolean hasArgsCon=Clazz.hasArgsCon(String.class);
 // hasArgsCon will be true
 ```
 
@@ -48,15 +51,15 @@ boolean hasArgsCon = Clazz.hasArgsCon(String.class);
 
 Creates an instance of a class by its name and casts it to the specified interface type.
 
-*   **Parameters:**
-    *   `className`: The full name of the class.
-    *   `clazz`: The interface type to cast to.
-*   **Returns:** The created instance of type `T`.
+* **Parameters:**
+    * `className`: The full name of the class.
+    * `clazz`: The interface type to cast to.
+* **Returns:** The created instance of type `T`.
 
 **Example:**
 
 ```java
-String instance = Clazz.newInstance("java.lang.String", String.class);
+String instance=Clazz.newInstance("java.lang.String",String.class);
 // instance will be an empty string
 ```
 
@@ -64,15 +67,15 @@ String instance = Clazz.newInstance("java.lang.String", String.class);
 
 Creates an instance of a class by its name and arguments.
 
-*   **Parameters:**
-    *   `clzName`: The full name of the class.
-    *   `args`: The arguments to pass to the constructor.
-*   **Returns:** The created instance as an `Object`.
+* **Parameters:**
+    * `clzName`: The full name of the class.
+    * `args`: The arguments to pass to the constructor.
+* **Returns:** The created instance as an `Object`.
 
 **Example:**
 
 ```java
-Object instance = Clazz.newInstance("java.lang.String", "Hello");
+Object instance=Clazz.newInstance("java.lang.String","Hello");
 // instance will be "Hello"
 ```
 
@@ -137,4 +140,5 @@ public class TestClazz {
 
 ## Conclusion
 
-The `Clazz` class provides a set of useful utilities for working with Java classes through reflection. By using these methods, you can simplify your code and handle class operations more efficiently. Remember to consult the library's Javadoc for the most up-to-date information and additional methods.
+The `Clazz` class provides a set of useful utilities for working with Java classes through reflection. By using these methods, you can simplify your code and handle class operations more efficiently. Remember to consult
+the library's Javadoc for the most up-to-date information and additional methods.

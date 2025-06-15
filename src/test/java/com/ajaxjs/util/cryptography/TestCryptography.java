@@ -4,7 +4,6 @@ package com.ajaxjs.util.cryptography;
 import com.ajaxjs.util.EncodeTools;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

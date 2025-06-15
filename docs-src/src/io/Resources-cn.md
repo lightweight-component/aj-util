@@ -9,6 +9,7 @@ layout: layouts/aj-util-cn.njk
 ---
 
 # Resources
+
 `Resources` 类提供静态方法来定位和检索类路径中或相对于特定类的资源。 这对于访问与应用程序捆绑在一起的配置文件、模板或其他数据文件特别有用。
 
 ## 方法
@@ -17,10 +18,10 @@ layout: layouts/aj-util-cn.njk
 
 检索位于类路径中的资源的路径。
 
-*   **参数：**
-    *   `resource`：资源文件的名称。 可以包括包目录（例如，`com/example/my_resource.txt`）。 空字符串返回类路径根目录。
-*   **返回值：** 资源的绝对路径。
-*   **抛出：** 如果找不到资源，则抛出 `RuntimeException`。
+* **参数：**
+    * `resource`：资源文件的名称。 可以包括包目录（例如，`com/example/my_resource.txt`）。 空字符串返回类路径根目录。
+* **返回值：** 资源的绝对路径。
+* **抛出：** 如果找不到资源，则抛出 `RuntimeException`。
 
 **示例：**
 
@@ -33,11 +34,11 @@ System.out.println(resourcePath);
 
 检索位于类路径中的资源的路径，并可选择进行 URL 解码。
 
-*   **参数：**
-    *   `resource`：资源文件的名称。
-    *   `isDecode`：一个布尔值，指示是否应解码 URL。
-*   **返回值：** 资源的绝对路径。
-*   **抛出：** 如果找不到资源，则抛出 `RuntimeException`。
+* **参数：**
+    * `resource`：资源文件的名称。
+    * `isDecode`：一个布尔值，指示是否应解码 URL。
+* **返回值：** 资源的绝对路径。
+* **抛出：** 如果找不到资源，则抛出 `RuntimeException`。
 
 **示例：**
 
@@ -50,10 +51,10 @@ System.out.println(resourcePath);
 
 检索位于相对于给定类的资源的路径。
 
-*   **参数：**
-    *   `clz`：用于定位资源的类。
-    *   `resource`：资源文件的名称。
-*   **返回值：** 资源的绝对路径；如果未找到，则返回 `null`。
+* **参数：**
+    * `clz`：用于定位资源的类。
+    * `resource`：资源文件的名称。
+* **返回值：** 资源的绝对路径；如果未找到，则返回 `null`。
 
 **示例：**
 
@@ -66,11 +67,11 @@ System.out.println(resourcePath);
 
 检索位于相对于给定类的资源的路径，并可选择进行 URL 解码。
 
-*   **参数：**
-    *   `clz`：用于定位资源的类。
-    *   `resource`：资源文件的名称。
-    *   `isDecode`：一个布尔值，指示是否应解码 URL。
-*   **返回值：** 资源的绝对路径；如果未找到，则返回 `null`。
+* **参数：**
+    * `clz`：用于定位资源的类。
+    * `resource`：资源文件的名称。
+    * `isDecode`：一个布尔值，指示是否应解码 URL。
+* **返回值：** 资源的绝对路径；如果未找到，则返回 `null`。
 
 **示例：**
 
@@ -83,10 +84,10 @@ System.out.println(resourcePath);
 
 从 Java 类文件中提取类名。
 
-*   **参数：**
-    *   `file`：Java 类文件。
-    *   `packageName`：类的包名。
-*   **返回值：** 完全限定的类名。
+* **参数：**
+    * `file`：Java 类文件。
+    * `packageName`：类的包名。
+* **返回值：** 完全限定的类名。
 
 **示例：**
 

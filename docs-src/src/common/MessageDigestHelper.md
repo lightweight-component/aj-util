@@ -7,9 +7,11 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
- # MessageDigestHelper Tutorial
 
-The `MessageDigestHelper` class provides methods for generating message digests using different algorithms like MD5, SHA-1, and SHA-256. These methods can be used to create hashes for verifying data integrity, storing passwords securely, and other cryptographic purposes.
+# MessageDigestHelper Tutorial
+
+The `MessageDigestHelper` class provides methods for generating message digests using different algorithms like MD5, SHA-1, and SHA-256. These methods can be used to create hashes for verifying data integrity, storing
+passwords securely, and other cryptographic purposes.
 
 ## Methods
 
@@ -17,9 +19,9 @@ The `MessageDigestHelper` class provides methods for generating message digests 
 
 Generates an MD5 hash for a given string.
 
-*   **Parameters:**
-    *   `str`: The input string to hash.
-*   **Returns:** The MD5 hash of the input string.
+* **Parameters:**
+    * `str`: The input string to hash.
+* **Returns:** The MD5 hash of the input string.
 
 **Example:**
 
@@ -32,9 +34,9 @@ String md5Hash = MessageDigestHelper.getMd5("Hello World!");
 
 Generates a SHA-1 hash for a given string.
 
-*   **Parameters:**
-    *   `str`: The input string to hash.
-*   **Returns:** The SHA-1 hash of the input string.
+* **Parameters:**
+    * `str`: The input string to hash.
+* **Returns:** The SHA-1 hash of the input string.
 
 **Example:**
 
@@ -47,9 +49,9 @@ String sha1Hash = MessageDigestHelper.getSHA1("Hello World!");
 
 Generates a SHA-256 hash for a given string.
 
-*   **Parameters:**
-    *   `str`: The input string to hash.
-*   **Returns:** The SHA-256 hash of the input string.
+* **Parameters:**
+    * `str`: The input string to hash.
+* **Returns:** The SHA-256 hash of the input string.
 
 **Example:**
 
@@ -62,9 +64,9 @@ String sha256Hash = MessageDigestHelper.getSHA256("Hello World!");
 
 Generates an MD5 hash for a given string and encodes it in Base64.
 
-*   **Parameters:**
-    *   `str`: The input string to hash.
-*   **Returns:** The Base64-encoded MD5 hash of the input string.
+* **Parameters:**
+    * `str`: The input string to hash.
+* **Returns:** The Base64-encoded MD5 hash of the input string.
 
 **Example:**
 
@@ -77,7 +79,7 @@ String md5Base64Hash = MessageDigestHelper.getMd5AsBase64("Hello World!");
 
 Returns the hash result for the configured algorithm, input string, and key (if provided).
 
-*   **Returns:** The hash result as a string.
+* **Returns:** The hash result as a string.
 
 **Example:**
 

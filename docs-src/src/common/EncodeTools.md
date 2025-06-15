@@ -7,9 +7,11 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # EncodeTools Tutorial
 
-The `EncodeTools` class provides methods for URL encoding, URL decoding, Base64 encoding, and Base64 decoding. These methods can be used to handle string encoding and decoding for various purposes, such as preparing strings for HTTP requests or encoding binary data.
+The `EncodeTools` class provides methods for URL encoding, URL decoding, Base64 encoding, and Base64 decoding. These methods can be used to handle string encoding and decoding for various purposes, such as preparing
+strings for HTTP requests or encoding binary data.
 
 ## Methods
 
@@ -17,9 +19,9 @@ The `EncodeTools` class provides methods for URL encoding, URL decoding, Base64 
 
 Encodes a string using URL encoding.
 
-*   **Parameters:**
-    *   `str`: The input string to encode.
-*   **Returns:** The URL-encoded string.
+* **Parameters:**
+    * `str`: The input string to encode.
+* **Returns:** The URL-encoded string.
 
 **Example:**
 
@@ -32,9 +34,9 @@ String encoded = EncodeTools.urlEncode("Hello World!");
 
 Decodes a URL-encoded string.
 
-*   **Parameters:**
-    *   `str`: The URL-encoded string to decode.
-*   **Returns:** The decoded string.
+* **Parameters:**
+    * `str`: The URL-encoded string to decode.
+* **Returns:** The decoded string.
 
 **Example:**
 
@@ -47,9 +49,9 @@ String decoded = EncodeTools.urlDecode("Hello%20World%21");
 
 Encodes a byte array using Base64 encoding.
 
-*   **Parameters:**
-    *   `bytes`: The byte array to encode.
-*   **Returns:** The Base64-encoded byte array.
+* **Parameters:**
+    * `bytes`: The byte array to encode.
+* **Returns:** The Base64-encoded byte array.
 
 **Example:**
 
@@ -62,9 +64,9 @@ byte[] encodedBytes = EncodeTools.base64Encode("Hello World!".getBytes());
 
 Encodes a byte array using Base64 encoding and returns the result as a string.
 
-*   **Parameters:**
-    *   `bytes`: The byte array to encode.
-*   **Returns:** The Base64-encoded string.
+* **Parameters:**
+    * `bytes`: The byte array to encode.
+* **Returns:** The Base64-encoded string.
 
 **Example:**
 
@@ -77,9 +79,9 @@ String encodedString = EncodeTools.base64EncodeToString("Hello World!".getBytes(
 
 Decodes a Base64-encoded string.
 
-*   **Parameters:**
-    *   `str`: The Base64-encoded string to decode.
-*   **Returns:** The decoded byte array.
+* **Parameters:**
+    * `str`: The Base64-encoded string to decode.
+* **Returns:** The decoded byte array.
 
 **Example:**
 
@@ -92,9 +94,9 @@ byte[] decodedBytes = EncodeTools.base64Decode("SGVsbG8gV29ybGQh");
 
 Decodes a Base64-encoded string and returns the result as a string.
 
-*   **Parameters:**
-    *   `str`: The Base64-encoded string to decode.
-*   **Returns:** The decoded string.
+* **Parameters:**
+    * `str`: The Base64-encoded string to decode.
+* **Returns:** The decoded string.
 
 **Example:**
 

@@ -7,8 +7,11 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # FileHelper
-The `FileHelper` class simplifies common file system operations, such as reading and writing file content, deleting files or directories, listing directory contents, creating directories, and checking for the existence of files or directories. It leverages the `java.nio.file` package for efficient and modern file I/O.
+
+The `FileHelper` class simplifies common file system operations, such as reading and writing file content, deleting files or directories, listing directory contents, creating directories, and checking for the existence
+of files or directories. It leverages the `java.nio.file` package for efficient and modern file I/O.
 
 ## Methods
 
@@ -16,10 +19,10 @@ The `FileHelper` class simplifies common file system operations, such as reading
 
 Reads the entire content of a file into a string.
 
-*   **Parameters:**
-    *   `filePath`: The path to the file.
-*   **Returns:** The content of the file as a string.
-*   **Throws:** `UncheckedIOException` if an error occurs during file reading.
+* **Parameters:**
+    * `filePath`: The path to the file.
+* **Returns:** The content of the file as a string.
+* **Throws:** `UncheckedIOException` if an error occurs during file reading.
 
 **Example:**
 
@@ -32,10 +35,10 @@ System.out.println(content);
 
 Writes a string to a file, overwriting any existing content.
 
-*   **Parameters:**
-    *   `filePath`: The path to the file.
-    *   `content`: The string to write to the file.
-*   **Throws:** `UncheckedIOException` if an error occurs during file writing.
+* **Parameters:**
+    * `filePath`: The path to the file.
+    * `content`: The string to write to the file.
+* **Throws:** `UncheckedIOException` if an error occurs during file writing.
 
 **Example:**
 
@@ -47,9 +50,9 @@ FileHelper.writeFileContent("path/to/my/file.txt", "Hello, World!");
 
 Deletes a file or directory. If the path is a directory, it will recursively delete all files and subdirectories within it.
 
-*   **Parameters:**
-    *   `filePath`: The path to the file or directory.
-*   **Throws:** `UncheckedIOException` if an error occurs during deletion.
+* **Parameters:**
+    * `filePath`: The path to the file or directory.
+* **Throws:** `UncheckedIOException` if an error occurs during deletion.
 
 **Example:**
 
@@ -62,10 +65,10 @@ FileHelper.deleteFileOrDirectory("path/to/my/directory");
 
 Lists the names of the files and subdirectories within a directory.
 
-*   **Parameters:**
-    *   `directoryPath`: The path to the directory.
-*   **Returns:** A list of strings, where each string is the name of a file or subdirectory.
-*   **Throws:** `UncheckedIOException` if an error occurs during directory listing.
+* **Parameters:**
+    * `directoryPath`: The path to the directory.
+* **Returns:** A list of strings, where each string is the name of a file or subdirectory.
+* **Throws:** `UncheckedIOException` if an error occurs during directory listing.
 
 **Example:**
 
@@ -80,9 +83,9 @@ for (String item : contents) {
 
 Creates a directory, including any necessary parent directories.
 
-*   **Parameters:**
-    *   `directoryPath`: The path to the directory to create.
-*   **Throws:** `UncheckedIOException` if an error occurs during directory creation.
+* **Parameters:**
+    * `directoryPath`: The path to the directory to create.
+* **Throws:** `UncheckedIOException` if an error occurs during directory creation.
 
 **Example:**
 
@@ -94,9 +97,9 @@ FileHelper.createDirectory("path/to/my/new/directory");
 
 Checks if a file or directory exists.
 
-*   **Parameters:**
-    *   `filePath`: The path to the file or directory.
-*   **Returns:** `true` if the file or directory exists, `false` otherwise.
+* **Parameters:**
+    * `filePath`: The path to the file or directory.
+* **Returns:** `true` if the file or directory exists, `false` otherwise.
 
 **Example:**
 

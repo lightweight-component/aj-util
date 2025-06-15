@@ -7,7 +7,9 @@ tags:
   - last one
 layout: layouts/aj-util.njk
 ---
+
 # XmlHelper
+
 The `XmlHelper` class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps. These methods can be used for processing and manipulating XML data.
 
 ## Methods
@@ -16,7 +18,7 @@ The `XmlHelper` class provides methods for parsing XML documents, retrieving ele
 
 Initializes a `DocumentBuilder` for XML parsing.
 
-*   **Returns:** A `DocumentBuilder` instance.
+* **Returns:** A `DocumentBuilder` instance.
 
 **Example:**
 
@@ -29,11 +31,11 @@ DocumentBuilder builder = XmlHelper.initBuilder();
 
 Retrieves nodes from an XML document using an XPath expression and processes them with a given function.
 
-*   **Parameters:**
-    *   `xml`: The path to the XML file.
-    *   `xpath`: The XPath expression to locate nodes.
-    *   `fn`: A function to process the nodes.
-*   **Returns:** None.
+* **Parameters:**
+    * `xml`: The path to the XML file.
+    * `xpath`: The XPath expression to locate nodes.
+    * `fn`: A function to process the nodes.
+* **Returns:** None.
 
 **Example:**
 
@@ -48,10 +50,10 @@ XmlHelper.xPath("path/to/xml/file.xml", "/root/element", node -> {
 
 Parses an XML string and processes the root element and its children with a given function.
 
-*   **Parameters:**
-    *   `xml`: The XML content as a string.
-    *   `fn`: A function to process the root element and its children.
-*   **Returns:** None.
+* **Parameters:**
+    * `xml`: The XML content as a string.
+    * `fn`: A function to process the root element and its children.
+* **Returns:** None.
 
 **Example:**
 
@@ -70,9 +72,9 @@ XmlHelper.parseXML(xmlContent, (node, nodeList) -> {
 
 Retrieves the root element of an XML string.
 
-*   **Parameters:**
-    *   `xml`: The XML content as a string.
-*   **Returns:** The root element.
+* **Parameters:**
+    * `xml`: The XML content as a string.
+* **Returns:** The root element.
 
 **Example:**
 
@@ -86,10 +88,10 @@ Element root = XmlHelper.getRoot(xmlContent);
 
 Converts the attributes of a node to a map.
 
-*   **Parameters:**
-    *   `xml`: The path to the XML file.
-    *   `xpath`: The XPath expression to locate the node.
-*   **Returns:** A map of the node's attributes.
+* **Parameters:**
+    * `xml`: The path to the XML file.
+    * `xpath`: The XPath expression to locate the node.
+* **Returns:** A map of the node's attributes.
 
 **Example:**
 

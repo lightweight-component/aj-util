@@ -3,7 +3,6 @@ package com.ajaxjs.util.http_request;
 import com.ajaxjs.util.io.FileHelper;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 

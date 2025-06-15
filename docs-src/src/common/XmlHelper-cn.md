@@ -18,7 +18,7 @@ layout: layouts/aj-util-cn.njk
 
 初始化一个用于 XML 解析的 `DocumentBuilder`。
 
-*   **返回值:** 一个 `DocumentBuilder` 实例。
+* **返回值:** 一个 `DocumentBuilder` 实例。
 
 **示例:**
 
@@ -31,11 +31,11 @@ DocumentBuilder builder = XmlHelper.initBuilder();
 
 使用 XPath 表达式从 XML 文档中检索节点，并使用给定的函数处理它们。
 
-*   **参数说明：**
-    *   `xml`: XML 文件的路径。
-    *   `xpath`: 用于定位节点的 XPath 表达式。
-    *   `fn`: 用于处理节点的函数。
-*   **返回值:** 无。
+* **参数说明：**
+    * `xml`: XML 文件的路径。
+    * `xpath`: 用于定位节点的 XPath 表达式。
+    * `fn`: 用于处理节点的函数。
+* **返回值:** 无。
 
 **示例:**
 
@@ -50,10 +50,10 @@ XmlHelper.xPath("path/to/xml/file.xml", "/root/element", node -> {
 
 解析 XML 字符串，并使用给定的函数处理根元素及其子元素。
 
-*   **参数说明：**
-    *   `xml`: XML 内容的字符串。
-    *   `fn`: 用于处理根元素及其子元素的函数。
-*   **返回值:** 无。
+* **参数说明：**
+    * `xml`: XML 内容的字符串。
+    * `fn`: 用于处理根元素及其子元素的函数。
+* **返回值:** 无。
 
 **示例:**
 
@@ -72,9 +72,9 @@ XmlHelper.parseXML(xmlContent, (node, nodeList) -> {
 
 检索 XML 字符串的根元素。
 
-*   **参数说明：**
-    *   `xml`: XML 内容的字符串。
-*   **返回值:** 根元素。
+* **参数说明：**
+    * `xml`: XML 内容的字符串。
+* **返回值:** 根元素。
 
 **示例:**
 
@@ -88,10 +88,10 @@ Element root = XmlHelper.getRoot(xmlContent);
 
 将节点的属性转换为映射。
 
-*   **参数说明：**
-    *   `xml`: XML 文件的路径。
-    *   `xpath`: 用于定位节点的 XPath 表达式。
-*   **返回值:** 节点属性的映射。
+* **参数说明：**
+    * `xml`: XML 文件的路径。
+    * `xpath`: 用于定位节点的 XPath 表达式。
+* **返回值:** 节点属性的映射。
 
 **示例:**
 
