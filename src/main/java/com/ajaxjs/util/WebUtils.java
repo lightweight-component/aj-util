@@ -2,6 +2,7 @@ package com.ajaxjs.util;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,6 +26,12 @@ public class WebUtils {
         }
     }
 
+    /**
+     * The ip from browser.
+     *
+     * @param request The request object
+     * @return The ip
+     */
     public static String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
 
@@ -42,5 +49,27 @@ public class WebUtils {
         }
 
         return ip;
+    }
+
+
+    /**
+     * 尝试从 Cookie 中提取指定名称的 value
+     *
+     * @param request    The request object
+     * @param cookieName The name of cookie
+     * @return The value of the cookie
+     */
+    public static String getCookie(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+
+        if (!CollUtils.isEmpty(cookies)) {
+            for (Cookie cookie : cookies) {
+                if (cookieName.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
     }
 }

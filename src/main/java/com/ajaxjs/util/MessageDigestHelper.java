@@ -50,7 +50,12 @@ public class MessageDigestHelper {
     /**
      * true 返回 Hex 转换为字符串，false = Base64 编码字符串
      */
-    private Boolean isHexStr = true;
+    private boolean isHexStr = true;
+
+    /**
+     * true 当 Base64 模式下，是否去掉末尾的 = 号，默认 false
+     */
+    private boolean isBase64withoutPadding;
 
     /**
      * 获取指定算法的 MessageDigest 对象
@@ -87,8 +92,12 @@ public class MessageDigestHelper {
 
         if (isHexStr)
             return BytesHelper.bytesToHexStr(result).toLowerCase();
-        else
-            return EncodeTools.base64EncodeToString(result);
+        else { // base64
+            if (isBase64withoutPadding)
+                return Base64Helper.encode().input(result).withoutPadding().getString();
+            else
+                return EncodeTools.base64EncodeToString(result);
+        }
     }
 
     /**
@@ -128,7 +137,7 @@ public class MessageDigestHelper {
      * @return 字符串的 MD5 哈希值，Base64 编码
      */
     public static String getMd5AsBase64(String str) {
-        return new MessageDigestHelper().setAlgorithmName("MD5").setValue(str).setIsHexStr(false).getResult();
+        return new MessageDigestHelper().setAlgorithmName("MD5").setValue(str).setHexStr(false).getResult();
     }
 
     // ----------------------KEY--------------------------
@@ -147,7 +156,8 @@ public class MessageDigestHelper {
         try {
             if (key == null)
                 sk = KeyGenerator.getInstance(algorithmName).generateKey();
-            else sk = new SecretKeySpec(StrUtil.getUTF8_Bytes(key)/*Base64Utils.decodeFromString(key)*/, algorithmName);
+            else
+                sk = new SecretKeySpec(StrUtil.getUTF8_Bytes(key)/*Base64Utils.decodeFromString(key)*/, algorithmName);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
         }
@@ -183,15 +193,15 @@ public class MessageDigestHelper {
      * @return MD5 值的 Base64 编码
      */
     public static String getMd5AsBase64(String key, String str) {
-        return new MessageDigestHelper().setAlgorithmName("HmacMD5").setKey(key).setValue(str).setIsHexStr(false).getResult();
+        return new MessageDigestHelper().setAlgorithmName("HmacMD5").setKey(key).setValue(str).setHexStr(false).getResult();
     }
 
     public static String getHmacSHA1AsBase64(String key, String str) {
-        return new MessageDigestHelper().setAlgorithmName("HmacSHA1").setKey(key).setValue(str).setIsHexStr(false).getResult();
+        return new MessageDigestHelper().setAlgorithmName("HmacSHA1").setKey(key).setValue(str).setHexStr(false).getResult();
     }
 
     public static String getHmacSHA256AsBase64(String key, String str) {
-        return new MessageDigestHelper().setAlgorithmName("HmacSHA256").setKey(key).setValue(str).setIsHexStr(false).getResult();
+        return new MessageDigestHelper().setAlgorithmName("HmacSHA256").setKey(key).setValue(str).setHexStr(false).getResult();
     }
 
     /**
