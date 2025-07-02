@@ -30,14 +30,13 @@
 | IO                  | 文件、资源、流操作工具包                              |                 |
 | Reflection          | 反射工具包                                     |                 |
 
-## Source code
+## 源码
 
 [Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
 
 ## 链接
 
-- [教程（英文）](https://framework.ajaxjs.com/aj-util/)
-- [教程（中文）](https://framework.ajaxjs.com/aj-util/cn/)
+- [教程](https://aj-util.ajaxjs.com/)
 - [DeepWiki 教程](https://deepwiki.com/lightweight-component/aj-util) 
 - [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
