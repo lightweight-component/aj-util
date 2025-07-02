@@ -1,10 +1,10 @@
 ---
-title: Docs Home
+title: AJ Utilities 简介
 subTitle: 2024-12-05 by Frank Cheung
-description: TODO
-date: 2022-01-05
+description: AJ Utilities 简介
+date: 2025-01-05
 tags:
-  - last one
+  - AJ Utilities 简介
 layout: layouts/aj-util-cn.njk
 ---
 
@@ -33,7 +33,11 @@ layout: layouts/aj-util-cn.njk
 
 ## 源代码
 
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util) | [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util) 
+
+## 链接
+
+[用户手册](https://aj-util.ajaxjs.com) | [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-util) | [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
 ## 安装
 
@@ -43,7 +47,7 @@ layout: layouts/aj-util-cn.njk
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.5</version>
 </dependency>
 ```
 
