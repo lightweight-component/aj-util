@@ -1,181 +1,190 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>AJ Utils-Quick Start</title>
-    <meta name="description" content="Small Java Utils Library with many powerful components."/>
-    <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"/>
-    <link rel="stylesheet" href="/style/docs/main.css"/>
-    <link rel="icon" type="image/x-icon" href="/asset/logo.ico"/>
-    <script src="/asset/common.js"></script>
-</head>
-<body>
-<nav>
-    <div>
-        <div class="links">
-            <a href="/cn">🏠 首页</a>
-            | ⚙️ 源码:
-            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-            | <a href="">英语版本</a>
-        </div>
-        <h1>
-            <img src="/asset/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
-            AJ Utils
-        </h1>
-        <h3>小型、干净、简单的 Java 工具库
-        </h3>
-    </div>
-</nav>
-<div>
-    <menu>
-
-        <ul>
-            <li class="selected">
-                <a href="/cn">首页</a>
-            </li>
-        </ul>
-        <h3>Common 常用模块</h3>
-        <ul>
-            <li class="data">
-                <a href="/common/BytesHelper-cn/">BytesHelper</a>
-            </li>
-            <li>
-                <a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a>
-            </li>
-            <li>
-                <a href="/common/EnumsUtil-cn/">EnumsUtil</a>
-            </li>
-            <li class="data">
-                <a href="/common/RandomTools-cn/">RandomTools</a>
-            </li>
-            <li>
-                <a href="/common/RegExpUtils-cn/">RegExpUtils</a>
-            </li>
-            <li>
-                <a href="/common/XmlHelper-cn/">XmlHelper</a>
-            </li>
-            <li>
-                <a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a>
-            </li>
-            <li>
-                <a href="/common/EncodeTools-cn/">EncodeTools</a>
-            </li>
-        </ul>
-        <h3>Input/Output 输入/输出</h3>
-        <ul>
-            <li class="data">
-                <a href="/io/FileHelper-cn/">FileHelper</a>
-            </li>
-            <li>
-                <a href="/io/Resources-cn/">Resources</a>
-            </li>
-            <li>
-                <a href="/io/StreamHelper-cn/">StreamHelper</a>
-            </li>
-        </ul>
-        <h3>Reflection 反射</h3>
-        <ul>
-            <li>
-                <a href="/reflect/Clazz-cn/">Clazz</a>
-            </li>
-            <li>
-                <a href="/reflect/Methods-cn/">Methods</a>
-            </li>
-            <li>
-                <a href="/reflect/Types-cn/">Types</a>
-            </li>
-        </ul>
-    </menu>
-    <article>
-        <h1>Resources</h1>
-        <p><code>Resources</code> 类提供静态方法来定位和检索类路径中或相对于特定类的资源。 这对于访问与应用程序捆绑在一起的配置文件、模板或其他数据文件特别有用。</p>
-        <h2>方法</h2>
-        <h3>1. <code>getResourcesFromClasspath(String resource)</code></h3>
-        <p>检索位于类路径中的资源的路径。</p>
-        <ul>
-            <li><strong>参数：</strong>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-Quick Start</title>
+        <meta name="description" content="Small Java Utils Library with many powerful components." />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="/style/docs/main.css"/>
+        <link rel="icon" type="image/x-icon" href="/asset/logo.ico"/>
+        <script src="/asset/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                   <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                   | <a  href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="/asset/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
                 <ul>
-                    <li><code>resource</code>：资源文件的名称。 可以包括包目录（例如，<code>com/example/my_resource.txt</code>）。 空字符串返回类路径根目录。</li>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
                 </ul>
-            </li>
-            <li><strong>返回值：</strong> 资源的绝对路径。</li>
-            <li><strong>抛出：</strong> 如果找不到资源，则抛出 <code>RuntimeException</code>。</li>
-        </ul>
-        <p><strong>示例：</strong></p>
-        <pre><code class="language-java">String resourcePath = Resources.getResourcesFromClasspath(&quot;com/example/config.properties&quot;);
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/common/BytesHelper-cn/">BytesHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a>
+                    </li>
+                    <li>
+                        <a href="/common/EnumsUtil-cn/">EnumsUtil</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/RandomTools-cn/">RandomTools</a>
+                    </li>
+                    <li>
+                        <a href="/common/RegExpUtils-cn/">RegExpUtils</a>
+                    </li>
+                    <li>
+                        <a href="/common/XmlHelper-cn/">XmlHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/EncodeTools-cn/">EncodeTools</a>
+                    </li>
+                </ul>
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/io/FileHelper-cn/">FileHelper</a>
+                    </li>
+                    <li>
+                        <a href="/io/Resources-cn/">Resources</a>
+                    </li>
+                    <li>
+                        <a href="/io/StreamHelper-cn/">StreamHelper</a>
+                    </li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li>
+                        <a href="/reflect/Clazz-cn/">Clazz</a>
+                    </li>
+                    <li>
+                        <a href="/reflect/Methods-cn/">Methods</a>
+                    </li>
+                    <li>
+                        <a href="/reflect/Types-cn/">Types</a>
+                    </li>
+                </ul>
+            </menu>
+            <article>
+                <h1>Resources</h1>
+<p><code>Resources</code> 类提供静态方法来定位和检索类路径中或相对于特定类的资源。 这对于访问与应用程序捆绑在一起的配置文件、模板或其他数据文件特别有用。</p>
+<h2>方法</h2>
+<h3>1. <code>getResourcesFromClasspath(String resource)</code></h3>
+<p>检索位于类路径中的资源的路径。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>resource</code>：资源文件的名称。 可以包括包目录（例如，<code>com/example/my_resource.txt</code>）。 空字符串返回类路径根目录。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 资源的绝对路径。</li>
+<li><strong>抛出：</strong> 如果找不到资源，则抛出 <code>RuntimeException</code>。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClasspath(&quot;com/example/config.properties&quot;);
 System.out.println(resourcePath);
 </code></pre>
-        <h3>2. <code>getResourcesFromClasspath(String resource, boolean isDecode)</code></h3>
-        <p>检索位于类路径中的资源的路径，并可选择进行 URL 解码。</p>
-        <ul>
-            <li><strong>参数：</strong>
-                <ul>
-                    <li><code>resource</code>：资源文件的名称。</li>
-                    <li><code>isDecode</code>：一个布尔值，指示是否应解码 URL。</li>
-                </ul>
-            </li>
-            <li><strong>返回值：</strong> 资源的绝对路径。</li>
-            <li><strong>抛出：</strong> 如果找不到资源，则抛出 <code>RuntimeException</code>。</li>
-        </ul>
-        <p><strong>示例：</strong></p>
-        <pre><code class="language-java">String resourcePath = Resources.getResourcesFromClasspath(&quot;com/example/config.properties&quot;, true);
+<h3>2. <code>getResourcesFromClasspath(String resource, boolean isDecode)</code></h3>
+<p>检索位于类路径中的资源的路径，并可选择进行 URL 解码。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>resource</code>：资源文件的名称。</li>
+<li><code>isDecode</code>：一个布尔值，指示是否应解码 URL。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 资源的绝对路径。</li>
+<li><strong>抛出：</strong> 如果找不到资源，则抛出 <code>RuntimeException</code>。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClasspath(&quot;com/example/config.properties&quot;, true);
 System.out.println(resourcePath);
 </code></pre>
-        <h3>3. <code>getResourcesFromClass(Class&lt;?&gt; clz, String resource)</code></h3>
-        <p>检索位于相对于给定类的资源的路径。</p>
-        <ul>
-            <li><strong>参数：</strong>
-                <ul>
-                    <li><code>clz</code>：用于定位资源的类。</li>
-                    <li><code>resource</code>：资源文件的名称。</li>
-                </ul>
-            </li>
-            <li><strong>返回值：</strong> 资源的绝对路径；如果未找到，则返回 <code>null</code>。</li>
-        </ul>
-        <p><strong>示例：</strong></p>
-        <pre><code class="language-java">String resourcePath = Resources.getResourcesFromClass(MyClass.class, &quot;my_resource.txt&quot;);
+<h3>3. <code>getResourcesFromClass(Class&lt;?&gt; clz, String resource)</code></h3>
+<p>检索位于相对于给定类的资源的路径。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>clz</code>：用于定位资源的类。</li>
+<li><code>resource</code>：资源文件的名称。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 资源的绝对路径；如果未找到，则返回 <code>null</code>。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClass(MyClass.class, &quot;my_resource.txt&quot;);
 System.out.println(resourcePath);
 </code></pre>
-        <h3>4. <code>getResourcesFromClass(Class&lt;?&gt; clz, String resource, boolean isDecode)</code></h3>
-        <p>检索位于相对于给定类的资源的路径，并可选择进行 URL 解码。</p>
-        <ul>
-            <li><strong>参数：</strong>
-                <ul>
-                    <li><code>clz</code>：用于定位资源的类。</li>
-                    <li><code>resource</code>：资源文件的名称。</li>
-                    <li><code>isDecode</code>：一个布尔值，指示是否应解码 URL。</li>
-                </ul>
-            </li>
-            <li><strong>返回值：</strong> 资源的绝对路径；如果未找到，则返回 <code>null</code>。</li>
-        </ul>
-        <p><strong>示例：</strong></p>
-        <pre><code class="language-java">String resourcePath = Resources.getResourcesFromClass(MyClass.class, &quot;my_resource.txt&quot;, true);
+<h3>4. <code>getResourcesFromClass(Class&lt;?&gt; clz, String resource, boolean isDecode)</code></h3>
+<p>检索位于相对于给定类的资源的路径，并可选择进行 URL 解码。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>clz</code>：用于定位资源的类。</li>
+<li><code>resource</code>：资源文件的名称。</li>
+<li><code>isDecode</code>：一个布尔值，指示是否应解码 URL。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 资源的绝对路径；如果未找到，则返回 <code>null</code>。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClass(MyClass.class, &quot;my_resource.txt&quot;, true);
 System.out.println(resourcePath);
 </code></pre>
-        <h3>5. <code>getClassName(File file, String packageName)</code></h3>
-        <p>从 Java 类文件中提取类名。</p>
-        <ul>
-            <li><strong>参数：</strong>
-                <ul>
-                    <li><code>file</code>：Java 类文件。</li>
-                    <li><code>packageName</code>：类的包名。</li>
-                </ul>
-            </li>
-            <li><strong>返回值：</strong> 完全限定的类名。</li>
-        </ul>
-        <p><strong>示例：</strong></p>
-        <pre><code class="language-java">File classFile = new File(&quot;path/to/MyClass.class&quot;);
+<h3>5. <code>getClassName(File file, String packageName)</code></h3>
+<p>从 Java 类文件中提取类名。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>file</code>：Java 类文件。</li>
+<li><code>packageName</code>：类的包名。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 完全限定的类名。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">File classFile = new File(&quot;path/to/MyClass.class&quot;);
 String className = Resources.getClassName(classFile, &quot;com.example&quot;);
 System.out.println(className); // Output: com.example.MyClass
 </code></pre>
-        <h2>单元测试示例</h2>
-        <pre><code class="language-java">package com.ajaxjs.util.io;
+<h2>单元测试示例</h2>
+<pre><code class="language-java">package com.ajaxjs.util.io;
 
 import org.junit.jupiter.api.Test;
 
@@ -232,19 +241,19 @@ public class TestResources {
     }
 }
 </code></pre>
-        <p><strong>注意：</strong> 单元测试使用 <code>assertThrows</code> 和 <code>assertNull</code> 来检查预期的异常和 null 返回值。 由于提供的代码中没有相关方法，因此某些测试被注释掉了。</p>
-        <h2>结论</h2>
-        <p><code>Resources</code> 类提供了一种简单有效的方法来访问应用程序中的资源。 通过使用这些方法，您可以轻松地从类路径或相对于特定类检索配置文件、模板和其他数据文件。</p>
+<p><strong>注意：</strong> 单元测试使用 <code>assertThrows</code> 和 <code>assertNull</code> 来检查预期的异常和 null 返回值。 由于提供的代码中没有相关方法，因此某些测试被注释掉了。</p>
+<h2>结论</h2>
+<p><code>Resources</code> 类提供了一种简单有效的方法来访问应用程序中的资源。 通过使用这些方法，您可以轻松地从类路径或相对于特定类检索配置文件、模板和其他数据文件。</p>
 
-    </article>
-</div>
+            </article>
+        </div>
 
-<footer>
-    AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
-    frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
-    <br/>
-    <br/>
-    Copyright © 2025 Frank Cheung. All rights reserved.
-</footer>
-</body>
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
 </html>

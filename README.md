@@ -35,7 +35,7 @@ Small Java Utils Library with many powerful components. The size of jar is aroun
 
 ## Link
 
-[Tutorials](https://framework.ajaxjs.com/aj-util/) | [Tutorials(Chinese)](https://framework.ajaxjs.com/aj-util/cn/) | [DeepWiki Tutorials](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+[Tutorials](https://aj-util.ajaxjs.com) | [Tutorials(Chinese)](https://framework.ajaxjs.com/aj-util/cn/) | [DeepWiki Tutorials](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
 ## Install
 
@@ -46,6 +46,6 @@ Runs on Java 8+. Maven:
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 </dependency>
 ```

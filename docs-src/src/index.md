@@ -1,10 +1,10 @@
 ---
 title: Docs Home
 subTitle: 2024-12-05 by Frank Cheung
-description: TODO
-date: 2022-01-05
+description: AJ Utilities Home
+date: 2025-01-05
 tags:
-  - last one
+  - AJ Utilities Home
 layout: layouts/aj-util.njk
 ---
 
@@ -33,7 +33,10 @@ Small Java Utils Library with many powerful components. The size of jar is aroun
 
 ## Source code
 
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
+
+## Links
+[User Manual](https://aj-util.ajaxjs.com) | [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
 ## Install
 
@@ -43,7 +46,7 @@ Runs on Java 8+. Maven:
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.5</version>
 </dependency>
 ```
 

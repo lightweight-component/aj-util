@@ -1,12 +1,9 @@
 package com.ajaxjs.util;
 
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 /**
@@ -185,16 +182,26 @@ public class DateHelper {
         return instant.atZone(ZoneId.systemDefault());
     }
 
+    public final static DateTimeFormatter GMT_Formatter = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneId.of("GMT"));
+
     /**
      * 请求的时间戳，格式必须符合 RFC1123 的日期格式
      *
      * @return 当前日期
      */
     public static String getGMTDate() {
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return GMT_Formatter.format(Instant.now());
+    }
 
-        return format.format(new Date());
+    public final static DateTimeFormatter ISO8601_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
+
+    /**
+     * 请求的时间戳。按照 ISO8601 标准表示，并需要使用 UTC 时间，格式为 yyyy-MM-ddTHH:mm:ssZ
+     *
+     * @return 当前日期
+     */
+    public static String getISO8601Date() {
+        return ISO8601_FORMATTER.format(Instant.now());
     }
 
     /**

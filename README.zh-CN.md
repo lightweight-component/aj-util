@@ -2,6 +2,7 @@
 [![Javadoc](https://img.shields.io/badge/javadoc-1.2.0-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
 ![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-util)
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
 [![QQ群](https://framework.ajaxjs.com/static/qq.svg)](https://shang.qq.com/wpa/qunwpa?idkey=3877893a4ed3a5f0be01e809e7ac120e346102bd550deb6692239bb42de38e22)
 
@@ -29,14 +30,13 @@
 | IO                  | 文件、资源、流操作工具包                              |                 |
 | Reflection          | 反射工具包                                     |                 |
 
-## Source code
+## 源码
 
 [Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
 
 ## 链接
 
-- [教程（英文）](https://framework.ajaxjs.com/aj-util/)
-- [教程（中文）](https://framework.ajaxjs.com/aj-util/cn/)
+- [教程](https://aj-util.ajaxjs.com/)
 - [DeepWiki 教程](https://deepwiki.com/lightweight-component/aj-util) 
 - [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
@@ -49,6 +49,6 @@
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 </dependency>
 ```
