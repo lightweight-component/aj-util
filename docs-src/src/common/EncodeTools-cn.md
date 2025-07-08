@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 # EncodeTools 教程
 
-`EncodeTools` 类提供了 URL 编码、URL 解码、Base64 编码和 Base64 解码的方法。这些方法可用于处理字符串编码和解码的各种用途，如准备 HTTP 请求的字符串或编码二进制数据。
+`EncodeTools` 类提供了 URL 编码、URL 解码、Base64 编码和 Base64 解码的方法。这些方法可用于处理字符串编码和解码的各种用途，如准备
+HTTP 请求的字符串或编码二进制数据。
 
 ## 方法
 

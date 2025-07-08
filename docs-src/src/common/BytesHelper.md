@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # BytesHelper Tutorial
 
-This tutorial provides an overview of the `BytesHelper` class, which is part of the `lightweight-component/aj-util` library.  `BytesHelper` offers a collection of utility methods for working with byte arrays in Java.
+This tutorial provides an overview of the `BytesHelper` class, which is part of the `lightweight-component/aj-util`
+library.  `BytesHelper` offers a collection of utility methods for working with byte arrays in Java.
 This guide will cover the purpose of each method and provide usage examples.
 
 ## Introduction
@@ -46,7 +47,8 @@ byte[]original={0x01,0x02,0x03,0x04,0x05};
 
 ### 2. `byteIndexOf(byte[] data, byte[] search, int start)`
 
-Finds the index of a byte array (`search`) within another byte array (`data`), starting the search from a specified index (`start`).
+Finds the index of a byte array (`search`) within another byte array (`data`), starting the search from a specified
+index (`start`).
 
 * **Parameters:**
     * `data`: The byte array to search within.
@@ -65,7 +67,8 @@ byte[]data={0x01,0x02,0x03,0x04,0x05};
 
 ### 3. `byteIndexOf(byte[] data, byte[] search)`
 
-Finds the index of a byte array (`search`) within another byte array (`data`), starting the search from the beginning (index 0). This is an overloaded version of the previous method.
+Finds the index of a byte array (`search`) within another byte array (`data`), starting the search from the beginning (
+index 0). This is an overloaded version of the previous method.
 
 * **Parameters:**
     * `data`: The byte array to search within.
@@ -117,7 +120,8 @@ byte[]bytes={0x1A,0x2B,0x3C};
 
 ### 6. `parseHexStr2Byte(String hex)` (Hypothetical - Not found in the provided code, but good to include if it existed or you implemented it)
 
-Converts a hexadecimal string to a byte array. This method appears in the test code, so it's likely part of the library, or intended to be.
+Converts a hexadecimal string to a byte array. This method appears in the test code, so it's likely part of the library,
+or intended to be.
 
 * **Parameters:**
     * `hex`: The hexadecimal string to convert.
@@ -150,5 +154,6 @@ public class TestBytesHelper {
 
 ## Conclusion
 
-The `BytesHelper` class provides a convenient set of utilities for common byte array manipulations in Java. By using these methods, you can simplify your code and avoid writing repetitive byte array handling logic.
+The `BytesHelper` class provides a convenient set of utilities for common byte array manipulations in Java. By using
+these methods, you can simplify your code and avoid writing repetitive byte array handling logic.
 Remember to consult the library's Javadoc for the most up-to-date information and additional methods.

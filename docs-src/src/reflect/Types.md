@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # Types
 
-The `Types` class provides methods for retrieving generic type information, converting types, and handling parameterized types. These methods facilitate efficient and convenient manipulation of Java types at runtime.
+The `Types` class provides methods for retrieving generic type information, converting types, and handling parameterized
+types. These methods facilitate efficient and convenient manipulation of Java types at runtime.
 
 ## Methods
 
@@ -20,7 +21,8 @@ Retrieves the actual type arguments of a parameterized type.
 
 * **Parameters:**
     * `type`: The type to retrieve the actual type arguments from.
-* **Returns:** An array of `Type` representing the actual type arguments, or `null` if the input type is not a parameterized type.
+* **Returns:** An array of `Type` representing the actual type arguments, or `null` if the input type is not a
+  parameterized type.
 
 **Example:**
 

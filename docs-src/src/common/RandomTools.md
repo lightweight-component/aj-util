@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # RandomTools Tutorial
 
-The `RandomTools` class provides methods for generating random integers and strings. These methods can be used when you need random values for testing, simulations, or other purposes.
+The `RandomTools` class provides methods for generating random integers and strings. These methods can be used when you
+need random values for testing, simulations, or other purposes.
 
 ## Methods
 

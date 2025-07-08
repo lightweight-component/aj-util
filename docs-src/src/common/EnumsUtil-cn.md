@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 # EnumsUtil
 
-当枚举实现 `IEnum` 接口时，`EnumsUtil` 类提供了一种基于代码检索枚举实例及其关联消息（或其他值）的方法。 当您拥有每个常量都有一个代码和相应描述性消息的枚举，并且需要通过其代码查找枚举时，这尤其有用。
+当枚举实现 `IEnum` 接口时，`EnumsUtil` 类提供了一种基于代码检索枚举实例及其关联消息（或其他值）的方法。
+当您拥有每个常量都有一个代码和相应描述性消息的枚举，并且需要通过其代码查找枚举时，这尤其有用。
 
 ## `IEnum` 接口
 
@@ -162,7 +163,9 @@ public class TestEnumsUtil {
 
 ## 结论
 
-`EnumsUtil` 类提供了一种方便的方式来处理实现 `IEnum` 接口的枚举，从而允许您基于代码轻松检索枚举实例及其关联值。 这在需要将代码映射到枚举值及其相应消息的应用程序中尤其有用。
+`EnumsUtil` 类提供了一种方便的方式来处理实现 `IEnum` 接口的枚举，从而允许您基于代码轻松检索枚举实例及其关联值。
+这在需要将代码映射到枚举值及其相应消息的应用程序中尤其有用。
 
 **重要提示：** 搜索结果可能不完整。
-要查看更多结果，您可以使用此链接：[https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil](https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil) 在 GitHub UI 中。
+要查看更多结果，您可以使用此链接：[https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil](https://github.com/lightweight-component/aj-util/search?q=symbol%3AEnumsUtil)
+在 GitHub UI 中。

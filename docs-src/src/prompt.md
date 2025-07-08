@@ -1,10 +1,13 @@
-你可以获取一个github代码仓库，把所有代码加载进去，进行学习，分析这些代码？Here is: https://github.com/lightweight-component/aj-util
+你可以获取一个github代码仓库，把所有代码加载进去，进行学习，分析这些代码？Here
+is: https://github.com/lightweight-component/aj-util
 
 What is the purpose of this repository?
 
-Can u write the tutorials for `EncodeTools` and `MessageDigestHelper`? u can take the unit test code as some examples. Also give these tutorials in Chinese.
+Can u write the tutorials for `EncodeTools` and `MessageDigestHelper`? u can take the unit test code as some examples.
+Also give these tutorials in Chinese.
 
-Can u write a tutorial for `XmlHelper`? u can take the unit test code as some examples. Also give this tutorial in Chinese.
+Can u write a tutorial for `XmlHelper`? u can take the unit test code as some examples. Also give this tutorial in
+Chinese.
 
 Here is a Tutorial for `ConvertBasicValue`. Please write tutorial again for 'BytesHelper' like  `ConvertBasicValue` did.
 
@@ -12,19 +15,24 @@ Here is a Tutorial for `ConvertBasicValue`. Please write tutorial again for 'Byt
 
 # ConvertBasicValue Tutorial
 
-This tutorial provides an overview of the `ConvertBasicValue` class, which is part of the `lightweight-component/aj-util` library. `ConvertBasicValue` offers a collection of utility methods for converting objects to
+This tutorial provides an overview of the `ConvertBasicValue` class, which is part of
+the `lightweight-component/aj-util` library. `ConvertBasicValue` offers a collection of utility methods for converting
+objects to
 basic Java types. This guide will cover the purpose of each method and provide usage examples.
 
 ## Introduction
 
-The `ConvertBasicValue` class provides methods for safely converting objects to various basic Java types like `String`, `boolean`, `int`, `long`, `float`, `double`, `Date`, and `BigDecimal`. These methods handle null
-values and attempt to parse string representations where appropriate, providing a more robust alternative to direct casting.
+The `ConvertBasicValue` class provides methods for safely converting objects to various basic Java types
+like `String`, `boolean`, `int`, `long`, `float`, `double`, `Date`, and `BigDecimal`. These methods handle null
+values and attempt to parse string representations where appropriate, providing a more robust alternative to direct
+casting.
 
 ## Methods
 
 ### 1. `basicCast(Object value, Class<T> clz)`
 
-Safely casts an object to a specified class type. This method leverages `basicConvert` to perform the initial conversion and then casts the result to the desired type.
+Safely casts an object to a specified class type. This method leverages `basicConvert` to perform the initial conversion
+and then casts the result to the desired type.
 
 * **Parameters:**
     * `value`: The object to convert.
@@ -47,7 +55,8 @@ Converts an object to a specified class type. This method handles `null` values 
     * `clz`: The target class type.
 * **Returns:** The converted object, or `null` if the input value is `null`.
 
-This method contains the core logic for different type conversions. Let's look at some of the specific conversions it handles:
+This method contains the core logic for different type conversions. Let's look at some of the specific conversions it
+handles:
 
 * **String:** Converts the object to a string using `value.toString()`.
 * **boolean/Boolean:** Converts the object to a boolean using the `toBoolean()` method (explained below).
@@ -129,7 +138,8 @@ assertEquals(0.0,ConvertBasicValue.object2double(null),0.0001);
 
 ## Conclusion
 
-The `ConvertBasicValue` class provides a useful set of utilities for safely converting objects to basic Java types. By using these methods, you can simplify your code and handle potential `null` values and parsing errors
+The `ConvertBasicValue` class provides a useful set of utilities for safely converting objects to basic Java types. By
+using these methods, you can simplify your code and handle potential `null` values and parsing errors
 more gracefully. Remember to consult the library's Javadoc for the most up-to-date information and additional methods.
 
 ```

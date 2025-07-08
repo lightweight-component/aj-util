@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # Methods
 
-The `Methods` class provides methods for dynamically retrieving and invoking methods, as well as handling method parameters. These methods facilitate efficient and convenient manipulation of Java methods at runtime.
+The `Methods` class provides methods for dynamically retrieving and invoking methods, as well as handling method
+parameters. These methods facilitate efficient and convenient manipulation of Java methods at runtime.
 
 ## Methods
 
@@ -226,5 +227,6 @@ public class TestReflectUtil {
 
 ## Conclusion
 
-The `Methods` class provides a set of useful utilities for working with Java methods through reflection. By using these methods, you can simplify your code and handle method operations more efficiently. Remember to
+The `Methods` class provides a set of useful utilities for working with Java methods through reflection. By using these
+methods, you can simplify your code and handle method operations more efficiently. Remember to
 consult the library's Javadoc for the most up-to-date information and additional methods.

@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 # BytesHelper 教程
 
-本教程概述了 `lightweight-component/aj-util` 库中的 `BytesHelper` 类。`BytesHelper` 提供了一系列用于在 Java 中处理字节数组的实用方法。本指南将介绍每个方法的用途并提供使用示例。
+本教程概述了 `lightweight-component/aj-util` 库中的 `BytesHelper` 类。`BytesHelper` 提供了一系列用于在 Java
+中处理字节数组的实用方法。本指南将介绍每个方法的用途并提供使用示例。
 
 ## 简介
 
@@ -148,4 +149,5 @@ public class TestBytesHelper {
 
 ## 结论
 
-`BytesHelper` 类提供了一组方便的实用程序，用于 Java 中常见的字节数组操作。 通过使用这些方法，您可以简化代码并避免编写重复的字节数组处理逻辑。 请记住查阅库的 Javadoc 以获取最新信息和其他方法。
+`BytesHelper` 类提供了一组方便的实用程序，用于 Java 中常见的字节数组操作。 通过使用这些方法，您可以简化代码并避免编写重复的字节数组处理逻辑。
+请记住查阅库的 Javadoc 以获取最新信息和其他方法。

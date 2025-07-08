@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # MessageDigestHelper Tutorial
 
-The `MessageDigestHelper` class provides methods for generating message digests using different algorithms like MD5, SHA-1, and SHA-256. These methods can be used to create hashes for verifying data integrity, storing
+The `MessageDigestHelper` class provides methods for generating message digests using different algorithms like MD5,
+SHA-1, and SHA-256. These methods can be used to create hashes for verifying data integrity, storing
 passwords securely, and other cryptographic purposes.
 
 ## Methods

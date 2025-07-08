@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # EncodeTools Tutorial
 
-The `EncodeTools` class provides methods for URL encoding, URL decoding, Base64 encoding, and Base64 decoding. These methods can be used to handle string encoding and decoding for various purposes, such as preparing
+The `EncodeTools` class provides methods for URL encoding, URL decoding, Base64 encoding, and Base64 decoding. These
+methods can be used to handle string encoding and decoding for various purposes, such as preparing
 strings for HTTP requests or encoding binary data.
 
 ## Methods

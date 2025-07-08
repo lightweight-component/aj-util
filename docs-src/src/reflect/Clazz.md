@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # Clazz
 
-The `Clazz` class provides methods for dynamically creating class instances, getting constructors, and checking if a class has constructors with parameters. These methods facilitate efficient and convenient handling of
+The `Clazz` class provides methods for dynamically creating class instances, getting constructors, and checking if a
+class has constructors with parameters. These methods facilitate efficient and convenient handling of
 Java classes at runtime.
 
 ## Methods
@@ -140,5 +141,6 @@ public class TestClazz {
 
 ## Conclusion
 
-The `Clazz` class provides a set of useful utilities for working with Java classes through reflection. By using these methods, you can simplify your code and handle class operations more efficiently. Remember to consult
+The `Clazz` class provides a set of useful utilities for working with Java classes through reflection. By using these
+methods, you can simplify your code and handle class operations more efficiently. Remember to consult
 the library's Javadoc for the most up-to-date information and additional methods.

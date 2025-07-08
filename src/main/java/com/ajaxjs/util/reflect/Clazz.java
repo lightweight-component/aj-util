@@ -130,7 +130,8 @@ public class Clazz {
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
         try {
             return constructor.newInstance(args); // 实例化
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+                 InvocationTargetException e) {
             throw new RuntimeException("实例化对象失败：" + constructor.getDeclaringClass(), e);
         }
     }

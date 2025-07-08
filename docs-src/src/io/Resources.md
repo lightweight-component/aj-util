@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # Resources
 
-The `Resources` class provides static methods to locate and retrieve resources from the classpath or relative to a specific class. This is particularly useful for accessing configuration files, templates, or other data
+The `Resources` class provides static methods to locate and retrieve resources from the classpath or relative to a
+specific class. This is particularly useful for accessing configuration files, templates, or other data
 files bundled with your application.
 
 ## Methods
@@ -20,7 +21,8 @@ files bundled with your application.
 Retrieves the path of a resource located in the classpath.
 
 * **Parameters:**
-    * `resource`: The name of the resource file. Can include package directories (e.g., `com/example/my_resource.txt`). An empty string returns the classpath root.
+    * `resource`: The name of the resource file. Can include package directories (e.g., `com/example/my_resource.txt`).
+      An empty string returns the classpath root.
 * **Returns:** The absolute path to the resource.
 * **Throws:** `RuntimeException` if the resource is not found.
 
@@ -159,9 +161,11 @@ public class TestResources {
 }
 ```
 
-**Note:** The unit tests use `assertThrows` and `assertNull` to check for exceptions and null returns as expected. Some tests are commented out since the associated methods are not available in the provided code.
+**Note:** The unit tests use `assertThrows` and `assertNull` to check for exceptions and null returns as expected. Some
+tests are commented out since the associated methods are not available in the provided code.
 
 ## Conclusion
 
-The `Resources` class provides a simple and effective way to access resources within your application. By using these methods, you can easily retrieve configuration files, templates, and other data files from the
+The `Resources` class provides a simple and effective way to access resources within your application. By using these
+methods, you can easily retrieve configuration files, templates, and other data files from the
 classpath or relative to a specific class.

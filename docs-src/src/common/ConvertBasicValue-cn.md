@@ -10,11 +10,14 @@ layout: layouts/aj-util-cn.njk
 
 # ConvertBasicValue 教程
 
-本教程旨在介绍 `lightweight-component/aj-util` 库中的 `ConvertBasicValue` 类。`ConvertBasicValue` 提供了一组实用工具方法，用于将对象安全地转换为基本的 Java 数据类型。本指南将详细介绍每个方法的目的，并提供相应的用法示例。
+本教程旨在介绍 `lightweight-component/aj-util` 库中的 `ConvertBasicValue` 类。`ConvertBasicValue`
+提供了一组实用工具方法，用于将对象安全地转换为基本的 Java 数据类型。本指南将详细介绍每个方法的目的，并提供相应的用法示例。
 
 ## 引言
 
-`ConvertBasicValue` 类提供了一系列方法，可以将对象安全地转换为各种基本 Java 类型，例如 `String`、`boolean`、`int`、`long`、`float`、`double`、`Date` 和 `BigDecimal`。 这些方法能够处理空值（null），并在适当的情况下尝试解析字符串表示形式，从而为直接类型转换提供了一种更强大的替代方案。
+`ConvertBasicValue` 类提供了一系列方法，可以将对象安全地转换为各种基本 Java
+类型，例如 `String`、`boolean`、`int`、`long`、`float`、`double`、`Date` 和 `BigDecimal`。
+这些方法能够处理空值（null），并在适当的情况下尝试解析字符串表示形式，从而为直接类型转换提供了一种更强大的替代方案。
 
 ## 方法详解
 
@@ -172,4 +175,5 @@ public class TestConvertBasicValue {
 
 ## 总结
 
-`ConvertBasicValue` 类提供了一组有用的实用工具，用于将对象安全地转换为基本的 Java 类型。 通过使用这些方法，您可以简化代码并更优雅地处理潜在的 `null` 值和解析错误。 请记住查阅库的 Javadoc 以获取最新信息和其他方法。
+`ConvertBasicValue` 类提供了一组有用的实用工具，用于将对象安全地转换为基本的 Java 类型。
+通过使用这些方法，您可以简化代码并更优雅地处理潜在的 `null` 值和解析错误。 请记住查阅库的 Javadoc 以获取最新信息和其他方法。

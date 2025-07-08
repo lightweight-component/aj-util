@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 # FileHelper
 
-`FileHelper` 类简化了常见的文件系统操作，例如读取和写入文件内容、删除文件或目录、列出目录内容、创建目录以及检查文件或目录是否存在。 它利用 `java.nio.file` 包来实现高效且现代的文件 I/O。
+`FileHelper` 类简化了常见的文件系统操作，例如读取和写入文件内容、删除文件或目录、列出目录内容、创建目录以及检查文件或目录是否存在。
+它利用 `java.nio.file` 包来实现高效且现代的文件 I/O。
 
 ## 方法
 
@@ -153,8 +154,10 @@ public class TestFileHelper {
 }
 ```
 
-**注意：** `getFileSize()`、`copyFileOrDirectory()` 和 `moveFileOrDirectory()` 方法存在于测试代码中，但不存在于提供的 `FileHelper` 类代码中。
+**注意：** `getFileSize()`、`copyFileOrDirectory()` 和 `moveFileOrDirectory()`
+方法存在于测试代码中，但不存在于提供的 `FileHelper` 类代码中。
 
 ## 结论
 
-`FileHelper` 类提供了一组方便的实用程序，用于在 Java 中执行常见的文件系统操作。 通过使用这些方法，您可以简化代码并避免编写重复的文件 I/O 逻辑。
+`FileHelper` 类提供了一组方便的实用程序，用于在 Java 中执行常见的文件系统操作。 通过使用这些方法，您可以简化代码并避免编写重复的文件
+I/O 逻辑。

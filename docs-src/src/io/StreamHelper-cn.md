@@ -111,4 +111,5 @@ public class TestStreamHelper {
 
 ## 结论
 
-`StreamHelper` 类提供了一种方便的方式来在 Java 中执行常见的流操作。 通过使用这些方法，您可以简化代码并避免编写重复的流 I/O 逻辑。
+`StreamHelper` 类提供了一种方便的方式来在 Java 中执行常见的流操作。 通过使用这些方法，您可以简化代码并避免编写重复的流 I/O
+逻辑。

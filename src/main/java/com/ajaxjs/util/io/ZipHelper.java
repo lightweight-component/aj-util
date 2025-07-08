@@ -53,7 +53,7 @@ public class ZipHelper {
             }
             zis.closeEntry();
         } catch (IOException e) {
-            log.warn("unzip",e);
+            log.warn("unzip", e);
         }
 
         log.info("解压缩完成，耗时：{0}ms，保存在{1}", System.currentTimeMillis() - start, save);
@@ -85,7 +85,7 @@ public class ZipHelper {
         try (FileOutputStream fos = new FileOutputStream(saveZip); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
             zip(fileToZip, fileToZip.getName(), zipOut, everyFile);
         } catch (IOException e) {
-            log.warn("zip",e);
+            log.warn("zip", e);
         }
 
         log.info("压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, saveZip);
@@ -125,7 +125,7 @@ public class ZipHelper {
                 StreamHelper.write(in, zipOut, false);
             }
         } catch (IOException e) {
-            log.warn("zip",e);
+            log.warn("zip", e);
         }
     }
 
@@ -156,7 +156,7 @@ public class ZipHelper {
             }
 
         } catch (IOException e) {
-            log.warn("zipFileBuffer",e);
+            log.warn("zipFileBuffer", e);
         }
     }
 
@@ -187,7 +187,7 @@ public class ZipHelper {
                 }
             }
         } catch (IOException e) {
-            log.warn("zipFile",e);
+            log.warn("zipFile", e);
         }
     }
 
@@ -207,7 +207,7 @@ public class ZipHelper {
             while (checkedinputstream.read() != -1) {
             }
         } catch (IOException e) {
-            log.warn("getFileCRCCode",e);
+            log.warn("getFileCRCCode", e);
         }
 
         return crc32.getValue();

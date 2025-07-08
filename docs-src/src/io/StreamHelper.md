@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # StreamHelper
 
-The `StreamHelper` class provides static methods to perform common operations on Java streams. It focuses on simplifying the conversion of input streams to strings and efficiently copying data between streams.
+The `StreamHelper` class provides static methods to perform common operations on Java streams. It focuses on simplifying
+the conversion of input streams to strings and efficiently copying data between streams.
 
 ## Methods
 
@@ -111,4 +112,5 @@ public class TestStreamHelper {
 
 ## Conclusion
 
-The `StreamHelper` class provides a convenient way to perform common stream operations in Java. By using these methods, you can simplify your code and avoid writing repetitive stream I/O logic.
+The `StreamHelper` class provides a convenient way to perform common stream operations in Java. By using these methods,
+you can simplify your code and avoid writing repetitive stream I/O logic.

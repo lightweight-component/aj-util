@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # XmlHelper
 
-The `XmlHelper` class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps. These methods can be used for processing and manipulating XML data.
+The `XmlHelper` class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps.
+These methods can be used for processing and manipulating XML data.
 
 ## Methods
 

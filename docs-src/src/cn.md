@@ -33,7 +33,7 @@ layout: layouts/aj-util-cn.njk
 
 ## 源代码
 
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util) 
+[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
 
 ## 链接
 

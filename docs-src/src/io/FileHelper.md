@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # FileHelper
 
-The `FileHelper` class simplifies common file system operations, such as reading and writing file content, deleting files or directories, listing directory contents, creating directories, and checking for the existence
+The `FileHelper` class simplifies common file system operations, such as reading and writing file content, deleting
+files or directories, listing directory contents, creating directories, and checking for the existence
 of files or directories. It leverages the `java.nio.file` package for efficient and modern file I/O.
 
 ## Methods
@@ -48,7 +49,8 @@ FileHelper.writeFileContent("path/to/my/file.txt", "Hello, World!");
 
 ### 3. `deleteFileOrDirectory(String filePath)`
 
-Deletes a file or directory. If the path is a directory, it will recursively delete all files and subdirectories within it.
+Deletes a file or directory. If the path is a directory, it will recursively delete all files and subdirectories within
+it.
 
 * **Parameters:**
     * `filePath`: The path to the file or directory.
@@ -154,8 +156,10 @@ public class TestFileHelper {
 }
 ```
 
-**Note:** The `getFileSize()`, `copyFileOrDirectory()`, and `moveFileOrDirectory()` methods are present in the test code but not in the provided `FileHelper` class code.
+**Note:** The `getFileSize()`, `copyFileOrDirectory()`, and `moveFileOrDirectory()` methods are present in the test code
+but not in the provided `FileHelper` class code.
 
 ## Conclusion
 
-The `FileHelper` class provides a convenient set of utilities for performing common file system operations in Java. By using these methods, you can simplify your code and avoid writing repetitive file I/O logic.
+The `FileHelper` class provides a convenient set of utilities for performing common file system operations in Java. By
+using these methods, you can simplify your code and avoid writing repetitive file I/O logic.

@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # RegExpUtils Tutorial
 
-The `RegExpUtils` class provides methods for matching strings against regular expressions, extracting matched groups, and finding all matches in a string. These methods can be used for validating input, parsing text, and
+The `RegExpUtils` class provides methods for matching strings against regular expressions, extracting matched groups,
+and finding all matches in a string. These methods can be used for validating input, parsing text, and
 more.
 
 ## Methods

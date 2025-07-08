@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # AJ Utilities
 
-Small Java Utils Library with many powerful components. The size of jar is around 90kb. It contains the following modules:
+Small Java Utils Library with many powerful components. The size of jar is around 90kb. It contains the following
+modules:
 
 | Class/Package Module | Detail Description                                                                     | Memo                                      |
 |----------------------|----------------------------------------------------------------------------------------|-------------------------------------------|
@@ -36,6 +37,7 @@ Small Java Utils Library with many powerful components. The size of jar is aroun
 [Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
 
 ## Links
+
 [User Manual](https://aj-util.ajaxjs.com) | [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
 ## Install
