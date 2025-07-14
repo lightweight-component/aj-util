@@ -82,7 +82,7 @@ public class EncodeTools {
      */
     public static String urlEncodeSafe(String value) {
         if (value == null)
-            return "";
+            return StrUtil.EMPTY_STRING;
 
         String encoded = urlEncode(value);
         return encoded.replace("+", "%20").replace("*", "%2A").replace("~", "%7E").replace("/", "%2F");
