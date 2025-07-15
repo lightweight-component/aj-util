@@ -271,6 +271,15 @@ public class DateHelper {
     }
 
     /**
+     * 获取当前日期时间(字符串)。
+     *
+     * @return 当前日期时间
+     */
+    public static String now(String format) {
+        return DateTimeFormatter.ofPattern(format).format(LocalDateTime.now());
+    }
+
+    /**
      * 获取当前日期时间(字符串)，格式如
      *
      * @return 当前日期时间
