@@ -5,13 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -220,4 +219,66 @@ public class FileHelper {
             throw new UncheckedIOException("移动文件或目录", e);
         }
     }
+
+    /**
+     * 对文件按照指定大小进行分片，在文件所在目录生成分片后的文件块儿
+     * 使用零拷贝对文件高效的切片和合并
+     */
+    public static void chunkFile(Path file, long chunkSize) {
+        if (Files.notExists(file) || Files.isDirectory(file))
+            throw new IllegalArgumentException("文件不存在:" + file);
+
+        if (chunkSize < 1)
+            throw new IllegalArgumentException("分片大小不能小于1个字节:" + chunkSize);
+
+        try {
+            long fileSize = Files.size(file); // 原始文件大小
+            long numberOfChunk = fileSize % chunkSize == 0 ? fileSize / chunkSize : (fileSize / chunkSize) + 1; // 分片数量
+            String fileName = file.getFileName().toString();   // 原始文件名称
+
+            // 读取原始文件
+            try (FileChannel fileChannel = FileChannel.open(file, EnumSet.of(StandardOpenOption.READ))) {
+                for (int i = 0; i < numberOfChunk; i++) {
+                    long start = i * chunkSize;
+                    long end = start + chunkSize;
+
+                    if (end > fileSize)
+                        end = fileSize;
+
+                    Path chunkFile = Paths.get(fileName + "-" + (i + 1));  // 分片文件名称
+
+                    try (FileChannel chunkFileChannel = FileChannel.open(file.resolveSibling(chunkFile),
+                            EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE))) {
+
+                        fileChannel.transferTo(start, end - start, chunkFileChannel);// 返回写入的数据长度
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * 把多个文件合并为一个文件
+     *
+     * @param file       目标文件
+     * @param chunkFiles 分片文件
+     */
+    public static void mergeFile(Path file, Path... chunkFiles) {
+        if (chunkFiles == null || chunkFiles.length == 0)
+            throw new IllegalArgumentException("分片文件不能为空");
+
+        try (FileChannel fileChannel = FileChannel.open(file, EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE))) {
+            for (Path chunkFile : chunkFiles) {
+                try (FileChannel chunkChannel = FileChannel.open(chunkFile, EnumSet.of(StandardOpenOption.READ))) {
+                    chunkChannel.transferTo(0, chunkChannel.size(), fileChannel);
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+
 }
