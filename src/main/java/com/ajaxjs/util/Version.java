@@ -1,6 +1,8 @@
 package com.ajaxjs.util;
 
 
+import java.util.TimeZone;
+
 /**
  * 初始化，检测是否可以运行
  */
@@ -16,8 +18,11 @@ public class Version {
     public static boolean isDebug;
 
     static {
-        if (!"Asia/Shanghai".equals(System.getProperty("user.timezone")))
+        if (!"Asia/Shanghai".equals(System.getProperty("user.timezone"))) {
             System.err.println("当前 JVM 非中国大陆时区");
+            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+        }
+
         /*
          * 有两种模式：本地模式和远程模式（自动判断） 返回 true 表示是非 linux 环境，为开发调试的环境，即 isDebug = true； 返回
          * false 表示在部署的 linux 环境下。 Linux 的为远程模式
