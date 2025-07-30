@@ -126,6 +126,12 @@ public abstract class ResponseHandler {
     public static Map<String, Object> toJson(ResponseEntity resp) {
         Map<String, Object> map = null;
 
+        if (resp == null) {
+            map = new HashMap<>();
+            map.put(Base.ERR_MSG, "请求异常，没有返回任何");
+            return map;
+        }
+
         if (resp.isOk()) {
             try {
                 map = JsonUtil.json2map(resp.toString());
@@ -136,7 +142,8 @@ public abstract class ResponseHandler {
             if (resp.getEx() != null) {
                 map = new HashMap<>();
                 map.put(Base.ERR_MSG, resp.getEx().getMessage());
-            } else map = JsonUtil.json2map(resp.getResponseText());
+            } else
+                map = JsonUtil.json2map(resp.getResponseText());
         }
 
         return map;
