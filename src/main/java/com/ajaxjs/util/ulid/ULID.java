@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>
  * Binary compatible with UUID.
  * <p>
- * Can be used instead of {@link java.util.UUID} or only to generate {@link java.util.UUID} objects.
+ * Can be used instead of {@link UUID} or only to generate {@link UUID} objects.
  * <p>
  * <b>Usage:</b>
  * <p>
@@ -32,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *     // can be useful for compatibility
  *     ULID.fromUUID(UUID.randomUUID());
  * </pre>
- *
+ * @author <a href="https://github.com/jaspeen/ulid-java">...</a>
  * @see <a href="https://github.com/ulid/spec">ULID spec</a>
  */
 public class ULID implements Serializable, Comparable<ULID> {
