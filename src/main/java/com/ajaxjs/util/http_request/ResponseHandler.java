@@ -10,12 +10,12 @@
  */
 package com.ajaxjs.util.http_request;
 
-import com.ajaxjs.util.JsonUtil;
-import com.ajaxjs.util.MapTool;
+import com.ajaxjs.util.*;
 import com.ajaxjs.util.http_request.model.ResponseEntity;
 import com.ajaxjs.util.io.FileHelper;
 import com.ajaxjs.util.io.StreamHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ import java.util.zip.GZIPInputStream;
  * @author Frank Cheung
  */
 @Slf4j
-public abstract class ResponseHandler {
+public abstract class ResponseHandler extends BoxLogger {
     private static final int MAX_LENGTH_TO_PRINT = 500;
 
     /**
@@ -48,12 +48,26 @@ public abstract class ResponseHandler {
         if (resp.getIn() != null) {
             String result = StreamHelper.copyToString(resp.getIn());
             resp.setResponseText(result.trim());
-
             String resultMsg = (result.length() > MAX_LENGTH_TO_PRINT) ? result.substring(0, MAX_LENGTH_TO_PRINT) + " ..." : result;
-            log.info("{} {} 响应状态：{}，请求结果\n{}", resp.getHttpMethod(), resp.getUrl(), resultMsg, resp.getHttpCode());
+
+            printLog(resp.getHttpMethod() + " " + resp.getUrl(), String.valueOf(resp.getHttpCode()), resultMsg, resp.getStartTime());
         }
 
         return resp;
+    }
+
+    public static void printLog(String httpInfo, String httpCode, String returnText, Long startTime) {
+        String title = " HTTP ServerRequest ";
+        String sb = "\n" + ANSI_YELLOW + boxLine('┌', '─', '┐', title) + '\n' +
+                boxContent("Time:       ", DateHelper.now()) + '\n' +
+                boxContent("TraceId:    ", MDC.get(TRACE_KEY)) + '\n' +
+                boxContent("Request:    ", httpInfo) + '\n' +
+                boxContent("ReturnCode: ", "HTTP status " + httpCode) + '\n' +
+                boxContent("ReturnText: ", returnText.trim()) + '\n' +
+                boxContent("Execution:  ", (System.currentTimeMillis() - startTime) + "ms") + '\n' +
+                boxLine('└', '─', '┘', StrUtil.EMPTY_STRING) + ANSI_RESET;
+
+        log.info(sb);
     }
 
     /**

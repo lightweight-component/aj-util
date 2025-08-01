@@ -74,4 +74,9 @@ public class ResponseEntity {
      * 结果的流
      */
     private InputStream in;
+
+    /**
+     * 开始请求时间
+     */
+    private Long startTime;
 }

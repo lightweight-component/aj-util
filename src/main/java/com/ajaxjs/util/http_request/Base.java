@@ -86,6 +86,7 @@ public abstract class Base {
      */
     public static ResponseEntity connect(HttpURLConnection conn) {
         ResponseEntity resp = new ResponseEntity();
+        resp.setStartTime(System.currentTimeMillis());
         resp.setConnection(conn);
         resp.setUrl(conn.getURL().toString());
         resp.setHttpMethod(conn.getRequestMethod());
