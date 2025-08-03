@@ -1,27 +1,23 @@
 package com.ajaxjs.util.io;
 
-
+import com.ajaxjs.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.function.Function;
 import java.util.zip.*;
 
 /**
  * ZIP 压缩/解压缩
- *
- * @author sp42 frank@ajaxjs.com
  */
 @Slf4j
 public class ZipHelper {
-
     /**
      * 解压文件
      *
      * @param save    解压文件的路径，必须为目录
-     * @param zipFile 输入的解压文件路径，例如C:/temp/foo.zip或 c:\\temp\\bar.zip
+     * @param zipFile 输入的解压文件路径，例如 C:/temp/foo.zip 或 c:\\temp\\bar.zip
      */
     public static void unzip(String save, String zipFile) {
         if (!new File(save).isDirectory())
@@ -56,155 +52,108 @@ public class ZipHelper {
             log.warn("unzip", e);
         }
 
-        log.info("解压缩完成，耗时：{0}ms，保存在{1}", System.currentTimeMillis() - start, save);
+        log.info("解压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
     }
 
     /**
-     * 压缩文件
+     * 一维文件数组压缩为 ZIP
      *
-     * @param toZip   要压缩的目录或文件
-     * @param saveZip 压缩后保存的 zip 文件名
+     * @param fileContent 文件数组
+     * @param saveZip     目标 zip 文件路径
+     * @param useStore    true: 仅存储(STORED)，false: 标准压缩(DEFLATED)
      */
-    public static void zip(String toZip, String saveZip) {
-        zip(toZip, saveZip, null);
-    }
+    public static void zipFile(File[] fileContent, String saveZip, boolean useStore) {
+        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(saveZip)));
+             ZipOutputStream zipOut = new ZipOutputStream(bos)) {
 
-    /**
-     * 压缩文件
-     *
-     * @param toZip     要压缩的目录或文件
-     * @param saveZip   压缩后保存的 zip 文件名
-     * @param everyFile 输入 File，可在这 Lambda 里面判断是否加入 ZIP 压缩，返回 true 表示允许，反之不行
-     */
-    public static void zip(String toZip, String saveZip, Function<File, Boolean> everyFile) {
-        long start = System.currentTimeMillis();
-        File fileToZip = new File(toZip);
-
-        initFolder(saveZip);
-
-        try (FileOutputStream fos = new FileOutputStream(saveZip); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
-            zip(fileToZip, fileToZip.getName(), zipOut, everyFile);
+            for (File fc : fileContent)
+                addFileToZip(fc, fc.getName(), zipOut, useStore);
         } catch (IOException e) {
-            log.warn("zip", e);
+            e.printStackTrace();
         }
-
-        log.info("压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, saveZip);
     }
 
     /**
-     * 内部的压缩方法
+     * 递归压缩目录为ZIP
      *
-     * @param toZip     要压缩的目录或文件
-     * @param fileName  ZIP 内的文件名
-     * @param zipOut    ZIP 流
-     * @param everyFile 输入 File，可在这 Lambda 里面判断是否加入 ZIP 压缩，返回 true 表示允许，反之不行
+     * @param sourceDir 目录路径
+     * @param saveZip   目标 zip 文件路径
+     * @param useStore  true: 仅存储(STORED)，false: 标准压缩(DEFLATED)
      */
-    private static void zip(File toZip, String fileName, ZipOutputStream zipOut, Function<File, Boolean> everyFile) {
-        if (toZip.isHidden())
-            return;
+    public static void zipDirectory(String sourceDir, String saveZip, boolean useStore) {
+        File dir = new File(sourceDir);
 
-        if (everyFile != null && !everyFile.apply(toZip))
-            return; // 跳过不要的
+        if (!dir.exists() || !dir.isDirectory())
+            throw new IllegalArgumentException("Source directory does not exist or is not a directory: " + sourceDir);
 
-        try {
-            if (toZip.isDirectory()) {
-                zipOut.putNextEntry(new ZipEntry(fileName.endsWith("/") ? fileName : fileName + "/"));
+        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(saveZip)));
+             ZipOutputStream zipOut = new ZipOutputStream(bos)) {
+            String basePath = dir.getCanonicalPath();
+            zipDirectoryRecursive(dir, basePath, zipOut, useStore);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 目录压缩，用于递归
+     */
+    private static void zipDirectoryRecursive(File file, String basePath, ZipOutputStream zipOut, boolean useStore) throws IOException {
+        String relativePath = basePath.equals(file.getCanonicalPath())
+                ? StrUtil.EMPTY_STRING
+                : file.getCanonicalPath().substring(basePath.length() + 1).replace(File.separatorChar, '/');
+
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+
+            if (files != null && files.length == 0 && !relativePath.isEmpty()) {
+                ZipEntry entry = new ZipEntry(relativePath + "/"); // 空目录也要加入Zip
+                zipOut.putNextEntry(entry);
                 zipOut.closeEntry();
-
-                File[] children = toZip.listFiles();
-                assert children != null;
-                for (File childFile : children)
-                    zip(childFile, fileName + "/" + childFile.getName(), zipOut, everyFile);
-
-                return;
+            } else if (files != null) {
+                for (File child : files)
+                    zipDirectoryRecursive(child, basePath, zipOut, useStore);
             }
-
-            zipOut.putNextEntry(new ZipEntry(fileName));
-
-            try (FileInputStream in = new FileInputStream(toZip)) {
-                StreamHelper.write(in, zipOut, false);
-            }
-        } catch (IOException e) {
-            log.warn("zip", e);
-        }
+        } else
+            addFileToZip(file, relativePath, zipOut, useStore);
     }
 
     /**
-     * Zip压缩大文件从30秒到近乎1秒的优化过程 <a href="https://blog.csdn.net/hj7jay/article/details/102798664">...</a>
-     * 这是一个调用本地方法与原生操作系统进行交互，从磁盘中读取数据。
-     * 每读取一个字节的数据就调用一次本地方法与操作系统交互，是非常耗时的。例如我们现在有30000个字节的数据，如果使用 FileInputStream
-     * 那么就需要调用30000次的本地方法来获取这些数据，而如果使用缓冲区的话（这里假设初始的缓冲区大小足够放下30000字节的数据）那么只需要调用一次就行。因为缓冲区在第一次调用  read() 方法的时候会直接从磁盘中将数据直接读取到内存中。
-     * 随后再一个字节一个字节的慢慢返回。
-     *
-     * @param toZip
-     * @param saveZip
+     * 单文件添加到 zip
      */
-    public static void zipFileBuffer(String toZip, String saveZip) {
-        File fileToZip = new File(toZip);
+    private static void addFileToZip(File file, String zipEntryName, ZipOutputStream zipOut, boolean useStore) throws IOException {
+        try (BufferedInputStream bin = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
+            ZipEntry entry = new ZipEntry(zipEntryName);
 
-        try (ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(fileToZip.toPath()));
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(zipOut)) {
+            if (useStore) {
+                entry.setMethod(ZipEntry.STORED);
+                entry.setSize(file.length());
+                entry.setCrc(getFileCRCCode(file));
+            } else
+                entry.setMethod(ZipEntry.DEFLATED);// // DEFLATED 模式不需要设置 size 和 crc，ZipOutputStream 会自动处理
 
-            for (int i = 1; i < 11; i++) {
-                try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(Paths.get(saveZip + i + ".jpg")))) {
-                    zipOut.putNextEntry(new ZipEntry(saveZip + i + ".jpg"));
-                    int temp;
+            zipOut.putNextEntry(entry);
 
-                    while ((temp = bufferedInputStream.read()) != -1)
-                        bufferedOutputStream.write(temp);
-                }
-            }
+            byte[] buffer = new byte[8192];
+            int len;
+            while ((len = bin.read(buffer)) != -1)
+                zipOut.write(buffer, 0, len);
 
-        } catch (IOException e) {
-            log.warn("zipFileBuffer", e);
+            zipOut.closeEntry();
         }
     }
-
-    /**
-     * Java 极快压缩方式 <a href="https://blog.csdn.net/weixin_44044915/article/details/115734457">fileContent</a>
-     */
-    public static void zipFile(File[] fileContent, String saveZip) {
-        try (ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(Paths.get(saveZip)));
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(zipOut)) {
-
-            for (File fc : fileContent) {
-                try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(fc.toPath()))) {
-                    ZipEntry entry = new ZipEntry(fc.getName());
-                    // 核心，和复制粘贴效果一样，并没有压缩，但速度很快
-                    entry.setMethod(ZipEntry.STORED);
-                    entry.setSize(fc.length());
-                    entry.setCrc(getFileCRCCode(fc));
-                    zipOut.putNextEntry(entry);
-
-                    int len;
-                    byte[] data = new byte[8192];
-
-                    while ((len = bufferedInputStream.read(data)) != -1)
-                        bufferedOutputStream.write(data, 0, len);
-
-                    bufferedInputStream.close();
-                    bufferedOutputStream.flush();
-                }
-            }
-        } catch (IOException e) {
-            log.warn("zipFile", e);
-        }
-    }
-
 
     /**
      * 获取 CRC32
-     * CheckedInputStream一种输入流，它还维护正在读取的数据的校验和。然后可以使用校验和来验证输入数据的完整性。
-     *
-     * @param file
-     * @return
+     * CheckedInputStream 一种输入流，它还维护正在读取的数据的校验和。然后可以使用校验和来验证输入数据的完整性。
      */
-    public static long getFileCRCCode(File file) {
+    private static long getFileCRCCode(File file) {
         CRC32 crc32 = new CRC32();
 
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
              CheckedInputStream checkedinputstream = new CheckedInputStream(bufferedInputStream, crc32)) {
             while (checkedinputstream.read() != -1) {
+                // 只需遍历即可统计
             }
         } catch (IOException e) {
             log.warn("getFileCRCCode", e);
