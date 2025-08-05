@@ -1,12 +1,3 @@
-/* 百度统计 */
-var _hmt = _hmt || [];
-(function () {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?061f86e97629f2d5b916a718bf2fe516";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-})();
-
 document.addEventListener('DOMContentLoaded', function () {
     var arr = location.pathname.split('/');
     if (arr && arr.length > 3) {
