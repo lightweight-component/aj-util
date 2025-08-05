@@ -33,6 +33,11 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!-- 编译为 jar 包时依赖的 -->
         <dependency>
             <groupId>javax.servlet</groupId>
