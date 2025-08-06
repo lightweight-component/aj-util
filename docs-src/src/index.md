@@ -38,7 +38,7 @@ modules:
 
 ## Links
 
-[User Manual](https://aj-util.ajaxjs.com) | [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+[User Manual](https://aj-util.ajaxjs.com) | [Ask DeepWiki](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
 ## Install
 
@@ -48,7 +48,7 @@ Runs on Java 8+. Maven:
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.7</version>
 </dependency>
 ```
 

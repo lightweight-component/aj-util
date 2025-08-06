@@ -37,7 +37,7 @@ layout: layouts/aj-util-cn.njk
 
 ## 链接
 
-[用户手册](https://aj-util.ajaxjs.com) | [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-util) | [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+[用户手册](https://aj-util.ajaxjs.com) |  [Ask DeepWiki](https://deepwiki.com/lightweight-component/aj-util) | [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
 ## 安装
 
@@ -47,7 +47,7 @@ layout: layouts/aj-util-cn.njk
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.7</version>
 </dependency>
 ```
 
