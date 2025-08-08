@@ -113,9 +113,8 @@ public class StreamHelper {
         try {
             if (isBuffer) {
                 try (OutputStream _out = new BufferedOutputStream(out)) {// 加入缓冲功能
-                    while ((readSize = in.read(buffer)) != -1) {
+                    while ((readSize = in.read(buffer)) != -1)
                         _out.write(buffer, 0, readSize);
-                    }
                 }
             } else {
                 // 每次读 1KB 数据，将输入流数据写入到输出流中
