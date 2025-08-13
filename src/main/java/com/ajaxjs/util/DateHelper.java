@@ -247,7 +247,10 @@ public class DateHelper {
             else
                 return localDateTime2Date(parseDateTimeShort(str));
             // 输入日期不合法，不能转为日期类型。请重新输入日期字符串格式类型，或考虑其他方法。
-        }
+        } else if (obj instanceof LocalDateTime)
+            return localDateTime2Date((LocalDateTime) obj);
+        else if (obj instanceof LocalDate)
+            return localDate2Date((LocalDate) obj);
 
         return null;
     }
