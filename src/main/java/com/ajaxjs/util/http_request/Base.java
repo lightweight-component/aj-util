@@ -10,9 +10,13 @@
  */
 package com.ajaxjs.util.http_request;
 
+import com.ajaxjs.util.BoxLogger;
+import com.ajaxjs.util.DateHelper;
+import com.ajaxjs.util.StrUtil;
 import com.ajaxjs.util.http_request.model.ResponseEntity;
 import com.ajaxjs.util.io.StreamHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +51,7 @@ public abstract class Base {
      * @return 请求连接对象
      */
     public static HttpURLConnection initHttpConnection(String url, String method) {
-        log.info("准备连接： {} {}", method, url);
+//        log.info("准备连接： {} {}", method, url);
         URL httpUrl = null;
 
         try {
@@ -115,7 +119,8 @@ public abstract class Base {
                     resp.setResponseText(result);
                 }
 
-                log.info("{} {} 请求正常但结果异常 HTTP CODE {}，返回结果：\n{}", resp.getHttpMethod(), resp.getUrl(), resp.getHttpCode(), result == null ? "未知" : result);
+                printErrorLog(resp.getHttpMethod(), resp.getUrl(), String.valueOf(resp.getHttpCode()), result == null ? "未知" : result);
+                log.warn("{} 返回结果异常\n{}", resp.getUrl(), result == null ? "未知" : result);
             } else {
                 resp.setOk(true);
                 in = conn.getInputStream();// 发起请求，接收响应
@@ -128,6 +133,19 @@ public abstract class Base {
         }
 
         return resp;
+    }
+
+    public static void printErrorLog(String httpMethod, String url, String httpCode, String returnText) {
+        String title = " HTTP ServerRequest ErrResponse ";
+        String sb = "\n" + BoxLogger.ANSI_RED + BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
+                BoxLogger.boxContent("Time:       ", DateHelper.now()) + '\n' +
+                BoxLogger.boxContent("TraceId:    ", MDC.get(BoxLogger.TRACE_KEY)) + '\n' +
+                BoxLogger.boxContent("Request:    ", httpMethod + " " + url) + '\n' +
+                BoxLogger.boxContent("ReturnCode: ", httpCode) + '\n' +
+                BoxLogger.boxContent("ReturnText: ", returnText) + '\n' +
+                BoxLogger.boxLine('└', '─', '┘', StrUtil.EMPTY_STRING) + BoxLogger.ANSI_RESET;
+
+        log.info(sb);
     }
 
     /**

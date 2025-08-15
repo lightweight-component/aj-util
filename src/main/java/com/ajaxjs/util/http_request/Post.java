@@ -15,6 +15,7 @@ import com.ajaxjs.util.http_request.model.HttpConstants;
 import com.ajaxjs.util.http_request.model.ResponseEntity;
 import com.ajaxjs.util.io.StreamHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -60,6 +61,7 @@ public class Post extends Base implements HttpConstants {
      * @return 响应的  ResponseEntity  对象
      */
     public static ResponseEntity any(String method, String url, Object params, Consumer<HttpURLConnection> fn) {
+        printInitLog(method, url, params.toString());
         final byte[] _params;
 
         if (params instanceof String)
@@ -95,6 +97,18 @@ public class Post extends Base implements HttpConstants {
                 }
             }
         });
+    }
+
+    public static void printInitLog(String httpMethod, String url, String parameters) {
+        String title = " Init HTTP ServerRequest ";
+        String sb = "\n" + BoxLogger.ANSI_BLUE + BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
+                BoxLogger.boxContent("Time:       ", DateHelper.now()) + '\n' +
+                BoxLogger.boxContent("TraceId:    ", MDC.get(BoxLogger.TRACE_KEY)) + '\n' +
+                BoxLogger.boxContent("Request:    ", httpMethod + " " + url) + '\n' +
+                BoxLogger.boxContent("Parameters: ", parameters) + '\n' +
+                BoxLogger.boxLine('└', '─', '┘', StrUtil.EMPTY_STRING) + BoxLogger.ANSI_RESET;
+
+        log.info(sb);
     }
 
     /**
@@ -227,7 +241,7 @@ public class Post extends Base implements HttpConstants {
      */
     static String toJsonStr(Object params) {
         String json = JsonUtil.toJson(params);
-        json = json.replaceAll("[\\r\\n]", "" ); // 不要换行，否则会不承认这个格式
+        json = json.replaceAll("[\\r\\n]", ""); // 不要换行，否则会不承认这个格式
         log.info(json);
 
         return json;
