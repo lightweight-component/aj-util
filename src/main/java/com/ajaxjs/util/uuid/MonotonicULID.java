@@ -1,10 +1,11 @@
-package com.ajaxjs.util.ulid;
+package com.ajaxjs.util.uuid;
 
 
 import java.security.SecureRandom;
 import java.util.Random;
 
 /**
+ * 同一毫秒内的有序性,单调 ULID
  * Monotonic version of ULID generator.
  * <p>
  * When generating a ULID within the same millisecond
@@ -30,16 +31,17 @@ public class MonotonicULID {
 
     public synchronized ULID next() {
         long now = System.currentTimeMillis();
+
         if (lastTime == now) {
             // Entropy is big-endian (network byte order) per ULID spec
             // Increment last entropy by 1
             boolean carry = true;
             for (int i = ULID.ENTROPY_LENGTH - 1; i >= 0; i--) {
                 if (carry) {
-                    byte work = this.lastEntropy[i];
+                    byte work = lastEntropy[i];
                     work = (byte) (work + 0x01);
-                    carry = this.lastEntropy[i] == (byte) 0xff && carry;
-                    this.lastEntropy[i] = work;
+                    carry = lastEntropy[i] == (byte) 0xff && carry;
+                    lastEntropy[i] = work;
                 }
             }
             // Last byte has carry over
@@ -48,15 +50,23 @@ public class MonotonicULID {
                 throw new IllegalStateException("ULID entropy overflowed for same millisecond");
             }
         } else {
-            this.lastTime = now;
-            this.random.nextBytes(this.lastEntropy);
+            lastTime = now;
+            random.nextBytes(lastEntropy);
         }
-        return ULID.generate(now, this.lastEntropy);
+
+        return ULID.generate(now, lastEntropy);
     }
 
     public static MonotonicULID DEFAULT = new MonotonicULID(new SecureRandom());
 
     public static ULID random() {
         return DEFAULT.next();
+    }
+
+    public static void main(String[] args) {
+        ULID random1 = MonotonicULID.random();
+        System.out.println(random1);
+        System.out.println(MonotonicULID.random());
+        System.out.println(MonotonicULID.random());
     }
 }

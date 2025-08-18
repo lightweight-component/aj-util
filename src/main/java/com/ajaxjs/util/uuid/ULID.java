@@ -1,4 +1,4 @@
-package com.ajaxjs.util.ulid;
+package com.ajaxjs.util.uuid;
 
 
 import java.io.Serializable;
