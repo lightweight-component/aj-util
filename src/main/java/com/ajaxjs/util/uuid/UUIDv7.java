@@ -1,12 +1,11 @@
 package com.ajaxjs.util.uuid;
 
-
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.UUID;
 
 public class UUIDv7 {
-    private static final SecureRandom random = new SecureRandom();
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     public static UUID randomUUID() {
         byte[] value = randomBytes();
@@ -20,7 +19,7 @@ public class UUIDv7 {
     private static byte[] randomBytes() {
         // random bytes
         byte[] value = new byte[16];
-        random.nextBytes(value);
+        RANDOM.nextBytes(value);
 
         // current timestamp in ms
         ByteBuffer timestamp = ByteBuffer.allocate(Long.BYTES);
