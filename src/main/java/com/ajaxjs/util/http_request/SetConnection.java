@@ -11,6 +11,7 @@
 package com.ajaxjs.util.http_request;
 
 import com.ajaxjs.util.MapTool;
+import com.ajaxjs.util.http_request.model.HttpConstants;
 
 import java.net.HttpURLConnection;
 import java.util.Map;
@@ -57,9 +58,9 @@ public abstract class SetConnection {
     /**
      * 设置 POST 方式
      */
-    public final static Consumer<HttpURLConnection> SET_FORM_POST = conn -> conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+    public final static Consumer<HttpURLConnection> SET_FORM_POST = conn -> conn.setRequestProperty("Content-type", HttpConstants.CONTENT_TYPE_FORM_UTF8);
 
-    public final static Consumer<HttpURLConnection> SET_JSON = conn -> conn.setRequestProperty("Content-type", "application/json");
+    public final static Consumer<HttpURLConnection> SET_JSON = conn -> conn.setRequestProperty("Content-type", HttpConstants.CONTENT_TYPE_JSON);
 
     /**
      * Map 转化到 HTTP HEAD。 这是高阶函数

@@ -10,6 +10,7 @@
  */
 package com.ajaxjs.util.http_request;
 
+import com.ajaxjs.util.http_request.model.HttpConstants;
 import com.ajaxjs.util.http_request.model.ResponseEntity;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,7 +87,7 @@ public class Head extends Base {
     /**
      * 加入 HTTP 头为 JSON
      */
-    public final static Consumer<HttpURLConnection> GET_JSON = (head) -> head.setRequestProperty("Content-Type", "application/json");
+    public final static Consumer<HttpURLConnection> GET_JSON = (head) -> head.setRequestProperty("Content-Type", HttpConstants.CONTENT_TYPE_JSON);
 
     /**
      * 生成一个用于设置 OAuth 认证头的 Consumer 对象
