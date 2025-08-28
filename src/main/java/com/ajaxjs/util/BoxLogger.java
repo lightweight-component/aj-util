@@ -17,6 +17,8 @@ public class BoxLogger {
 
     public final static String TRACE_KEY = "traceId";
 
+    public final static String BIZ_ACTION = "bizAction";
+
     // 打印边框行
     public static String boxLine(char left, char fill, char right, String title) {
         int fillLen = BOX_WIDTH - 2 - title.length();
