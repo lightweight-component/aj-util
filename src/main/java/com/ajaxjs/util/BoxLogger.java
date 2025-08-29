@@ -30,7 +30,6 @@ public class BoxLogger {
 
     // 打印内容行
     public static String boxContent(String key, String value) {
-//         key + value + padding = BOX_WIDTH - 2
         int maxLen = BOX_WIDTH - 2 - key.length();
         String val = truncate(value, maxLen);
         int pad = BOX_WIDTH - 2 - key.length() - getDisplayWidth(val);
@@ -40,7 +39,9 @@ public class BoxLogger {
 
     // 重复字符
     public static String repeat(char c, int n) {
-        if (n <= 0) return "";
+        if (n <= 0)
+            return StrUtil.EMPTY_STRING;
+
         StringBuilder sb = new StringBuilder(n);
         for (int i = 0; i < n; i++)
             sb.append(c);
