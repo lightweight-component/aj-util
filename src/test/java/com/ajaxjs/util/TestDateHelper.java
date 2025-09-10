@@ -10,7 +10,6 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDateHelper {
-
     @Test
     public void formatDate_LocalDateToString_FormatsCorrectly() {
         LocalDate date = LocalDate.of(2023, 3, 14);
