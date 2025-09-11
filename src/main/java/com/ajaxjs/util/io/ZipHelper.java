@@ -35,15 +35,17 @@ public class ZipHelper {
 //					new File(newFile.getParent()).mkdirs();
                     initFolder(newFile);
                     FileOutputStream fos = new FileOutputStream(newFile);
-                    StreamHelper.write(zis, fos, false);
+                    StreamHelper.write(zis, fos, true);
                     fos.close();
                 }
 
 //				ze = zis.getNextEntry();
             }
+
             zis.closeEntry();
         } catch (IOException e) {
             log.warn("unzip", e);
+            throw new UncheckedIOException(e);
         }
 
         log.info("解压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
