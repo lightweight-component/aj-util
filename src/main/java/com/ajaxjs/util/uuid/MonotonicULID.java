@@ -40,15 +40,15 @@ public class MonotonicULID {
                 if (carry) {
                     byte work = lastEntropy[i];
                     work = (byte) (work + 0x01);
-                    carry = lastEntropy[i] == (byte) 0xff && carry;
+                    carry = lastEntropy[i] == (byte) 0xff;
                     lastEntropy[i] = work;
                 }
             }
+
             // Last byte has carry over
-            if (carry) {
+            if (carry)
                 // Throw error if entropy overflows in same millisecond per ULID spec
                 throw new IllegalStateException("ULID entropy overflowed for same millisecond");
-            }
         } else {
             lastTime = now;
             random.nextBytes(lastEntropy);

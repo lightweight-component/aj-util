@@ -31,7 +31,6 @@ public class EnumsUtil {
         return Optional.empty(); // 如果没有找到匹配的枚举对象，则返回空的Optional对象
     }
 
-
     /**
      * 根据枚举代码获取对应的枚举消息
      * 此方法利用泛型方法的类型参数，通过给定的枚举代码和枚举类类型，返回枚举代码对应的消息
@@ -41,13 +40,13 @@ public class EnumsUtil {
      * @param <V>  枚举消息的类型
      * @param <T>  枚举类的类型，该类继承自 IEnum 接口
      * @param code 枚举代码，用于查找对应的枚举项
-     * @param cla  枚举类的 Class 对象，用于反射获取枚举项
+     * @param clz  枚举类的 Class 对象，用于反射获取枚举项
      * @return 对应枚举代码的消息，如果找不到则返回 null
      */
-    public static <E, V, T extends IEnum<E, V>> V ofMsg(E code, Class<T> cla) {
-        Optional<T> of = of(code, cla); // 尝试根据枚举代码获取对应的枚举项
+    public static <E, V, T extends IEnum<E, V>> V ofMsg(E code, Class<T> clz) {
+        Optional<T> of = of(code, clz); // 尝试根据枚举代码获取对应的枚举项
 
-        return of.map(IEnum::getMsg).orElse(null); // 如果找到了对应的枚举项，则返回其消息；否则返回null
+        return of.map(IEnum::getMsg).orElse(null); // 如果找到了对应的枚举项，则返回其消息；否则返回 null
     }
 
     /**
@@ -59,19 +58,17 @@ public class EnumsUtil {
      * @param <V> 枚举值的类型
      * @param <T> 枚举类的类型，该类继承了IEnum接口
      * @param msg 消息，用于在枚举类中查找对应的枚举项
-     * @param cla 枚举类的Class对象，用于获取枚举项
+     * @param clz 枚举类的Class对象，用于获取枚举项
      * @return 如果找到对应的消息，则返回枚举项的代码；否则返回null
      */
-    public static <E, V, T extends IEnum<E, V>> E ofCode(String msg, Class<T> cla) {
+    public static <E, V, T extends IEnum<E, V>> E ofCode(String msg, Class<T> clz) {
         if (StrUtil.isEmptyText(msg))
             return null;
 
-        T[] enums = cla.getEnumConstants();
+        T[] enums = clz.getEnumConstants();
 
-        // 遍历枚举项，寻找与消息匹配的枚举项
-        for (T value : enums) {
-            // 如果消息与枚举项的消息匹配，则返回该枚举项的代码
-            if (msg.equals(value.getMsg()))
+        for (T value : enums) { // 遍历枚举项，寻找与消息匹配的枚举项
+            if (msg.equals(value.getMsg()))// 如果消息与枚举项的消息匹配，则返回该枚举项的代码
                 return value.getCode();
         }
 

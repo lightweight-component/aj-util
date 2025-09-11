@@ -124,6 +124,7 @@ public class FileHelper {
 
     /**
      * 创建目录。
+     * 有创建多级目录的能力
      *
      * @param directoryPath 目录路径
      * @throws UncheckedIOException 如果创建目录时发生错误

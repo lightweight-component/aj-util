@@ -179,7 +179,7 @@ public class Clazz {
      * @return 对象实例，因为传入的类全称是字符串，无法创建泛型 T，所以统一返回 Object
      */
     public static Object newInstance(String clzName, Object... args) {
-        Class<?> clazz = Clazz.getClassByName(clzName);
+        Class<?> clazz = getClassByName(clzName);
 
         return newInstance(clazz, args);
     }

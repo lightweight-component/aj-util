@@ -20,14 +20,8 @@ public class ZipHelper {
      * @param zipFile 输入的解压文件路径，例如 C:/temp/foo.zip 或 c:\\temp\\bar.zip
      */
     public static void unzip(String save, String zipFile) {
-        if (!new File(save).isDirectory())
-            throw new IllegalArgumentException("保存的路径必须为目录路径");
-
         long start = System.currentTimeMillis();
-        File folder = new File(save);
-
-        if (!folder.exists())
-            folder.mkdirs();
+        FileHelper.createDirectory(save);
 
         try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(zipFile)))) {
             ZipEntry ze;
@@ -171,20 +165,7 @@ public class ZipHelper {
         if (file.isDirectory())
             throw new IllegalArgumentException("参数必须是文件，不是目录");
 
-        mkDir(file.getParent());
-    }
-
-    /**
-     * 创建目录
-     *
-     * @param folder 目录字符串
-     */
-    public static void mkDir(String folder) {
-        File _folder = new File(folder);
-        if (!_folder.exists())// 先检查目录是否存在，若不存在建立
-            _folder.mkdirs();
-
-        _folder.mkdir();
+        FileHelper.createDirectory(file.getParent());
     }
 
     /**
