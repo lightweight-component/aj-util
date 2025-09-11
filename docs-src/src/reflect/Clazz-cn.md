@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Clazz 教程
+description: Clazz 类提供了动态创建类实例和检查构造函数的实用方法
 tags:
-  - last one
+  - 反射
+  - 实例化
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

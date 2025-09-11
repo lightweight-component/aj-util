@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-AesCrypto</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  AesCrypto" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, AesCrypto" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>AesCrypto 教程</h1>
+<p>本教程提供了 <code>AesCrypto</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>AesCrypto</code> 提供了一系列使用 AES、DES、3DES 和 PBE 等算法进行对称加密和解密的实用方法。</p>
+<h2>简介</h2>
+<p><code>AesCrypto</code> 类提供了使用各种对称加密算法对数据进行加密和解密的方法。它实现了单例模式，并提供了一套完整的安全数据加密工具。</p>
+<h2>方法</h2>
+<h3>1. <code>getInstance()</code></h3>
+<p>返回 <code>AesCrypto</code> 类的单例实例。</p>
+<ul>
+<li><strong>返回值：</strong> <code>AesCrypto</code> 的单例实例。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">AesCrypto crypto = AesCrypto.getInstance();
+</code></pre>
+<h3>2. <code>getSecretKey(String algorithmName, SecureRandom secure)</code></h3>
+<p>使用提供的安全随机生成器为指定算法生成密钥，并将其作为 Base64 编码的字符串返回。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>algorithmName</code>：加密算法的名称。</li>
+<li><code>secure</code>：安全随机生成器。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 密钥的 Base64 编码字符串表示。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">SecureRandom secureRandom = new SecureRandom();
+String secretKey = AesCrypto.getSecretKey(&quot;AES&quot;, secureRandom);
+</code></pre>
+<h3>3. <code>DES_encode(String res, String key)</code> 和 <code>DES_decode(String res, String key)</code></h3>
+<p>使用 DES 算法加密或解密数据。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>res</code>：要加密/解密的数据。</li>
+<li><code>key</code>：加密/解密密钥。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 加密/解密后的数据。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">AesCrypto crypto = AesCrypto.getInstance();
+String encrypted = crypto.DES_encode(&quot;你好，世界！&quot;, &quot;mySecretKey&quot;);
+String decrypted = crypto.DES_decode(encrypted, &quot;mySecretKey&quot;);
+</code></pre>
+<h3>4. <code>AES_encode(String res, String key)</code> 和 <code>AES_decode(String res, String key)</code></h3>
+<p>使用 AES 算法和 128 位密钥大小加密或解密数据。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>res</code>：要加密/解密的数据。</li>
+<li><code>key</code>：加密/解密密钥。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 加密/解密后的数据。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">AesCrypto crypto = AesCrypto.getInstance();
+String encrypted = crypto.AES_encode(&quot;你好，世界！&quot;, &quot;mySecretKey&quot;);
+String decrypted = crypto.AES_decode(encrypted, &quot;mySecretKey&quot;);
+</code></pre>
+<h3>5. <code>encryptTripleDES(byte[] key, String data)</code> 和 <code>decryptTripleDES(byte[] key, byte[] data)</code></h3>
+<p>使用三重 DES (3DES) 算法加密或解密数据。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>key</code>：加密/解密密钥（三重 DES 需要 24 字节）。</li>
+<li><code>data</code>：要加密/解密的数据。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 加密/解密后的数据。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">byte[] key = new byte[24]; // 生成或获取一个 24 字节的密钥
+new SecureRandom().nextBytes(key);
+
+byte[] encrypted = AesCrypto.encryptTripleDES(key, &quot;你好，世界！&quot;);
+String decrypted = AesCrypto.decryptTripleDES(key, encrypted);
+</code></pre>
+<h3>6. <code>initSalt()</code>、<code>encryptPBE(String key, byte[] salt, String data)</code> 和 <code>decryptPBE(String key, byte[] salt, byte[] data)</code></h3>
+<p>基于密码的加密 (PBE) 方法。</p>
+<ul>
+<li><strong>initSalt()</strong>：生成一个随机的 8 字节盐值。</li>
+<li><strong>encryptPBE()</strong>：使用提供的密钥和盐值通过 PBE 加密数据。</li>
+<li><strong>decryptPBE()</strong>：使用提供的密钥和盐值通过 PBE 解密数据。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">byte[] salt = AesCrypto.initSalt();
+String key = &quot;mySecretPassword&quot;;
+
+byte[] encrypted = AesCrypto.encryptPBE(key, salt, &quot;你好，世界！&quot;);
+String decrypted = AesCrypto.decryptPBE(key, salt, encrypted);
+</code></pre>
+<h2>结论</h2>
+<p><code>AesCrypto</code> 类提供了一套全面的对称加密和解密工具。它支持多种算法（AES、DES、3DES、PBE）并为安全数据处理提供了简单的接口。请记住安全地存储加密密钥，并遵循加密实现的最佳实践。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-MonotonicULID 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  提供单调递增ULID的实现和使用方法" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, UUID,ULID,单调递增" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>MonotonicULID 教程</h1>
+<p>本教程提供了 <code>MonotonicULID</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>MonotonicULID</code> 扩展了标准 ULID 的功能，确保在同一毫秒内生成的标识符单调递增。</p>
+<h2>简介</h2>
+<p><code>MonotonicULID</code> 类实现了 ULID 规范的单调版本。当在同一毫秒内生成多个 ULID 时，随机组件在最低有效位位置递增 1 位（带进位）。这确保了在同一毫秒内快速连续生成的 ULID 在按词典排序时仍然正确排序。</p>
+<p>这个特性对于高吞吐量系统特别有用，在这些系统中，可能在同一毫秒内生成许多标识符，并且维持严格的排序很重要。</p>
+<h2>方法</h2>
+<h3>1. <code>random()</code></h3>
+<p>使用默认安全随机生成器生成单调递增的 ULID。</p>
+<ul>
+<li><strong>返回值：</strong> 一个新的 ULID 实例，保证比同一毫秒内之前生成的任何 ULID 都大。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">ULID ulid1 = MonotonicULID.random();
+ULID ulid2 = MonotonicULID.random();
+// 如果在同一毫秒内生成，ulid2 在词典排序上将大于 ulid1
+</code></pre>
+<h3>2. 构造函数：<code>MonotonicULID(Random random)</code></h3>
+<p>使用自定义随机数生成器创建新的 MonotonicULID 生成器。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>random</code>：要使用的随机数生成器。</li>
+</ul>
+</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">MonotonicULID generator = new MonotonicULID(new SecureRandom());
+</code></pre>
+<h3>3. <code>next()</code></h3>
+<p>从此生成器实例生成下一个单调 ULID。</p>
+<ul>
+<li><strong>返回值：</strong> 一个新的 ULID 实例。</li>
+<li><strong>抛出：</strong> 如果在同一毫秒内熵溢出，则抛出 <code>IllegalStateException</code>。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">MonotonicULID generator = new MonotonicULID(new SecureRandom());
+ULID ulid1 = generator.next();
+ULID ulid2 = generator.next();
+// 如果在同一毫秒内生成，ulid2 将大于 ulid1
+</code></pre>
+<h2>单调性如何工作</h2>
+<p>单调性通过以下机制实现：</p>
+<ol>
+<li>当请求新的 ULID 时，将当前时间戳与上次生成的 ULID 的时间戳进行比较。</li>
+<li>如果时间戳不同（新的毫秒），则生成新的随机熵。</li>
+<li>如果时间戳相同（同一毫秒），则将上一个 ULID 的熵加 1。</li>
+<li>如果增加会导致溢出，则抛出 <code>IllegalStateException</code>。</li>
+</ol>
+<p>这种方法确保：</p>
+<ul>
+<li>ULID 在同一毫秒内始终递增</li>
+<li>时间戳组件仍然保持整体基于时间的排序</li>
+<li>冲突的概率仍然极低</li>
+</ul>
+<h2>使用场景</h2>
+<p>MonotonicULID 特别适用于：</p>
+<ol>
+<li><strong>数据库主键</strong>：确保插入顺序与键顺序匹配</li>
+<li><strong>分布式系统</strong>：在多个节点上提供一致的排序</li>
+<li><strong>高吞吐量应用</strong>：即使每毫秒生成数千个 ID 也能保持顺序</li>
+<li><strong>时间序列数据</strong>：非常适合需要按时间顺序存储的数据</li>
+</ol>
+<h2>与标准 ULID 的比较</h2>
+<p>虽然标准 ULID 已经可以按时间排序，但 MonotonicULID 增加了一个额外的保证：</p>
+<ul>
+<li><strong>标准 ULID</strong>：在同一毫秒内生成的两个 ULID 将随机排序（基于它们的随机组件）</li>
+<li><strong>MonotonicULID</strong>：在同一毫秒内生成的两个 ULID 将按照它们的生成顺序排序</li>
+</ul>
+<h2>结论</h2>
+<p><code>MonotonicULID</code> 类提供了 ULID 的增强版本，即使在同一毫秒内也能保证严格排序。这使其非常适合高性能系统，在这些系统中，唯一性和精确排序都是关键要求。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

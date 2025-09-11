@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Clazz Tutorial
+description: Utility methods for dynamically creating class instances and inspecting constructors
 tags:
-  - last one
+  - reflection
+  - instantiation
+  - Java
 layout: layouts/aj-util.njk
 ---
 

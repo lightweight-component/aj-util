@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-ObjectHelper Tutorial</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Provides utility methods for working with Java objects" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, object,utilities,cloning" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/common/BytesHelper/">BytesHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
+                    </li>
+                    <li>
+                        <a href="/common/EnumsUtil/">EnumsUtil</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/RandomTools/">RandomTools</a>
+                    </li>
+                    <li>
+                        <a href="/common/RegExpUtils/">RegExpUtils</a>
+                    </li>
+                    <li>
+                        <a href="/common/XmlHelper/">XmlHelper</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/EncodeTools/">EncodeTools</a>
+                    </li> 
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
+
+                <h3>Cryptography</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
+                    <li><a href="/common/Version/">Version</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+    
+           
+            </menu>
+            <article class="aj-text">
+                <h1>ObjectHelper Tutorial</h1>
+<p>This tutorial provides an overview of the <code>ObjectHelper</code> class, which is part of the <code>lightweight-component/aj-util</code> library. The <code>ObjectHelper</code> class provides utility methods for working with Java objects.</p>
+<h2>Introduction</h2>
+<p>The <code>ObjectHelper</code> class contains static methods for object cloning and map creation utilities.</p>
+<h2>Main Features</h2>
+<ul>
+<li>Deep cloning of Serializable objects</li>
+<li>Convenient map creation methods</li>
+<li>Optimized map initialization</li>
+<li>Empty map constant</li>
+</ul>
+<h2>Constants</h2>
+<ol>
+<li><code>EMPTY_PARAMS_MAP</code> - Immutable empty map</li>
+</ol>
+<h2>Methods</h2>
+<h3>1. Cloning</h3>
+<ol>
+<li><code>clone(T obj)</code> - Deep clone a Serializable object</li>
+</ol>
+<h3>2. Map Creation</h3>
+<ol>
+<li><code>mapOf(K k1, V v1)</code> - Create map with single entry</li>
+<li><code>mapOf(K k1, V v1, K k2, V v2)</code> - Create map with two entries</li>
+<li><code>mapOf(K k1, V v1, K k2, V v2, K k3, V v3)</code> - Create map with three entries</li>
+<li><code>mapOf(int expectedSize)</code> - Create optimized HashMap with expected size</li>
+</ol>
+<h2>Usage Examples</h2>
+<h3>Object Cloning</h3>
+<pre><code class="language-java">MyClass original = new MyClass();
+MyClass cloned = ObjectHelper.clone(original);
+</code></pre>
+<h3>Map Creation</h3>
+<pre><code class="language-java">Map&lt;String, Integer&gt; map1 = ObjectHelper.mapOf(&quot;a&quot;, 1);
+Map&lt;String, Integer&gt; map2 = ObjectHelper.mapOf(&quot;a&quot;, 1, &quot;b&quot;, 2);
+Map&lt;String, Integer&gt; map3 = ObjectHelper.mapOf(&quot;a&quot;, 1, &quot;b&quot;, 2, &quot;c&quot;, 3);
+
+// Optimized map
+Map&lt;String, Integer&gt; map = ObjectHelper.mapOf(100); // Pre-sized for ~100 entries
+</code></pre>
+<h3>Empty Map</h3>
+<pre><code class="language-java">Map&lt;String, Object&gt; empty = ObjectHelper.EMPTY_PARAMS_MAP;
+</code></pre>
+<h2>Implementation Notes</h2>
+<ul>
+<li><code>clone()</code> uses Java serialization for deep cloning</li>
+<li><code>mapOf()</code> methods provide convenient map initialization</li>
+<li><code>mapOf(int)</code> optimizes HashMap creation by calculating ideal initial capacity</li>
+</ul>
+<h2>Conclusion</h2>
+<p>The <code>ObjectHelper</code> class provides useful utilities for object cloning and map creation, simplifying common object-related operations in Java applications.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

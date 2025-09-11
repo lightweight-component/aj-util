@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: EnumsUtil Tutorial
+description: Utility for retrieving enum instances and their associated values by code
 tags:
-  - last one
+  - enums
+  - IEnum interface
+  - utilities
 layout: layouts/aj-util.njk
 ---
 

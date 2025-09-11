@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Methods 教程
+description: Methods 类提供了动态检索和调用 Java 方法的实用工具
 tags:
-  - last one
+  - 反射
+  - 方法调用
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: BytesHelper 教程
+description: BytesHelper 类提供了字节数组操作的实用方法
 tags:
-  - last one
+  - 字节数组
+  - 十六进制
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Resources 教程
+description: Resources 类提供了访问类路径资源的实用方法
 tags:
-  - last one
+  - 资源加载
+  - 类路径
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

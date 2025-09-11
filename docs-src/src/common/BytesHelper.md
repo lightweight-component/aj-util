@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: BytesHelper Tutorial
+description: Utility methods for byte array manipulation
 tags:
-  - last one
+  - byte arrays
+  - hexadecimal
+  - Java
 layout: layouts/aj-util.njk
 ---
 

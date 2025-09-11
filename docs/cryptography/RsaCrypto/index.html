@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-RsaCrypto</title>
+        <meta name="description" content="Small Java utilities with many useful functions. RsaCrypto" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, RsaCrypto" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/common/BytesHelper/">BytesHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
+                    </li>
+                    <li>
+                        <a href="/common/EnumsUtil/">EnumsUtil</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/RandomTools/">RandomTools</a>
+                    </li>
+                    <li>
+                        <a href="/common/RegExpUtils/">RegExpUtils</a>
+                    </li>
+                    <li>
+                        <a href="/common/XmlHelper/">XmlHelper</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/EncodeTools/">EncodeTools</a>
+                    </li> 
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
+
+                <h3>Cryptography</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
+                    <li><a href="/common/Version/">Version</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+    
+           
+            </menu>
+            <article class="aj-text">
+                <h1>RsaCrypto Tutorial</h1>
+<p>This tutorial provides an overview of the <code>RsaCrypto</code> class, which is part of the <code>lightweight-component/aj-util</code> library. <code>RsaCrypto</code> offers a collection of utility methods for asymmetric encryption, decryption, and digital signatures using the RSA algorithm.</p>
+<h2>Introduction</h2>
+<p>The <code>RsaCrypto</code> class provides methods for generating RSA key pairs, encrypting and decrypting data using public and private keys, and creating and verifying digital signatures. RSA is an asymmetric cryptographic algorithm that uses a pair of keys: a public key for encryption and a private key for decryption.</p>
+<h2>Methods</h2>
+<h3>1. <code>init()</code></h3>
+<p>Initializes and returns an RSA key pair with a key size of 1024 bits.</p>
+<ul>
+<li><strong>Returns:</strong> A map containing the public and private keys as byte arrays.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
+</code></pre>
+<h3>2. <code>getPublicKey(Map&lt;String, byte[]&gt; map)</code> and <code>getPrivateKey(Map&lt;String, byte[]&gt; map)</code></h3>
+<p>Retrieves the public or private key from a key pair map as a Base64 encoded string.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>map</code>: The map containing the key pair.</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> The Base64 encoded string representation of the key.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
+String publicKey = RsaCrypto.getPublicKey(keyPair);
+String privateKey = RsaCrypto.getPrivateKey(keyPair);
+</code></pre>
+<h3>3. <code>sign(String privateKey, byte[] data)</code></h3>
+<p>Creates a digital signature for the provided data using the private key.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>privateKey</code>: The Base64 encoded private key.</li>
+<li><code>data</code>: The data to sign.</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> The Base64 encoded digital signature.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
+String privateKey = RsaCrypto.getPrivateKey(keyPair);
+String signature = RsaCrypto.sign(privateKey, &quot;Hello, World!&quot;.getBytes());
+</code></pre>
+<h3>4. <code>verify(byte[] data, String publicKey, String sign)</code></h3>
+<p>Verifies a digital signature using the public key.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>data</code>: The original data.</li>
+<li><code>publicKey</code>: The Base64 encoded public key.</li>
+<li><code>sign</code>: The Base64 encoded signature to verify.</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> <code>true</code> if the signature is valid, <code>false</code> otherwise.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
+String publicKey = RsaCrypto.getPublicKey(keyPair);
+String privateKey = RsaCrypto.getPrivateKey(keyPair);
+
+byte[] data = &quot;Hello, World!&quot;.getBytes();
+String signature = RsaCrypto.sign(privateKey, data);
+
+boolean isValid = RsaCrypto.verify(data, publicKey, signature);
+// isValid should be true
+</code></pre>
+<h3>5. Public Key Operations: <code>encryptByPublicKey(byte[] data, String key)</code> and <code>decryptByPublicKey(byte[] data, String key)</code></h3>
+<p>Encrypts or decrypts data using the public key.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>data</code>: The data to encrypt/decrypt.</li>
+<li><code>key</code>: The Base64 encoded public key.</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> The encrypted/decrypted data as a byte array.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
+String publicKey = RsaCrypto.getPublicKey(keyPair);
+
+byte[] data = &quot;Hello, World!&quot;.getBytes();
+byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
+</code></pre>
+<h3>6. Private Key Operations: <code>encryptByPrivateKey(byte[] data, String key)</code> and <code>decryptByPrivateKey(byte[] data, String key)</code></h3>
+<p>Encrypts or decrypts data using the private key.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>data</code>: The data to encrypt/decrypt.</li>
+<li><code>key</code>: The Base64 encoded private key.</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> The encrypted/decrypted data as a byte array.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
+String privateKey = RsaCrypto.getPrivateKey(keyPair);
+String publicKey = RsaCrypto.getPublicKey(keyPair);
+
+// Encrypt with public key
+byte[] data = &quot;Hello, World!&quot;.getBytes();
+byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
+
+// Decrypt with private key
+byte[] decrypted = RsaCrypto.decryptByPrivateKey(encrypted, privateKey);
+// decrypted should be equal to the original data
+</code></pre>
+<h2>Conclusion</h2>
+<p>The <code>RsaCrypto</code> class provides a comprehensive set of tools for RSA asymmetric encryption, decryption, and digital signatures. It offers methods for key pair generation, data encryption/decryption using both public and private keys, and signature creation/verification. Remember to store private keys securely and follow best practices for cryptographic implementations.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

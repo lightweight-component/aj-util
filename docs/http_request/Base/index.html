@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-Base HTTP Request API</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Base HTTP Request API" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Base API" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/common/BytesHelper/">BytesHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
+                    </li>
+                    <li>
+                        <a href="/common/EnumsUtil/">EnumsUtil</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/RandomTools/">RandomTools</a>
+                    </li>
+                    <li>
+                        <a href="/common/RegExpUtils/">RegExpUtils</a>
+                    </li>
+                    <li>
+                        <a href="/common/XmlHelper/">XmlHelper</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/EncodeTools/">EncodeTools</a>
+                    </li> 
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
+
+                <h3>Cryptography</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
+                    <li><a href="/common/Version/">Version</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+    
+           
+            </menu>
+            <article class="aj-text">
+                <h1>HTTP Request Base Tutorial</h1>
+<p>This tutorial provides an overview of the <code>Base</code> class in the HTTP request package, which is part of the <code>lightweight-component/aj-util</code> library. The <code>Base</code> class serves as the foundation for making HTTP requests in Java applications.</p>
+<h2>Introduction</h2>
+<p>The <code>Base</code> class provides the core functionality for making HTTP requests using Java's built-in <code>HttpURLConnection</code>. It handles connection initialization, configuration, and execution of HTTP requests. This class serves as the foundation for other HTTP request classes in the package, such as <code>Get</code>, <code>Post</code>, <code>Delete</code>, etc.</p>
+<h2>Key Features</h2>
+<ul>
+<li>Simple interface for making HTTP requests</li>
+<li>Connection timeout and read timeout handling</li>
+<li>Error handling and logging</li>
+<li>Support for custom HTTP headers</li>
+<li>Response processing</li>
+</ul>
+<h2>Methods</h2>
+<h3>1. <code>initHttpConnection(String url, String method)</code></h3>
+<p>Initializes an <code>HttpURLConnection</code> for the specified URL and HTTP method.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>url</code>: The target URL for the HTTP request.</li>
+<li><code>method</code>: The HTTP method (GET, POST, PUT, DELETE, etc.).</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> An initialized <code>HttpURLConnection</code> object.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
+</code></pre>
+<h3>2. <code>connect(HttpURLConnection conn)</code></h3>
+<p>Executes the HTTP request using the provided connection and returns the response.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>conn</code>: The <code>HttpURLConnection</code> object to use for the request.</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> A <code>ResponseEntity</code> object containing the response details.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
+ResponseEntity response = Base.connect(conn);
+</code></pre>
+<h3>3. <code>connect(String url, String method, Consumer&lt;HttpURLConnection&gt; fn)</code></h3>
+<p>A convenience method that combines initialization and connection in one call, with an optional function for customizing the connection.</p>
+<ul>
+<li><strong>Parameters:</strong>
+<ul>
+<li><code>url</code>: The target URL for the HTTP request.</li>
+<li><code>method</code>: The HTTP method (GET, POST, PUT, DELETE, etc.).</li>
+<li><code>fn</code>: An optional function for customizing the connection (e.g., adding headers).</li>
+</ul>
+</li>
+<li><strong>Returns:</strong> A <code>ResponseEntity</code> object containing the response details.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-java">ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+    conn.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer token123&quot;);
+});
+</code></pre>
+<h2>Connection Configuration</h2>
+<p>The <code>Base</code> class sets default connection parameters:</p>
+<ul>
+<li><strong>Connection Timeout</strong>: 10 seconds (10,000 ms)</li>
+<li><strong>Read Timeout</strong>: 15 seconds (15,000 ms)</li>
+</ul>
+<p>These timeouts ensure that requests don't hang indefinitely if there are network issues.</p>
+<h2>Error Handling</h2>
+<p>The <code>Base</code> class includes comprehensive error handling:</p>
+<ol>
+<li>
+<p>For HTTP response codes &gt;= 400, it:</p>
+<ul>
+<li>Sets the <code>ok</code> flag to <code>false</code> in the <code>ResponseEntity</code></li>
+<li>Retrieves the error stream</li>
+<li>Logs the error details</li>
+</ul>
+</li>
+<li>
+<p>For connection exceptions, it:</p>
+<ul>
+<li>Sets the <code>ok</code> flag to <code>false</code></li>
+<li>Stores the exception in the <code>ResponseEntity</code></li>
+<li>Logs the exception details</li>
+</ul>
+</li>
+</ol>
+<h2>ResponseEntity</h2>
+<p>The <code>connect</code> methods return a <code>ResponseEntity</code> object that contains:</p>
+<ul>
+<li>HTTP response code</li>
+<li>Response body (as text or input stream)</li>
+<li>URL and HTTP method used</li>
+<li>Request timing information</li>
+<li>Success/failure status</li>
+<li>Any exceptions that occurred</li>
+</ul>
+<h2>Usage Example</h2>
+<p>Here's a complete example of using the <code>Base</code> class to make a GET request:</p>
+<pre><code class="language-java">try {
+    ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
+        conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+    });
+    
+    if (response.isOk()) {
+        // Process the successful response
+        String responseText = StreamHelper.copyToString(response.getIn());
+        System.out.println(&quot;Response: &quot; + responseText);
+    } else {
+        // Handle the error
+        System.err.println(&quot;Error: &quot; + response.getHttpCode() + &quot; - &quot; + response.getResponseText());
+    }
+} catch (Exception e) {
+    e.printStackTrace();
+}
+</code></pre>
+<h2>Conclusion</h2>
+<p>The <code>Base</code> class provides a solid foundation for making HTTP requests in Java applications. It handles the low-level details of connection management, error handling, and response processing, allowing you to focus on the business logic of your application. For specific HTTP methods, consider using the specialized classes built on top of <code>Base</code>, such as <code>Get</code>, <code>Post</code>, etc.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

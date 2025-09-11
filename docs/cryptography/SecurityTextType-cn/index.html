@@ -1,0 +1,33 @@
+<h1>SecurityTextType 教程</h1>
+<p>本教程提供了 <code>SecurityTextType</code> 接口的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>SecurityTextType</code> 接口定义了各种安全相关文本编码和哈希类型的枚举。</p>
+<h2>简介</h2>
+<p><code>SecurityTextType</code> 接口包含嵌套枚举，用于分类不同类型的：</p>
+<ul>
+<li>文本编码格式</li>
+<li>摘要（哈希）算法</li>
+<li>加密操作</li>
+</ul>
+<h2>枚举</h2>
+<h3>1. Encode</h3>
+<p>定义各种文本编码格式：</p>
+<ol>
+<li><code>BASE16</code> - 十六进制编码</li>
+<li><code>BASE32</code> - Base32 编码</li>
+<li><code>BASE58</code> - Base58 编码（用于比特币）</li>
+<li><code>BASE64</code> - Base64 编码</li>
+<li><code>BASE91</code> - Base91 编码</li>
+</ol>
+<h3>2. Digest</h3>
+<p>定义消息摘要（哈希）算法：</p>
+<ol>
+<li><code>Md5</code> - MD5 哈希</li>
+<li><code>Md5WithSalt</code> - 带盐的 MD5 哈希</li>
+</ol>
+<h3>3. Cryptography</h3>
+<p>当前为空，保留用于未来的加密操作类型。</p>
+<h2>使用示例</h2>
+<pre><code class="language-java">SecurityTextType.Encode encoding = SecurityTextType.Encode.BASE64;
+SecurityTextType.Digest digest = SecurityTextType.Digest.Md5WithSalt;
+</code></pre>
+<h2>结论</h2>
+<p><code>SecurityTextType</code> 接口提供了一种类型安全的方式，在整个应用程序中引用不同的安全相关文本编码和哈希算法。</p>

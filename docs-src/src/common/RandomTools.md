@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: RandomTools Tutorial
+description: Utility methods for generating random numbers and strings
 tags:
-  - last one
+  - random
+  - utilities
+  - Java
 layout: layouts/aj-util.njk
 ---
 

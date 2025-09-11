@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-Advanced Usage</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Advanced Usage for HTTP" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Response Handler,Connection Setup,SSL Certificate,Batch Download" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/common/BytesHelper/">BytesHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
+                    </li>
+                    <li>
+                        <a href="/common/EnumsUtil/">EnumsUtil</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/RandomTools/">RandomTools</a>
+                    </li>
+                    <li>
+                        <a href="/common/RegExpUtils/">RegExpUtils</a>
+                    </li>
+                    <li>
+                        <a href="/common/XmlHelper/">XmlHelper</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/EncodeTools/">EncodeTools</a>
+                    </li> 
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
+
+                <h3>Cryptography</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
+                    <li><a href="/common/Version/">Version</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+    
+           
+            </menu>
+            <article class="aj-text">
+                <h1>Response Handler Utility</h1>
+<p>Provides methods for processing HTTP responses in various formats.</p>
+<h2>Features</h2>
+<ul>
+<li>Response to text conversion</li>
+<li>Response to JSON/XML conversion</li>
+<li>File download handling</li>
+<li>GZip response handling</li>
+<li>Detailed logging</li>
+</ul>
+<h2>Usage Examples</h2>
+<pre><code class="language-java">// Convert response to JSON
+Map&lt;String, Object&gt; json = ResponseHandler.toJson(response);
+
+// Convert response to XML
+Map&lt;String, String&gt; xml = ResponseHandler.toXML(response);
+
+// Download file from response
+String filePath = ResponseHandler.download(response, &quot;/downloads&quot;, &quot;file.pdf&quot;);
+</code></pre>
+<h1>Connection Setup Utility</h1>
+<p>Provides common configurations for HTTP connections.</p>
+<h2>Features</h2>
+<ul>
+<li>Cookie handling</li>
+<li>Referer setting</li>
+<li>Timeout configuration</li>
+<li>User-Agent configuration</li>
+<li>GZip support</li>
+<li>Header mapping</li>
+</ul>
+<h2>Usage Examples</h2>
+<pre><code class="language-java">// Set custom User-Agent
+connectionConsumer = SetConnection.SET_USER_AGENT.andThen(conn -&gt; conn.setRequestProperty(&quot;User-Agent&quot;, &quot;MyApp/1.0&quot;));
+
+// Set cookies
+Map&lt;String, String&gt; cookies = Map.of(&quot;session&quot;, &quot;12345&quot;);
+SetConnection.SET_COOKIES.accept(connection, cookies);
+</code></pre>
+<h1>Batch Download Utility</h1>
+<p>Provides concurrent downloading of multiple files.</p>
+<h2>Features</h2>
+<ul>
+<li>Concurrent downloads using multiple threads</li>
+<li>Customizable file naming</li>
+<li>Progress tracking via CountDownLatch</li>
+</ul>
+<h2>Usage Examples</h2>
+<pre><code class="language-java">String[] urls = {
+    &quot;https://example.com/file1.pdf&quot;,
+    &quot;https://example.com/file2.pdf&quot;
+};
+
+BatchDownload downloader = new BatchDownload(urls, &quot;/downloads&quot;, 
+    () -&gt; &quot;custom_&quot; + System.currentTimeMillis());
+    
+downloader.start();
+</code></pre>
+<h1>SSL Certificate Utility</h1>
+<p>Provides methods for handling SSL certificate verification.</p>
+<h2>Features</h2>
+<ul>
+<li>Skip SSL certificate verification</li>
+<li>Custom certificate loading</li>
+<li>Global SSL context configuration</li>
+</ul>
+<h2>Usage Examples</h2>
+<pre><code class="language-java">// Skip SSL verification globally
+SkipSSL.init();
+
+// Skip SSL verification for single connection
+SkipSSL.setSSL_Ignore((HttpsURLConnection)connection);
+
+// Load custom certificate
+KeyManager[] kms = SkipSSL.loadCert(&quot;/path/to/cert.p12&quot;, &quot;password&quot;);
+SSLSocketFactory sf = SkipSSL.getSocketFactory(kms);
+</code></pre>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

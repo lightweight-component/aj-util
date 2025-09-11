@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-BoxLogger Tutorial</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Provides utilities for creating boxed log messages with proper formatting" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, logging,formatting,utilities" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/common/BytesHelper/">BytesHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
+                    </li>
+                    <li>
+                        <a href="/common/EnumsUtil/">EnumsUtil</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/RandomTools/">RandomTools</a>
+                    </li>
+                    <li>
+                        <a href="/common/RegExpUtils/">RegExpUtils</a>
+                    </li>
+                    <li>
+                        <a href="/common/XmlHelper/">XmlHelper</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/EncodeTools/">EncodeTools</a>
+                    </li> 
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
+
+                <h3>Cryptography</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
+                    <li><a href="/common/Version/">Version</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+    
+           
+            </menu>
+            <article class="aj-text">
+                <h1>BoxLogger Tutorial</h1>
+<p>This tutorial provides an overview of the <code>BoxLogger</code> class, which is part of the <code>lightweight-component/aj-util</code> library. The <code>BoxLogger</code> class provides utilities for creating boxed log messages with proper formatting and alignment.</p>
+<h2>Introduction</h2>
+<p>The <code>BoxLogger</code> class contains static methods for creating visually formatted log messages in boxes, with support for ANSI colors and proper handling of wide characters (like CJK).</p>
+<h2>Main Features</h2>
+<ul>
+<li>Boxed log message formatting</li>
+<li>ANSI color support</li>
+<li>String truncation with ellipsis</li>
+<li>Display width calculation (handling wide characters)</li>
+<li>String repetition utility</li>
+</ul>
+<h2>Constants</h2>
+<ol>
+<li><code>ANSI_GREEN</code> - ANSI green color code</li>
+<li><code>ANSI_YELLOW</code> - ANSI yellow color code</li>
+<li><code>ANSI_BLUE</code> - ANSI blue color code</li>
+<li><code>ANSI_RED</code> - ANSI red color code</li>
+<li><code>ANSI_RESET</code> - ANSI reset code</li>
+<li><code>NONE</code> - Constant &quot;none&quot;</li>
+<li><code>TRACE_KEY</code> - Default trace key name</li>
+<li><code>BIZ_ACTION</code> - Default business action key name</li>
+</ol>
+<h2>Methods</h2>
+<h3>1. Box Formatting</h3>
+<ol>
+<li><code>boxLine(char left, char fill, char right, String title)</code> - Create a box border line</li>
+<li><code>boxContent(String key, String value)</code> - Create a content line within box</li>
+</ol>
+<h3>2. String Utilities</h3>
+<ol>
+<li><code>repeat(char c, int n)</code> - Repeat character n times</li>
+<li><code>truncate(String s, int maxDisplayLen)</code> - Truncate string with ellipsis</li>
+<li><code>getDisplayWidth(String s)</code> - Calculate display width (wide chars = 2)</li>
+<li><code>isWideChar(char ch)</code> - Check if character is wide (CJK)</li>
+</ol>
+<h2>Usage Examples</h2>
+<h3>Create Boxed Log</h3>
+<pre><code class="language-java">System.out.println(BoxLogger.boxLine('┌', '─', '┐', &quot; LOG START &quot;));
+System.out.println(BoxLogger.boxContent(&quot;User: &quot;, &quot;张三&quot;));
+System.out.println(BoxLogger.boxLine('└', '─', '┘', &quot; LOG END &quot;));
+</code></pre>
+<h3>ANSI Colors</h3>
+<pre><code class="language-java">System.out.println(BoxLogger.ANSI_RED + &quot;Error!&quot; + BoxLogger.ANSI_RESET);
+</code></pre>
+<h3>String Utilities</h3>
+<pre><code class="language-java">String repeated = BoxLogger.repeat('-', 10); // &quot;----------&quot;
+String truncated = BoxLogger.truncate(&quot;This is a long string&quot;, 10); // &quot;This is...&quot;
+int width = BoxLogger.getDisplayWidth(&quot;中文&quot;); // 4
+</code></pre>
+<h2>Implementation Notes</h2>
+<ul>
+<li>Box width is fixed at 97 characters</li>
+<li>Properly handles CJK and fullwidth characters</li>
+<li>Includes basic ANSI color support</li>
+<li>Provides clean truncation with ellipsis</li>
+</ul>
+<h2>Conclusion</h2>
+<p>The <code>BoxLogger</code> class provides useful utilities for creating visually formatted log messages, especially useful for CLI applications or debugging output.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

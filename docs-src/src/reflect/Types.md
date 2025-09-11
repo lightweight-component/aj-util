@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Types Tutorial
+description: Utility methods for working with Java generic type information
 tags:
-  - last one
+  - generics
+  - type conversion
+  - Java
 layout: layouts/aj-util.njk
 ---
 

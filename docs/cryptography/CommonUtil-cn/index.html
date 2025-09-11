@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-CommonUtil</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  整个库中使用的常见加密实用工具" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 加密,解密,实用工具" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>CommonUtil 教程</h1>
+<p>本教程提供了 <code>CommonUtil</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>CommonUtil</code> 类提供了整个库中使用的常见加密实用工具。</p>
+<h2>简介</h2>
+<p><code>CommonUtil</code> 类包含用于各种加密操作的静态方法，包括：</p>
+<ul>
+<li>通用加密操作（加密/解密）</li>
+<li>XOR 加密/解密</li>
+<li>私钥加载和管理</li>
+<li>证书反序列化</li>
+</ul>
+<h2>主要特性</h2>
+<ul>
+<li>统一的加密操作处理</li>
+<li>简单的 XOR 加密/解密</li>
+<li>从各种来源加载私钥</li>
+<li>证书反序列化和验证</li>
+<li>支持多种加密算法</li>
+</ul>
+<h2>方法</h2>
+<h3>1. 加密操作</h3>
+<ol>
+<li><code>doCipher(String algorithmName, int mode, Key key, byte[] data)</code> - 基本加密操作</li>
+<li><code>doCipher(String algorithmName, int mode, Key key, byte[] data, AlgorithmParameterSpec spec)</code> - 带参数的加密</li>
+<li><code>doCipher(String algorithmName, int mode, byte[] keyData, AlgorithmParameterSpec spec, String cipherText, byte[] associatedData)</code> - 带关联数据的 AES 加密</li>
+</ol>
+<h3>2. XOR 加密</h3>
+<ol>
+<li><code>XOR_encode(String res, String key)</code> - 简单 XOR 加密</li>
+<li><code>XOR_decode(String res, String key)</code> - XOR 解密</li>
+<li><code>XOR(int res, String key)</code> - 整数 XOR 操作</li>
+</ol>
+<h3>3. 密钥管理</h3>
+<ol>
+<li><code>loadPrivateKeyByPath(String privateKeyPath)</code> - 从文件加载私钥</li>
+<li><code>loadPrivateKey(String privateKey)</code> - 从字符串加载私钥</li>
+<li><code>loadPrivateKey(InputStream inputStream)</code> - 从流加载私钥</li>
+</ol>
+<h3>4. 证书处理</h3>
+<ol>
+<li><code>deserializeToCerts(String apiV3Key, Map&lt;String, Object&gt; pMap)</code> - 反序列化和解密证书</li>
+</ol>
+<h2>使用示例</h2>
+<h3>加密操作</h3>
+<pre><code class="language-java">byte[] encrypted = CommonUtil.doCipher(&quot;AES/CBC/PKCS5Padding&quot;, 
+    Cipher.ENCRYPT_MODE, key, data, ivSpec);
+
+String decrypted = CommonUtil.doCipher(&quot;AES/GCM/NoPadding&quot;,
+    Cipher.DECRYPT_MODE, keyBytes, gcmSpec, cipherText, aad);
+</code></pre>
+<h3>XOR 加密</h3>
+<pre><code class="language-java">String encoded = CommonUtil.XOR_encode(&quot;secret&quot;, &quot;password&quot;);
+String decoded = CommonUtil.XOR_decode(encoded, &quot;password&quot;);
+</code></pre>
+<h3>密钥加载</h3>
+<pre><code class="language-java">PrivateKey key = CommonUtil.loadPrivateKeyByPath(&quot;keys/private.pem&quot;);
+PrivateKey key2 = CommonUtil.loadPrivateKey(privateKeyString);
+</code></pre>
+<h3>证书处理</h3>
+<pre><code class="language-java">Map&lt;BigInteger, X509Certificate&gt; certs = 
+    CommonUtil.deserializeToCerts(apiV3Key, responseMap);
+</code></pre>
+<h2>实现说明</h2>
+<ul>
+<li>处理各种加密异常</li>
+<li>支持多种密钥格式</li>
+<li>包含基本证书验证</li>
+<li>提供简单的 XOR 加密用于基本混淆</li>
+</ul>
+<h2>结论</h2>
+<p><code>CommonUtil</code> 类提供了基础的加密实用工具，被库中其他安全相关类使用，提供了一致的常见加密操作处理方式。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

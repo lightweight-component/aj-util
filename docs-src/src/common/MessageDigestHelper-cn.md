@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: MessageDigestHelper 教程
+description: MessageDigestHelper 类提供了消息摘要算法的实用工具方法
 tags:
-  - last one
+  - 加密
+  - 哈希
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

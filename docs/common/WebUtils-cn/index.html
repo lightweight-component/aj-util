@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-WebUtils 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  提供Java Web应用程序常用工具方法的工具类" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Web工具,IP地址,Cookie处理" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>WebUtils 教程</h1>
+<p>本教程提供了 <code>WebUtils</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>WebUtils</code> 类为 Java Web 应用程序提供了常用的工具方法。</p>
+<h2>简介</h2>
+<p><code>WebUtils</code> 类包含用于常见 Web 操作的静态方法，如 IP 地址获取和 Cookie 处理。</p>
+<h2>主要特性</h2>
+<ul>
+<li>获取本地 IP 地址</li>
+<li>从 HTTP 请求中获取客户端 IP 地址</li>
+<li>从 HTTP 请求中获取 Cookie</li>
+</ul>
+<h2>方法</h2>
+<h3>1. <code>getLocalIp()</code></h3>
+<p>获取服务器的本地 IP 地址。</p>
+<ul>
+<li><strong>返回值:</strong> 本地 IP 地址字符串，如果无法确定则返回 null。</li>
+</ul>
+<p><strong>示例:</strong></p>
+<pre><code class="language-java">String ip = WebUtils.getLocalIp();
+</code></pre>
+<h3>2. <code>getClientIp(HttpServletRequest request)</code></h3>
+<p>从 HTTP 请求中获取客户端的 IP 地址，处理各种代理头。</p>
+<ul>
+<li><strong>参数:</strong>
+<ul>
+<li><code>request</code>: HttpServletRequest 对象</li>
+</ul>
+</li>
+<li><strong>返回值:</strong> 客户端 IP 地址字符串</li>
+</ul>
+<p><strong>示例:</strong></p>
+<pre><code class="language-java">String clientIp = WebUtils.getClientIp(request);
+</code></pre>
+<h3>3. <code>getCookie(HttpServletRequest request, String cookieName)</code></h3>
+<p>从 HTTP 请求中按名称获取 Cookie 值。</p>
+<ul>
+<li><strong>参数:</strong>
+<ul>
+<li><code>request</code>: HttpServletRequest 对象</li>
+<li><code>cookieName</code>: 要获取的 Cookie 名称</li>
+</ul>
+</li>
+<li><strong>返回值:</strong> Cookie 值字符串，如果 Cookie 不存在则返回 null</li>
+</ul>
+<p><strong>示例:</strong></p>
+<pre><code class="language-java">String sessionId = WebUtils.getCookie(request, &quot;JSESSIONID&quot;);
+</code></pre>
+<h2>使用示例</h2>
+<p>以下是使用 WebUtils 类的完整示例：</p>
+<pre><code class="language-java">import javax.servlet.http.HttpServletRequest;
+import com.ajaxjs.util.WebUtils;
+
+public class Example {
+    public void processRequest(HttpServletRequest request) {
+        // 获取服务器 IP
+        String serverIp = WebUtils.getLocalIp();
+        System.out.println(&quot;服务器 IP: &quot; + serverIp);
+        
+        // 获取客户端 IP
+        String clientIp = WebUtils.getClientIp(request);
+        System.out.println(&quot;客户端 IP: &quot; + clientIp);
+        
+        // 获取会话 Cookie
+        String sessionId = WebUtils.getCookie(request, &quot;JSESSIONID&quot;);
+        System.out.println(&quot;会话 ID: &quot; + sessionId);
+    }
+}
+</code></pre>
+<h2>结论</h2>
+<p><code>WebUtils</code> 类为常见的 Web 操作提供了简单的工具方法，使在 Java Web 应用程序中处理 IP 地址和 Cookie 更加容易。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

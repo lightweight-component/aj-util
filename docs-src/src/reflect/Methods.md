@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Methods Tutorial
+description: Utility methods for dynamically retrieving and invoking Java methods
 tags:
-  - last one
+  - reflection
+  - method invocation
+  - Java
 layout: layouts/aj-util.njk
 ---
 

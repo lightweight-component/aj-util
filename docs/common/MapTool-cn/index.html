@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-MapTool 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  提供Map数据结构实用工具方法的工具类" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Map工具,XML转换,数据结构" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>MapTool 教程</h1>
+<p>本教程提供了 <code>MapTool</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>MapTool</code> 类为 Java 应用程序中的 Map 数据结构提供了实用工具方法。</p>
+<h2>简介</h2>
+<p><code>MapTool</code> 类包含用于常见 Map 操作的静态方法，如转换、连接和 XML 序列化/反序列化。</p>
+<h2>主要特性</h2>
+<ul>
+<li>将 Map 条目连接成具有各种分隔符的字符串</li>
+<li>在不同 Map 类型和格式之间转换</li>
+<li>在 Map 和 XML 之间转换</li>
+<li>Map 的深拷贝</li>
+<li>Map 值处理的辅助方法</li>
+</ul>
+<h2>方法</h2>
+<h3>1. <code>join()</code> 方法</h3>
+<p>四个重载方法用于将 Map 条目连接成字符串：</p>
+<ol>
+<li><code>join(Map&lt;String, T&gt; map, String div, Function&lt;T, String&gt; fn)</code> - 使用自定义分隔符和值处理器连接</li>
+<li><code>join(Map&lt;String, T&gt; map, Function&lt;T, String&gt; fn)</code> - 使用默认分隔符(&amp;)和自定义值处理器连接</li>
+<li><code>join(Map&lt;String, T&gt; map, String div)</code> - 使用自定义分隔符和默认 toString() 值处理器连接</li>
+<li><code>join(Map&lt;String, T&gt; map)</code> - 使用默认分隔符(&amp;)和默认 toString() 值处理器连接</li>
+</ol>
+<h3>2. <code>toMap()</code> 方法</h3>
+<p>两个将数据转换为 Map 的方法：</p>
+<ol>
+<li><code>toMap(String[] pairs, Function&lt;String, Object&gt; fn)</code> - 将 key=value 字符串数组转换为 Map</li>
+<li><code>toMap(String[] columns, String[] values, Function&lt;String, Object&gt; fn)</code> - 将并行的键和值数组转换为 Map</li>
+</ol>
+<h3>3. <code>getValue()</code></h3>
+<p><code>getValue(Map&lt;String, T&gt; map, String key, Consumer&lt;T&gt; s)</code> - 安全地获取和处理 Map 中的值（如果存在）</p>
+<h3>4. <code>as()</code> 方法</h3>
+<p>两个 Map 转换方法：</p>
+<ol>
+<li><code>as(Map&lt;String, K&gt; map, Function&lt;K, T&gt; fn)</code> - 使用函数转换 Map 值</li>
+<li><code>as(Map&lt;String, String[]&gt; map)</code> - 将 String[] 值的 Map 转换为 Map&lt;String, Object&gt;</li>
+</ol>
+<h3>5. <code>deepCopy()</code></h3>
+<p><code>deepCopy(Map&lt;T, K&gt; map)</code> - 创建 Map 的深拷贝</p>
+<h3>6. XML 转换方法</h3>
+<ol>
+<li><code>beanToXml(Object bean)</code> - 将 Java bean 转换为 XML 字符串</li>
+<li><code>mapToXml(Map&lt;String, ?&gt; data)</code> - 将 Map 转换为 XML 字符串</li>
+<li><code>xmlToMap(String strXML)</code> - 将 XML 字符串转换为 Map</li>
+</ol>
+<h2>使用示例</h2>
+<h3>连接 Map 条目</h3>
+<pre><code class="language-java">Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
+map.put(&quot;name&quot;, &quot;John&quot;);
+map.put(&quot;age&quot;, &quot;30&quot;);
+
+String joined = MapTool.join(map); // &quot;name=John&amp;age=30&quot;
+</code></pre>
+<h3>转换为 Map</h3>
+<pre><code class="language-java">String[] pairs = {&quot;name=John&quot;, &quot;age=30&quot;};
+Map&lt;String, Object&gt; map = MapTool.toMap(pairs, Integer::parseInt);
+</code></pre>
+<h3>XML 转换</h3>
+<pre><code class="language-java">Map&lt;String, String&gt; data = new HashMap&lt;&gt;();
+data.put(&quot;name&quot;, &quot;John&quot;);
+data.put(&quot;age&quot;, &quot;30&quot;);
+
+String xml = MapTool.mapToXml(data); 
+// &lt;xml&gt;&lt;name&gt;John&lt;/name&gt;&lt;age&gt;30&lt;/age&gt;&lt;/xml&gt;
+
+Map&lt;String, String&gt; map = MapTool.xmlToMap(xml);
+</code></pre>
+<h2>结论</h2>
+<p><code>MapTool</code> 类提供了全面的实用方法，用于处理 Map 数据结构，包括连接、转换和 XML 序列化/反序列化。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

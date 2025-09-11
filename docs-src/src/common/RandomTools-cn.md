@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: RandomTools 教程
+description: RandomTools 类提供了生成随机数和随机字符串的实用方法
 tags:
-  - last one
+  - 随机数
+  - 工具类
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

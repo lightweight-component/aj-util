@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: RegExpUtils 教程
+description: RegExpUtils 类提供了正则表达式匹配和处理的实用方法
 tags:
-  - last one
+  - 正则表达式
+  - 字符串匹配
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

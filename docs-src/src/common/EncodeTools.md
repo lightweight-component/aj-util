@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: EncodeTools Tutorial
+description: Utility methods for URL encoding/decoding and Base64 encoding/decoding
 tags:
-  - last one
+  - URL encoding
+  - Base64
+  - utilities
 layout: layouts/aj-util.njk
 ---
 

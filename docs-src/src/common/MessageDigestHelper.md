@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: MessageDigestHelper Tutorial
+description: Utility methods for message digest algorithms
 tags:
-  - last one
+  - cryptography
+  - hash
+  - Java
 layout: layouts/aj-util.njk
 ---
 

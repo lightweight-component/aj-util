@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-ZipHelper Tutorial</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for ZIP compression and decompression operations" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, compression,decompression,Java" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li class="data">
+                        <a href="/common/BytesHelper/">BytesHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
+                    </li>
+                    <li>
+                        <a href="/common/EnumsUtil/">EnumsUtil</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/RandomTools/">RandomTools</a>
+                    </li>
+                    <li>
+                        <a href="/common/RegExpUtils/">RegExpUtils</a>
+                    </li>
+                    <li>
+                        <a href="/common/XmlHelper/">XmlHelper</a>
+                    </li>
+                    <li class="data">
+                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
+                    </li>
+                    <li>
+                        <a href="/common/EncodeTools/">EncodeTools</a>
+                    </li> 
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
+
+                <h3>Cryptography</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
+                    <li><a href="/common/Version/">Version</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+    
+           
+            </menu>
+            <article class="aj-text">
+                <h1>ZipHelper Tutorial</h1>
+<p>This tutorial provides an overview of the <code>ZipHelper</code> class, which is part of the <code>lightweight-component/aj-util</code> library. The <code>ZipHelper</code> class provides utility methods for ZIP compression and decompression operations.</p>
+<h2>Introduction</h2>
+<p>The <code>ZipHelper</code> class contains static methods for working with ZIP files, including compression, decompression, and file type detection.</p>
+<h2>Main Features</h2>
+<ul>
+<li>ZIP file decompression with directory handling</li>
+<li>File and directory compression (with STORED or DEFLATED options)</li>
+<li>Recursive directory compression</li>
+<li>ZIP file detection (magic number check)</li>
+<li>CRC32 checksum calculation</li>
+<li>Automatic directory creation</li>
+</ul>
+<h2>Methods</h2>
+<h3>1. Decompression</h3>
+<ol>
+<li><code>unzip(String save, String zipFile)</code> - Decompress ZIP file to target directory</li>
+</ol>
+<h3>2. Compression</h3>
+<ol>
+<li><code>zipFile(File[] fileContent, String saveZip, boolean useStore)</code> - Compress files to ZIP</li>
+<li><code>zipDirectory(String sourceDir, String saveZip, boolean useStore)</code> - Compress directory to ZIP</li>
+</ol>
+<h3>3. Utility Methods</h3>
+<ol>
+<li><code>initFolder(File file)</code> - Ensure parent directories exist for a file</li>
+<li><code>initFolder(String file)</code> - String version of initFolder</li>
+<li><code>isZipFile(String filePath)</code> - Check if file is a valid ZIP file</li>
+<li><code>getFileCRCCode(File file)</code> - Calculate CRC32 checksum for a file</li>
+</ol>
+<h2>Usage Examples</h2>
+<h3>Decompression</h3>
+<pre><code class="language-java">ZipHelper.unzip(&quot;C:/extracted&quot;, &quot;C:/archive.zip&quot;);
+</code></pre>
+<h3>File Compression</h3>
+<pre><code class="language-java">File[] files = {new File(&quot;file1.txt&quot;), new File(&quot;file2.txt&quot;)};
+ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // Use DEFLATED compression
+</code></pre>
+<h3>Directory Compression</h3>
+<pre><code class="language-java">ZipHelper.zipDirectory(&quot;C:/data&quot;, &quot;backup.zip&quot;, true); // Use STORED (no compression)
+</code></pre>
+<h3>ZIP File Detection</h3>
+<pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
+</code></pre>
+<h3>Directory Creation</h3>
+<pre><code class="language-java">ZipHelper.initFolder(&quot;C:/new/path/file.txt&quot;); // Creates C:/new/path if needed
+</code></pre>
+<h2>Compression Methods</h2>
+<p>The class supports two compression methods:</p>
+<ol>
+<li><code>DEFLATED</code> (default) - Standard ZIP compression</li>
+<li><code>STORED</code> - No compression, files are stored as-is</li>
+</ol>
+<h2>Error Handling</h2>
+<p>The methods handle common IO errors and log warnings when issues occur during compression/decompression.</p>
+<h2>Conclusion</h2>
+<p>The <code>ZipHelper</code> class provides comprehensive utility methods for working with ZIP files, making compression and decompression operations more convenient in Java applications.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

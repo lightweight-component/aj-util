@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: FileHelper Tutorial
+description: Utility methods for simplifying file system operations
 tags:
-  - last one
+  - file operations
+  - I/O
+  - Java
 layout: layouts/aj-util.njk
 ---
 

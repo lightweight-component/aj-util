@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Types 教程
+description: Types 类提供了处理 Java 泛型类型信息的实用方法
 tags:
-  - last one
+  - 泛型
+  - 类型转换
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

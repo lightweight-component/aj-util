@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: Resources Tutorial
+description: Utility methods for accessing classpath resources
 tags:
-  - last one
+  - resource loading
+  - classpath
+  - Java
 layout: layouts/aj-util.njk
 ---
 

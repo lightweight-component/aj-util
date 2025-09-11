@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-Base64Helper 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  为 Base64 编码和解码操作提供了流畅的接口" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 编码,解码,base64" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>Base64Helper 教程</h1>
+<p>本教程提供了 <code>Base64Helper</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>Base64Helper</code> 类为 Base64 编码和解码操作提供了流畅的接口。</p>
+<h2>简介</h2>
+<p><code>Base64Helper</code> 类提供了一种类型安全、可配置的方式来执行 Base64 编码和解码，支持 URL-safe 编码和填充控制。</p>
+<h2>主要特性</h2>
+<ul>
+<li>流畅/链式方法调用</li>
+<li>支持标准和 URL-safe Base64</li>
+<li>可选填充移除</li>
+<li>类型安全的输出（字符串或字节数组）</li>
+<li>默认 UTF-8 编码，支持自定义字符集</li>
+</ul>
+<h2>方法</h2>
+<h3>1. 初始化</h3>
+<ol>
+<li><code>encode()</code> - 创建编码模式实例（工厂方法）</li>
+<li><code>decode()</code> - 创建解码模式实例（工厂方法）</li>
+<li><code>encoder()</code> - 设置为编码模式</li>
+<li><code>decoder()</code> - 设置为解码模式</li>
+</ol>
+<h3>2. 输入方法</h3>
+<ol>
+<li><code>input(String input)</code> - 设置输入字符串（UTF-8）</li>
+<li><code>input(String input, Charset charset)</code> - 使用自定义字符集设置输入字符串</li>
+<li><code>input(byte[] input)</code> - 设置输入字节数组</li>
+</ol>
+<h3>3. 配置</h3>
+<ol>
+<li><code>withoutPadding()</code> - 从编码输出中移除填充</li>
+<li><code>urlSafe()</code> - 使用 URL-safe Base64 变体</li>
+</ol>
+<h3>4. 输出方法</h3>
+<ol>
+<li><code>getString()</code> - 获取 UTF-8 字符串结果</li>
+<li><code>getString(Charset charset)</code> - 获取自定义字符集的字符串结果</li>
+<li><code>getBytes()</code> - 获取字节数组结果</li>
+</ol>
+<h2>使用示例</h2>
+<h3>基本编码</h3>
+<pre><code class="language-java">String encoded = Base64Helper.encode()
+    .input(&quot;Hello World&quot;)
+    .getString();
+
+String decoded = Base64Helper.decode()
+    .input(encoded)
+    .getString();
+</code></pre>
+<h3>URL-Safe 编码</h3>
+<pre><code class="language-java">String encoded = Base64Helper.encode()
+    .input(&quot;data to encode&quot;)
+    .urlSafe()
+    .getString();
+</code></pre>
+<h3>无填充</h3>
+<pre><code class="language-java">String encoded = Base64Helper.encode()
+    .input(&quot;data&quot;)
+    .withoutPadding()
+    .getString();
+</code></pre>
+<h3>自定义字符集</h3>
+<pre><code class="language-java">String encoded = Base64Helper.encode()
+    .input(&quot;数据&quot;, StandardCharsets.UTF_16)
+    .getString(StandardCharsets.UTF_16);
+</code></pre>
+<h3>字节数组处理</h3>
+<pre><code class="language-java">byte[] data = {1, 2, 3, 4};
+byte[] encoded = Base64Helper.encode()
+    .input(data)
+    .getBytes();
+</code></pre>
+<h2>结论</h2>
+<p><code>Base64Helper</code> 类提供了一种灵活且类型安全的方式来执行 Base64 编码和解码操作，支持各种配置和输出格式。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

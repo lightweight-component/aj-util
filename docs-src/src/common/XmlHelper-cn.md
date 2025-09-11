@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: XmlHelper 教程
+description: XmlHelper 类提供了 XML 文档解析和操作的实用方法
 tags:
-  - last one
+  - XML
+  - 解析
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

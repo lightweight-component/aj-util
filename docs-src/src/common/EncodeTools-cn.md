@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: EncodeTools 教程
+description: 提供URL编码/解码和Base64编码/解码的工具类
 tags:
-  - last one
+  - URL编码
+  - Base64
+  - 工具类
 layout: layouts/aj-util-cn.njk
 ---
 

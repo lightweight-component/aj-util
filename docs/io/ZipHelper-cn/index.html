@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-ZipHelper 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  为 ZIP 压缩和解压缩操作提供实用方法" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 压缩,解压缩,Java" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>ZipHelper 教程</h1>
+<p>本教程提供了 <code>ZipHelper</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>ZipHelper</code> 类为 ZIP 压缩和解压缩操作提供了实用工具方法。</p>
+<h2>简介</h2>
+<p><code>ZipHelper</code> 类包含用于处理 ZIP 文件的静态方法，包括压缩、解压缩和文件类型检测。</p>
+<h2>主要特性</h2>
+<ul>
+<li>带目录处理的 ZIP 文件解压缩</li>
+<li>文件和目录压缩（支持 STORED 或 DEFLATED 选项）</li>
+<li>递归目录压缩</li>
+<li>ZIP 文件检测（魔数检查）</li>
+<li>CRC32 校验和计算</li>
+<li>自动目录创建</li>
+</ul>
+<h2>方法</h2>
+<h3>1. 解压缩</h3>
+<ol>
+<li><code>unzip(String save, String zipFile)</code> - 将 ZIP 文件解压缩到目标目录</li>
+</ol>
+<h3>2. 压缩</h3>
+<ol>
+<li><code>zipFile(File[] fileContent, String saveZip, boolean useStore)</code> - 将文件压缩为 ZIP</li>
+<li><code>zipDirectory(String sourceDir, String saveZip, boolean useStore)</code> - 将目录压缩为 ZIP</li>
+</ol>
+<h3>3. 实用方法</h3>
+<ol>
+<li><code>initFolder(File file)</code> - 确保文件的父目录存在</li>
+<li><code>initFolder(String file)</code> - initFolder 的字符串版本</li>
+<li><code>isZipFile(String filePath)</code> - 检查文件是否为有效的 ZIP 文件</li>
+<li><code>getFileCRCCode(File file)</code> - 计算文件的 CRC32 校验和</li>
+</ol>
+<h2>使用示例</h2>
+<h3>解压缩</h3>
+<pre><code class="language-java">ZipHelper.unzip(&quot;C:/extracted&quot;, &quot;C:/archive.zip&quot;);
+</code></pre>
+<h3>文件压缩</h3>
+<pre><code class="language-java">File[] files = {new File(&quot;file1.txt&quot;), new File(&quot;file2.txt&quot;)};
+ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // 使用 DEFLATED 压缩
+</code></pre>
+<h3>目录压缩</h3>
+<pre><code class="language-java">ZipHelper.zipDirectory(&quot;C:/data&quot;, &quot;backup.zip&quot;, true); // 使用 STORED（无压缩）
+</code></pre>
+<h3>ZIP 文件检测</h3>
+<pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
+</code></pre>
+<h3>目录创建</h3>
+<pre><code class="language-java">ZipHelper.initFolder(&quot;C:/new/path/file.txt&quot;); // 如果需要则创建 C:/new/path
+</code></pre>
+<h2>压缩方法</h2>
+<p>该类支持两种压缩方法：</p>
+<ol>
+<li><code>DEFLATED</code>（默认） - 标准 ZIP 压缩</li>
+<li><code>STORED</code> - 无压缩，文件按原样存储</li>
+</ol>
+<h2>错误处理</h2>
+<p>这些方法处理常见的 IO 错误，并在压缩/解压缩过程中出现问题时记录警告。</p>
+<h2>结论</h2>
+<p><code>ZipHelper</code> 类提供了全面的实用方法，用于处理 ZIP 文件，使 Java 应用程序中的压缩和解压缩操作更加方便。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

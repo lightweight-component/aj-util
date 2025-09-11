@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-BoxLogger 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  为创建带格式和对齐的盒状日志消息提供了实用工具" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 日志,格式化,工具" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>BoxLogger 教程</h1>
+<p>本教程提供了 <code>BoxLogger</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>BoxLogger</code> 类为创建带格式和对齐的盒状日志消息提供了实用工具。</p>
+<h2>简介</h2>
+<p><code>BoxLogger</code> 类包含用于创建视觉格式化的盒状日志消息的静态方法，支持 ANSI 颜色和正确处理宽字符（如 CJK）。</p>
+<h2>主要特性</h2>
+<ul>
+<li>盒状日志消息格式化</li>
+<li>ANSI 颜色支持</li>
+<li>带省略号的字符串截断</li>
+<li>显示宽度计算（处理宽字符）</li>
+<li>字符串重复实用工具</li>
+</ul>
+<h2>常量</h2>
+<ol>
+<li><code>ANSI_GREEN</code> - ANSI 绿色代码</li>
+<li><code>ANSI_YELLOW</code> - ANSI 黄色代码</li>
+<li><code>ANSI_BLUE</code> - ANSI 蓝色代码</li>
+<li><code>ANSI_RED</code> - ANSI 红色代码</li>
+<li><code>ANSI_RESET</code> - ANSI 重置代码</li>
+<li><code>NONE</code> - 常量 &quot;none&quot;</li>
+<li><code>TRACE_KEY</code> - 默认跟踪键名</li>
+<li><code>BIZ_ACTION</code> - 默认业务操作键名</li>
+</ol>
+<h2>方法</h2>
+<h3>1. 盒状格式化</h3>
+<ol>
+<li><code>boxLine(char left, char fill, char right, String title)</code> - 创建盒状边框线</li>
+<li><code>boxContent(String key, String value)</code> - 在盒内创建内容行</li>
+</ol>
+<h3>2. 字符串实用工具</h3>
+<ol>
+<li><code>repeat(char c, int n)</code> - 重复字符 n 次</li>
+<li><code>truncate(String s, int maxDisplayLen)</code> - 带省略号的字符串截断</li>
+<li><code>getDisplayWidth(String s)</code> - 计算显示宽度（宽字符=2）</li>
+<li><code>isWideChar(char ch)</code> - 检查字符是否为宽字符（CJK）</li>
+</ol>
+<h2>使用示例</h2>
+<h3>创建盒状日志</h3>
+<pre><code class="language-java">System.out.println(BoxLogger.boxLine('┌', '─', '┐', &quot; 日志开始 &quot;));
+System.out.println(BoxLogger.boxContent(&quot;用户: &quot;, &quot;张三&quot;));
+System.out.println(BoxLogger.boxLine('└', '─', '┘', &quot; 日志结束 &quot;));
+</code></pre>
+<h3>ANSI 颜色</h3>
+<pre><code class="language-java">System.out.println(BoxLogger.ANSI_RED + &quot;错误!&quot; + BoxLogger.ANSI_RESET);
+</code></pre>
+<h3>字符串实用工具</h3>
+<pre><code class="language-java">String repeated = BoxLogger.repeat('-', 10); // &quot;----------&quot;
+String truncated = BoxLogger.truncate(&quot;这是一个长字符串&quot;, 10); // &quot;这是一个...&quot;
+int width = BoxLogger.getDisplayWidth(&quot;中文&quot;); // 4
+</code></pre>
+<h2>实现说明</h2>
+<ul>
+<li>盒宽度固定为 97 个字符</li>
+<li>正确处理 CJK 和全角字符</li>
+<li>包含基本的 ANSI 颜色支持</li>
+<li>提供带省略号的干净截断</li>
+</ul>
+<h2>结论</h2>
+<p><code>BoxLogger</code> 类提供了有用的实用工具，用于创建视觉格式化的日志消息，特别适用于 CLI 应用程序或调试输出。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

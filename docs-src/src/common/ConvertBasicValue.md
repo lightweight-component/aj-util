@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: ConvertBasicValue Tutorial
+description: Utility methods for converting objects to basic Java types
 tags:
-  - last one
+  - type conversion
+  - primitive types
+  - Java
 layout: layouts/aj-util.njk
 ---
 
@@ -183,5 +183,3 @@ public class TestConvertBasicValue {
 The `ConvertBasicValue` class provides a useful set of utilities for safely converting objects to basic Java types. By
 using these methods, you can simplify your code and handle potential `null` values and parsing errors
 more gracefully. Remember to consult the library's Javadoc for the most up-to-date information and additional methods.
-
-```

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-DateHelper 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  为 Java 应用程序中的日期和时间处理提供实用方法" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 日期,时间,Java" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>DateHelper 教程</h1>
+<p>本教程提供了 <code>DateHelper</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>DateHelper</code> 类为 Java 应用程序中的日期和时间处理提供了实用工具方法。</p>
+<h2>简介</h2>
+<p><code>DateHelper</code> 类包含使用 Java 8 的 java.time API 的静态方法，用于常见的日期/时间操作，包括格式化、解析和不同日期/时间类型之间的转换。</p>
+<h2>主要特性</h2>
+<ul>
+<li>线程安全的日期/时间格式化和解析</li>
+<li>传统 Date 和 java.time 类型之间的转换</li>
+<li>支持多种标准日期/时间格式</li>
+<li>RFC1123 和 ISO8601 时间戳生成</li>
+<li>对象到日期的转换工具</li>
+</ul>
+<h2>标准格式</h2>
+<ol>
+<li><code>TIME</code> - &quot;HH:mm:ss&quot;</li>
+<li><code>DATETIME</code> - &quot;yyyy-MM-dd HH:mm:ss&quot;</li>
+<li><code>DATETIME_SHORT</code> - &quot;yyyy-MM-dd HH:mm&quot;</li>
+<li><code>DATE</code> - &quot;yyyy-MM-dd&quot;</li>
+</ol>
+<h2>方法</h2>
+<h3>1. 格式化方法</h3>
+<ol>
+<li><code>formatDate(LocalDate date)</code> - 将 LocalDate 格式化为字符串</li>
+<li><code>formatTime(LocalTime time)</code> - 将 LocalTime 格式化为字符串</li>
+<li><code>formatDateTime(LocalDateTime dateTime)</code> - 将 LocalDateTime 格式化为字符串</li>
+<li><code>formatDateTime(Date dateTime)</code> - 将 Date 格式化为字符串</li>
+</ol>
+<h3>2. 解析方法</h3>
+<ol>
+<li><code>parseDate(String dateStr)</code> - 将字符串解析为 LocalDate</li>
+<li><code>parseTime(String timeStr)</code> - 将字符串解析为 LocalTime</li>
+<li><code>parseDateTime(String dateTimeStr)</code> - 将字符串解析为 LocalDateTime</li>
+<li><code>parseDateTimeShort(String dateTimeStr)</code> - 将短格式字符串解析为 LocalDateTime</li>
+</ol>
+<h3>3. 类型转换</h3>
+<ol>
+<li><code>localDateTime2Date(LocalDateTime localDateTime)</code> - 将 LocalDateTime 转换为 Date</li>
+<li><code>localDate2Date(LocalDate localDate)</code> - 将 LocalDate 转换为 Date</li>
+<li><code>toLocalDate(Date date)</code> - 将 Date 转换为 LocalDate</li>
+<li><code>toLocalDateTime(Date date)</code> - 将 Date 转换为 LocalDateTime</li>
+</ol>
+<h3>4. 标准时间戳</h3>
+<ol>
+<li><code>getGMTDate()</code> - 获取 RFC1123 格式的当前时间</li>
+<li><code>getISO8601Date()</code> - 获取 ISO8601 格式的当前时间</li>
+</ol>
+<h3>5. 实用方法</h3>
+<ol>
+<li><code>object2Date(Object obj)</code> - 将各种对象类型转换为 Date</li>
+<li><code>nowDateTime()</code> - 获取当前 Date</li>
+<li><code>now()</code> - 获取格式化字符串形式的当前时间</li>
+<li><code>now(String format)</code> - 获取自定义格式的当前时间</li>
+<li><code>nowShort()</code> - 获取短格式的当前时间</li>
+</ol>
+<h2>使用示例</h2>
+<h3>格式化日期</h3>
+<pre><code class="language-java">LocalDateTime now = LocalDateTime.now();
+String formatted = DateHelper.formatDateTime(now); // &quot;2023-01-15 14:30:45&quot;
+</code></pre>
+<h3>解析日期</h3>
+<pre><code class="language-java">LocalDate date = DateHelper.parseDate(&quot;2023-01-15&quot;);
+LocalDateTime dateTime = DateHelper.parseDateTime(&quot;2023-01-15 14:30:45&quot;);
+</code></pre>
+<h3>类型转换</h3>
+<pre><code class="language-java">Date date = new Date();
+LocalDateTime ldt = DateHelper.toLocalDateTime(date);
+Date newDate = DateHelper.localDateTime2Date(ldt);
+</code></pre>
+<h3>标准时间戳</h3>
+<pre><code class="language-java">String rfc1123 = DateHelper.getGMTDate(); // &quot;Mon, 15 Jan 2023 14:30:45 GMT&quot;
+String iso8601 = DateHelper.getISO8601Date(); // &quot;2023-01-15T14:30:45Z&quot;
+</code></pre>
+<h3>对象转换</h3>
+<pre><code class="language-java">Date fromLong = DateHelper.object2Date(1673793045000L);
+Date fromString = DateHelper.object2Date(&quot;2023-01-15&quot;);
+Date fromLocal = DateHelper.object2Date(LocalDateTime.now());
+</code></pre>
+<h2>结论</h2>
+<p><code>DateHelper</code> 类提供了全面的实用方法，用于处理日期和时间，使在 Java 应用程序中格式化、解析和转换不同的日期/时间表示更加容易。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

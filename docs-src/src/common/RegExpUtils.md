@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: RegExpUtils Tutorial
+description: Utility methods for regular expression matching and processing
 tags:
-  - last one
+  - regex
+  - string matching
+  - Java
 layout: layouts/aj-util.njk
 ---
 

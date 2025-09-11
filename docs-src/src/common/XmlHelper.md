@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: XmlHelper Tutorial
+description: Utility methods for parsing and manipulating XML documents
 tags:
-  - last one
+  - XML
+  - parsing
+  - Java
 layout: layouts/aj-util.njk
 ---
 

@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: EnumsUtil 教程
+description: 提供基于代码检索枚举实例及其关联消息的工具类
 tags:
-  - last one
+  - 枚举
+  - IEnum接口
+  - 工具类
 layout: layouts/aj-util-cn.njk
 ---
 

@@ -1,10 +1,10 @@
 ---
-title: Quick Start
-subTitle: 2025-02-23 by Frank Cheung
-description: TODO
-date: 2025-02-23
+title: ConvertBasicValue 教程
+description: ConvertBasicValue 类提供了基本类型转换的实用方法
 tags:
-  - last one
+  - 类型转换
+  - 基本类型
+  - Java
 layout: layouts/aj-util-cn.njk
 ---
 

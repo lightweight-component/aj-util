@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-UUIDv7 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  时间排序UUID的实现和使用方法" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, UUID,UUIDv7,时间排序" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>UUIDv7 教程</h1>
+<p>本教程提供了 <code>UUIDv7</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>UUIDv7</code> 实现了 UUID 版本 7 规范，相比传统的随机 UUID，它提供了按时间排序的 UUID，具有改进的特性。</p>
+<h2>简介</h2>
+<p><code>UUIDv7</code> 类实现了在提议的 UUID 规范中定义的 UUID 版本 7 格式。UUIDv7 旨在按时间排序，同时保持 UUID 的唯一性保证。它在最高有效位中嵌入了毫秒精度的 Unix 时间戳，使 UUID 可以按创建时间排序。</p>
+<p>UUIDv7 通过以下方式解决了传统随机 UUID（版本 4）的几个限制：</p>
+<ol>
+<li>使 UUID 按时间排序，以便更好地进行数据库索引</li>
+<li>保持与 UUID 标准的兼容性</li>
+<li>比 UUID 版本 1 提供更有效的时间表示</li>
+</ol>
+<h2>方法</h2>
+<h3>1. <code>randomUUID()</code></h3>
+<p>使用当前时间戳和安全随机值生成新的 UUIDv7。</p>
+<ul>
+<li><strong>返回值：</strong> 符合 UUIDv7 格式的新 UUID 实例。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">UUID uuid = UUIDv7.randomUUID();
+System.out.println(uuid); // 例如：&quot;017f22e2-79b0-7cc3-98c4-dc0c0c07398f&quot;
+</code></pre>
+<h2>UUIDv7 结构</h2>
+<p>UUIDv7 格式遵循以下结构：</p>
+<pre><code>0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           unix_ts_ms                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          unix_ts_ms           |  ver  |       rand_a          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|var|                        rand_b                             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            rand_b                             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</code></pre>
+<p>其中：</p>
+<ul>
+<li><code>unix_ts_ms</code>：48 位 Unix 时间戳（毫秒）</li>
+<li><code>ver</code>：4 位表示 UUID 版本（7）</li>
+<li><code>var</code>：2 位表示 UUID 变体（2）</li>
+<li><code>rand_a</code> 和 <code>rand_b</code>：用于唯一性的随机位</li>
+</ul>
+<h2>实现细节</h2>
+<p><code>UUIDv7</code> 类生成具有以下特征的 UUID：</p>
+<ol>
+<li>前 48 位包含毫秒级 Unix 时间戳</li>
+<li>版本位（第 48-51 位）设置为 <code>0111</code>（7）</li>
+<li>变体位（第 64-65 位）设置为 <code>10</code>（RFC 4122 变体）</li>
+<li>剩余位用加密安全的随机值填充</li>
+</ol>
+<p>此实现使用 <code>SecureRandom</code> 生成 UUID 的随机部分，确保高度的唯一性和不可预测性。</p>
+<h2>使用场景</h2>
+<p>UUIDv7 特别适用于：</p>
+<ol>
+<li><strong>数据库主键</strong>：按时间排序的特性使其成为高效的索引</li>
+<li><strong>分布式系统</strong>：它们可以独立生成，同时保持大致的时间顺序</li>
+<li><strong>日志和跟踪</strong>：嵌入的时间戳有助于按时间顺序分析</li>
+<li><strong>任何需要可排序唯一标识符的系统</strong>：创建顺序很重要的场景</li>
+</ol>
+<h2>与其他 UUID 版本的比较</h2>
+<ul>
+<li><strong>UUID v1</strong>：使用 MAC 地址和时间，但存在隐私问题和非直观的排序</li>
+<li><strong>UUID v4</strong>：完全随机，不可排序</li>
+<li><strong>UUID v7</strong>：按时间排序，带有随机组件，更适合数据库索引</li>
+</ul>
+<h2>结论</h2>
+<p><code>UUIDv7</code> 类提供了按时间排序的 UUID 的现代实现，它保持与 UUID 标准的兼容性，同时为数据库系统和分布式应用程序提供改进的特性。通过以标准化方式嵌入时间戳，UUIDv7 实现了高效的排序和索引，同时保留了 UUID 预期的唯一性保证。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

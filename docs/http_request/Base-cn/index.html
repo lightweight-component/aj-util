@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-Base HTTP Request API</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  Base HTTP Request API" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Base API" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+
+                <h3>UUID</h3>
+                <ul>
+                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
+                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
+                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
+                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
+                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
+                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
+                </ul>
+
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
+                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Version-cn/">Version</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
+                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                </ul>
+
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>HTTP 请求 Base 教程</h1>
+<p>本教程提供了 HTTP 请求包中 <code>Base</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>Base</code> 类为 Java 应用程序中的 HTTP 请求提供了基础功能。</p>
+<h2>简介</h2>
+<p><code>Base</code> 类使用 Java 内置的 <code>HttpURLConnection</code> 提供了 HTTP 请求的核心功能。它处理连接初始化、配置和 HTTP 请求的执行。该类作为包中其他 HTTP 请求类（如 <code>Get</code>、<code>Post</code>、<code>Delete</code> 等）的基础。</p>
+<h2>主要特性</h2>
+<ul>
+<li>简单的 HTTP 请求接口</li>
+<li>连接超时和读取超时处理</li>
+<li>错误处理和日志记录</li>
+<li>支持自定义 HTTP 头</li>
+<li>响应处理</li>
+</ul>
+<h2>方法</h2>
+<h3>1. <code>printErrorLog(String httpMethod, String url, String httpCode, String returnText)</code></h3>
+<p>打印格式化的错误日志，包含请求方法、URL、HTTP状态码和返回文本。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>httpMethod</code>: HTTP方法</li>
+<li><code>url</code>: 请求URL</li>
+<li><code>httpCode</code>: HTTP状态码</li>
+<li><code>returnText</code>: 返回的错误文本</li>
+</ul>
+</li>
+</ul>
+<h3>2. <code>initHttpConnection(String url, String method)</code></h3>
+<p>为指定的 URL 和 HTTP 方法初始化 <code>HttpURLConnection</code>。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>url</code>：HTTP 请求的目标 URL。</li>
+<li><code>method</code>：HTTP 方法（GET、POST、PUT、DELETE 等）。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 初始化的 <code>HttpURLConnection</code> 对象。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
+</code></pre>
+<h3>2. <code>connect(HttpURLConnection conn)</code></h3>
+<p>使用提供的连接执行 HTTP 请求并返回响应。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>conn</code>：用于请求的 <code>HttpURLConnection</code> 对象。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 包含响应详情的 <code>ResponseEntity</code> 对象。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
+ResponseEntity response = Base.connect(conn);
+</code></pre>
+<h3>3. <code>connect(String url, String method, Consumer&lt;HttpURLConnection&gt; fn)</code></h3>
+<p>一个便捷方法，将初始化和连接合并为一个调用，并可选择自定义连接的函数。</p>
+<ul>
+<li><strong>参数：</strong>
+<ul>
+<li><code>url</code>：HTTP 请求的目标 URL。</li>
+<li><code>method</code>：HTTP 方法（GET、POST、PUT、DELETE 等）。</li>
+<li><code>fn</code>：用于自定义连接的可选函数（例如，添加头信息）。</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 包含响应详情的 <code>ResponseEntity</code> 对象。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-java">ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+    conn.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer token123&quot;);
+});
+</code></pre>
+<h2>连接配置</h2>
+<p><code>Base</code> 类设置了默认的连接参数：</p>
+<ul>
+<li><strong>连接超时</strong>：10 秒（10,000 毫秒）</li>
+<li><strong>读取超时</strong>：15 秒（15,000 毫秒）</li>
+</ul>
+<p>这些超时确保在网络问题时请求不会无限期挂起。</p>
+<h2>错误处理</h2>
+<p><code>Base</code> 类包含全面的错误处理：</p>
+<ol>
+<li>
+<p>对于 HTTP 响应代码 &gt;= 400，它：</p>
+<ul>
+<li>在 <code>ResponseEntity</code> 中将 <code>ok</code> 标志设置为 <code>false</code></li>
+<li>检索错误流</li>
+<li>记录错误详情</li>
+</ul>
+</li>
+<li>
+<p>对于连接异常，它：</p>
+<ul>
+<li>将 <code>ok</code> 标志设置为 <code>false</code></li>
+<li>在 <code>ResponseEntity</code> 中存储异常</li>
+<li>记录异常详情</li>
+</ul>
+</li>
+</ol>
+<h2>ResponseEntity</h2>
+<p><code>connect</code> 方法返回包含以下内容的 <code>ResponseEntity</code> 对象：</p>
+<ul>
+<li>HTTP 响应代码</li>
+<li>响应体（作为文本或输入流）</li>
+<li>使用的 URL 和 HTTP 方法</li>
+<li>请求时间信息</li>
+<li>成功/失败状态</li>
+<li>发生的任何异常</li>
+</ul>
+<h2>使用示例</h2>
+<p>以下是使用 <code>Base</code> 类进行 GET 请求的完整示例：</p>
+<pre><code class="language-java">try {
+    ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
+        conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+    });
+    
+    if (response.isOk()) {
+        // 处理成功的响应
+        String responseText = StreamHelper.copyToString(response.getIn());
+        System.out.println(&quot;响应: &quot; + responseText);
+    } else {
+        // 处理错误
+        System.err.println(&quot;错误: &quot; + response.getHttpCode() + &quot; - &quot; + response.getResponseText());
+    }
+} catch (Exception e) {
+    e.printStackTrace();
+}
+</code></pre>
+<h2>常量</h2>
+<h3><code>ERR_MSG</code></h3>
+<p>错误消息的键名，值为&quot;errMsg&quot;。</p>
+<h2>结论</h2>
+<p><code>Base</code> 类为 Java 应用程序中的 HTTP 请求提供了坚实的基础。它处理连接管理、错误处理和响应处理的底层细节，使您能够专注于应用程序的业务逻辑。对于特定的 HTTP 方法，请考虑使用基于 <code>Base</code> 构建的专用类，如 <code>Get</code>、<code>Post</code> 等。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>
