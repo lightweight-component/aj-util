@@ -217,4 +217,15 @@ public class CollUtils {
 
         return arr;
     }
+
+    /**
+     * 类似 Java 9 List.of() 厂方法
+     *
+     * @param arr
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> listOf(T... arr) {
+        return Collections.unmodifiableList(Arrays.asList(arr));
+    }
 }
