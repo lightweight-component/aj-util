@@ -4,8 +4,10 @@ import com.ajaxjs.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.zip.*;
 
 /**
@@ -43,6 +45,41 @@ public class ZipHelper {
             }
 
             zis.closeEntry();
+        } catch (IOException e) {
+            log.warn("unzip", e);
+            throw new UncheckedIOException(e);
+        }
+
+        log.info("解压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
+    }
+
+    /**
+     * 解压文件
+     *
+     * @param save        解压文件的路径，必须为目录
+     * @param zipFilePath 输入的解压文件路径，例如 C:/temp/foo.zip 或 c:\\temp\\bar.zip
+     */
+    public static void unzipWithChineseFilename(String save, String zipFilePath) {
+        long start = System.currentTimeMillis();
+        FileHelper.createDirectory(save);
+
+        try (ZipFile zipFile = new ZipFile(zipFilePath, Charset.forName("GBK"))) {
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                File newFile = new File(save, entry.getName());
+
+                if (entry.isDirectory()) {
+                    newFile.mkdirs();
+                } else {
+                    initFolder(newFile);
+                    try (InputStream is = zipFile.getInputStream(entry);
+                         FileOutputStream fos = new FileOutputStream(newFile)) {
+                        StreamHelper.write(is, fos, true);
+                    }
+                }
+            }
         } catch (IOException e) {
             log.warn("unzip", e);
             throw new UncheckedIOException(e);

@@ -211,7 +211,20 @@ public class Post extends Base implements HttpConstants {
      * @return 返回一个Map对象，包含服务器的响应数据。
      */
     public static Map<String, Object> apiJsonBody(String url, Object params, Consumer<HttpURLConnection> fn) {
-        return api(url, toJsonStr(params), fn);
+        return api(url, toJsonStr(params), fn.andThen(Head.GET_JSON));
+    }
+
+    /**
+     * 使用POST方法向指定URL发送JSON格式的数据，并返回服务器的响应。
+     * 此方法主要处理JSON数据的序列化和HTTP请求的发送，具体的请求细节可以通过回调函数fn进行定制。
+     * POST JSON as RawBody
+     *
+     * @param url    请求的URL地址。
+     * @param params 要发送的参数，可以是任何Java对象，将会被序列化为JSON格式。
+     * @return 返回一个Map对象，包含服务器的响应数据。
+     */
+    public static Map<String, Object> apiJsonBody(String url, Object params) {
+        return api(url, toJsonStr(params), Head.GET_JSON);
     }
 
     /**

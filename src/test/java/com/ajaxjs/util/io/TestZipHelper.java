@@ -18,9 +18,12 @@ public class TestZipHelper {
 
     @Test
     public void testFileUnZip() {
-        ZipHelper.unzip("c:\\temp2\\", "c:\\temp2\\test.zip");
+        ZipHelper.unzip("c:\\temp2\\", "D:\\sp42\\code\\rdd-old\\a.zip");
     }
-
+    @Test
+    public void testChineseFileUnZip() {
+        ZipHelper.unzipWithChineseFilename("c:\\temp2\\", "D:\\sp42\\code\\rdd-old\\a.zip");
+    }
 
     private static final String ZIP_PATH = "c:\\temp\\test.zip";
 
