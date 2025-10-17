@@ -233,4 +233,16 @@ public class EncodeTools {
     public static String base64DecodeToStringUtf8(String str) {
         return base64DecodeToStringUtf8(StrUtil.getUTF8_Bytes(str));
     }
+
+
+    /**
+     * 格式化 Base64 字符串，每 64 个字符换行
+     */
+    public static String formatBase64String(String base64) {
+        StringBuilder formatted = new StringBuilder();
+        for (int i = 0; i < base64.length(); i += 64)
+            formatted.append(base64, i, Math.min(i + 64, base64.length())).append("\n");
+
+        return formatted.toString().trim();
+    }
 }

@@ -2,6 +2,8 @@ package com.ajaxjs.util.cryptography;
 
 
 import com.ajaxjs.util.EncodeTools;
+import com.ajaxjs.util.cryptography.rsa.DoSignature;
+import com.ajaxjs.util.cryptography.rsa.DoVerify;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -15,44 +17,62 @@ public class TestCryptography {
     final String word = "123";
 
     @Test
-    public void testAES() {
-        String encWord = AesCrypto.getInstance().AES_encode(word, key);
-        assertEquals(word, AesCrypto.getInstance().AES_decode(encWord, key));
+    void testAES() {
+        String encWord = Cryptography.AES_encode(word, key);
+        assertEquals(word, Cryptography.AES_decode(encWord, key));
     }
 
     @Test
-    public void testDES() {
-        String encWord = AesCrypto.getInstance().DES_encode(word, key);
-        assertEquals(word, AesCrypto.getInstance().DES_decode(encWord, key));
+    void testDES() {
+        String encWord = Cryptography.DES_encode(word, key);
+        assertEquals(word, Cryptography.DES_decode(encWord, key));
     }
 
     @SuppressWarnings("restriction")
     @Test
-    public void test3DES() {
-        // 添加新安全算法,如果用JCE就要把它添加进去
-        // 这里addProvider方法是增加一个新的加密算法提供者(个人理解没有找到好的答案,求补充)
+    void test3DES() {
+        // 添加新安全算法,如果用 JCE 就要把它添加进去
+        // 这里 addProvider 方法是增加一个新的加密算法提供者(个人理解没有找到好的答案,求补充)
 //		Security.addProvider(new com.sun.crypto.provider.SunJCE());
-        // byte数组(用来生成密钥的)
+        // byte 数组(用来生成密钥的)
         final byte[] keyBytes = {0x11, 0x22, 0x4F, 0x58, (byte) 0x88, 0x10, 0x40, 0x38, 0x28, 0x25, 0x79, 0x51, (byte) 0xCB, (byte) 0xDD, 0x55, 0x66, 0x77, 0x29, 0x74,
                 (byte) 0x98, 0x30, 0x40, 0x36, (byte) 0xE2};
         String word = "This is a 3DES test. 测试";
 
-        byte[] encoded = AesCrypto.encryptTripleDES(keyBytes, word);
+        byte[] encoded = Cryptography.tripleDES_encode(word, keyBytes);
 
-        assertEquals(word, AesCrypto.decryptTripleDES(keyBytes, encoded));
+        assertEquals(word, Cryptography.tripleDES_decode(encoded, keyBytes));
     }
 
     @Test
-    public void testPBE() {
-        // 加密前的原文
-        String word = "hello world !!!";
-        // 口令
-        String key = "qwert";
+    void testPBE() {
+        byte[] salt = Cryptography.initSalt();
+        byte[] encData = Cryptography.PBE_encode(word, key, salt);
 
-        // 初始化盐
-        byte[] salt = AesCrypto.initSalt();
-        byte[] encData = AesCrypto.encryptPBE(key, salt, word);
-        assertEquals(word, AesCrypto.decryptPBE(key, salt, encData));
+        assertEquals(word, Cryptography.PBE_decode(encData, key, salt));
+    }
+
+    @Test
+    void testDoSignature() {
+        // 生成公钥私钥
+        Map<String, byte[]> map = RsaCrypto.init();
+        String privateKey = RsaCrypto.getPrivateKey(map);
+
+        byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).sign();
+        String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
+
+        assertEquals(EncodeTools.base64EncodeToString(helloWorlds), result);
+    }
+
+    @Test
+    void testDoVerify() {
+        // 生成公钥私钥
+        Map<String, byte[]> map = RsaCrypto.init();
+        String publicKey = RsaCrypto.getPublicKey(map), privateKey = RsaCrypto.getPrivateKey(map);
+        String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
+        boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData("hello world").setPublicKeyStr(publicKey).setSignatureBase64(result).verify();
+
+        assertTrue(verified);
     }
 
     @Test

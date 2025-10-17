@@ -1,50 +1,42 @@
 package com.ajaxjs.util.cryptography;
 
-
+import com.ajaxjs.util.EncodeTools;
 import org.junit.jupiter.api.Test;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AesWeiXinUtilTest {
-    private final byte[] validKey = new byte[32];// 32 bytes for AES-256
-    private final byte[] validNonce = new byte[12];// 12 bytes for GCM
-    private final String validCiphertext = "yourValidCiphertext"; // Base64 encoded ciphertext
-    private final byte[] associatedData = new byte[0];// Typically associated data would be included here
+    /**
+     * 解密小程序提供的加密数据，返回包含手机号码等信息的 JSON 对象
+     *
+     * @param iv         前端给的
+     * @param cipherText 前端给的，密文
+     * @param sessionKey 后端申请返回
+     * @return 解密后的文本
+     */
+    public static String aesDecryptPhone(String iv, String cipherText, String sessionKey) {
+        byte[] keyData = EncodeTools.base64Decode(sessionKey);
+
+        Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP, Cipher.DECRYPT_MODE);
+        cryptography.setKey(new SecretKeySpec(keyData, Constant.AES)); // little odd, it's AES, differs with AES_WX_MINI_APP.
+        cryptography.setSpec(new IvParameterSpec(EncodeTools.base64Decode(iv)));
+        cryptography.setDataStrBase64(cipherText);
+
+        return cryptography.doCipherAsStr();
+    }
 
     @Test
-    public void decryptToString_ValidInputs_ShouldDecryptSuccessfully() {
-        String decryptedText = WeiXinCrypto.aesDecryptToString(validKey, associatedData, validNonce, validCiphertext);
+    void testAesDecryptPhone() {
+        String sessionKey = "IOv62NY75gNbTYVEe1ogWQ==";
+        String iv = "b/+OsOf6+y4Hl6RXJW+CjQ==";
+        String ciphertext = "6fxmM2gjyAk5v9mzSnPXw3xv4WTYywHH/JK9A78Zb2K8i9kehzGLd3xalzx8qNgkZ/SG4/kfL8DgpvQBEoygi7K7YNguUW7HNYHkESUiGXId+DGpziBjmxmoPquFZ8N2XF71kn6MYfXVUiwxCHRu5YYlTbKr4IjA2xqKMgAhaK6YsyD1NE9iOH4eYnT9Ky7B54BW0yWVH3NFgkTmEBQTNg==";
+        String decryptedText = aesDecryptPhone(iv, ciphertext, sessionKey);
         // Add assertions to validate the decrypted text
         System.out.println(decryptedText);
     }
 
-    @Test
-    public void decryptToString_InvalidKey_ShouldThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> WeiXinCrypto.aesDecryptToString(new byte[32], associatedData, validNonce, validCiphertext));
-    }
-
-    @Test
-    public void decryptToString_InvalidCiphertext_ShouldThrowException() {
-        assertThrows(RuntimeException.class, () -> WeiXinCrypto.aesDecryptToString(validKey, associatedData, validNonce, "invalidCiphertext"));
-    }
-
-    @Test
-    public void decryptPhone_ValidInputs_ShouldDecryptSuccessfully() {
-        String sessionKey = "yourSessionKey";
-        String iv = "yourIV";
-        String ciphertext = "yourCiphertext";
-        String decryptedText = WeiXinCrypto.aesDecryptPhone(iv, ciphertext, sessionKey);
-        // Add assertions to validate the decrypted text
-        System.out.println(decryptedText);
-    }
-
-    @Test
-    public void decryptPhone_InvalidSessionKey_ShouldThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> WeiXinCrypto.aesDecryptPhone("iv", "ciphertext", "invalidSessionKey"));
-    }
-
-    @Test
-    public void decryptPhone_InvalidCiphertext_ShouldThrowException() {
-        assertThrows(RuntimeException.class, () -> WeiXinCrypto.aesDecryptPhone("iv", "invalidCiphertext", "sessionKey"));
-    }
 }

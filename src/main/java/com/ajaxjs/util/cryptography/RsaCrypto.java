@@ -2,12 +2,11 @@ package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.ObjectHelper;
+import com.ajaxjs.util.cryptography.rsa.KeyMgr;
 
 import javax.crypto.Cipher;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
 
 /**
@@ -17,7 +16,7 @@ public class RsaCrypto {
     /**
      * 定义加密方式
      */
-    private final static String KEY_RSA = "RSA";// "RSA/ECB/PKCS1Padding"
+    public final static String RSA = "RSA";// "RSA/ECB/PKCS1Padding"
 
     /**
      * 定义签名算法
@@ -34,6 +33,8 @@ public class RsaCrypto {
      */
     private final static String KEY_RSA_PRIVATE_KEY = "RSAPrivateKey";
 
+    public static final String SHA256_SIGNATURE_ALGORITHM = "SHA256withRSA";
+
     /**
      * 初始化密钥
      * <p>
@@ -42,7 +43,7 @@ public class RsaCrypto {
      * @return 密钥对
      */
     public static Map<String, byte[]> init() {
-        return getKeyPair(KEY_RSA, 1024, KEY_RSA_PUBLIC_KEY, KEY_RSA_PRIVATE_KEY);
+        return getKeyPair(RSA, 1024, KEY_RSA_PUBLIC_KEY, KEY_RSA_PRIVATE_KEY);
     }
 
     /**
@@ -53,11 +54,21 @@ public class RsaCrypto {
      * @return 数字签名
      */
     public static String sign(String privateKey, byte[] data) {
-        byte[] sign = sign(KEY_RSA_SIGNATURE, (PrivateKey) restoreKey(false, privateKey), data);
+        byte[] sign = sign(KEY_RSA_SIGNATURE, (PrivateKey) KeyMgr.restoreKey(false, privateKey), data);
 
         return EncodeTools.base64EncodeToString(sign);
     }
 
+    /**
+     * 使用指定的算法和私钥对数据进行签名
+     *
+     * @param algorithmName 签名算法名称，如"SHA256withRSA"
+     * @param privateKey    用于签名的私钥
+     * @param data          待签名的数据字节数组
+     * @return 签名后的字节数组
+     * @throws RuntimeException         当签名计算失败或Java环境不支持指定算法时抛出
+     * @throws IllegalArgumentException 当提供的私钥无效时抛出
+     */
     public static byte[] sign(String algorithmName, PrivateKey privateKey, byte[] data) {
         try {
             Signature signature = Signature.getInstance(algorithmName);
@@ -75,7 +86,33 @@ public class RsaCrypto {
     }
 
     /**
-     * 校验数字签名
+     * 使用指定算法和私钥对数据进行签名，并返回Base64编码的签名结果
+     *
+     * @param algorithmName 算法名称，如"SHA256withRSA"
+     * @param data          待签名的数据字节数组
+     * @param privateKey    用于签名的私钥
+     * @return Base64编码的签名字符串
+     */
+    public static String sign(String algorithmName, byte[] data, PrivateKey privateKey) {
+        return EncodeTools.base64EncodeToString(sign(algorithmName, privateKey, data));
+    }
+
+    /**
+     * 使用指定算法和私钥对数据进行签名
+     *
+     * @param algorithmName 算法名称，如"SHA256withRSA"
+     * @param data          待签名的字符串数据
+     * @param privateKey    用于签名的私钥
+     * @return 签名结果的Base64编码字符串
+     */
+    public static String sign(String algorithmName, String data, PrivateKey privateKey) {
+        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+
+        return sign(algorithmName, bytes, privateKey);
+    }
+
+    /**
+     * 使用公钥验证签名
      *
      * @param data      加密数据
      * @param publicKey 公钥
@@ -83,12 +120,40 @@ public class RsaCrypto {
      * @return 校验成功返回true，失败返回 false
      */
     public static boolean verify(byte[] data, String publicKey, String sign) {
+        return verify(KEY_RSA_SIGNATURE, data, sign, publicKey);
+    }
+
+    /**
+     * 使用公钥验证签名
+     *
+     * @param signatureAlgorithm 签名算法名称，如SHA256withRSA
+     * @param data               待验证的数据字节数组
+     * @param signatureBase64    Base64编码的签名字符串
+     * @param publicKey          用于验证签名的公钥
+     * @return 验证通过返回true，否则返回false
+     */
+    public static boolean verify(String signatureAlgorithm, byte[] data, String signatureBase64, String publicKey) {
+        PublicKey _publicKey = (PublicKey) KeyMgr.restoreKey(true, publicKey);
+
+        return verify(signatureAlgorithm, data, signatureBase64, _publicKey);
+    }
+
+    /**
+     * 使用公钥验证签名
+     *
+     * @param signatureAlgorithm 签名算法名称，如SHA256withRSA
+     * @param data               待验证的数据字节数组
+     * @param signatureBase64    Base64编码的签名字符串
+     * @param publicKey          用于验证签名的公钥
+     * @return 验证通过返回true，否则返回false
+     */
+    public static boolean verify(String signatureAlgorithm, byte[] data, String signatureBase64, PublicKey publicKey) {
         try {
-            Signature signature = Signature.getInstance(KEY_RSA_SIGNATURE);
-            signature.initVerify((PublicKey) restoreKey(true, publicKey));
+            Signature signature = Signature.getInstance(signatureAlgorithm);
+            signature.initVerify(publicKey);
             signature.update(data);
 
-            return signature.verify(EncodeTools.base64Decode(sign));
+            return signature.verify(EncodeTools.base64Decode(signatureBase64));
         } catch (SignatureException e) {
             throw new RuntimeException("签名计算失败", e);
         } catch (NoSuchAlgorithmException e) {
@@ -98,27 +163,6 @@ public class RsaCrypto {
         }
     }
 
-    // --------------------------------------------------------------------------------------
-
-    /**
-     * 还原公钥/私钥
-     *
-     * @param isPublic 是否公钥，反之私钥
-     * @param key      公钥或私钥的字符串表示
-     * @return 还原后的公钥或私钥对象，如果还原失败则返回null
-     */
-    private static Key restoreKey(boolean isPublic, String key) {
-        byte[] bytes = EncodeTools.base64Decode(key);
-
-        try {
-            KeyFactory f = KeyFactory.getInstance(KEY_RSA);
-            return isPublic ? f.generatePublic(new X509EncodedKeySpec(bytes)) : f.generatePrivate(new PKCS8EncodedKeySpec(bytes));
-        } catch (InvalidKeySpecException e) {
-            throw new RuntimeException("无效的密钥格式", e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("当前 Java 环境不支持 " + KEY_RSA, e);
-        }
-    }
 
     // ------------------------- PUBLIC KEY ------------------------
 
@@ -132,7 +176,7 @@ public class RsaCrypto {
      */
     private static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
         int mode = isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
-        return CommonUtil.doCipher(KEY_RSA, mode, restoreKey(isPublic, key), data, null);
+        return CommonUtil.doCipher(RSA, mode, KeyMgr.restoreKey(isPublic, key), data, null);
     }
 
     /**

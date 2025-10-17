@@ -2,7 +2,9 @@ package com.ajaxjs.util.io;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
@@ -29,6 +31,9 @@ public class FileHelper {
         Path path = Paths.get(filePath);
 
         try {
+            if (!Files.exists(path))
+                throw new IOException("文件不存在: " + filePath);
+
             if (Files.isDirectory(path))
                 throw new IOException("参数 full path：" + filePath + " 不能是目录，请指定文件");
         } catch (IOException e) {

@@ -5,7 +5,7 @@ import com.ajaxjs.util.io.Resources;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -36,18 +36,17 @@ public class WeiXinCrypto {
         return CommonUtil.doCipher("AES/GCM/NoPadding", Cipher.DECRYPT_MODE, aesKey, spec, cipherText, associatedData);
     }
 
-    /**
-     * 解密小程序提供的加密数据，返回包含手机号码等信息的 JSON 对象
-     *
-     * @param iv         前端给的
-     * @param cipherText 前端给的，密文
-     * @param sessionKey 后端申请返回
-     * @return 解密后的文本
-     */
-    public static String aesDecryptPhone(String iv, String cipherText, String sessionKey) {
-        IvParameterSpec spec = new IvParameterSpec(EncodeTools.base64Decode(iv));
+    public static String aesDecryptToString2(byte[] aesKey, byte[] associatedData, byte[] nonce, String cipherText) {
+        if (aesKey.length != 32)
+            throw new IllegalArgumentException("无效的 ApiV3Key，长度必须为32个字节");
 
-        return CommonUtil.doCipher("AES/CBC/PKCS5Padding", Cipher.DECRYPT_MODE, EncodeTools.base64Decode(sessionKey), spec, cipherText, null);
+        Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.DECRYPT_MODE);
+        cryptography.setKey(new SecretKeySpec(aesKey, Constant.AES)); // little odd, it's AES.
+        cryptography.setSpec(new GCMParameterSpec(128, nonce));
+        cryptography.setDataStrBase64(cipherText);
+        cryptography.setAssociatedData(associatedData);
+
+        return cryptography.doCipherAsStr();
     }
 
     //----------------- RSA 加密、解密 -------------------
