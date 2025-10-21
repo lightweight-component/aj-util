@@ -1,5 +1,6 @@
 package com.ajaxjs.util.cryptography;
 
+import com.ajaxjs.util.CollUtils;
 import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.StrUtil;
 import com.ajaxjs.util.io.Resources;
@@ -10,20 +11,65 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.*;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 证书和回调报文解密
  */
 @Deprecated
 public class WeiXinCrypto {
+    /**
+     * 反序列化证书并解密
+     *
+     * @param apiV3Key APIv3 密钥
+     * @param pMap     下载证书的请求返回体
+     * @return 证书 list
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<BigInteger, X509Certificate> deserializeToCerts(String apiV3Key, Map<String, Object> pMap) {
+        byte[] apiV3KeyByte = StrUtil.getUTF8_Bytes(apiV3Key);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) pMap.get("data");
+        Map<BigInteger, X509Certificate> newCertList = new HashMap<>();
+
+        if (!CollUtils.isEmpty(list)) {
+            for (Map<String, Object> map : list) {
+                Map<String, Object> certificate = (Map<String, Object>) map.get("encrypt_certificate");
+
+                // 解密
+                String cert = aesDecryptToString(apiV3KeyByte, StrUtil.getUTF8_Bytes(remove(certificate.get("associated_data"))), StrUtil.getUTF8_Bytes(remove(certificate.get("nonce"))),
+                        remove(certificate.get("ciphertext")));
+
+                try {
+                    CertificateFactory cf = CertificateFactory.getInstance("X509");
+                    X509Certificate x509Cert = (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(cert.getBytes(StandardCharsets.UTF_8)));
+                    x509Cert.checkValidity();
+                    newCertList.put(x509Cert.getSerialNumber(), x509Cert);
+                } catch (CertificateExpiredException | CertificateNotYetValidException ignored) {
+                } catch (CertificateException e) {
+                    throw new RuntimeException("当证书过期或尚未生效时", e);
+                }
+            }
+        }
+
+        return newCertList;
+    }
+
+    private static String remove(Object v) {
+        return v.toString().replace("\"", "");
+    }
+
     /**
      * AEAD_AES_256_GCM 解密
      *
@@ -181,36 +227,6 @@ public class WeiXinCrypto {
             throw new IllegalArgumentException("无效的证书", e);
         } catch (InvalidAlgorithmParameterException e) {
             throw new IllegalArgumentException("无效的算法参数", e);
-        }
-    }
-
-    /**
-     * 对签名数据进行签名。
-     * <p>
-     * 使用商户私钥对待签名串进行 SHA256 with RSA 签名，并对签名结果进行 Base64 编码得到签名值。
-     *
-     * @param privateKey 商户私钥
-     * @param data       数据
-     * @return 签名结果
-     */
-    public static String rsaSign(PrivateKey privateKey, byte[] data) {
-        return EncodeTools.base64EncodeToString(sign("SHA256withRSA", privateKey, data));
-    }
-
-
-    public static byte[] sign(String algorithmName, PrivateKey privateKey, byte[] data) {
-        try {
-            Signature signature = Signature.getInstance(algorithmName);
-            signature.initSign(privateKey);
-            signature.update(data);
-
-            return signature.sign();
-        } catch (SignatureException e) {
-            throw new RuntimeException("签名计算失败", e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("当前 Java 环境不支持 " + algorithmName, e);
-        } catch (InvalidKeyException e) {
-            throw new IllegalArgumentException("无效的证书", e);
         }
     }
 }

@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.crypto.Cipher;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -126,6 +129,12 @@ public class KeyMgr implements Constant {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + RSA, e);
         }
+    }
+
+    public static PrivateKey restorePrivateKey(String key) {
+        Key _key = restoreKey(false, key);
+
+        return (PrivateKey) _key;
     }
 
     /* ------------------------- PEM ------------------------ */
@@ -250,6 +259,32 @@ public class KeyMgr implements Constant {
 
     public static String privateKeyDecryptAsStr(byte[] data, String key) {
         return StrUtil.byte2String(privateKeyDecrypt(data, key)); // needs to Base64?
+    }
+
+    /**
+     * 从输入流中加载私钥
+     * 该方法首先将输入流中的字节读取到 ByteArrayOutputStream 中，然后将其转换为字符串形式的私钥，
+     * 最后调用另一方法 loadPrivateKey(String) 来解析并返回私钥对象
+     *
+     * @param inputStream 包含私钥信息的输入流
+     * @return 解析后的 PrivateKey 对象
+     * @throws IllegalArgumentException 如果输入流中的数据无法被正确读取或解析为私钥，则抛出此异常
+     */
+    public static PrivateKey loadPrivateKey(InputStream inputStream) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream(2048);
+        byte[] buffer = new byte[1024];
+        String privateKey;
+
+        try {
+            for (int length; (length = inputStream.read(buffer)) != -1; )
+                os.write(buffer, 0, length);
+
+            privateKey = os.toString(EncodeTools.UTF8_SYMBOL);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("无效的密钥", e);
+        }
+
+        return restorePrivateKey(privateKey);
     }
 }
 

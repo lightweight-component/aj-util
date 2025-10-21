@@ -19,9 +19,9 @@ public class SecretKeyMgr {
     /**
      * 获取对称加密用的 SecretKey
      *
-     * @param algorithmName 加密算法
-     * @param secure        可选的
-     * @param keySize       可选的
+     * @param algorithmName The name of algorithm
+     * @param secure        Pass 0 if it's optional
+     * @param keySize       Pass null if it's optional
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String algorithmName, int keySize, SecureRandom secure) {
@@ -58,7 +58,7 @@ public class SecretKeyMgr {
      *
      * @param algorithmName 随机数生成算法名称，如"SHA1PRNG"
      * @param key           用于初始化随机数生成器的种子密钥字符串
-     * @return 初始化完成的SecureRandom实例
+     * @return 初始化完成的 SecureRandom 实例
      * @throws RuntimeException 当指定的算法不存在时抛出
      */
     public static SecureRandom getRandom(String algorithmName, String key) {

@@ -4,6 +4,9 @@ import com.ajaxjs.util.BytesHelper;
 
 import java.util.Objects;
 
+/**
+ * Exclusive OR
+ */
 public class XOR {
     /**
      * 使用异或操作符对字符串进行简单加密。
@@ -14,11 +17,11 @@ public class XOR {
      * @param key 加密使用的密钥。注意，该密钥将被转换为哈希值后用于加密操作。
      * @return 返回加密后的十六进制字符串。
      */
-    public static String XOR_encode(String res, String key) {
+    public static String encode(String res, String key) {
         byte[] bs = res.getBytes();
 
         for (int i = 0; i < bs.length; i++)
-            bs[i] = (byte) (bs[i] ^ key.hashCode());
+            bs[i] = (byte) XOR(bs[i], key);
 
         return BytesHelper.bytesToHexStr(bs);
     }
@@ -30,11 +33,11 @@ public class XOR {
      * @param key 秘钥
      * @return 结果
      */
-    public static String XOR_decode(String res, String key) {
+    public static String decode(String res, String key) {
         byte[] bs = BytesHelper.parseHexStr2Byte(res);
 
         for (int i = 0; i < Objects.requireNonNull(bs).length; i++)
-            bs[i] = (byte) (bs[i] ^ key.hashCode());
+            bs[i] = (byte) XOR(bs[i], key);
 
         return new String(bs);
     }
