@@ -14,6 +14,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+/**
+ * 密钥管理
+ */
 @RequiredArgsConstructor
 @Accessors(chain = true)
 @Data
@@ -110,7 +113,7 @@ public class KeyMgr implements Constant {
         else
             key = key.replaceAll("-----\\w+ PRIVATE KEY-----", StrUtil.EMPTY_STRING);
 
-        key = key.replaceAll("\\s",  StrUtil.EMPTY_STRING);
+        key = key.replaceAll("\\s", StrUtil.EMPTY_STRING);
 
         byte[] bytes = EncodeTools.base64Decode(key);
 
@@ -194,7 +197,6 @@ public class KeyMgr implements Constant {
         cryptography.setKey(restoreKey(isPublic, key));
         cryptography.setData(data);
 
-//        return CommonUtil.doCipher(KEY_RSA, mode, restoreKey(isPublic, key), data, null);
         return cryptography.doCipher();
     }
 

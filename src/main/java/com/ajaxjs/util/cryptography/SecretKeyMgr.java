@@ -5,9 +5,16 @@ import com.ajaxjs.util.StrUtil;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 
+/**
+ * 对称加密的密钥工具类
+ */
 public class SecretKeyMgr {
     /**
      * 获取对称加密用的 SecretKey
@@ -34,6 +41,16 @@ public class SecretKeyMgr {
         }
 
         return kg.generateKey();
+    }
+
+    public static Key getSecretKey(String algorithmName, KeySpec spec) {
+        try {
+            return SecretKeyFactory.getInstance(algorithmName).generateSecret(spec);
+        } catch (InvalidKeySpecException e) {
+            throw new IllegalArgumentException("Invalid Key Spec.", e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+        }
     }
 
     /**

@@ -15,7 +15,6 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
 
 /**
@@ -169,15 +168,7 @@ public class Cryptography {
 
     public static byte[] PBE_encode(String data, String key, byte[] salt) {
         Cryptography cryptography = new Cryptography(Constant.PBE, Cipher.ENCRYPT_MODE);
-
-        try {
-            cryptography.setKey(SecretKeyFactory.getInstance(Constant.PBE).generateSecret(new PBEKeySpec(key.toCharArray())));
-        } catch (InvalidKeySpecException e) {
-            throw new IllegalArgumentException("Invalid Key Spec.", e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + Constant.PBE, e);
-        }
-
+        cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE, new PBEKeySpec(key.toCharArray())));
         cryptography.setSpec(new PBEParameterSpec(salt, 100));
         cryptography.setDataStr(data);
 
@@ -186,15 +177,7 @@ public class Cryptography {
 
     public static String PBE_decode(byte[] data, String key, byte[] salt) {
         Cryptography cryptography = new Cryptography(Constant.PBE, Cipher.DECRYPT_MODE);
-
-        try {
-            cryptography.setKey(SecretKeyFactory.getInstance(Constant.PBE).generateSecret(new PBEKeySpec(key.toCharArray())));
-        } catch (InvalidKeySpecException e) {
-            throw new IllegalArgumentException("Invalid Key Spec.", e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + Constant.PBE, e);
-        }
-
+        cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE, new PBEKeySpec(key.toCharArray())));
         cryptography.setSpec(new PBEParameterSpec(salt, 100));
         cryptography.setData(data);
 

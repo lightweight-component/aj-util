@@ -39,10 +39,19 @@ public class DoVerify {
         return this;
     }
 
+    private byte[] signatureData;
+
     /**
      * The signature string, should be a Base64 string.
      */
     private String signatureBase64;
+
+    public DoVerify setSignatureBase64(String signatureBase64) {
+        this.signatureBase64 = signatureBase64;
+        signatureData = EncodeTools.base64Decode(signatureBase64);
+
+        return this;
+    }
 
     /**
      * The public key
@@ -74,7 +83,7 @@ public class DoVerify {
             signature.initVerify(publicKey);
             signature.update(data);
 
-            return signature.verify(EncodeTools.base64Decode(signatureBase64));
+            return signature.verify(signatureData);
         } catch (SignatureException e) {
             throw new RuntimeException("Signature failed.", e);
         } catch (NoSuchAlgorithmException e) {

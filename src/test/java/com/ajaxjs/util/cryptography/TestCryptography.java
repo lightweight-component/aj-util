@@ -53,7 +53,7 @@ public class TestCryptography {
 
     @Test
     void testDoSignature() {
-        // 生成公钥私钥
+// 生成公钥私钥
         KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
         keyMgr.generateKeyPair();
         String privateKey = keyMgr.getPrivateKeyStr();
@@ -66,7 +66,7 @@ public class TestCryptography {
 
     @Test
     void testDoVerify() {
-        // 生成公钥私钥
+// 生成公钥私钥
         KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
         keyMgr.generateKeyPair();
         String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
@@ -107,10 +107,10 @@ public class TestCryptography {
         assertEquals(english, decEnglish);
 //		System.out.println("私钥签名——公钥验证签名");
 
-        // 产生签名
+// 产生签名
         String sign = new DoSignature(Constant.MD5_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
 //		System.out.println("签名:\r" + sign);
-        // 验证签名
+// 验证签名
         assertTrue(new DoVerify(Constant.MD5_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
     }
 }
