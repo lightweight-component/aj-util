@@ -4,9 +4,8 @@ package com.ajaxjs.util.cryptography;
 import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.cryptography.rsa.DoSignature;
 import com.ajaxjs.util.cryptography.rsa.DoVerify;
+import com.ajaxjs.util.cryptography.rsa.KeyMgr;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,8 +54,9 @@ public class TestCryptography {
     @Test
     void testDoSignature() {
         // 生成公钥私钥
-        Map<String, byte[]> map = RsaCrypto.init();
-        String privateKey = RsaCrypto.getPrivateKey(map);
+        KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+        keyMgr.generateKeyPair();
+        String privateKey = keyMgr.getPrivateKeyStr();
 
         byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).sign();
         String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
@@ -67,8 +67,9 @@ public class TestCryptography {
     @Test
     void testDoVerify() {
         // 生成公钥私钥
-        Map<String, byte[]> map = RsaCrypto.init();
-        String publicKey = RsaCrypto.getPublicKey(map), privateKey = RsaCrypto.getPrivateKey(map);
+        KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+        keyMgr.generateKeyPair();
+        String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
         String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
         boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData("hello world").setPublicKeyStr(publicKey).setSignatureBase64(result).verify();
 
@@ -78,8 +79,9 @@ public class TestCryptography {
     @Test
     public void testRSA() {
         // 生成公钥私钥
-        Map<String, byte[]> map = RsaCrypto.init();
-        String publicKey = RsaCrypto.getPublicKey(map), privateKey = RsaCrypto.getPrivateKey(map);
+        KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+        keyMgr.generateKeyPair();
+        String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
 
         System.out.println("公钥: \n\r" + publicKey);
         System.out.println("私钥： \n\r" + privateKey);
@@ -87,28 +89,28 @@ public class TestCryptography {
 
         String word = "你好，世界！";
 
-        byte[] encWord = RsaCrypto.encryptByPublicKey(word.getBytes(), publicKey);
-        String decWord = new String(RsaCrypto.decryptByPrivateKey(encWord, privateKey));
+        byte[] encWord = KeyMgr.publicKeyEncrypt(word.getBytes(), publicKey);
+        String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
 
         String eBody = EncodeTools.base64EncodeToString(encWord);
-        String decWord2 = new String(RsaCrypto.decryptByPrivateKey(EncodeTools.base64Decode(eBody), privateKey));
+        String decWord2 = new String(KeyMgr.privateKeyDecrypt(EncodeTools.base64Decode(eBody), privateKey));
         System.out.println("加密前: " + word + "\n\r密文：" + eBody + "\n解密后: " + decWord2);
         assertEquals(word, decWord);
 
 //		System.out.println("私钥加密--------公钥解密");
 
         String english = "Hello, World!";
-        byte[] encEnglish = RsaCrypto.encryptByPrivateKey(english.getBytes(), privateKey);
-        String decEnglish = new String(RsaCrypto.decryptByPublicKey(encEnglish, publicKey));
+        byte[] encEnglish = KeyMgr.privateKeyEncrypt(english.getBytes(), privateKey);
+        String decEnglish = new String(KeyMgr.publicKeyDecrypt(encEnglish, publicKey));
 //		System.out.println("加密前: " + english + "\n\r" + "解密后: " + decEnglish);
 
         assertEquals(english, decEnglish);
 //		System.out.println("私钥签名——公钥验证签名");
 
         // 产生签名
-        String sign = RsaCrypto.sign(privateKey, encEnglish);
+        String sign = new DoSignature(Constant.MD5_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
 //		System.out.println("签名:\r" + sign);
         // 验证签名
-        assertTrue(RsaCrypto.verify(encEnglish, publicKey, sign));
+        assertTrue(new DoVerify(Constant.MD5_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
     }
 }

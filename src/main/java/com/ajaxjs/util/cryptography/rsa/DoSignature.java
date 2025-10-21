@@ -2,7 +2,6 @@ package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.cryptography.Constant;
-import com.ajaxjs.util.cryptography.RsaCrypto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;

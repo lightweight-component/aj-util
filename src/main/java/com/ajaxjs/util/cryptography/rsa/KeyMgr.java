@@ -1,7 +1,7 @@
 package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.EncodeTools;
-import com.ajaxjs.util.ObjectHelper;
+import com.ajaxjs.util.StrUtil;
 import com.ajaxjs.util.cryptography.Constant;
 import com.ajaxjs.util.cryptography.Cryptography;
 import lombok.Data;
@@ -13,7 +13,6 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Accessors(chain = true)
@@ -29,39 +28,72 @@ public class KeyMgr implements Constant {
      */
     private final int keySize;
 
+    /**
+     * The result of generating a key pair
+     */
+    private KeyPair keyPair;
+
+    /**
+     * Get a pair of keys: public key and private key
+     *
+     * @return Key pair object
+     */
     public KeyPair generateKeyPair() {
         try {
             KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithmName);
             generator.initialize(keySize);
+            keyPair = generator.generateKeyPair();
 
-            return generator.generateKeyPair();
+            return keyPair;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
         }
     }
 
     /**
-     * 生成一对密钥，并返回密钥对的 byte[]
+     * 返回公钥的 byte[]
      *
-     * @return Map
+     * @return 私钥的 byte[]
      */
-    public Map<String, byte[]> getKeyPairAsMapBytes() {
-        KeyPair keyPair = generateKeyPair();
-
-        return ObjectHelper.mapOf(PUBLIC_KEY_RSA, keyPair.getPublic().getEncoded(), PRIVATE_KEY_RSA, keyPair.getPrivate().getEncoded());
+    public byte[] getPublicKeyBytes() {
+        return keyPair.getPublic().getEncoded();
     }
 
     /**
-     * 生成一对密钥，并返回密钥对的 Base64 编码
+     * 返回私钥的 byte[]
      *
-     * @return Map
+     * @return 私钥的 byte[]
      */
-    public Map<String, String> getKeyPairAsMap() {
-        KeyPair keyPair = generateKeyPair();
-
-        return ObjectHelper.mapOf(PUBLIC_KEY_RSA, EncodeTools.base64EncodeToString(keyPair.getPublic().getEncoded()),
-                PRIVATE_KEY_RSA, EncodeTools.base64EncodeToString(keyPair.getPrivate().getEncoded()));
+    public byte[] getPrivateKeyBytes() {
+        return keyPair.getPrivate().getEncoded();
     }
+
+    /**
+     * 返回公钥的 Base64 编码
+     *
+     * @return 私钥的 Base64 编码
+     */
+    public String getPublicKeyStr() {
+        return EncodeTools.base64EncodeToString(getPublicKeyBytes());
+    }
+
+    public String getPublicToPem() {
+        return publicKeyToPem(getPublicKeyStr());
+    }
+
+    /**
+     * 返回私钥的 Base64 编码
+     *
+     * @return 私钥的 Base64 编码
+     */
+    public String getPrivateKeyStr() {
+        return EncodeTools.base64EncodeToString(getPrivateKeyBytes());
+    }
+
+    public String getPrivateToPem() {
+        return privateKeyToPem(getPrivateKeyStr());
+    }
+
     /* ------------------------- Restore Key ------------------------ */
 
     /**
@@ -72,16 +104,24 @@ public class KeyMgr implements Constant {
      * @return 还原后的公钥或私钥对象，如果还原失败则返回 null
      */
     public static Key restoreKey(boolean isPublic, String key) {
+        // auto removes the pem
+        if (isPublic)
+            key = key.replaceAll("-----\\w+ PUBLIC KEY-----", StrUtil.EMPTY_STRING);
+        else
+            key = key.replaceAll("-----\\w+ PRIVATE KEY-----", StrUtil.EMPTY_STRING);
+
+        key = key.replaceAll("\\s",  StrUtil.EMPTY_STRING);
+
         byte[] bytes = EncodeTools.base64Decode(key);
 
         try {
-            KeyFactory f = KeyFactory.getInstance(KEY_RSA);
+            KeyFactory f = KeyFactory.getInstance(RSA);
 
             return isPublic ? f.generatePublic(new X509EncodedKeySpec(bytes)) : f.generatePrivate(new PKCS8EncodedKeySpec(bytes));
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException("Invalid Key. " + key, e);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + KEY_RSA, e);
+            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + RSA, e);
         }
     }
 
@@ -93,6 +133,7 @@ public class KeyMgr implements Constant {
      * @param privateKey 待转换的私钥对象
      * @return PEM 格式的私钥字符串
      */
+    @Deprecated
     public static String privateKeyToPem(PrivateKey privateKey) {
         String encoded = EncodeTools.base64EncodeToString(privateKey.getEncoded());
 
@@ -117,6 +158,7 @@ public class KeyMgr implements Constant {
      * @param publicKey 公钥对象
      * @return PEM 格式的公钥字符串
      */
+    @Deprecated
     public static String publicKeyToPem(PublicKey publicKey) {
         String encoded = EncodeTools.base64EncodeToString(publicKey.getEncoded());
 
@@ -148,7 +190,7 @@ public class KeyMgr implements Constant {
     private static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
         int mode = isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
 
-        Cryptography cryptography = new Cryptography(KEY_RSA, mode);
+        Cryptography cryptography = new Cryptography(RSA, mode);
         cryptography.setKey(restoreKey(isPublic, key));
         cryptography.setData(data);
 
@@ -163,8 +205,12 @@ public class KeyMgr implements Constant {
      * @param key  公钥
      * @return 加密后的字节数组
      */
-    public static byte[] encryptByPublicKey(byte[] data, String key) {
+    public static byte[] publicKeyEncrypt(byte[] data, String key) {
         return action(true, true, data, key);
+    }
+
+    public static String publicKeyEncryptAsBase64Str(byte[] data, String key) {
+        return EncodeTools.base64EncodeToString(publicKeyEncrypt(data, key));
     }
 
     /**
@@ -174,7 +220,7 @@ public class KeyMgr implements Constant {
      * @param key  公钥
      * @return 解密后的字节数组
      */
-    public static byte[] decryptByPublicKey(byte[] data, String key) {
+    public static byte[] publicKeyDecrypt(byte[] data, String key) {
         return action(false, true, data, key);
     }
 
@@ -185,7 +231,7 @@ public class KeyMgr implements Constant {
      * @param key  私钥
      * @return 加密后的字节数组
      */
-    public static byte[] encryptByPrivateKey(byte[] data, String key) {
+    public static byte[] privateKeyEncrypt(byte[] data, String key) {
         return action(true, false, data, key);
     }
 
@@ -196,7 +242,12 @@ public class KeyMgr implements Constant {
      * @param key  私钥
      * @return 解密后的字节数组
      */
-    public static byte[] decryptByPrivateKey(byte[] data, String key) {
+    public static byte[] privateKeyDecrypt(byte[] data, String key) {
         return action(false, false, data, key);
     }
+
+    public static String privateKeyDecryptAsStr(byte[] data, String key) {
+        return StrUtil.byte2String(privateKeyDecrypt(data, key)); // needs to Base64?
+    }
 }
+

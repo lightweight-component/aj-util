@@ -25,11 +25,7 @@ public interface Constant {
     @SuppressWarnings("SpellCheckingInspection")
     String PBE = "PBEWITHMD5andDES";
 
-    String KEY_RSA = "RSA";// "RSA/ECB/PKCS1Padding"
-
-    String PUBLIC_KEY_RSA = "RSAPublicKey";
-
-    String PRIVATE_KEY_RSA = "RSAPrivateKey";
+    String RSA = "RSA";// "RSA/ECB/PKCS1Padding"
 
     String MD5_RSA = "MD5withRSA";
 
