@@ -22,7 +22,7 @@ public class SecretKeyMgr {
      * @param algorithmName The name of algorithm
      * @param secure        Pass 0 if it's optional
      * @param keySize       Pass null if it's optional
-     * @return SecretKey
+     * @return The secret key, it's symmetric
      */
     public static SecretKey getSecretKey(String algorithmName, int keySize, SecureRandom secure) {
         KeyGenerator kg;
@@ -43,6 +43,13 @@ public class SecretKeyMgr {
         return kg.generateKey();
     }
 
+    /**
+     * Get the secret key by the given algorithm name and key spec
+     *
+     * @param algorithmName The name of algorithm
+     * @param spec          A (transparent) specification of the key material
+     * @return A key does not belong to symmetric or not
+     */
     public static Key getSecretKey(String algorithmName, KeySpec spec) {
         try {
             return SecretKeyFactory.getInstance(algorithmName).generateSecret(spec);
@@ -78,7 +85,7 @@ public class SecretKeyMgr {
     /**
      * 根据指定算法和安全随机数生成一个秘密密钥，并将其以 Base64 编码的字符串形式返回
      *
-     * @param algorithmName 算法名称
+     * @param algorithmName The name of algorithm
      * @param keySize       The size of key
      * @param secure        安全随机数
      * @return Base64 编码后的秘密密钥字符串

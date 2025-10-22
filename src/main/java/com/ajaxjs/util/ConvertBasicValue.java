@@ -51,7 +51,7 @@ public class ConvertBasicValue {
             return null;
 
         if (clz == null) {
-            System.err.println("Clz can not be null");
+            log.warn("Clz can not be null");
             return null;
         }
 

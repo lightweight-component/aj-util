@@ -6,5 +6,7 @@ public class TestUUIDv7 {
     @Test
     void test() {
         System.out.println(UUIDv7.randomUUID());
+        System.out.println(UUIDv7.randomUUID());
+        System.out.println(UUIDv7.randomUUID());
     }
 }
