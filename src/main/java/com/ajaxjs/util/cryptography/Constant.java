@@ -33,6 +33,11 @@ public interface Constant {
 
     String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
 
+    /**
+     * Optimal Asymmetric Encryption Padding
+     */
+    String RSAES_OAEP = "RSA/ECB/OAEPWithSHA-1AndMGF1Padding";
+
     String NO_SUCH_ALGORITHM = "No Such Algorithm in this Java. ";
 
     enum Encode {

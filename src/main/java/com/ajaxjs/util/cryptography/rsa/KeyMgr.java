@@ -4,6 +4,7 @@ import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.StrUtil;
 import com.ajaxjs.util.cryptography.Constant;
 import com.ajaxjs.util.cryptography.Cryptography;
+import com.ajaxjs.util.io.FileHelper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -285,6 +286,12 @@ public class KeyMgr implements Constant {
         }
 
         return restorePrivateKey(privateKey);
+    }
+
+    public static PrivateKey loadPrivateKey(String filePath) {
+        String fileContent = FileHelper.readFileContent(filePath);
+
+        return restorePrivateKey(fileContent);
     }
 }
 

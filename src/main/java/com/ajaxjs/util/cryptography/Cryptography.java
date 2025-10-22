@@ -97,6 +97,10 @@ public class Cryptography {
         return StrUtil.byte2String(doCipher());
     }
 
+    public String doCipherAsBase64Str() {
+        return EncodeTools.base64EncodeToString(doCipher());
+    }
+
     /**
      * Get hex string of cipher, which is good for encrypt.
      *
