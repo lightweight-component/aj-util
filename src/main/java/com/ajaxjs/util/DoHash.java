@@ -1,0 +1,143 @@
+package com.ajaxjs.util;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+@Slf4j
+@Data
+@Accessors(chain = true)
+@RequiredArgsConstructor
+public class DoHash {
+    private final String algorithmName;
+
+    private byte[] input;
+
+    private String inputStr;
+
+    public DoHash setInput(String input) {
+        inputStr = input;
+        this.input = StrUtil.getUTF8_Bytes(input);
+
+        return this;
+    }
+
+    public byte[] getMessageDigest() {
+        MessageDigest md;
+
+        try {
+            md = MessageDigest.getInstance(algorithmName);
+        } catch (NoSuchAlgorithmException e) {
+            log.warn("No Such Algorithm: {}", algorithmName, e);
+            throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
+        }
+
+        return md.digest(input);
+    }
+
+    private byte[] key;
+
+    public DoHash setKey(String key) {
+        this.key = StrUtil.getUTF8_Bytes(key);
+        return this;
+    }
+
+    public DoHash setKeyBase64(String key) {
+        this.key = StrUtil.getUTF8_Bytes(key);// todo
+        return this;
+    }
+
+    /**
+     * 获取指定算法的 MAC 值（可设密钥）
+     *
+     * @return 生成的 MAC 值
+     */
+    public byte[] getMac() {
+        SecretKey sk;
+
+        try {
+            if (key == null)
+                sk = KeyGenerator.getInstance(algorithmName).generateKey();
+            else
+                sk = new SecretKeySpec(key/*Base64Utils.decodeFromString(key)*/, algorithmName);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
+        }
+
+        try {
+            Mac mac = Mac.getInstance(algorithmName);
+            mac.init(sk);
+
+            return mac.doFinal(input);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException("Invalid Key.", e);
+        }
+    }
+
+    public byte[] hash() {
+        return key == null ? getMessageDigest() : getMac();
+    }
+
+    public String hashAsStr() {
+        return BytesHelper.bytesToHexStr(hash()).toLowerCase();
+    }
+
+    /**
+     * @param isWithoutPadding 是否去掉末尾的 = 号
+     * @return
+     */
+    public String hashAsBase64(boolean isWithoutPadding) {
+        return isWithoutPadding ? null : EncodeTools.base64EncodeToString(hash());// todo
+    }
+
+    public String hashAsBase64() {
+        return hashAsBase64(false);
+    }
+
+    public static final String MD5 = "MD5";
+
+    public static final String SHA1 = "SHA1";
+
+    public static final String SHA256 = "SHA-256";
+
+    /**
+     * 生成字符串的 MD5 哈希值，等价于 Spring 的 DigestUtils.md5DigestAsHex()
+     *
+     * @param str 输入的字符串
+     * @return 字符串的 MD5 哈希值，返回32位小写的字符串
+     */
+    public static String md5(String str) {
+        return new DoHash(MD5).setInput(str).hashAsStr();
+    }
+
+    /**
+     * 生成字符串的 SHA1 哈希值
+     *
+     * @param str 输入的字符串
+     * @return 字符串的 SHA1 哈希值
+     */
+    public static String getSHA1(String str) {
+        return new DoHash(SHA1).setInput(str).hashAsStr();
+    }
+
+    /**
+     * 生成字符串的 SHA256 哈希值
+     *
+     * @param str 输入的字符串
+     * @return 字符串的 SHA256 哈希值
+     */
+    public static String getSHA256(String str) {
+        return new DoHash(SHA256).setInput(str).hashAsStr();
+    }
+}

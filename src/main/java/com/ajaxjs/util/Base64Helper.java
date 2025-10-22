@@ -86,6 +86,7 @@ public class Base64Helper {
             Base64.Encoder encoder = urlSafe ?
                     (withoutPadding ? Base64.getUrlEncoder().withoutPadding() : Base64.getUrlEncoder())
                     : (withoutPadding ? Base64.getEncoder().withoutPadding() : Base64.getEncoder());
+
             return encoder.encode(inputBytes);
         } else {
             Base64.Decoder decoder = urlSafe ? Base64.getUrlDecoder() : Base64.getDecoder();
