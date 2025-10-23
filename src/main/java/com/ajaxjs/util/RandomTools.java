@@ -119,7 +119,7 @@ public class RandomTools {
     }
 
     /**
-     * 生成一个 UUID，可选择是否去掉其中的 "-" 符号（Copy from Spring，Spring 提供的算法性能远远高于 JDK 的）
+     * 生成一个 UUID，可选择是否去掉其中的 "-" 符号（可以参考 Spring 的，Spring 提供的算法性能远远高于 JDK 的）
      *
      * @param isRemove 是否去掉 "-" 符号
      * @return 生成的 UUID 字符串

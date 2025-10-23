@@ -196,9 +196,12 @@ public class XmlHelper {
 
             if (namedItem != null)
                 return namedItem.getNodeValue();
-            else
-                return null;// LOGGER.warning("找不到属性 " + attrName);
+            else {
+                log.warn("The attribute: {} is not found", attrName);
+                return null;
+            }
 
-        } else return null;
+        } else
+            return null;
     }
 }

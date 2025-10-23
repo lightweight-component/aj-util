@@ -22,10 +22,7 @@ public class DoHash {
 
     private byte[] input;
 
-    private String inputStr;
-
     public DoHash setInput(String input) {
-        inputStr = input;
         this.input = StrUtil.getUTF8_Bytes(input);
 
         return this;

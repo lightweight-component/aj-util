@@ -42,7 +42,7 @@ public class EncodeTools {
     }
 
     /**
-     * URL 编码。 适合 GET 请求时候用
+     * URL 编码。适合 GET 请求时候用
      * <p>
      * <a href="https://www.cnblogs.com/del88/p/6496825.html">...</a>
      *
@@ -52,6 +52,11 @@ public class EncodeTools {
     public static String urlEncodeQuery(String str) {
         str = str.replaceAll(" ", "%20");
         return urlEncode(str);
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(urlEncodeQuery("Hello World! 你好"));
     }
 
     /**
