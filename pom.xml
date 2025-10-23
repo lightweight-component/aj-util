@@ -11,8 +11,8 @@
         <relativePath/>
     </parent>
 
-    <artifactId>ajaxjs-util</artifactId>
-    <name>aj-util</name>
+    <artifactId>ajaxjs-utils</artifactId>
+    <name>aj-utils</name>
     <description>Small Java Utils Library with many powerful components</description>
     <version>1.2.7</version>
     <packaging>jar</packaging>
