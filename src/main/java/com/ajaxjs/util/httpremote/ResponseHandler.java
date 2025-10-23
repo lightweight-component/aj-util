@@ -29,35 +29,6 @@ import java.util.zip.GZIPInputStream;
 @Slf4j
 public abstract class ResponseHandler extends BoxLogger {
 
-    /**
-     * 下载文件
-     *
-     * @param resp     响应消息体
-     * @param saveDir  保存的目录
-     * @param fileName 保存的文件名
-     * @return 下载文件的完整磁盘路径
-     */
-    public static String download(Response resp, String saveDir, String fileName) {
-        FileHelper.createDirectory(saveDir);
-        File file = new File(saveDir, fileName);
-
-        try (OutputStream out = Files.newOutputStream(file.toPath())) {
-            StreamHelper.write(resp.getIn(), out, true);
-            log.info("文件 [{}]写入成功", file);
-
-            return file.toString();
-        } catch (IOException e) {
-            log.warn("ERROR>>", e);
-        } finally {
-            try {
-                resp.getIn().close();
-            } catch (IOException e) {
-                log.warn("ERROR>>", e);
-            }
-        }
-
-        return null;
-    }
 
     /**
      * 判断是否为 GZip 格式的输入流并返回相应的输入流

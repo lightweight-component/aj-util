@@ -1,12 +1,17 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.JsonUtil;
+import com.ajaxjs.util.MapTool;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.List;
 import java.util.Map;
 
 @Data
+@Slf4j
 public class Response {
     /**
      * 连接对象
@@ -57,4 +62,42 @@ public class Response {
      * 开始请求时间
      */
     private Long startTime;
+
+
+    /**
+     * Get the response as JSON List
+     *
+     * @return JSON List
+     */
+    public List<Map<String, Object>> responseAsJsonList() {
+        return JsonUtil.json2mapList(responseText);
+    }
+
+    /**
+     * Get the response as JSON
+     *
+     * @return JSON
+     */
+    public Map<String, Object> responseAsJson() {
+        return JsonUtil.json2map(responseText);
+    }
+
+    /**
+     * Get the response as Java Bean
+     *
+     * @param clz The Java Bean class
+     * @return Java Bean
+     */
+    public <T> T responseAsBean(Class<T> clz) {
+        if (!isOk)
+            return null;
+
+        Map<String, Object> map = responseAsJson();
+
+        return JsonUtil.map2pojo(map, clz);
+    }
+
+    public Map<String, String> responseAsXML() {
+        return MapTool.xmlToMap(responseText);
+    }
 }

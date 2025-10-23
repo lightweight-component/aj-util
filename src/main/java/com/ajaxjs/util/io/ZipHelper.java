@@ -102,7 +102,7 @@ public class ZipHelper {
             for (File fc : fileContent)
                 addFileToZip(fc, fc.getName(), zipOut, useStore);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("一维文件数组压缩为 ZIP", e);
         }
     }
 

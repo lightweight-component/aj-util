@@ -14,20 +14,19 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 @Data
 @Slf4j
-public class RequestCore implements HttpConstant {
+public class Request implements HttpConstant {
     private final String url;
 
     private final HttpMethod method;
 
     private String contentType;
 
-    public RequestCore(HttpMethod method, String url) {
+    public Request(HttpMethod method, String url) {
         this.method = method;
         this.url = url;
     }
@@ -43,7 +42,7 @@ public class RequestCore implements HttpConstant {
      * @param data The request data to be sent in string of the pair format, like `a=foo&b=bar`.
      * @return Request
      */
-    public RequestCore setDataStr(String data) {
+    public Request setDataStr(String data) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -63,7 +62,7 @@ public class RequestCore implements HttpConstant {
      * @param json The request data to be sent in Json.
      * @return Request
      */
-    public RequestCore setData(String json) {
+    public Request setData(String json) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -84,7 +83,7 @@ public class RequestCore implements HttpConstant {
      * @param dataMap The request data to be sent in Map.
      * @return Request
      */
-    public RequestCore setData(Map<String, Object> dataMap) {
+    public Request setData(Map<String, Object> dataMap) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -106,7 +105,7 @@ public class RequestCore implements HttpConstant {
      * @param javaBean The request data to be sent in Java Bean.
      * @return Request
      */
-    public RequestCore setData(Object javaBean) {
+    public Request setData(Object javaBean) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -189,6 +188,11 @@ public class RequestCore implements HttpConstant {
     private Response resp;
 
     /**
+     * Not null = Skip consume input stream to text.
+     */
+    private Consumer<InputStream> inputStreamConsumer;
+
+    /**
      * 发送请求，返回响应信息
      *
      * @return 返回类型
@@ -200,46 +204,42 @@ public class RequestCore implements HttpConstant {
         resp.setConnection(conn);
         resp.setUrl(conn.getURL().toString());
         resp.setHttpMethod(conn.getRequestMethod());
-//        LOGGER.info("开始请求 {0} {1}", resp.getHttpMethod(), resp.getUrl());
 
         try {
-            int responseCode = conn.getResponseCode();
-//            LOGGER.info("responseCode:" + responseCode);
+            int responseCode = conn.getResponseCode(); // starts to connect
             resp.setHttpCode(responseCode);
-
             InputStream in;
+
             if (responseCode >= 400) {// 如果返回的结果是 400 以上，那么就说明出问题了
-                // an error stream if any, null if there have been no errors, the connection is
-                // not connected or the server sent no useful data.
-                // 在连接建立后服务器端并没有发数据，Stream是空的，只有在进行了getHeaderFields()操作后才会激活服务器进行数据发送，实验一下
-                // https://blog.csdn.net/xia4820723/article/details/47804797
+                /*
+                 An error stream if any, null if there have been no errors, the connection is not connected or the server sent no useful data.
+                 在连接建立后服务器端并没有发数据，Stream是空的，只有在进行了 getHeaderFields() 操作后才会激活服务器进行数据发送，实验一下
+                 https://blog.csdn.net/xia4820723/article/details/47804797
+                 */
                 conn.getExpiration();
                 resp.setOk(false);
-
-                // 错误通常为文本
-                in = conn.getErrorStream();
-
-                String result = null;
-                if (in != null) {
-                    result = StreamHelper.copyToString(in);
-                    resp.setResponseText(result);
-                }
-
-                printErrorLog(resp.getHttpMethod(), resp.getUrl(), String.valueOf(resp.getHttpCode()), result == null ? "未知" : result);
-                log.warn("{} 返回结果异常\n{}", resp.getUrl(), result == null ? "未知" : result);
+                in = conn.getErrorStream(); // 错误通常为文本
             } else {
                 resp.setOk(true);
                 in = conn.getInputStream();// 发起请求，接收响应
-                resp.setIn(in);
             }
 
-            String result = StreamHelper.copyToString(resp.getIn());
-            resp.setResponseText(result.trim());
-            String resultMsg = (result.length() > MAX_LENGTH_TO_PRINT) ? result.substring(0, MAX_LENGTH_TO_PRINT) + " ..." : result;
+            String result = null;
 
-            printLog(resp.getHttpMethod() + " " + resp.getUrl(), String.valueOf(resp.getHttpCode()), resultMsg, resp.getStartTime());
+            if (in != null) {
+                if (inputStreamConsumer == null) {
+                    result = StreamHelper.copyToString(in);
+                    result = result.trim();
+                    resp.setResponseText(result);
+                } else
+                    inputStreamConsumer.accept(in);
+
+                in.close();
+            }
+
+            printLog(resp.isOk(), resp.getHttpMethod(), resp.getUrl(), responseCode, result, resp.getStartTime());
         } catch (IOException e) {
-            log.warn("请求异常： {} {}", resp.getHttpMethod(), resp.getUrl(), e);
+            log.warn("Request failed. Method: {}, URL: {}", resp.getHttpMethod(), resp.getUrl(), e);
             resp.setOk(false);
             resp.setEx(e);
         }
@@ -247,70 +247,24 @@ public class RequestCore implements HttpConstant {
         return resp;
     }
 
-    /**
-     * Get the response as JSON List
-     *
-     * @return JSON List
-     */
-    public List<Map<String, Object>> responseAsJsonList() {
-        Response resp = connect();
-
-        return resp.isOk() ? JsonUtil.json2mapList(resp.getResponseText()) : null;
-    }
-
-    /**
-     * Get the response as JSON
-     *
-     * @return JSON
-     */
-    public Map<String, Object> responseAsJson() {
-        Response resp = connect();
-
-        return resp.isOk() ? JsonUtil.json2map(resp.getResponseText()) : null;
-    }
-
-    /**
-     * Get the response as Java Bean
-     *
-     * @param clz The Java Bean class
-     * @return Java Bean
-     */
-    public <T> T responseAsBean(Class<T> clz) {
-        Map<String, Object> map = responseAsJson();
-
-        return JsonUtil.map2pojo(map, clz);
-    }
-
-    public Map<String, String> responseAsXML() {
-        Response resp = connect();
-
-        return resp.isOk() ? MapTool.xmlToMap(resp.getResponseText()) : null;
-    }
-
     private static final int MAX_LENGTH_TO_PRINT = 500;
 
-    public static void printLog(String httpInfo, String httpCode, String returnText, Long startTime) {
-        String title = " HTTP ServerRequest ";
-        String sb = "\n" + BoxLogger.ANSI_YELLOW + BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
-                BoxLogger.boxContent("Time:       ", ""/* TODO DateHelper.now()*/) + '\n' +
-                BoxLogger.boxContent("TraceId:    ", MDC.get(BoxLogger.TRACE_KEY)) + '\n' +
-                BoxLogger.boxContent("Request:    ", httpInfo) + '\n' +
-                BoxLogger.boxContent("ReturnCode: ", "HTTP status " + httpCode) + '\n' +
-                BoxLogger.boxContent("ReturnText: ", returnText.trim()) + '\n' +
-                BoxLogger.boxContent("Execution:  ", (System.currentTimeMillis() - startTime) + "ms") + '\n' +
-                BoxLogger.boxLine('└', '─', '┘', StrUtil.EMPTY_STRING) + BoxLogger.ANSI_RESET;
+    public static void printLog(boolean isOk, String httpMethod, String url, int httpCode, String returnText, Long startTime) {
+        if (returnText == null)
+            returnText = "(ZERO byte returns)";
 
-        log.info(sb);
-    }
+        returnText = (returnText.length() > MAX_LENGTH_TO_PRINT) ? returnText.substring(0, MAX_LENGTH_TO_PRINT) + " ..." : returnText;
 
-    public static void printErrorLog(String httpMethod, String url, String httpCode, String returnText) {
-        String title = " HTTP ServerRequest ErrResponse ";
-        String sb = "\n" + BoxLogger.ANSI_RED + BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
+        String title = isOk ? " HTTP ServerRequest " : " HTTP ServerRequest ErrResponse ";
+        String sb = "\n" +
+                (isOk ? BoxLogger.ANSI_RED : BoxLogger.ANSI_YELLOW) +
+                BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
                 BoxLogger.boxContent("Time:       ", ""/* TODO DateHelper.now()*/) + '\n' +
                 BoxLogger.boxContent("TraceId:    ", MDC.get(BoxLogger.TRACE_KEY)) + '\n' +
                 BoxLogger.boxContent("Request:    ", httpMethod + " " + url) + '\n' +
-                BoxLogger.boxContent("ReturnCode: ", httpCode) + '\n' +
-                BoxLogger.boxContent("ReturnText: ", returnText) + '\n' +
+                BoxLogger.boxContent("ReturnCode: ", "HTTP status " + httpCode) + '\n' +
+                BoxLogger.boxContent("ReturnText: ", returnText.trim()) + '\n' +
+                BoxLogger.boxContent("Execution:  ", (System.currentTimeMillis() - startTime) + "ms") + '\n' +
                 BoxLogger.boxLine('└', '─', '┘', StrUtil.EMPTY_STRING) + BoxLogger.ANSI_RESET;
 
         log.info(sb);
