@@ -1,7 +1,7 @@
 package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.EncodeTools;
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.StringBytes;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -77,7 +77,7 @@ public class SecretKeyMgr {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
         }
 
-        random.setSeed(StrUtil.getUTF8_Bytes(key));
+        random.setSeed(new StringBytes(key).getUTF8_Bytes());
 
         return random;
     }

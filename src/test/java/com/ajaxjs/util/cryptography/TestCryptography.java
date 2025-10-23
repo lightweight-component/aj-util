@@ -1,6 +1,6 @@
 package com.ajaxjs.util.cryptography;
 
-
+import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.cryptography.rsa.DoSignature;
 import com.ajaxjs.util.cryptography.rsa.DoVerify;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 public class TestCryptography {
     final String key = "abc";
@@ -93,7 +92,7 @@ public class TestCryptography {
         String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
 
         String eBody = EncodeTools.base64EncodeToString(encWord);
-        String decWord2 = new String(KeyMgr.privateKeyDecrypt(EncodeTools.base64Decode(eBody), privateKey));
+        String decWord2 = new String(KeyMgr.privateKeyDecrypt(new Base64Utils(eBody).decode(), privateKey));
         System.out.println("加密前: " + word + "\n\r密文：" + eBody + "\n解密后: " + decWord2);
         assertEquals(word, decWord);
 

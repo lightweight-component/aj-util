@@ -1,6 +1,6 @@
 package com.ajaxjs.util.cryptography;
 
-import com.ajaxjs.util.EncodeTools;
+import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.cryptography.rsa.KeyMgr;
 import org.junit.jupiter.api.Test;
 
@@ -22,11 +22,11 @@ public class WeiXinUtilTest {
      * @return 解密后的文本
      */
     public static String aesDecryptPhone(String iv, String cipherText, String sessionKey) {
-        byte[] keyData = EncodeTools.base64Decode(sessionKey);
+        byte[] keyData = new Base64Utils(sessionKey).decode();
 
         Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP, Cipher.DECRYPT_MODE);
         cryptography.setKey(new SecretKeySpec(keyData, Constant.AES)); // little odd, it's AES, differs with AES_WX_MINI_APP.
-        cryptography.setSpec(new IvParameterSpec(EncodeTools.base64Decode(iv)));
+        cryptography.setSpec(new IvParameterSpec(new Base64Utils(iv).decode()));
         cryptography.setDataStrBase64(cipherText);
 
         return cryptography.doCipherAsStr();

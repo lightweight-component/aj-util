@@ -1,7 +1,9 @@
 package com.ajaxjs.util.cryptography.rsa;
 
+import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.StringBytes;
 import com.ajaxjs.util.cryptography.Constant;
 import com.ajaxjs.util.cryptography.Cryptography;
 import com.ajaxjs.util.io.FileHelper;
@@ -107,7 +109,7 @@ public class KeyMgr implements Constant {
      * 还原公钥/私钥
      *
      * @param isPublic 是否公钥，反之私钥
-     * @param key      公钥或私钥的字符串表示
+     * @param key      公钥或私钥的字符串表示，应该为 Base64 编码的字符串
      * @return 还原后的公钥或私钥对象，如果还原失败则返回 null
      */
     public static Key restoreKey(boolean isPublic, String key) {
@@ -119,7 +121,7 @@ public class KeyMgr implements Constant {
 
         key = key.replaceAll("\\s", StrUtil.EMPTY_STRING);
 
-        byte[] bytes = EncodeTools.base64Decode(key);
+        byte[] bytes = new Base64Utils(key).decode();
 
         try {
             KeyFactory f = KeyFactory.getInstance(RSA);
@@ -161,7 +163,7 @@ public class KeyMgr implements Constant {
      */
     public static String privateKeyToPem(String encoded) {
         return "-----BEGIN PRIVATE KEY-----\n" +
-                EncodeTools.formatBase64String(encoded) +
+                Base64Utils.formatBase64String(encoded) +
                 "\n-----END PRIVATE KEY-----";
     }
 
@@ -186,7 +188,7 @@ public class KeyMgr implements Constant {
      */
     public static String publicKeyToPem(String encoded) {
         return "-----BEGIN PUBLIC KEY-----\n" +
-                EncodeTools.formatBase64String(encoded) +
+                Base64Utils.formatBase64String(encoded) +
                 "\n-----END PUBLIC KEY-----";
     }
 
@@ -259,7 +261,7 @@ public class KeyMgr implements Constant {
     }
 
     public static String privateKeyDecryptAsStr(byte[] data, String key) {
-        return StrUtil.byte2String(privateKeyDecrypt(data, key)); // needs to Base64?
+        return new StringBytes(privateKeyDecrypt(data, key)).getUTF8_String(); // needs to Base64?
     }
 
     /**

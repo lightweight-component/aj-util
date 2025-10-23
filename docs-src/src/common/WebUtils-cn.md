@@ -68,18 +68,17 @@ String sessionId = WebUtils.getCookie(request, "JSESSIONID");
 
 ```java
 import javax.servlet.http.HttpServletRequest;
-import com.ajaxjs.util.WebUtils;
 
 public class Example {
     public void processRequest(HttpServletRequest request) {
         // 获取服务器 IP
         String serverIp = WebUtils.getLocalIp();
         System.out.println("服务器 IP: " + serverIp);
-        
+
         // 获取客户端 IP
         String clientIp = WebUtils.getClientIp(request);
         System.out.println("客户端 IP: " + clientIp);
-        
+
         // 获取会话 Cookie
         String sessionId = WebUtils.getCookie(request, "JSESSIONID");
         System.out.println("会话 ID: " + sessionId);

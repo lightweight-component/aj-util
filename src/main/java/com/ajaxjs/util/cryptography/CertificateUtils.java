@@ -1,7 +1,7 @@
 package com.ajaxjs.util.cryptography;
 
-import com.ajaxjs.util.CollUtils;
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.CheckEmpty;
+import com.ajaxjs.util.StringBytes;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
@@ -70,11 +70,11 @@ public class CertificateUtils {
      */
     @SuppressWarnings("unchecked")
     public static Map<BigInteger, X509Certificate> deserializeToCerts(String apiV3Key, Map<String, Object> pMap) {
-        byte[] apiV3KeyByte = StrUtil.getUTF8_Bytes(apiV3Key);
+        byte[] apiV3KeyByte = new StringBytes(apiV3Key).getUTF8_Bytes();
         List<Map<String, Object>> list = (List<Map<String, Object>>) pMap.get("data");
         Map<BigInteger, X509Certificate> newCertList = new HashMap<>();
 
-        if (!CollUtils.isEmpty(list)) {
+        if (!CheckEmpty.isEmpty(list)) {
             for (Map<String, Object> map : list) {
                 Map<String, Object> certificate = (Map<String, Object>) map.get("encrypt_certificate");
 
@@ -84,7 +84,7 @@ public class CertificateUtils {
                         remove(certificate.get("nonce")),
                         remove(certificate.get("ciphertext")));
 
-                X509Certificate x509Cert = getCert(new ByteArrayInputStream(StrUtil.getUTF8_Bytes(cert)));
+                X509Certificate x509Cert = getCert(new ByteArrayInputStream(new StringBytes(cert).getUTF8_Bytes()));
                 newCertList.put(x509Cert.getSerialNumber(), x509Cert);
             }
         }
@@ -114,7 +114,7 @@ public class CertificateUtils {
 //        return doCipher("AES/GCM/NoPadding", Cipher.DECRYPT_MODE, aesKey, spec, cipherText, associatedData);
 //    }
     public static String aesDecryptToString(byte[] aesKey, String associatedData, String nonce, String cipherText) {
-        return aesDecryptToString(aesKey, StrUtil.getUTF8_Bytes(associatedData), StrUtil.getUTF8_Bytes(nonce), cipherText);
+        return aesDecryptToString(aesKey, new StringBytes(associatedData).getUTF8_Bytes(), new StringBytes(nonce).getUTF8_Bytes(), cipherText);
     }
 
     public static String aesDecryptToString(byte[] aesKey, byte[] associatedData, byte[] nonce, String cipherText) {

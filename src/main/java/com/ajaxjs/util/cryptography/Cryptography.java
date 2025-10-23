@@ -1,8 +1,9 @@
 package com.ajaxjs.util.cryptography;
 
+import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.BytesHelper;
 import com.ajaxjs.util.EncodeTools;
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.StringBytes;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -35,10 +36,7 @@ public class Cryptography {
 
     private Key key;
 
-    private byte[] keyData;
-
     public void setKeyData(byte[] keyData) {
-        this.keyData = keyData;
         key = new SecretKeySpec(keyData, algorithmName);
     }
 
@@ -51,18 +49,12 @@ public class Cryptography {
 
     private byte[] data;
 
-    private String dataStr;
-
     public void setDataStr(String dataStr) {
-        this.dataStr = dataStr;
-        data = StrUtil.getUTF8_Bytes(dataStr);
+        data = new StringBytes(dataStr).getUTF8_Bytes();
     }
 
-    private String dataStrBase64;
-
     public void setDataStrBase64(String dataStrBase64) {
-        this.dataStrBase64 = dataStrBase64;
-        data = EncodeTools.base64Decode(dataStrBase64);
+        data = new Base64Utils(dataStrBase64).decode();
     }
 
     private AlgorithmParameterSpec spec;
@@ -94,7 +86,7 @@ public class Cryptography {
     }
 
     public String doCipherAsStr() {
-        return StrUtil.byte2String(doCipher());
+        return new StringBytes(doCipher()).getUTF8_String();
     }
 
     public String doCipherAsBase64Str() {

@@ -21,7 +21,6 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -38,36 +37,6 @@ public class StrUtil {
      * 空白字符串常量
      */
     public static final String EMPTY_STRING = "";
-
-    /**
-     * Check whether the given {@code String} contains actual <em>text</em>.
-     * <p>More specifically, this method returns {@code true} if the
-     * {@code String} is not {@code null}, its length is greater than 0,
-     * and it contains at least one non-whitespace character.
-     *
-     * @param str the {@code String} to check (maybe {@code null})
-     * @return {@code true} if the {@code String} is not {@code null}, its
-     * length is greater than 0, and it does not contain whitespace only
-     * @see Character#isWhitespace
-     */
-    public static boolean hasText(String str) {
-        return (str != null && !str.isEmpty() && containsText(str));
-    }
-
-    public static boolean isEmptyText(String str) {
-        return !hasText(str);
-    }
-
-    private static boolean containsText(CharSequence str) {
-        int strLen = str.length();
-
-        for (int i = 0; i < strLen; i++) {
-            if (!Character.isWhitespace(str.charAt(i)))
-                return true;
-        }
-
-        return false;
-    }
 
     /**
      * 连接两个 url 目录字符串，如果没有 / 则加上；如果有则去掉一个
@@ -340,29 +309,5 @@ public class StrUtil {
      */
     public static boolean isWordOneOfThem(String word, List<String> list) {
         return isWordOneOfThem(word, list.toArray(new String[0]));
-    }
-
-    public static byte[] getUTF8_Bytes(String str) {
-        return str.getBytes(StandardCharsets.UTF_8);
-    }
-
-    /**
-     * 字节转编码为 字符串（ UTF-8 编码）
-     *
-     * @param bytes 输入的字节数组
-     * @return 字符串
-     */
-    public static String byte2String(byte[] bytes) {
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * 字符串转为 UTF-8 编码的字符串
-     *
-     * @param str 输入的字符串
-     * @return UTF-8 字符串
-     */
-    public static String byte2String(String str) {
-        return byte2String(str.getBytes());
     }
 }

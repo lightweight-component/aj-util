@@ -1,7 +1,10 @@
 package com.ajaxjs.util;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -13,38 +16,6 @@ import java.util.stream.Collectors;
  */
 public class CollUtils {
     /**
-     * Determine whether the given array is empty:
-     * i.e. {@code null} or of zero length.
-     *
-     * @param array the array to check
-     */
-    public static boolean isEmpty(Object[] array) {
-        return (array == null || array.length == 0);
-    }
-
-    /**
-     * Return {@code true} if the supplied Collection is {@code null} or empty.
-     * Otherwise, return {@code false}.
-     *
-     * @param collection the Collection to check
-     * @return whether the given Collection is empty
-     */
-    public static boolean isEmpty(Collection<?> collection) {
-        return (collection == null || collection.isEmpty());
-    }
-
-    /**
-     * Return {@code true} if the supplied Map is {@code null} or empty.
-     * Otherwise, return {@code false}.
-     *
-     * @param map the Map to check
-     * @return whether the given Map is empty
-     */
-    public static boolean isEmpty(Map<?, ?> map) {
-        return (map == null || map.isEmpty());
-    }
-
-    /**
      * 即使 List 为空（null），也要返回一个空的 List
      *
      * @param <T>  范型，List 中元素的类别
@@ -52,7 +23,7 @@ public class CollUtils {
      * @return 如果给定的 List 不为 null，则直接返回原 List 对象；如果为 null，则返回一个空的 List 对象
      */
     public static <T> List<T> getList(List<T> list) {
-        if (isEmpty(list))
+        if (CheckEmpty.isEmpty(list))
             list = Collections.emptyList();
 
         return list;

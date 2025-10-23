@@ -1,6 +1,6 @@
 package com.ajaxjs.util.cryptography.rsa;
 
-import com.ajaxjs.util.EncodeTools;
+import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.cryptography.Constant;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +42,11 @@ public class DoVerify {
     private byte[] signatureData;
 
     /**
-     * The signature string, should be a Base64 string.
+     * @param signatureBase64 The signature string, should be a Base64 string.
+     * @return This
      */
-    private String signatureBase64;
-
     public DoVerify setSignatureBase64(String signatureBase64) {
-        this.signatureBase64 = signatureBase64;
-        signatureData = EncodeTools.base64Decode(signatureBase64);
+        signatureData = new Base64Utils(signatureBase64).decode();
 
         return this;
     }

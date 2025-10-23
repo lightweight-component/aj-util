@@ -1,7 +1,7 @@
 package com.ajaxjs.util.io;
 
-import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.UrlEncode;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -72,7 +72,7 @@ public class Resources {
         String path;
 
         if (isDecode)
-            path = EncodeTools.urlDecode(new File(url.getPath()).toString());
+            path = new UrlEncode(new File(url.getPath()).toString()).decode();
         else {
             path = url.getPath();
             path = path.startsWith("/") ? path.substring(1) : path;
