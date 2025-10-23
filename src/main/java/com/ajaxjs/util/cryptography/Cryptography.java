@@ -2,7 +2,6 @@ package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.BytesHelper;
-import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.StringBytes;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -90,7 +89,7 @@ public class Cryptography {
     }
 
     public String doCipherAsBase64Str() {
-        return EncodeTools.base64EncodeToString(doCipher());
+        return new Base64Utils(doCipher()).encodeAsString();
     }
 
     /**

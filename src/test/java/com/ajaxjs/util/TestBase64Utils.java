@@ -2,6 +2,10 @@ package com.ajaxjs.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TestBase64Utils {
@@ -26,5 +30,16 @@ class TestBase64Utils {
     void testDecode() {
         String text = new Base64Utils("aGVsbG8gd29ybGQh").decodeAsString();
         assertEquals("hello world!", text);
+    }
+
+    static String HELLO_WORLD = "hello world!";
+
+    @Test
+    void testCharset() {
+        Base64Utils base64Utils = new Base64Utils(HELLO_WORLD);
+        String utf8 = base64Utils.encodeAsString();
+        String jdk = Base64.getEncoder().encodeToString(HELLO_WORLD.getBytes(StandardCharsets.UTF_8));
+
+        assertEquals(utf8, jdk);
     }
 }

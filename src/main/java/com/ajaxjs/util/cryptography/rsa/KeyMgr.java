@@ -1,7 +1,6 @@
 package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
-import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.StrUtil;
 import com.ajaxjs.util.StringBytes;
 import com.ajaxjs.util.cryptography.Constant;
@@ -15,6 +14,7 @@ import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -83,7 +83,7 @@ public class KeyMgr implements Constant {
      * @return 私钥的 Base64 编码
      */
     public String getPublicKeyStr() {
-        return EncodeTools.base64EncodeToString(getPublicKeyBytes());
+        return new Base64Utils(getPublicKeyBytes()).encodeAsString();
     }
 
     public String getPublicToPem() {
@@ -96,7 +96,7 @@ public class KeyMgr implements Constant {
      * @return 私钥的 Base64 编码
      */
     public String getPrivateKeyStr() {
-        return EncodeTools.base64EncodeToString(getPrivateKeyBytes());
+        return new Base64Utils(getPrivateKeyBytes()).encodeAsString();
     }
 
     public String getPrivateToPem() {
@@ -150,7 +150,7 @@ public class KeyMgr implements Constant {
      */
     @Deprecated
     public static String privateKeyToPem(PrivateKey privateKey) {
-        String encoded = EncodeTools.base64EncodeToString(privateKey.getEncoded());
+        String encoded = new Base64Utils(privateKey.getEncoded()).encodeAsString();
 
         return privateKeyToPem(encoded);
     }
@@ -175,7 +175,7 @@ public class KeyMgr implements Constant {
      */
     @Deprecated
     public static String publicKeyToPem(PublicKey publicKey) {
-        String encoded = EncodeTools.base64EncodeToString(publicKey.getEncoded());
+        String encoded = new Base64Utils(publicKey.getEncoded()).encodeAsString();
 
         return publicKeyToPem(encoded);
     }
@@ -224,7 +224,7 @@ public class KeyMgr implements Constant {
     }
 
     public static String publicKeyEncryptAsBase64Str(byte[] data, String key) {
-        return EncodeTools.base64EncodeToString(publicKeyEncrypt(data, key));
+        return new Base64Utils(publicKeyEncrypt(data, key)).encodeAsString();
     }
 
     /**
@@ -282,7 +282,7 @@ public class KeyMgr implements Constant {
             for (int length; (length = inputStream.read(buffer)) != -1; )
                 os.write(buffer, 0, length);
 
-            privateKey = os.toString(EncodeTools.UTF8_SYMBOL);
+            privateKey = os.toString(StandardCharsets.UTF_8.toString());
         } catch (IOException e) {
             throw new IllegalArgumentException("无效的密钥", e);
         }

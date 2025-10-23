@@ -16,14 +16,12 @@
  */
 package com.ajaxjs.util;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A helper for Java Object.
  */
-public class MapHelper {
+public class ObjectHelper {
     /**
      * Dummy Map
      */
@@ -104,5 +102,17 @@ public class MapHelper {
             initialCapacity = 16;
 
         return new HashMap<>(initialCapacity, defaultLoadFactor);// Create and return the HashMap with the calculated initial capacity and default load factor
+    }
+
+    /**
+     * Input multiple elements and returns a list of those elements.
+     * Just like `List.of()` in Java 9.
+     *
+     * @param arr The elements
+     * @param <T> The type of the elements
+     * @return A new list containing the elements of the array
+     */
+    public static <T> List<T> listOf(T... arr) {
+        return Collections.unmodifiableList(Arrays.asList(arr));
     }
 }

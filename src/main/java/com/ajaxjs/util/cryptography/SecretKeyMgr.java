@@ -1,6 +1,6 @@
 package com.ajaxjs.util.cryptography;
 
-import com.ajaxjs.util.EncodeTools;
+import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.StringBytes;
 
 import javax.crypto.KeyGenerator;
@@ -93,6 +93,6 @@ public class SecretKeyMgr {
     public static String getSecretKeyAsStr(String algorithmName, int keySize, SecureRandom secure) {
         byte[] encoded = getSecretKey(algorithmName, keySize, secure).getEncoded();
 
-        return EncodeTools.base64EncodeToString(encoded);
+        return new Base64Utils(encoded).encodeAsString();
     }
 }

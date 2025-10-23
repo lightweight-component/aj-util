@@ -96,7 +96,7 @@ public class HashHelper {
      * @return
      */
     public String hashAsBase64(boolean isWithoutPadding) {
-        return isWithoutPadding ? null : EncodeTools.base64EncodeToString(hash());// todo
+        return isWithoutPadding ? null : new Base64Utils(hash()).encodeAsString();// todo
     }
 
     public String hashAsBase64() {

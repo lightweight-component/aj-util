@@ -58,23 +58,15 @@ public class Base64Utils {
         return encoder.encode(input);
     }
 
-    /**
-     * Decode the input in BASE64 then returns the string with specified charset
-     *
-     * @param charset you can specify the charset of the result
-     * @return The result in string.
-     */
-    public String encodeAsString(Charset charset) {
-        return new String(encode(), charset);
-    }
 
     /**
-     * Decode the input in BASE64 then returns the string in UTF-8 charset
+     * Decode the input in BASE64 then returns the string.
+     * Charset ISO_8859_1 is enough for BASE64 result.
      *
      * @return The result in string.
      */
     public String encodeAsString() {
-        return new String(encode(), StandardCharsets.UTF_8);
+        return new String(encode(), StandardCharsets.ISO_8859_1);
     }
 
     /**

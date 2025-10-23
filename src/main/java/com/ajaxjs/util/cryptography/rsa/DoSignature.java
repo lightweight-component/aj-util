@@ -1,6 +1,6 @@
 package com.ajaxjs.util.cryptography.rsa;
 
-import com.ajaxjs.util.EncodeTools;
+import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.cryptography.Constant;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +84,6 @@ public class DoSignature {
      * @return The signature in Base64 string.
      */
     public String signToString() {
-        return EncodeTools.base64EncodeToString(sign());
+        return new Base64Utils(sign()).encodeAsString();
     }
 }

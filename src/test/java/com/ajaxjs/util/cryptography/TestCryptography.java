@@ -1,7 +1,6 @@
 package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.Base64Utils;
-import com.ajaxjs.util.EncodeTools;
 import com.ajaxjs.util.cryptography.rsa.DoSignature;
 import com.ajaxjs.util.cryptography.rsa.DoVerify;
 import com.ajaxjs.util.cryptography.rsa.KeyMgr;
@@ -60,7 +59,7 @@ public class TestCryptography {
         byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).sign();
         String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
 
-        assertEquals(EncodeTools.base64EncodeToString(helloWorlds), result);
+        assertEquals(new Base64Utils(helloWorlds).encodeAsString(), result);
     }
 
     @Test
@@ -91,7 +90,7 @@ public class TestCryptography {
         byte[] encWord = KeyMgr.publicKeyEncrypt(word.getBytes(), publicKey);
         String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
 
-        String eBody = EncodeTools.base64EncodeToString(encWord);
+        String eBody = new Base64Utils(encWord).encodeAsString();
         String decWord2 = new String(KeyMgr.privateKeyDecrypt(new Base64Utils(eBody).decode(), privateKey));
         System.out.println("加密前: " + word + "\n\r密文：" + eBody + "\n解密后: " + decWord2);
         assertEquals(word, decWord);
