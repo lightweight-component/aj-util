@@ -7,10 +7,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestRequest {
+class TestGet {
     @Test
     public void testSimpleGet() {
         String html = Get.simpleGET("https://www.baidu.com");
+        assert html != null;
         assertTrue(html.contains("百度一下，你就知道"));
     }
 
@@ -28,9 +29,9 @@ public class TestRequest {
 
     @Test
     void testDownload2disk() {
-        assertNotNull(Get.download("https://www.baidu.com/", null, "c:/temp", "baidu"));
+        assertNotNull(BatchDownload.download(HttpConstant.HttpMethod.GET, "https://www.baidu.com/", null, "c:/temp", "baidu"));
 
         String url = "https://etax.guangdong.chinatax.gov.cn:8443/static_res/images/nlogo14400.png";
-        assertNotNull(Get.download(url, null, "c:/temp", null));
+        assertNotNull(BatchDownload.download(HttpConstant.HttpMethod.GET, url, null, "c:/temp", null));
     }
 }

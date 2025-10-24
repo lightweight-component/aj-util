@@ -36,13 +36,16 @@ public class Request implements HttpConstant {
      */
     private byte[] data;
 
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
     /**
      * Set data in string.
      *
      * @param data The request data to be sent in string of the pair format, like `a=foo&b=bar`.
-     * @return Request
      */
-    public Request setDataStr(String data) {
+    public void setDataStr(String data) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -52,17 +55,14 @@ public class Request implements HttpConstant {
             this.data = json.getBytes(StandardCharsets.UTF_8);
         } else if (contentType.equals(CONTENT_TYPE_FORM))
             this.data = data.getBytes(StandardCharsets.UTF_8); // directly send the string
-
-        return this;
     }
 
     /**
      * Set data in Json.
      *
      * @param json The request data to be sent in Json.
-     * @return Request
      */
-    public Request setData(String json) {
+    public void setData(String json) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -73,17 +73,14 @@ public class Request implements HttpConstant {
             String str = MapTool.join(map, v -> v == null ? null : new UrlEncode(v.toString()).encode());
             this.data = str.getBytes(StandardCharsets.UTF_8);
         }
-
-        return this;
     }
 
     /**
      * Set data in Map.
      *
      * @param dataMap The request data to be sent in Map.
-     * @return Request
      */
-    public Request setData(Map<String, Object> dataMap) {
+    public void setData(Map<String, Object> dataMap) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -93,19 +90,17 @@ public class Request implements HttpConstant {
         } else if (contentType.equals(CONTENT_TYPE_FORM)) {
             String str = MapTool.join(dataMap, v -> v == null ? null : new UrlEncode(v.toString()).encode());
             this.data = str.getBytes(StandardCharsets.UTF_8);
+        } else if (contentType.contains(CONTENT_TYPE_FORM_UPLOAD)) {// Only supports Map when uploading
+            // TODO
         }
-
-        return this;
     }
-
 
     /**
      * Set data in Java Bean.
      *
      * @param javaBean The request data to be sent in Java Bean.
-     * @return Request
      */
-    public Request setData(Object javaBean) {
+    public void setData(Object javaBean) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
@@ -117,8 +112,6 @@ public class Request implements HttpConstant {
             String str = MapTool.join(map, v -> v == null ? null : new UrlEncode(v.toString()).encode());
             this.data = str.getBytes(StandardCharsets.UTF_8);
         }
-
-        return this;
     }
 
     /**
@@ -204,11 +197,13 @@ public class Request implements HttpConstant {
         resp.setConnection(conn);
         resp.setUrl(conn.getURL().toString());
         resp.setHttpMethod(conn.getRequestMethod());
+        InputStream in = null;
+        String result = null;
 
         try {
             int responseCode = conn.getResponseCode(); // starts to connect
             resp.setHttpCode(responseCode);
-            InputStream in;
+
 
             if (responseCode >= 400) {// 如果返回的结果是 400 以上，那么就说明出问题了
                 /*
@@ -224,8 +219,6 @@ public class Request implements HttpConstant {
                 in = conn.getInputStream();// 发起请求，接收响应
             }
 
-            String result = null;
-
             if (in != null) {
                 if (inputStreamConsumer == null) {
                     result = StreamHelper.copyToString(in);
@@ -233,15 +226,26 @@ public class Request implements HttpConstant {
                     resp.setResponseText(result);
                 } else
                     inputStreamConsumer.accept(in);
-
-                in.close();
             }
-
-            printLog(resp.isOk(), resp.getHttpMethod(), resp.getUrl(), responseCode, result, resp.getStartTime());
         } catch (IOException e) {
             log.warn("Request failed. Method: {}, URL: {}", resp.getHttpMethod(), resp.getUrl(), e);
             resp.setOk(false);
             resp.setEx(e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    log.warn("Close input stream failed.", e);
+                }
+            }
+
+            String requestParams = "NONE";
+
+            if (getData() != null)
+                requestParams = new String(getData());
+
+            printLog(resp.isOk(), resp.getHttpMethod(), resp.getUrl(), requestParams, resp.getHttpCode(), result, resp.getStartTime());
         }
 
         return resp;
@@ -249,19 +253,20 @@ public class Request implements HttpConstant {
 
     private static final int MAX_LENGTH_TO_PRINT = 500;
 
-    public static void printLog(boolean isOk, String httpMethod, String url, int httpCode, String returnText, Long startTime) {
+    public static void printLog(boolean isOk, String httpMethod, String url, String data, int httpCode, String returnText, Long startTime) {
         if (returnText == null)
-            returnText = "(ZERO byte returns)";
+            returnText = "(ZERO byte returns OR controller by other process.)";
 
         returnText = (returnText.length() > MAX_LENGTH_TO_PRINT) ? returnText.substring(0, MAX_LENGTH_TO_PRINT) + " ..." : returnText;
 
         String title = isOk ? " HTTP ServerRequest " : " HTTP ServerRequest ErrResponse ";
         String sb = "\n" +
-                (isOk ? BoxLogger.ANSI_RED : BoxLogger.ANSI_YELLOW) +
+                (isOk ? BoxLogger.ANSI_YELLOW : BoxLogger.ANSI_RED) +
                 BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
                 BoxLogger.boxContent("Time:       ", ""/* TODO DateHelper.now()*/) + '\n' +
                 BoxLogger.boxContent("TraceId:    ", MDC.get(BoxLogger.TRACE_KEY)) + '\n' +
                 BoxLogger.boxContent("Request:    ", httpMethod + " " + url) + '\n' +
+                BoxLogger.boxContent("Parameters: ", data) + '\n' +
                 BoxLogger.boxContent("ReturnCode: ", "HTTP status " + httpCode) + '\n' +
                 BoxLogger.boxContent("ReturnText: ", returnText.trim()) + '\n' +
                 BoxLogger.boxContent("Execution:  ", (System.currentTimeMillis() - startTime) + "ms") + '\n' +
