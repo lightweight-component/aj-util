@@ -9,7 +9,8 @@ public class TestHead {
     @Test
     public void testRedirect() {
         String redirect = Head.get302redirect("https://baidu.com");
-        assertTrue("http://www.baidu.com/".equals(redirect));
+        System.out.println( redirect);
+        assertTrue("https://www.baidu.com/".equals(redirect));
     }
 
     @Test
