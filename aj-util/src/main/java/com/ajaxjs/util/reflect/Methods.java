@@ -1,7 +1,8 @@
 package com.ajaxjs.util.reflect;
 
-import com.ajaxjs.util.CheckEmpty;
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.CommonConstant;
+import com.ajaxjs.util.ObjectHelper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.*;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * 方法相关的反射
  */
+@Slf4j
 public class Methods {
     /**
      * 根据类和方法名获取该类声明的方法
@@ -24,6 +26,7 @@ public class Methods {
         try {
             return clz.getDeclaredMethod(methodName);
         } catch (NoSuchMethodException e) {
+            log.warn("No Such Method Exception " + methodName, e);
             throw new RuntimeException("No Such Method Exception " + methodName, e);
         }
     }
@@ -40,14 +43,14 @@ public class Methods {
         Class<?> cls = obj instanceof Class ? (Class<?>) obj : obj.getClass();
 
         try {
-            return CheckEmpty.isEmpty(args) ? cls.getMethod(method) : cls.getMethod(method, args);
+            return ObjectHelper.isEmpty(args) ? cls.getMethod(method) : cls.getMethod(method, args);
         } catch (NoSuchMethodException | SecurityException e) {
             StringBuilder str = new StringBuilder();
 
             for (Class<?> clz : args)
                 str.append(clz.getName());
 
-            System.err.println(StrUtil.print("类找不到这个方法 {}.{}({})。", cls.getName(), method, str.toString().isEmpty() ? "void" : str.toString()));
+            log.warn("类找不到这个方法 {}.{}({})。", cls.getName(), method, str.toString().isEmpty() ? "void" : str.toString());
             return null;
         }
     }
@@ -62,7 +65,7 @@ public class Methods {
      * @return 匹配的方法对象，null 表示找不到
      */
     public static Method getMethod(Object obj, String method, Object... args) {
-        if (!CheckEmpty.isEmpty(args))
+        if (!ObjectHelper.isEmpty(args))
             return getMethod(obj, method, Clazz.args2class(args));
         else
             return getMethod(obj, method);
@@ -116,6 +119,7 @@ public class Methods {
                             return methodObj;
                     }
                 } catch (Exception e) {
+                    log.warn("循环 object 向上转型（接口）异常 ", e);
                     throw new RuntimeException("循环 object 向上转型（接口）异常 ", e);
                 }
             }
@@ -223,7 +227,7 @@ public class Methods {
 
             if (e1 instanceof InvocationTargetException) {
                 e = ((InvocationTargetException) e1).getTargetException();
-                System.err.println(StrUtil.print("反射执行方法异常！所在类[{}] 方法：[{}]", instance.getClass().getName(), method.getName()));
+                log.error("反射执行方法异常！所在类[{}] 方法：[{}]", instance.getClass().getName(), method.getName());
 
                 throw e;
             }
@@ -256,7 +260,7 @@ public class Methods {
     public static String getUnderLayerErrMsg(Throwable e) {
         String msg = getUnderLayerErr(e).toString();
 
-        return msg.replaceAll("^[^:]*:\\s?", StrUtil.EMPTY_STRING);
+        return msg.replaceAll("^[^:]*:\\s?", CommonConstant.EMPTY_STRING);
     }
 
     /**
@@ -271,6 +275,7 @@ public class Methods {
         try {
             return executeMethod_Throwable(instance, method, args);
         } catch (Throwable e) {
+            log.warn("Error occurred when executing method: " + method, e);
             return null;
         }
     }
@@ -322,10 +327,11 @@ public class Methods {
             try {
                 return executeMethod_Throwable(new Object(), method, args);
             } catch (Throwable e) {
-                throw new RuntimeException("Error when executing static method: ", e);
+                log.warn("Error when executing static method: " + method, e);
+                throw new RuntimeException("Error when executing static method: " + method, e);
             }
         } else
-            System.err.println("这不是一个静态方法：{}" + method);
+            log.warn("This is not a static method: {}", method);
 
         return null;
     }
@@ -369,6 +375,7 @@ public class Methods {
                     .bindTo(proxy)
                     .invokeWithArguments(args);
         } catch (Throwable e) {
+            log.warn("Error when executing default method: " + method, e);
             throw new RuntimeException(e);
         }
     }

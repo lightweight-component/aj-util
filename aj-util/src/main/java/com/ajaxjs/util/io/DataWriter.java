@@ -28,32 +28,34 @@ public class DataWriter {
     private boolean isBuffered = true;
 
     /**
-     * 两端速度不匹配，需要协调 理想环境下，速度一样快，那就没必要搞流，直接一坨给弄过去就可以了 流的意思很形象，就是一点一滴的，不是一坨坨大批量的
      * 带缓冲的一入一出 出是字节流，所以要缓冲（字符流自带缓冲，所以不需要额外缓冲）
      * 请注意，该方法不会关闭 input 流 close，你需要手动关闭
      *
      * @param in 输入流，无须手动关闭
      */
     public void write(InputStream in) {
-        int readSize; // 读取到的数据长度
-        byte[] buffer = new byte[BUFFER_SIZE]; // 通过 byte 作为数据中转，用于存放循环读取的临时数据
+
+        if (!isBuffered)
+            log.warn("It's not recommended that NOT using BufferedOutputStream.");
 
         try {
-            if (isBuffered) {
-                try (OutputStream _out = new BufferedOutputStream(out)) {// 加入缓冲功能
-                    while ((readSize = in.read(buffer)) != -1)
-                        _out.write(buffer, 0, readSize);
-                }
-            } else {
-                // 每次读 1KB 数据，将输入流数据写入到输出流中
-                // readSize = in.read(buffer, 0, bufferSize);
-                while ((readSize = in.read(buffer, 0, BUFFER_SIZE)) != -1) {
-                    out.write(buffer, 0, readSize);
-                    // readSize = in.read(buffer, 0, bufferSize);
-                }
+            OutputStream _out = isBuffered ? new BufferedOutputStream(out) : out;// 加入缓冲功能
 
-                out.flush();
-            }
+            new DataReader(in).readStreamAsBytes(BUFFER_SIZE, (readSize, buffer) -> {
+                try {
+                    _out.write(buffer, 0, readSize);
+                } catch (IOException e) {
+                    log.warn("Error occurred when copying input to output data.", e);
+                    throw new UncheckedIOException("Error occurred when copying input to output data.", e);
+                }
+            });
+
+//            int readSize; // 读取到的数据长度
+//            byte[] buffer = new byte[BUFFER_SIZE]; // 通过 byte 作为数据中转，用于存放循环读取的临时数据
+//            while ((readSize = in.read(buffer)) != -1)
+//                _out.write(buffer, 0, readSize);
+
+            _out.flush();
         } catch (IOException e) {
             log.warn("Error occurred when copying input to output data.", e);
             throw new UncheckedIOException("Error occurred when copying input to output data.", e);

@@ -28,7 +28,7 @@ class TestDataWriter {
         writerWithoutBuffer.setBuffered(false);
     }
 
-    static String testData = "Hello World!";
+    static final String testData = "Hello World!";
     static final byte[] testBytes = testData.getBytes(StandardCharsets.UTF_8);
 
     @Test

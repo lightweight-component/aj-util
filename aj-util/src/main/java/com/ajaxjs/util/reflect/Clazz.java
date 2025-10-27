@@ -1,6 +1,7 @@
 package com.ajaxjs.util.reflect;
 
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.CommonConstant;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * 类相关的反射
  */
-
+@Slf4j
 public class Clazz {
     /**
      * 根据类名字符串获取类对象
@@ -24,7 +25,8 @@ public class Clazz {
         try {
             return Class.forName(clzName);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("找不到这个类： " + clzName);
+            log.error("Class:" + clzName + " not Found.", e);
+            throw new RuntimeException("Class:" + clzName + " not Found.");
         }
     }
 
@@ -68,7 +70,7 @@ public class Clazz {
      */
     public static Class<?> getClassByInterface(Type type) {
         String className = type.toString();
-        className = className.replaceAll("<.*>$", StrUtil.EMPTY_STRING).replaceAll("(class|interface)\\s", StrUtil.EMPTY_STRING); // 不要泛型的字符
+        className = className.replaceAll("<.*>$", CommonConstant.EMPTY_STRING).replaceAll("(class|interface)\\s", CommonConstant.EMPTY_STRING); // 不要泛型的字符
 
         return getClassByName(className);
     }
@@ -109,7 +111,8 @@ public class Clazz {
             try {
                 return newInstance(clz.getDeclaredConstructor());
             } catch (NoSuchMethodException e) {
-                throw new RuntimeException("找不到这个 " + clz.getName() + " 类的构造器。", e);
+                log.error("The constructor of this class " + clz.getName() + " is not found.", e);
+                throw new RuntimeException("The constructor of this class " + clz.getName() + " is not found.", e);
             }
         }
 
@@ -129,10 +132,11 @@ public class Clazz {
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
         try {
-            return constructor.newInstance(args); // 实例化
+            return constructor.newInstance(args);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
                  InvocationTargetException e) {
-            throw new RuntimeException("实例化对象失败：" + constructor.getDeclaringClass(), e);
+            log.error("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
+            throw new RuntimeException("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
         }
     }
 
@@ -199,9 +203,11 @@ public class Clazz {
         try {
             return argClz != null ? clz.getConstructor(argClz) : clz.getConstructor();
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException("找不到这个 " + clz.getName() + " 类的构造器。", e);
+            log.error("Error occurred when creating instance of class: " + clz, e);
+            throw new RuntimeException("Error occurred when creating instance of class: " + clz, e);
         } catch (SecurityException e) {
-            throw new RuntimeException("获取类的构造器失败，安全问题", e);
+            log.error("Security Error occurred when getting the constructor  of class: " + clz, e);
+            throw new RuntimeException("Security Error occurred when getting the constructor  of class: " + clz, e);
         }
     }
 }

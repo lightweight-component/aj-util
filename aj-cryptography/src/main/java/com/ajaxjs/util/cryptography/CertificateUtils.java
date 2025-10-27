@@ -1,7 +1,7 @@
 package com.ajaxjs.util.cryptography;
 
 
-import com.ajaxjs.util.CheckEmpty;
+import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.StringBytes;
 
 import javax.crypto.Cipher;
@@ -75,7 +75,7 @@ public class CertificateUtils {
         List<Map<String, Object>> list = (List<Map<String, Object>>) pMap.get("data");
         Map<BigInteger, X509Certificate> newCertList = new HashMap<>();
 
-        if (!CheckEmpty.isEmpty(list)) {
+        if (!ObjectHelper.isEmpty(list)) {
             for (Map<String, Object> map : list) {
                 Map<String, Object> certificate = (Map<String, Object>) map.get("encrypt_certificate");
 

@@ -39,8 +39,7 @@ public class Get extends Request {
     }
 
     public static Map<String, Object> api(String url) {
-        return api(url, c -> {
-        });
+        return api(url, EMPTY_INIT);
     }
 
     public static Map<String, Object> api(String url, Consumer<HttpURLConnection> initConnection) {
@@ -53,6 +52,10 @@ public class Get extends Request {
 
     public static <T> T api(String url, Class<T> clz, Consumer<HttpURLConnection> initConnection) {
         return new Get(url, initConnection).getResp().responseAsBean(clz);
+    }
+
+    public static <T> T api(String url, Class<T> clz) {
+        return new Get(url, EMPTY_INIT).getResp().responseAsBean(clz);
     }
 
     public static Map<String, String> apiXml(String url, Consumer<HttpURLConnection> initConnection) {

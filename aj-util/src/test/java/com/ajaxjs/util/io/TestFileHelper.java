@@ -23,7 +23,7 @@ public class TestFileHelper {
         System.out.println("Directory contents: " + directoryContents);
 
         // 创建目录
-        new FileHelper(dir + File.separator + "newdirectory").createDirectory();
+        new FileHelper(dir + File.separator + "newDirectory").createDirectory();
 
         // 删除文件或目录
 //            FileHelper.deleteFileOrDirectory("output.txt");

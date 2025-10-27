@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -36,6 +37,30 @@ public class DataReader {
     public DataReader(InputStream in, Charset encode) {
         this(in);
         this.encode = encode;
+    }
+
+    /**
+     * 两端速度不匹配，需要协调 理想环境下，速度一样快，那就没必要搞流，直接一坨给弄过去就可以了 流的意思很形象，就是一点一滴的，不是一坨坨大批量的
+     * It will close the input stream when the reading process is complete.
+     */
+    public void readStreamAsBytes(int bufferSize, BiConsumer<Integer, byte[]> fn) {
+        int readSize; // 读取到的数据长度
+        byte[] buffer = new byte[bufferSize]; // 通过 byte 作为数据中转，用于存放循环读取的临时数据
+
+        try {
+            while ((readSize = in.read(buffer)) != -1)
+                fn.accept(readSize, buffer);
+        } catch (IOException e) {
+            log.warn("Error occurred when reading the stream data to bytes.", e);
+            throw new UncheckedIOException("Error occurred when reading the stream data to bytes.", e);
+        } finally {
+            try {
+                if (in != null)
+                    in.close();
+            } catch (IOException e) {
+                log.warn("Error occurred when closing the input stream.", e);
+            }
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.ajaxjs.util.io;
 
 
-import com.ajaxjs.util.CheckEmpty;
+import com.ajaxjs.util.ObjectHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -23,7 +23,7 @@ public class CmdHelper {
                 while ((line = reader.readLine()) != null) {
                     line = line.trim();
 
-                    if (CheckEmpty.hasText(line) && !callback.apply(line))
+                    if (ObjectHelper.hasText(line) && !callback.apply(line))
                         break;
                 }
             }

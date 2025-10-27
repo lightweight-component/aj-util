@@ -32,7 +32,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -105,7 +104,7 @@ public class MapTool {
      * @return Map 对象
      */
     public static Map<String, Object> toMap(String[] pairs, Function<String, Object> fn) {
-        if (CheckEmpty.isEmpty(pairs))
+        if (ObjectHelper.isEmpty(pairs))
             return null;
 
         Map<String, Object> map = new HashMap<>();
@@ -134,7 +133,7 @@ public class MapTool {
      * @return Map 对象
      */
     public static Map<String, Object> toMap(String[] columns, String[] values, Function<String, Object> fn) {
-        if (CheckEmpty.isEmpty(columns))
+        if (ObjectHelper.isEmpty(columns))
             return null;
 
         if (columns.length != values.length)
@@ -226,7 +225,7 @@ public class MapTool {
      * @return XML 格式的字符串
      */
     public static String mapToXml(Map<String, ?> data) {
-        Document doc = Objects.requireNonNull(XmlHelper.initBuilder()).newDocument();
+        Document doc = XmlHelper.initBuilder().newDocument();
         Element root = doc.createElement("xml");
         doc.appendChild(root);
 
@@ -242,7 +241,7 @@ public class MapTool {
 
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.ENCODING, CommonConstant.UTF8);
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
             try (StringWriter writer = new StringWriter()) {
@@ -270,7 +269,7 @@ public class MapTool {
         Map<String, String> data = new HashMap<>();
 
         try (InputStream stream = new ByteArrayInputStream(strXML.getBytes(StandardCharsets.UTF_8))) {
-            Document doc = Objects.requireNonNull(XmlHelper.initBuilder()).parse(stream);
+            Document doc = XmlHelper.initBuilder().parse(stream);
             doc.getDocumentElement().normalize();
             NodeList nodeList = doc.getDocumentElement().getChildNodes();
 

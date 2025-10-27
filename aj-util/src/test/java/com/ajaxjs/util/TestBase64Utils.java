@@ -31,7 +31,7 @@ class TestBase64Utils {
         assertEquals("hello world!", text);
     }
 
-    static String HELLO_WORLD = "hello world!";
+    static final String HELLO_WORLD = "hello world!";
 
     @Test
     void testCharset() {

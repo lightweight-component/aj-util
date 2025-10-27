@@ -30,7 +30,7 @@
     <dependencies>
         <dependency>
             <groupId>com.ajaxjs</groupId>
-            <artifactId>ajaxjs-utils</artifactId>
+            <artifactId>ajaxjs-util</artifactId>
             <version>1.2.7</version>
         </dependency>
 

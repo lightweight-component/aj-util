@@ -40,7 +40,7 @@ public class BoxLogger {
     // 重复字符
     public static String repeat(char c, int n) {
         if (n <= 0)
-            return StrUtil.EMPTY_STRING;
+            return CommonConstant.EMPTY_STRING;
 
         StringBuilder sb = new StringBuilder(n);
         for (int i = 0; i < n; i++)
@@ -53,9 +53,9 @@ public class BoxLogger {
     public static String truncate(String s, int maxDisplayLen) {
         if (s == null)
             return "";
-        int dlen = getDisplayWidth(s);
+        int dLen = getDisplayWidth(s);
 
-        if (dlen <= maxDisplayLen)
+        if (dLen <= maxDisplayLen)
             return s;
 
         String ellipsis = "...";
@@ -90,7 +90,7 @@ public class BoxLogger {
     // 判断是否宽字符（简化，只判断 CJK）
     public static boolean isWideChar(char ch) {
         return (ch >= 0x4E00 && ch <= 0x9FA5) || // CJK
-                (ch >= 0xFF01 && ch <= 0xFF60) || // Fullwidth
+                (ch >= 0xFF01 && ch <= 0xFF60) || // Full Width
                 (ch >= 0x3000 && ch <= 0x303F);   // CJK Symbols
     }
 }

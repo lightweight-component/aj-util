@@ -13,6 +13,7 @@ class TestJsonUtil {
     private String mismatchedJson;
 
     @Data
+    static
     class User {
         private String name;
         private int age;
@@ -36,9 +37,7 @@ class TestJsonUtil {
 
     @Test
     void fromJson_InvalidJson_ThrowsException() {
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            JsonUtil.fromJson(invalidJson, User.class);
-        });
+        Exception exception = assertThrows(RuntimeException.class, () -> JsonUtil.fromJson(invalidJson, User.class));
 
         assertTrue(exception.getMessage().contains("Failed to convert JSON to object"),
                 "Exception message should indicate JSON conversion failure.");
@@ -46,9 +45,7 @@ class TestJsonUtil {
 
     @Test
     void fromJson_MismatchedJson_ThrowsException() {
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            JsonUtil.fromJson(mismatchedJson, User.class);
-        });
+        Exception exception = assertThrows(RuntimeException.class, () -> JsonUtil.fromJson(mismatchedJson, User.class));
 
         assertTrue(exception.getMessage().contains("Failed to convert JSON to object"),
                 "Exception message should indicate JSON conversion failure.");

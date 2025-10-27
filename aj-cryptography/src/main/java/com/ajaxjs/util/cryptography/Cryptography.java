@@ -101,6 +101,13 @@ public class Cryptography {
         return BytesHelper.bytesToHexStr(doCipher());
     }
 
+    /**
+     * Do encrypt
+     *
+     * @param data The text to be encrypted
+     * @param key  The key
+     * @return The encrypted string
+     */
     public static String AES_encode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
@@ -109,6 +116,13 @@ public class Cryptography {
         return cryptography.doCipherAsHexStr();
     }
 
+    /**
+     * Do decrypt
+     *
+     * @param data The text to be decrypted
+     * @param key  The key
+     * @return The decrypted string
+     */
     public static String AES_decode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.AES, Cipher.DECRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));

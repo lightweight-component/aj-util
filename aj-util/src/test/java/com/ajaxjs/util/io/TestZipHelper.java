@@ -6,7 +6,7 @@ import java.io.File;
 
 public class TestZipHelper {
 //    @Test
-//    public void testSpeicalFileZip() {
+//    public void testSpecialFileZip() {
 //        ZipHelper.zip("c:\\temp", "c:\\temp2\\test.zip", file -> {
 //            System.out.println(file);
 //            if ("c:\\temp\\foo".equals(file.toString()))

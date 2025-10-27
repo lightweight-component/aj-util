@@ -100,4 +100,21 @@ public class Response {
     public Map<String, String> responseAsXML() {
         return MapTool.xmlToMap(responseText);
     }
+
+    /**
+     * 返回 JSON 时候的 Map 的 key
+     */
+    public final static String ERR_MSG = "errMsg";
+    public final static String STATUS = "status";
+
+    /**
+     * Check the result of remote request that if it's ok.
+     * ONLY for AJ-Spring Response Structure.
+     *
+     * @param result Request result
+     * @return if it's ok
+     */
+    public static boolean isOk(Map<String, Object> result) {
+        return result != null && result.containsKey(STATUS) && "1".equals(result.get(STATUS).toString());
+    }
 }

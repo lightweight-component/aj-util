@@ -1,6 +1,6 @@
 package com.ajaxjs.util.io;
 
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -133,7 +133,7 @@ public class ZipHelper {
      */
     private static void zipDirectoryRecursive(File file, String basePath, ZipOutputStream zipOut, boolean useStore) throws IOException {
         String relativePath = basePath.equals(file.getCanonicalPath())
-                ? StrUtil.EMPTY_STRING
+                ? CommonConstant.EMPTY_STRING
                 : file.getCanonicalPath().substring(basePath.length() + 1).replace(File.separatorChar, '/');
 
         if (file.isDirectory()) {

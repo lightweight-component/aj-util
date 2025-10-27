@@ -1,6 +1,6 @@
 package com.ajaxjs.util.enums;
 
-import com.ajaxjs.util.CheckEmpty;
+import com.ajaxjs.util.ObjectHelper;
 
 import java.util.Optional;
 
@@ -62,7 +62,7 @@ public class EnumsUtil {
      * @return 如果找到对应的消息，则返回枚举项的代码；否则返回null
      */
     public static <E, V, T extends IEnum<E, V>> E ofCode(String msg, Class<T> clz) {
-        if (CheckEmpty.isEmptyText(msg))
+        if (ObjectHelper.isEmptyText(msg))
             return null;
 
         T[] enums = clz.getEnumConstants();

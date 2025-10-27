@@ -1,7 +1,7 @@
 package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.StringBytes;
 import com.ajaxjs.util.cryptography.Constant;
 import com.ajaxjs.util.cryptography.Cryptography;
@@ -115,11 +115,11 @@ public class KeyMgr implements Constant {
     public static Key restoreKey(boolean isPublic, String key) {
         // auto removes the pem
         if (isPublic)
-            key = key.replaceAll("-----\\w+ PUBLIC KEY-----", StrUtil.EMPTY_STRING);
+            key = key.replaceAll("-----\\w+ PUBLIC KEY-----", CommonConstant.EMPTY_STRING);
         else
-            key = key.replaceAll("-----\\w+ PRIVATE KEY-----", StrUtil.EMPTY_STRING);
+            key = key.replaceAll("-----\\w+ PRIVATE KEY-----", CommonConstant.EMPTY_STRING);
 
-        key = key.replaceAll("\\s", StrUtil.EMPTY_STRING);
+        key = key.replaceAll("\\s", CommonConstant.EMPTY_STRING);
 
         byte[] bytes = new Base64Utils(key).decode();
 

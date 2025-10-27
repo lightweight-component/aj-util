@@ -21,7 +21,7 @@ public class XOR {
         byte[] bs = res.getBytes();
 
         for (int i = 0; i < bs.length; i++)
-            bs[i] = (byte) XOR(bs[i], key);
+            bs[i] = (byte) xor(bs[i], key);
 
         return BytesHelper.bytesToHexStr(bs);
     }
@@ -37,7 +37,7 @@ public class XOR {
         byte[] bs = BytesHelper.parseHexStr2Byte(res);
 
         for (int i = 0; i < Objects.requireNonNull(bs).length; i++)
-            bs[i] = (byte) XOR(bs[i], key);
+            bs[i] = (byte) xor(bs[i], key);
 
         return new String(bs);
     }
@@ -52,7 +52,7 @@ public class XOR {
      * @param key 用于加密或解密的字符串密钥。
      * @return 经过异或操作后的加密或解密结果。
      */
-    public static int XOR(int res, String key) {
+    public static int xor(int res, String key) {
         return res ^ key.hashCode();
     }
 }

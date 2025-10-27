@@ -84,6 +84,16 @@ public class RandomTools {
         return new UUID(high, low);
     }
 
+    /**
+     * Generate a UUIDv7 string without hyphen.
+     *
+     * @return UUIDv7 string without hyphen.
+     */
+
+    public static String uuidStr() {
+        return uuid().toString().replace(CommonConstant.HYPHEN_STR, CommonConstant.EMPTY_STRING);
+    }
+
     private static byte[] randomBytes() {
         // random bytes
         byte[] value = new byte[16];

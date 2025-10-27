@@ -26,10 +26,22 @@ public class UrlEncode {
      */
     private Charset charset;
 
+    /**
+     * Create a new UrlEncode with input string.
+     * It's a default constructor.
+     *
+     * @param input The string input
+     */
     public UrlEncode(String input) {
         this(input, StandardCharsets.UTF_8);
     }
 
+    /**
+     * Create a new UrlEncode with input string and specified charset
+     *
+     * @param input   The string input
+     * @param charset The charset of the input string
+     */
     public UrlEncode(String input, Charset charset) {
         this.input = input;
         this.charset = charset;

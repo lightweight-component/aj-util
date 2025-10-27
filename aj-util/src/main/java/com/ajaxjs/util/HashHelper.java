@@ -1,5 +1,6 @@
 package com.ajaxjs.util;
 
+import com.ajaxjs.util.io.DataReader;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -92,8 +95,10 @@ public class HashHelper {
     }
 
     /**
+     * Get the result of hashed in BASE64
+     *
      * @param isWithoutPadding 是否去掉末尾的 = 号
-     * @return
+     * @return The result of hashed in BASE64
      */
     public String hashAsBase64(boolean isWithoutPadding) {
         return isWithoutPadding ? null : new Base64Utils(hash()).encodeAsString();// todo
@@ -137,5 +142,37 @@ public class HashHelper {
      */
     public static String getSHA256(String str) {
         return new HashHelper(SHA256, str).hashAsStr();
+    }
+
+    public static HashHelper getHmacMD5(String str, String key) {
+        return new HashHelper("HmacMD5", str).setKey(key);
+    }
+
+    /**
+     * Calculate the MD5 of a file.
+     *
+     * @param in The file stream.
+     * @return The MD5 result in lowercase.
+     */
+    public static String calcFileMD5(InputStream in) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            new DataReader(in).readStreamAsBytes(8192, (readSize, buffer) -> digest.update(buffer, 0, readSize));
+
+            return BytesHelper.bytesToHexStr(digest.digest()).toLowerCase();
+        } catch (NoSuchAlgorithmException e) {
+            log.warn("No Such Algorithm: MD5", e);
+            throw new RuntimeException("No Such Algorithm: MD5", e);
+        }
+    }
+
+    /**
+     * Calculate the MD5 of a file.
+     *
+     * @param bytes The file bytes.
+     * @return The MD5 result in lowercase.
+     */
+    public static String calcFileMD5(byte[] bytes) {
+        return calcFileMD5(new ByteArrayInputStream(bytes));
     }
 }

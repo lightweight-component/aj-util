@@ -270,7 +270,7 @@ public class Request implements HttpConstant {
                 BoxLogger.boxContent("ReturnCode: ", "HTTP status " + httpCode) + '\n' +
                 BoxLogger.boxContent("ReturnText: ", returnText.trim()) + '\n' +
                 BoxLogger.boxContent("Execution:  ", (System.currentTimeMillis() - startTime) + "ms") + '\n' +
-                BoxLogger.boxLine('└', '─', '┘', StrUtil.EMPTY_STRING) + BoxLogger.ANSI_RESET;
+                BoxLogger.boxLine('└', '─', '┘', CommonConstant.EMPTY_STRING) + BoxLogger.ANSI_RESET;
 
         log.info(sb);
     }

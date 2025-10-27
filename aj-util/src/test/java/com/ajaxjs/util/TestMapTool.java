@@ -9,7 +9,7 @@ import static com.ajaxjs.util.MapTool.join;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestMapTool {
-    Map<String, Object> map = new HashMap<String, Object>() {
+    final Map<String, Object> map = new HashMap<String, Object>() {
         private static final long serialVersionUID = 1L;
 
         {
@@ -57,7 +57,7 @@ class TestMapTool {
         }, v -> ConvertBasicValue.toJavaValue(v.toString())).get("bar"));
     }
 
-    static Map<String, Object> userWithoutChild = new HashMap<String, Object>() {
+    final static Map<String, Object> userWithoutChild = new HashMap<String, Object>() {
         private static final long serialVersionUID = 1L;
 
         {
@@ -70,8 +70,8 @@ class TestMapTool {
     };
 
     public static class MapMock {
-        static boolean s = true;
-        public static Map<String, Object> user = new HashMap<String, Object>() {
+        static final boolean s = true;
+        public final static Map<String, Object> user = new HashMap<String, Object>() {
             private static final long serialVersionUID = 1L;
 
             {

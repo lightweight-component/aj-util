@@ -255,8 +255,8 @@ public class ConvertBasicValue {
 
         value = value.trim();
 
-        if (StrUtil.EMPTY_STRING.equals(value))
-            return StrUtil.EMPTY_STRING;
+        if (CommonConstant.EMPTY_STRING.equals(value))
+            return CommonConstant.EMPTY_STRING;
 
         if ("null".equals(value))
             return null;

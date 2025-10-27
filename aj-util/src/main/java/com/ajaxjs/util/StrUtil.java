@@ -16,7 +16,6 @@
  */
 package com.ajaxjs.util;
 
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -33,10 +32,6 @@ import java.util.regex.Pattern;
  * @author sp42 frank@ajaxjs.com
  */
 public class StrUtil {
-    /**
-     * 空白字符串常量
-     */
-    public static final String EMPTY_STRING = "";
 
     /**
      * 连接两个 url 目录字符串，如果没有 / 则加上；如果有则去掉一个
@@ -71,7 +66,7 @@ public class StrUtil {
             try {
                 buffer.append(args[count++]);
             } catch (IndexOutOfBoundsException e) {
-                buffer.append("null"); // 数组越界时对应占位符填null
+                buffer.append("null"); // 数组越界时对应占位符填 null
             }
 
             beginIndex = endIndex + DELIM_STR.length();
@@ -135,7 +130,7 @@ public class StrUtil {
             String param = m.group();
             // 获取要替换的键名，即去除 '${' 和 '}' 后的部分
             Object value = params.get(param.substring(2, param.length() - 1));
-            m.appendReplacement(sb, value == null ? StrUtil.EMPTY_STRING : value.toString());// 替换键值对应的值，若值为 null，则置为空字符串
+            m.appendReplacement(sb, value == null ? CommonConstant.EMPTY_STRING : value.toString());// 替换键值对应的值，若值为 null，则置为空字符串
         }
 
         m.appendTail(sb);

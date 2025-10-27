@@ -1,6 +1,6 @@
 package com.ajaxjs.util.io;
 
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.UrlEncode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -109,7 +109,7 @@ public class Resources {
     public static String getResourceText(String path) {
         try (InputStream in = getResource(path)) {
             if (in == null) {
-                System.err.println(getResourcesFromClasspath(StrUtil.EMPTY_STRING) + " 下没有资源文件 " + path);
+                System.err.println(getResourcesFromClasspath(CommonConstant.EMPTY_STRING) + " 下没有资源文件 " + path);
                 return null;
             }
 
@@ -153,7 +153,7 @@ public class Resources {
      */
     static void listResourceFile() {
         ClassLoader classLoader = Resources.class.getClassLoader();
-        URL resourceUrl = classLoader.getResource(StrUtil.EMPTY_STRING);
+        URL resourceUrl = classLoader.getResource(CommonConstant.EMPTY_STRING);
 
         if (resourceUrl != null) {
             File[] files = new File(resourceUrl.getFile()).listFiles(); // 将URL转换为文件路径
