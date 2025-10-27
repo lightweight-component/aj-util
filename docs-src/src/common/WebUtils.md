@@ -68,18 +68,17 @@ Here's a complete example of using the WebUtils class:
 
 ```java
 import javax.servlet.http.HttpServletRequest;
-import com.ajaxjs.util.WebUtils;
 
 public class Example {
     public void processRequest(HttpServletRequest request) {
         // Get server IP
         String serverIp = WebUtils.getLocalIp();
         System.out.println("Server IP: " + serverIp);
-        
+
         // Get client IP
         String clientIp = WebUtils.getClientIp(request);
         System.out.println("Client IP: " + clientIp);
-        
+
         // Get session cookie
         String sessionId = WebUtils.getCookie(request, "JSESSIONID");
         System.out.println("Session ID: " + sessionId);
