@@ -8,7 +8,7 @@
 
 # AJ Utilities
 
-** Classic version, not maintain anymore**
+**Classic version, not maintain anymore**
 
 Small Java Utils Library with many powerful components. The size of jar is around 90kb. It contains the following modules:
 
