@@ -3,8 +3,11 @@ package com.ajaxjs.util.date;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.RegExpUtils;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateTools {
@@ -36,18 +39,60 @@ public class DateTools {
             if (ObjectHelper.isEmptyText(str))
                 return null;
 
+            LocalDateTime dateTime;
             if (RegExpUtils.match(DATE_TIME, str))
-                return localDateTime2Date(parseDateTime(str));
+                dateTime = LocalDateTime.parse(str, Formatter.getDateTimeFormatter());
             else if (RegExpUtils.match(DATE_YEAR, str))
-                return localDate2Date(parseDate(str));
+                dateTime = LocalDateTime.parse(str, Formatter.getDateFormatter());
             else
-                return localDateTime2Date(parseDateTimeShort(str));
+                dateTime = LocalDateTime.parse(str, Formatter.getDateTimeShortFormatter());
+
+            return new DateTypeConvert(dateTime).to(Date.class, null);
+
             // 输入日期不合法，不能转为日期类型。请重新输入日期字符串格式类型，或考虑其他方法。
         } else if (obj instanceof LocalDateTime)
-            return localDateTime2Date((LocalDateTime) obj);
+            return new DateTypeConvert((LocalDateTime) obj).to(Date.class, null);
         else if (obj instanceof LocalDate)
-            return localDate2Date((LocalDate) obj);
+            return new DateTypeConvert((LocalDate) obj).to(Date.class, null);
 
         return null;
+    }
+
+    public static LocalDateTime toLocalDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static String now(DateTimeFormatter formatter) {
+        return LocalDateTime.now().format(formatter);
+    }
+
+    public static String now(String format) {
+        return now(Formatter.getDateFormatter(format));
+    }
+
+    public static String now() {
+        return now(Formatter.getDateTimeFormatter());
+    }
+
+    public static String nowShort() {
+        return now(Formatter.getDateTimeFormatter());
+    }
+
+    /**
+     * 请求的时间戳，格式必须符合 RFC1123 的日期格式
+     *
+     * @return 当前日期
+     */
+    public static String nowGMTDate() {
+        return Formatter.GMT_FORMATTER.format(Instant.now());
+    }
+
+    /**
+     * 请求的时间戳。按照 ISO8601 标准表示，并需要使用 UTC 时间，格式为 yyyy-MM-ddTHH:mm:ssZ
+     *
+     * @return 当前日期
+     */
+    public static String newISO8601Date() {
+        return Formatter.ISO8601_FORMATTER.format(Instant.now());
     }
 }

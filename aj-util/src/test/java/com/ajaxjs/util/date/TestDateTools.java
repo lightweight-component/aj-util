@@ -22,26 +22,18 @@ class TestDateTools {
     }
 
     @Test
-    void object2Date_LongObject_ReturnsCorrectDate() {
+    void testObject2Date() {
         long time = 1681584645000L; // GMT: Saturday, April 15, 2023 11:30:45.000
         Date date = DateTools.object2Date(time);
-        assertNotNull(date);
-        assertEquals("2023-04-15 11:30:45", DateTools.formatDateTime(DateTools.toLocalDateTime(date)));
-    }
 
-    @Test
-    void object2Date_IntegerObject_ReturnsCorrectDate() {
-        long time = 1681584645000L; // GMT: Saturday, April 15, 2023 11:30:45.000
-        Date date = DateTools.object2Date(time);
-        assertNotNull(date);
-        assertEquals("2023-04-15 11:30:45", DateTools.formatDateTime(DateTools.toLocalDateTime(date)));
-    }
+        assertEquals("2023-04-16 02:50:45", DateTools.toLocalDateTime(date).format(Formatter.getDateTimeFormatter()));
 
-    @Test
-    void object2Date_StringObject_ReturnsCorrectDate() {
+        int i = 1681584645;
+        date = DateTools.object2Date(i);
+        assertEquals("2023-04-16 02:50:45", DateTools.toLocalDateTime(date).format(Formatter.getDateTimeFormatter()));
+
         String dateTimeStr = "2023-04-15 11:30:45";
-        Date date = DateTools.object2Date(dateTimeStr);
-        assertNotNull(date);
-        assertEquals("2023-04-15 11:30:45", DateTools.formatDateTime(DateTools.toLocalDateTime(date)));
+        date = DateTools.object2Date(dateTimeStr);
+        assertEquals(dateTimeStr, DateTools.toLocalDateTime(date).format(Formatter.getDateTimeFormatter()));
     }
 }

@@ -18,7 +18,7 @@ public class Types {
         if (type instanceof ParameterizedType)
             return ((ParameterizedType) type).getActualTypeArguments();
         else {
-            log.warn("{} 很可能不是一个泛型", type);
+            log.warn("{} may not be a generic", type);
             return null;
         }
     }

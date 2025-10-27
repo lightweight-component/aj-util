@@ -1,6 +1,7 @@
 package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.*;
+import com.ajaxjs.util.date.DateTools;
 import com.ajaxjs.util.io.DataReader;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -263,7 +264,7 @@ public class Request implements HttpConstant {
         String sb = "\n" +
                 (isOk ? BoxLogger.ANSI_YELLOW : BoxLogger.ANSI_RED) +
                 BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
-                BoxLogger.boxContent("Time:       ", ""/* TODO DateHelper.now()*/) + '\n' +
+                BoxLogger.boxContent("Time:       ", DateTools.now()) + '\n' +
                 BoxLogger.boxContent("TraceId:    ", MDC.get(BoxLogger.TRACE_KEY)) + '\n' +
                 BoxLogger.boxContent("Request:    ", httpMethod + " " + url) + '\n' +
                 BoxLogger.boxContent("Parameters: ", data) + '\n' +
