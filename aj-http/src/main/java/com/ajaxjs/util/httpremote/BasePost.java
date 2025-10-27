@@ -15,7 +15,11 @@ public abstract class BasePost extends Request {
 
     public BasePost(HttpMethod method, String url, Object data, String contentType, Consumer<HttpURLConnection> initConnection) {
         this(method, url);
-        this.setContentType(contentType == null ? HttpConstant.CONTENT_TYPE_JSON : contentType);
+        contentType = contentType == null ? HttpConstant.CONTENT_TYPE_JSON : contentType;
+        this.setContentType(contentType);
+
+        if (contentType.equals(HttpConstant.CONTENT_TYPE_JSON)) // auto add header
+            initConnection = initConnection.andThen(conn -> conn.setRequestProperty(CONTENT_TYPE, HttpConstant.CONTENT_TYPE_JSON));
 
         if (data != null) {
             if (data instanceof String) {
@@ -34,11 +38,8 @@ public abstract class BasePost extends Request {
         }
 
         init(initConnection);
-
         initData();
-
         connect();
-
     }
 
     public BasePost(HttpMethod method, String url, Object data, String contentType) {

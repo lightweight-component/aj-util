@@ -2,6 +2,8 @@ package com.ajaxjs.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +11,7 @@ import java.util.regex.Pattern;
  * 正则表达式工具类
  */
 public class RegExpUtils {
-    public boolean isMatch(Pattern pattern, String str) {
+    public static boolean isMatch(Pattern pattern, String str) {
         return pattern.matcher(str).find();
     }
 
@@ -67,5 +69,19 @@ public class RegExpUtils {
             list.add(m.group());
 
         return list.toArray(new String[0]);
+    }
+
+    private final static Map<String, Pattern> CACHE = new ConcurrentHashMap<>();
+
+    public static Pattern getPattern(String regexp) {
+        return CACHE.computeIfAbsent(regexp, Pattern::compile);
+    }
+
+    public static boolean match(String regexp, String str) {
+        return getPattern(regexp).matcher(str).matches();
+    }
+
+    public static boolean test(String pattern, String str) {
+        return getPattern(pattern).matcher(str).find();
     }
 }
