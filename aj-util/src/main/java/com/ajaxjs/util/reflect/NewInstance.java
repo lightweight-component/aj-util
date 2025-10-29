@@ -26,7 +26,7 @@ public class NewInstance<T> {
         if (ObjectHelper.isEmpty(args))
             try {
                 return clz.newInstance();
-            } catch (NoSuchMethodException e) {
+            } catch (Throwable e) {
                 log.error("The constructor of this class " + clz.getName() + " is not found.", e);
                 throw new RuntimeException("The constructor of this class " + clz.getName() + " is not found.", e);
             }
@@ -49,7 +49,8 @@ public class NewInstance<T> {
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
         try {
             return constructor.newInstance(args);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+                 InvocationTargetException e) {
             log.error("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
             throw new RuntimeException("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
         }

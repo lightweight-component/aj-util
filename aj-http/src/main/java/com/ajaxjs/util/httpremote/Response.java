@@ -2,6 +2,7 @@ package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.MapTool;
+import com.ajaxjs.util.ObjectHelper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,7 +71,9 @@ public class Response {
      * @return JSON List
      */
     public List<Map<String, Object>> responseAsJsonList() {
-        return JsonUtil.json2mapList(responseText);
+        checkIsJsonReturn();
+
+        return ObjectHelper.hasText(responseText) ? JsonUtil.json2mapList(responseText) : null;
     }
 
     /**
@@ -79,7 +82,23 @@ public class Response {
      * @return JSON
      */
     public Map<String, Object> responseAsJson() {
-        return JsonUtil.json2map(responseText);
+        checkIsJsonReturn();
+
+        return ObjectHelper.hasText(responseText) ? JsonUtil.json2map(responseText) : null;
+    }
+
+    private void checkIsJsonReturn() {
+        Map<String, List<String>> headers = connection.getHeaderFields();
+        List<String> types = headers.get(HttpConstant.CONTENT_TYPE);
+
+        if (!ObjectHelper.isEmpty(types)) {
+            for (String type : types) {
+                if (type.contains(HttpConstant.CONTENT_TYPE_JSON))
+                    return;
+            }
+        }
+
+        throw new IllegalStateException("The server returns wrong content-type: " + types + ". It's a JSON API call.");
     }
 
     /**
@@ -94,11 +113,11 @@ public class Response {
 
         Map<String, Object> map = responseAsJson();
 
-        return JsonUtil.map2pojo(map, clz);
+        return map == null ? null : JsonUtil.map2pojo(map, clz);
     }
 
     public Map<String, String> responseAsXML() {
-        return MapTool.xmlToMap(responseText);
+        return ObjectHelper.hasText(responseText) ? MapTool.xmlToMap(responseText) : null;
     }
 
     /**

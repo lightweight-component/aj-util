@@ -1,6 +1,8 @@
 package com.ajaxjs.util.date;
 
+import java.sql.Timestamp;
 import java.time.*;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -13,9 +15,13 @@ public class DateTypeConvert {
         this.timestamp = timestamp;
     }
 
+    public DateTypeConvert(int timestamp) {
+        this.timestamp = Long.parseLong(timestamp + "000");
+    }
+
     /**
-     * Although it's legacy, it's still widely used in many applications.
-     * If it's used as Data Value, just okay with it.
+     * Although it's a legacy, it's still widely used in many applications.
+     * If it's used as Data Value, okay with it.
      */
     private Date input;
 
@@ -35,11 +41,11 @@ public class DateTypeConvert {
     /**
      * SQL timestamp class
      */
-    private java.sql.Timestamp sqlTimestamp;
+    private Timestamp sqlTimestamp;
 
-    public DateTypeConvert(java.sql.Timestamp sqlTimestamp) {
+    public DateTypeConvert(Timestamp sqlTimestamp) {
+        Calendar cal = Calendar.getInstance();
         this.sqlTimestamp = sqlTimestamp;
-
     }
 
     /**
@@ -105,87 +111,79 @@ public class DateTypeConvert {
         this.instant = instant;
     }
 
-    /**
-     * Convert the input to the specified date type
-     *
-     * @param clz    The target date type
-     * @param zoneId The time zone. Optional, defaults to system default if passed null
-     * @param <T>    The target date type
-     * @return The converted date
-     */
-//    @SuppressWarnings("unchecked")
-//    public <T> T to(Class<T> clz, ZoneId zoneId) {
-//        if (input != null) {
-//            if (clz == LocalDate.class) {
-//                LocalDate localDate = input.toInstant()
-//                        .atZone(zoneId == null ? ZoneId.systemDefault() : zoneId)
-//                        .toLocalDate();
-//
-//                return (T) localDate;
-//            }
-//        }
-//
-//        if (localDate != null) {
-//            if (clz == Date.class) {
-//                Date date = Date.from(localDate.atStartOfDay(zoneId == null ? ZoneId.systemDefault() : zoneId).toInstant());
-//
-//                return (T) date;
-//            }
-//        }
-//
-//        throw new UnsupportedOperationException("Can not transform this date type to another date type");
-//    }
-    @SuppressWarnings("unchecked")
-    public <T> T to(Class<T> clz, ZoneId zoneId) {
-        ZoneId zone = zoneId != null ? zoneId : ZoneId.systemDefault();
-        Instant baseInstant;
-
-        if (input != null) {
-            baseInstant = input.toInstant();
-        } else if (sqlDate != null) {
-            baseInstant = sqlDate.toLocalDate().atStartOfDay(zone).toInstant();
-        } else if (sqlTimestamp != null) {
-            baseInstant = sqlTimestamp.toInstant();
-        } else if (localDate != null) {
-            baseInstant = localDate.atStartOfDay(zone).toInstant();
-        } else if (localDateTime != null) {
-            baseInstant = localDateTime.atZone(zone).toInstant();
-        } else if (zonedDateTime != null) {
-            baseInstant = zonedDateTime.toInstant();
-        } else if (offsetDateTime != null) {
-            baseInstant = offsetDateTime.toInstant();
-        } else if (offsetTime != null) {
-            baseInstant = offsetTime.atDate(LocalDate.now()).toInstant();
-        } else if (instant != null) {
-            baseInstant = instant;
-        } else if (timestamp != 0L) {
-            baseInstant = Instant.ofEpochMilli(timestamp);
-        } else
-            throw new UnsupportedOperationException("No input date/time set.");
-
-        // Convert baseInstant to target type
-        if (clz == Instant.class) {
-            return (T) baseInstant;
-        } else if (clz == Date.class) {
-            return (T) Date.from(baseInstant);
-        } else if (clz == java.sql.Date.class) {
-            return (T) java.sql.Date.valueOf(baseInstant.atZone(zone).toLocalDate());
-        } else if (clz == java.sql.Timestamp.class) {
-            return (T) java.sql.Timestamp.from(baseInstant);
-        } else if (clz == LocalDate.class) {
-            return (T) baseInstant.atZone(zone).toLocalDate();
-        } else if (clz == LocalTime.class) {
-            return (T) baseInstant.atZone(zone).toLocalTime();
-        } else if (clz == LocalDateTime.class) {
-            return (T) baseInstant.atZone(zone).toLocalDateTime();
-        } else if (clz == ZonedDateTime.class) {
-            return (T) baseInstant.atZone(zone);
-        } else if (clz == OffsetDateTime.class) {
-            return (T) baseInstant.atOffset(zone.getRules().getOffset(baseInstant));
-        } else if (clz == OffsetTime.class) {
-            return (T) baseInstant.atZone(zone).toOffsetDateTime().toOffsetTime();
-        }
-
-        throw new UnsupportedOperationException("Unsupported target type: " + clz.getName());
+    public DateTypeConvert(Calendar calendar) {
+        instant = calendar.toInstant();
     }
+
+    public DateTypeConvert(String str) {
+        this(DateTools.object2Date(str));
+    }
+
+/**
+ * Convert the input to the specified date type
+ *
+ * @param clz    The target date type
+ * @param zoneId The time zone. Optional, defaults to system default if passed null
+ * @param <T>    The target date type
+ * @return The converted date
+ */
+@SuppressWarnings("unchecked")
+public <T> T to(Class<T> clz, ZoneId zoneId) {
+    ZoneId zone = zoneId != null ? zoneId : ZoneId.systemDefault();
+    Instant baseInstant;
+
+    if (input != null) {/* SB way, actually u can set any value to Instant by constructor or setter method */
+        baseInstant = input.toInstant();
+    } else if (sqlDate != null) {
+        baseInstant = sqlDate.toLocalDate().atStartOfDay(zone).toInstant();
+    } else if (sqlTimestamp != null) {
+        baseInstant = sqlTimestamp.toInstant();
+    } else if (localDate != null) {
+        baseInstant = localDate.atStartOfDay(zone).toInstant();
+    } else if (localDateTime != null) {
+        baseInstant = localDateTime.atZone(zone).toInstant();
+    } else if (zonedDateTime != null) {
+        baseInstant = zonedDateTime.toInstant();
+    } else if (offsetDateTime != null) {
+        baseInstant = offsetDateTime.toInstant();
+    } else if (offsetTime != null) {
+        baseInstant = offsetTime.atDate(LocalDate.now()).toInstant();
+    } else if (instant != null) {
+        baseInstant = instant;
+    } else if (timestamp != 0L) {
+        baseInstant = Instant.ofEpochMilli(timestamp);
+    } else
+        throw new UnsupportedOperationException("No input date/time set.");
+
+    // Convert baseInstant to target
+    if (clz == Instant.class) {
+        return (T) baseInstant;
+    } else if (clz == Date.class) {
+        return (T) Date.from(baseInstant);
+    } else if (clz == java.sql.Date.class) {
+        return (T) java.sql.Date.valueOf(baseInstant.atZone(zone).toLocalDate());
+    } else if (clz == Timestamp.class) {
+        return (T) Timestamp.from(baseInstant);
+    } else if (clz == LocalDate.class) {
+        return (T) baseInstant.atZone(zone).toLocalDate();
+    } else if (clz == LocalTime.class) {
+        return (T) baseInstant.atZone(zone).toLocalTime();
+    } else if (clz == LocalDateTime.class) {
+        return (T) baseInstant.atZone(zone).toLocalDateTime();
+    } else if (clz == ZonedDateTime.class) {
+        return (T) baseInstant.atZone(zone);
+    } else if (clz == OffsetDateTime.class) {
+        return (T) baseInstant.atOffset(zone.getRules().getOffset(baseInstant));
+    } else if (clz == OffsetTime.class) {
+        return (T) baseInstant.atZone(zone).toOffsetDateTime().toOffsetTime();
+    } else if (clz == Calendar.class) {
+        Calendar calendar = Calendar.getInstance();
+        baseInstant.atZone(zone);
+        calendar.setTimeInMillis(baseInstant.toEpochMilli());
+
+        return (T) calendar;
+    }
+
+    throw new UnsupportedOperationException("Unsupported target type: " + clz.getName());
+}
 }

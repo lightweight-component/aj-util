@@ -42,6 +42,38 @@ public class ObjectHelper {
     }
 
     /**
+     * Determine whether the given array is empty:
+     * i.e. {@code null} or of zero length.
+     *
+     * @param array the array to check
+     */
+    public static boolean isEmpty(Object[] array) {
+        return (array == null || array.length == 0);
+    }
+
+    /**
+     * Return {@code true} if the supplied Collection is {@code null} or empty.
+     * Otherwise, return {@code false}.
+     *
+     * @param collection the Collection to check
+     * @return whether the given Collection is empty
+     */
+    public static boolean isEmpty(Collection<?> collection) {
+        return (collection == null || collection.isEmpty());
+    }
+
+    /**
+     * Return {@code true} if the supplied Map is {@code null} or empty.
+     * Otherwise, return {@code false}.
+     *
+     * @param map the Map to check
+     * @return whether the given Map is empty
+     */
+    public static boolean isEmpty(Map<?, ?> map) {
+        return (map == null || map.isEmpty());
+    }
+
+    /**
      * Dummy Map
      */
     public static final Map<String, Object> EMPTY_PARAMS_MAP = Collections.unmodifiableMap(new HashMap<>());
@@ -137,34 +169,28 @@ public class ObjectHelper {
     }
 
     /**
-     * Determine whether the given array is empty:
-     * i.e. {@code null} or of zero length.
+     * 创建一个不可变的 Set，类似于 Java 9+ 的 Set.of()
+     * 支持可变参数，自动去重，返回不可修改的集合
      *
-     * @param array the array to check
+     * @param elements 元素可变参数
+     * @param <T>      元素类型
+     * @return 不可变的 Set
+     * @throws IllegalArgumentException 如果传入 null 元素
      */
-    public static boolean isEmpty(Object[] array) {
-        return (array == null || array.length == 0);
-    }
+    @SafeVarargs
+    public static <T> Set<T> setOf(T... elements) {
+        if (elements == null)
+            throw new IllegalArgumentException("Elements array cannot be null");
 
-    /**
-     * Return {@code true} if the supplied Collection is {@code null} or empty.
-     * Otherwise, return {@code false}.
-     *
-     * @param collection the Collection to check
-     * @return whether the given Collection is empty
-     */
-    public static boolean isEmpty(Collection<?> collection) {
-        return (collection == null || collection.isEmpty());
-    }
+        Set<T> set = new HashSet<>();
 
-    /**
-     * Return {@code true} if the supplied Map is {@code null} or empty.
-     * Otherwise, return {@code false}.
-     *
-     * @param map the Map to check
-     * @return whether the given Map is empty
-     */
-    public static boolean isEmpty(Map<?, ?> map) {
-        return (map == null || map.isEmpty());
+        for (T element : elements) {
+            if (element == null)
+                throw new IllegalArgumentException("Set elements cannot contain null");
+
+            set.add(element);
+        }
+
+        return Collections.unmodifiableSet(set);
     }
 }

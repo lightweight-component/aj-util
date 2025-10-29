@@ -254,7 +254,7 @@ public class Request implements HttpConstant {
 
     private static final int MAX_LENGTH_TO_PRINT = 500;
 
-    public static void printLog(boolean isOk, String httpMethod, String url, String data, int httpCode, String returnText, Long startTime) {
+    public static void printLog(boolean isOk, String httpMethod, String url, String data, Integer httpCode, String returnText, Long startTime) {
         if (returnText == null)
             returnText = "(ZERO byte returns OR controller by other process.)";
 
