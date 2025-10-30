@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 /**
  * The reader class for reading data from an input stream.
  * InputStream is used for reading raw byte data from a source like a file, network socket, or memory buffer.
+ * If its text is not binary data, Reader can be used.
  * If it does not meet the need, you can refer to the Spring StreamUtils/ResourceUtils/FileCopyUtils/FileSystemUtils.
  */
 @Slf4j
@@ -39,9 +40,18 @@ public class DataReader {
         this.encode = encode;
     }
 
+    /*
+     * 两端速度不匹配，需要协调 理想环境下，速度一样快，那就没必要搞流，直接一坨给弄过去就可以了
+     * 但这是理想情况下，实际要考虑内存占用。
+     * 于是采用流的概念来优化。流的意思很形象，就是一点一滴的，不是一坨坨大批量的
+     */
+
     /**
-     * 两端速度不匹配，需要协调 理想环境下，速度一样快，那就没必要搞流，直接一坨给弄过去就可以了 流的意思很形象，就是一点一滴的，不是一坨坨大批量的
+     * Read the binary data from the input stream as bytes.
      * It will close the input stream when the reading process is complete.
+     *
+     * @param bufferSize The template buffer size.
+     * @param fn         What do you want to do with the data?
      */
     public void readStreamAsBytes(int bufferSize, BiConsumer<Integer, byte[]> fn) {
         int readSize; // 读取到的数据长度
@@ -64,7 +74,7 @@ public class DataReader {
     }
 
     /**
-     * Read the data from the input stream as line by line.
+     * Read the text data from the input stream as line by line.
      *
      * @param fn provided function to consume each line of data
      */

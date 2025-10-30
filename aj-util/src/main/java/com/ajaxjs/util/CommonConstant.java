@@ -9,4 +9,6 @@ public interface CommonConstant {
     char NEW_LINE = '\n';
 
     String UTF8 = "UTF-8";
+
+    String CLASS = "class";
 }

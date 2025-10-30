@@ -168,23 +168,6 @@ public class Methods {
         return null;
     }
 
-    /**
-     * 获取本类及其父类的字段属性（包括 private 的）
-     *
-     * @param clz 当前类对象
-     * @return 字段数组
-     */
-    public static Field[] getSuperClassDeclaredFields(Class<?> clz) {
-        List<Field> fieldList = new ArrayList<>();
-
-        while (clz != null) {
-            fieldList.addAll(new ArrayList<>(Arrays.asList(clz.getDeclaredFields())));
-            clz = clz.getSuperclass();
-        }
-
-        return fieldList.toArray(new Field[0]);
-    }
-
     public static Class<?>[] getAllSuperClazz(Class<?> clz) {
         List<Class<?>> clzList = new ArrayList<>();
 
@@ -244,9 +227,8 @@ public class Methods {
      * @return 实际异常对象
      */
     public static Throwable getUnderLayerErr(Throwable e) {
-        while (e.getClass().equals(InvocationTargetException.class) || e.getClass().equals(UndeclaredThrowableException.class)) {
+        while (e.getClass().equals(InvocationTargetException.class) || e.getClass().equals(UndeclaredThrowableException.class))
             e = e.getCause();
-        }
 
         return e;
     }

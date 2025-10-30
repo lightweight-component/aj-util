@@ -10,11 +10,16 @@ import java.io.*;
  * The writer class for writing data to an output stream.
  * OutputStream is used for writing raw byte data to a destination like a file, socket, or buffer.
  * If it does not meet the need, you can refer to the Spring StreamUtils/ResourceUtils/FileCopyUtils/FileSystemUtils.
+ * Please note that this class does not close the output stream.
  */
 @Slf4j
 @RequiredArgsConstructor
 @Data
 public class DataWriter {
+    /**
+     * The output stream to write data to.
+     * Please note that this class does not close the output stream.
+     */
     private final OutputStream out;
 
     /**
@@ -28,13 +33,12 @@ public class DataWriter {
     private boolean isBuffered = true;
 
     /**
-     * 带缓冲的一入一出 出是字节流，所以要缓冲（字符流自带缓冲，所以不需要额外缓冲）
-     * 请注意，该方法不会关闭 input 流 close，你需要手动关闭
+     * Write data from an input stream to an output stream.
+     * Please note that the output stream is not closed by this method.
      *
-     * @param in 输入流，无须手动关闭
+     * @param in InputStream, please note that the output stream is not closed by this method.
      */
     public void write(InputStream in) {
-
         if (!isBuffered)
             log.warn("It's not recommended that NOT using BufferedOutputStream.");
 
@@ -50,11 +54,6 @@ public class DataWriter {
                 }
             });
 
-//            int readSize; // 读取到的数据长度
-//            byte[] buffer = new byte[BUFFER_SIZE]; // 通过 byte 作为数据中转，用于存放循环读取的临时数据
-//            while ((readSize = in.read(buffer)) != -1)
-//                _out.write(buffer, 0, readSize);
-
             _out.flush();
         } catch (IOException e) {
             log.warn("Error occurred when copying input to output data.", e);
@@ -62,28 +61,13 @@ public class DataWriter {
         }
     }
 
-    /*
-     * 输入流复制到输出流
-     * New JDK 9 新特性，直接复制流，不用自己写循环了
-     *
-     * @param in  输入流
-     * @return 复制了多少字节
-
-    public  long write(InputStream in) {
-        try {
-            return in.transferTo(out); // 等价 Spring StreamUtils.copy(in, out)
-        } catch (IOException e) {
-            throw new RuntimeException("复制流的时候失败", e);
-        }
-    }
- */
-
     /**
-     * 送入的 byte[] 转换为输出流。可指定 byte[] 某一部分数据。注意这函数不会关闭输出流（特别在截取部分数据的时候），请记得在适当的时候将其关闭。
+     * Input bytes to output stream.
+     * You can specify a part of the byte[] data.
      *
-     * @param data   输入的数据
-     * @param off    偏移
-     * @param length 长度
+     * @param data   Input data
+     * @param off    Offset of the byte[] data, it can be zero
+     * @param length The length of the byte[] data, it can be zero
      */
     public void write(byte[] data, int off, int length) {
         try {
@@ -101,7 +85,28 @@ public class DataWriter {
         }
     }
 
+    /**
+     * Input all the bytes to output stream.
+     *
+     * @param data Input data
+     */
     public void write(byte[] data) {
         write(data, 0, 0);
     }
+
+    /*
+     * 输入流复制到输出流
+     * New JDK 9 新特性，直接复制流，不用自己写循环了
+     *
+     * @param in 输入流
+     * @return 复制了多少字节
+
+    public long write(InputStream in) {
+        try {
+            return in.transferTo(out); // 等价 Spring StreamUtils.copy(in, out)
+        } catch (IOException e) {
+            throw new RuntimeException("复制流的时候失败", e);
+        }
+    }
+    */
 }

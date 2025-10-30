@@ -19,8 +19,14 @@ import java.security.NoSuchAlgorithmException;
 @Data
 @Accessors(chain = true)
 public class HashHelper {
+    /**
+     * The algorithm name.
+     */
     private final String algorithmName;
 
+    /**
+     * The input data.
+     */
     private byte[] input;
 
     public HashHelper(String algorithmName, byte[] input) {
@@ -86,10 +92,20 @@ public class HashHelper {
         }
     }
 
+    /**
+     * Do hash
+     *
+     * @return The hash value in bytes.
+     */
     public byte[] hash() {
         return key == null ? getMessageDigest() : getMac();
     }
 
+    /**
+     * Do hash
+     *
+     * @return The hash value in hex string, lowercase.
+     */
     public String hashAsStr() {
         return BytesHelper.bytesToHexStr(hash()).toLowerCase();
     }
@@ -101,9 +117,14 @@ public class HashHelper {
      * @return The result of hashed in BASE64
      */
     public String hashAsBase64(boolean isWithoutPadding) {
-        return isWithoutPadding ? null : new Base64Utils(hash()).encodeAsString();// todo
+        return new Base64Utils(hash()).setWithoutPadding(isWithoutPadding).encodeAsString();
     }
 
+    /**
+     * Get the result of hashed in BASE64
+     *
+     * @return The result of hashed in BASE64
+     */
     public String hashAsBase64() {
         return hashAsBase64(false);
     }
@@ -115,37 +136,63 @@ public class HashHelper {
     public static final String SHA256 = "SHA-256";
 
     /**
-     * 生成字符串的 MD5 哈希值，等价于 Spring 的 DigestUtils.md5DigestAsHex()
+     * Generates MD5 hash value for a string. It's equivalent to Spring's DigestUtils.md5DigestAsHex()
      *
-     * @param str 输入的字符串
-     * @return 字符串的 MD5 哈希值，返回32位小写的字符串
+     * @param str Input string
+     * @return MD5 hash value
      */
     public static String md5(String str) {
         return new HashHelper(MD5, str).hashAsStr();
     }
 
     /**
-     * 生成字符串的 SHA1 哈希值
+     * Generates SHA1 hash value for a string.
      *
-     * @param str 输入的字符串
-     * @return 字符串的 SHA1 哈希值
+     * @param str Input string
+     * @return SHA1 hash value
      */
     public static String getSHA1(String str) {
         return new HashHelper(SHA1, str).hashAsStr();
     }
 
     /**
-     * 生成字符串的 SHA256 哈希值
+     * Generates SHA256 hash value for a string.
      *
-     * @param str 输入的字符串
-     * @return 字符串的 SHA256 哈希值
+     * @param str Input string
+     * @return SHA256 hash value
      */
     public static String getSHA256(String str) {
         return new HashHelper(SHA256, str).hashAsStr();
     }
 
+    /**
+     * Generates HMAC-MD5 hash value for a string.
+     *
+     * @param str Input string
+     * @param key Key string
+     * @return HMAC-MD5 hash value
+     */
+    @SuppressWarnings("SpellCheckingInspection")
     public static HashHelper getHmacMD5(String str, String key) {
         return new HashHelper("HmacMD5", str).setKey(key);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String HMAC_SHA1 = "HmacSHA1";
+
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String HMAC_SHA256 = "HmacSHA256";
+
+    /**
+     * Generates HMAC-SHA256 hash value for a string.
+     *
+     * @param str Input string
+     * @param key Key string
+     * @return HMAC-SHA256 hash value
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    public static String getHmacSHA256(String str, String key, boolean isWithoutPadding) {
+        return new HashHelper(HMAC_SHA256, str).setKey(key).hashAsBase64(isWithoutPadding);
     }
 
     /**

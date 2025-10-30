@@ -1,9 +1,11 @@
 package com.ajaxjs.util.httpremote;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Send HEAD request
@@ -36,18 +38,18 @@ public class Head extends Request {
     }
 
     /**
-     * 得到 HTTP 302 的跳转地址
+     * Obtain the redirect address of HTTP 302.
      *
-     * @return 跳转地址
+     * @return The redirect address.
      */
     public String get302redirect() {
         return getConn().getHeaderField("Location");
     }
 
     /**
-     * 检测资源是否存在
+     * Detect whether the resource exists
      *
-     * @return true 表示 404 不存在
+     * @return true = 404
      */
     public boolean is404() {
         try {
@@ -58,18 +60,40 @@ public class Head extends Request {
     }
 
     /**
-     * 得到资源的文件大小
+     * Obtain the file size.
      *
-     * @return 文件大小
+     * @return The file size.
      */
     public long getFileSize() {
         return getConn().getContentLength();
     }
+
     /**
-     * Map 转化到 HTTP HEAD。 这是高阶函数
+     * 判断是否为 GZip 格式的输入流并返回相应的输入流
+     * 有些网站强制加入 Content-Encoding:gzip，而不管之前的是否有 GZip 的请求
      *
-     * @param map 头数据
-     * @return 函数
+     * @param conn HTTP 连接
+     * @param in   输入流
+     * @return 如果Content-Encoding为gzip，则返回  GZIPInputStream 输入流，否则返回 null
+     */
+    public static InputStream gzip(HttpURLConnection conn, InputStream in) {
+        if ("gzip".equals(conn.getHeaderField("Content-Encoding"))) {
+            try {
+                return new GZIPInputStream(in);
+            } catch (IOException e) {
+//                log.warn("ERROR>>", e);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Transform Map to HTTP HEAD.
+     * This is a higher-order function
+     *
+     * @param map The head data
+     * @return A lambda function
      */
     public static Consumer<HttpURLConnection> map2header(Map<String, ?> map) {
         return conn -> {
