@@ -135,6 +135,8 @@ public class ObjectHelper {
         return map;
     }
 
+    public static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
     /**
      * Creates a HashMap with a specified expected number of entries.
      * The initial capacity and load factor are calculated to minimize resizing.
@@ -142,17 +144,21 @@ public class ObjectHelper {
      * @param expectedSize the expected number of entries in the map
      * @return a new HashMap with optimal initial capacity and load factor
      */
-    public static <K, V> Map<K, V> mapOf(int expectedSize) {
+
+    public static int getInitialCapacity(int expectedSize) {
         // Calculate the initial capacity as the next power of two greater than or equal to expectedSize / default_load_factor
-        float defaultLoadFactor = 0.75f;
-        int initialCapacity = (int) Math.ceil(expectedSize / defaultLoadFactor);
+        int initialCapacity = (int) Math.ceil(expectedSize / DEFAULT_LOAD_FACTOR);
         initialCapacity = Integer.highestOneBit(initialCapacity - 1) << 1;
 
         // Ensure that the initial capacity is at least 16 (the default capacity)
         if (initialCapacity < 16)
             initialCapacity = 16;
 
-        return new HashMap<>(initialCapacity, defaultLoadFactor);// Create and return the HashMap with the calculated initial capacity and default load factor
+        return initialCapacity;
+    }
+
+    public static <K, V> Map<K, V> mapOf(int expectedSize) {
+        return new HashMap<>(getInitialCapacity(expectedSize), DEFAULT_LOAD_FACTOR);// Create and return the HashMap with the calculated initial capacity and default load factor
     }
 
     /**

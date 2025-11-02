@@ -61,18 +61,4 @@ public class Get extends Request {
     public static Map<String, String> apiXml(String url, Consumer<HttpURLConnection> initConnection) {
         return new Get(url, initConnection).getResp().responseAsXML();
     }
-
-    /**
-     * 简单 GET 请求（原始 API 版），返回文本。
-     *
-     * @param url 请求目标地址
-     * @return 响应内容（如 HTML，JSON 等）
-     */
-    public static String simpleGET(String url) {
-        try {
-            return new DataReader(new URL(url).openStream()).readAsString();
-        } catch (IOException e) {
-            return null;
-        }
-    }
 }

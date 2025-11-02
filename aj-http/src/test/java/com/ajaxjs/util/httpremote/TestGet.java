@@ -8,12 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestGet {
-    @Test
-    public void testSimpleGet() {
-        String html = Get.simpleGET("https://www.baidu.com");
-        assert html != null;
-        assertTrue(html.contains("百度一下，你就知道"));
-    }
+//    @Test
+//    public void testSimpleGet() {
+//        String html = Get.simpleGET("https://www.baidu.com");
+//        assert html != null;
+//        assertTrue(html.contains("百度一下，你就知道"));
+//    }
 
     @Test
     void testGetHTML() {
