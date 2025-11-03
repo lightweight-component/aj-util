@@ -8,7 +8,7 @@
 
 # AJ Utilities
 
-Small Java Utils Library with many powerful components. The size of jar is around 90kb. It contains the following modules:
+Small Java Utils Library with many powerful components. The size of the jar file is around 90kb. It contains the following modules:
 
 | Class/Package Module | Detail Description                                                                     | Memo                                      |
 |----------------------|----------------------------------------------------------------------------------------|-------------------------------------------|

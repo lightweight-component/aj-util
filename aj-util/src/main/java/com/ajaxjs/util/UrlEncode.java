@@ -119,7 +119,7 @@ public class UrlEncode {
 
         if (accessTokenStr.contains("&")) {
             String[] fields = accessTokenStr.split("&");
-            res = new HashMap<>((int) (fields.length / 0.75 + 1));
+            res = new HashMap<>(ObjectHelper.getInitialCapacity(fields.length));
 
             for (String field : fields) {
                 if (field.contains("=")) {
