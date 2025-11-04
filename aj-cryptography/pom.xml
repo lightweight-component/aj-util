@@ -13,13 +13,13 @@
 
     <artifactId>aj-cryptography</artifactId>
     <name>aj-cryptography</name>
-    <description>Small Java Utils Library with many powerful components</description>
+    <description>A small, clean Java cryptography library with AES/DES/PBE/RSA.</description>
     <version>1.0</version>
     <packaging>jar</packaging>
 
     <url>https://aj-util.ajaxjs.com/</url>
     <scm>
-        <url>https://github.com/lightweight-component/aj-util</url>
+        <url>https://github.com/lightweight-component/aj-util/tree/main/aj-cryptography</url>
         <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
     </scm>
     <issueManagement>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.ajaxjs</groupId>
             <artifactId>ajaxjs-util</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.9</version>
         </dependency>
 
         <!-- 编译为 jar 包时依赖的 -->

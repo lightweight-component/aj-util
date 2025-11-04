@@ -14,12 +14,12 @@
     <artifactId>aj-net</artifactId>
     <name>aj-http</name>
     <description>A Small HTTP Request Component.</description>
-    <version>1.5</version>
+    <version>1.6</version>
     <packaging>jar</packaging>
 
     <url>https://aj-util.ajaxjs.com/</url>
     <scm>
-        <url>https://github.com/lightweight-component/aj-util</url>
+        <url>https://github.com/lightweight-component/aj-util/tree/main/aj-http</url>
         <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
     </scm>
     <issueManagement>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.ajaxjs</groupId>
             <artifactId>ajaxjs-util</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.9</version>
         </dependency>
 
         <!-- 编译为 jar 包时依赖的 -->
