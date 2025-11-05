@@ -45,6 +45,10 @@ public class DebugTools {
          * false 表示在部署的 linux 环境下。 Linux 的为远程模式
          */
         isDebug = !(OS_NAME.contains("nix") || OS_NAME.contains("nux") || OS_NAME.indexOf("aix") > 0);
+
+        // export AJAXJS_TEST="true"
+        if ("true".equals(System.getenv("AJAXJS_TEST")))
+            isDebug = true;
     }
 
     /**
