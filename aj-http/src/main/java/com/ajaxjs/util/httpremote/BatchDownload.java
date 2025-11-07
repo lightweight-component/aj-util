@@ -28,36 +28,37 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * 批量下载
+ * Utility class for batch downloading files from multiple URLs concurrently.
+ * Uses multi-threading to perform parallel downloads with configurable timeout.
  */
 @Slf4j
 public class BatchDownload {
     /**
-     * 闭锁。另外可参考栅栏 CyclicBarrier
+     * CountDownLatch to synchronize thread completion. Alternative: CyclicBarrier
      */
     private final CountDownLatch latch;
 
     /**
-     * 下载列表
+     * Array of URLs to download
      */
     private final String[] arr;
 
     /**
-     * 保存目录
+     * Directory to save downloaded files
      */
     private final String saveFolder;
 
     /**
-     * 如何命名文件名的函数。若为 null 则使用原文件名
+     * Function to generate new file names. If null, original file names are used.
      */
     private final Supplier<String> newFileNameFn;
 
     /**
-     * 创建图片批量下载
+     * Creates a new BatchDownload instance for downloading files concurrently.
      *
-     * @param arr           下载列表
-     * @param saveFolder    保存目录
-     * @param newFileNameFn 如何命名文件名的函数。若为 null 则使用原文件名
+     * @param arr           array of URLs to download
+     * @param saveFolder    directory to save downloaded files
+     * @param newFileNameFn function to generate new file names. If null, original file names are used.
      */
     public BatchDownload(String[] arr, String saveFolder, Supplier<String> newFileNameFn) {
         latch = new CountDownLatch(arr.length);
@@ -68,10 +69,10 @@ public class BatchDownload {
     }
 
     /**
-     * 单个下载
+     * Executes download for a single URL.
      *
-     * @param url 下载地址
-     * @param i   索引
+     * @param url the URL to download from
+     * @param i   the index in the array to update with the file name
      */
     private void exec(String url, int i) {
         String newFileName;
@@ -86,12 +87,13 @@ public class BatchDownload {
             String f = _arr[_arr.length - 1];
             arr[i] = f;
         } finally {
-            latch.countDown();// 每个子线程中，不管是否成功，是否有异常
+            latch.countDown(); // Decrement latch in all cases, regardless of success or exception
         }
     }
 
     /**
-     * 开始下载
+     * Starts concurrent downloads for all URLs in the array.
+     * Spawns a new thread for each download and waits for completion (with timeout).
      */
     public void start() {
         for (int i = 0; i < arr.length; i++) {
@@ -100,18 +102,29 @@ public class BatchDownload {
         }
 
         try {
-            latch.await(20, TimeUnit.SECONDS); // 给主线程设置一个最大等待超时时间 20秒
+            // Set the maximum waiting time of 20 seconds for the main thread
+            latch.await(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Downloads a file from the specified URL using the given HTTP method.
+     *
+     * @param method      HTTP method to use (GET, POST, etc.)
+     * @param url         the URL to download from
+     * @param fn          optional connection initializer function
+     * @param saveDir     directory to save the downloaded file
+     * @param newFileName optional new name for the downloaded file
+     * @return the absolute path of the downloaded file
+     */
     public static String download(HttpConstant.HttpMethod method, String url, Consumer<HttpURLConnection> fn, String saveDir, String newFileName) {
         Request get = new Request(method, url);
 
         Consumer<HttpURLConnection> init = conn -> {
-//            SetConnection.SET_USER_AGENT_DEFAULT.accept(conn);
-            conn.setDoInput(true);// for conn.getOutputStream().write(someBytes); 需要吗？
+            // Set up connection properties
+            conn.setDoInput(true);
             conn.setDoOutput(true);
         };
         get.init(fn == null ? init : fn.andThen(init));
@@ -122,16 +135,17 @@ public class BatchDownload {
         if (newFileName == null)
             fileName = oldFileName;
         else
-            fileName = newFileName + RegExpUtils.regMatch("\\.\\w+$", oldFileName);// 新文件名 + 旧扩展名
+            fileName = newFileName + RegExpUtils.regMatch("\\.\\w+$", oldFileName); // New filename + old extension
 
         assert fileName != null;
         File file = new File(saveDir, fileName);
         get.setInputStreamConsumer(in -> {
+            // Create directory if it doesn't exist
             new FileHelper(saveDir).createDirectory();
 
             try (OutputStream out = Files.newOutputStream(file.toPath())) {
                 new DataWriter(out).write(in);
-                log.info("文件[{}]写入成功", file);
+                log.info("File [{}] written successfully", file);
 
                 in.close();
             } catch (IOException e) {
@@ -143,7 +157,12 @@ public class BatchDownload {
         return file.toString();
     }
 
-
+    /**
+     * Extracts the file name from a URL.
+     *
+     * @param urlString the URL string to extract the file name from
+     * @return the extracted file name, or null if extraction fails
+     */
     public static String getFileNameFromUrl(String urlString) {
         try {
             URL url = new URL(urlString);

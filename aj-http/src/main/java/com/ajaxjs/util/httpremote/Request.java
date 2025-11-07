@@ -18,15 +18,36 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Core HTTP request implementation that handles creating, configuring, and executing HTTP requests.
+ * This class provides functionality for setting request data in various formats, configuring timeouts,
+ * initializing connections, and sending requests with proper logging and error handling.
+ * Implements HttpConstant to provide access to common HTTP constants.
+ */
 @Data
 @Slf4j
 public class Request implements HttpConstant {
+    /**
+     * The URL to which the request will be sent
+     */
     private final String url;
 
+    /**
+     * The HTTP method to be used for the request
+     */
     private final HttpMethod method;
 
+    /**
+     * The Content-Type header value for the request
+     */
     private String contentType;
 
+    /**
+     * Creates a new Request with the specified HTTP method and URL.
+     *
+     * @param method the HTTP method to use (GET, POST, PUT, DELETE, etc.)
+     * @param url    the URL to which the request will be sent
+     */
     public Request(HttpMethod method, String url) {
         this.method = method;
         this.url = url;
@@ -37,14 +58,21 @@ public class Request implements HttpConstant {
      */
     private byte[] data;
 
+    /**
+     * Sets the raw byte data for the request body.
+     *
+     * @param data the byte array containing the request body data
+     */
     public void setData(byte[] data) {
         this.data = data;
     }
 
     /**
-     * Set data in string.
+     * Sets request data from a string in query parameter format.
+     * Automatically converts to the appropriate format based on a content type.
      *
-     * @param data The request data to be sent in string of the pair format, like `a=foo&b=bar`.
+     * @param data The request data in string format, like `a=foo&b=bar`
+     * @throws IllegalArgumentException if a content type is not set or data is invalid
      */
     public void setDataStr(String data) {
         if (contentType == null)
@@ -59,13 +87,18 @@ public class Request implements HttpConstant {
     }
 
     /**
-     * Set data in Json.
+     * Sets request data from a JSON string.
+     * Automatically converts to the appropriate format based on a content type.
      *
-     * @param json The request data to be sent in Json.
+     * @param json The request data in JSON string format
+     * @throws IllegalArgumentException if a content type is not set or JSON is invalid
      */
     public void setData(String json) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
+
+        if (!json.startsWith("[") && !json.startsWith("{"))
+            throw new IllegalArgumentException("Please input a valid JSON string.");
 
         if (contentType.equals(CONTENT_TYPE_JSON))
             this.data = json.getBytes(StandardCharsets.UTF_8);// directly send the string
@@ -77,9 +110,11 @@ public class Request implements HttpConstant {
     }
 
     /**
-     * Set data in Map.
+     * Sets request data from a Map object.
+     * Automatically converts to the appropriate format based on a content type.
      *
-     * @param dataMap The request data to be sent in Map.
+     * @param dataMap The request data as a Map of key-value pairs
+     * @throws IllegalArgumentException if a content type is not set
      */
     public void setData(Map<String, Object> dataMap) {
         if (contentType == null)
@@ -97,9 +132,11 @@ public class Request implements HttpConstant {
     }
 
     /**
-     * Set data in Java Bean.
+     * Sets request data from a Java Bean object.
+     * Converts the bean to JSON or form data based on a content type.
      *
-     * @param javaBean The request data to be sent in Java Bean.
+     * @param javaBean The request data as a Java Bean object
+     * @throws IllegalArgumentException if a content type is not set
      */
     public void setData(Object javaBean) {
         if (contentType == null)
@@ -125,22 +162,28 @@ public class Request implements HttpConstant {
      */
     private int readTimeout = 15000;
 
+    /**
+     * The underlying HTTP connection object
+     */
     private HttpURLConnection conn;
 
     /**
-     * Init the connection.
+     * Initializes the HTTP connection with default settings.
      *
-     * @return HttpURLConnection
+     * @return the initialized HttpURLConnection object
      */
     public HttpURLConnection init() {
         return init(null);
     }
 
     /**
-     * Init the connection.
+     * Initializes the HTTP connection with custom settings.
+     * Sets up the connection with the appropriate method, timeouts, and any custom initialization.
      *
-     * @param initConnection The function to be executed before the connection is established. Used to set the request headers.
-     * @return HttpURLConnection
+     * @param initConnection function to be executed before the connection is established,
+     *                       typically used to set custom request headers
+     * @return the initialized HttpURLConnection object
+     * @throws RuntimeException if there's an error creating or configuring the connection
      */
     public HttpURLConnection init(Consumer<HttpURLConnection> initConnection) {
 //        log.info("准备连接： {} {}", method, url);
@@ -164,7 +207,7 @@ public class Request implements HttpConstant {
 
         try {
             conn.setRequestMethod(method.toString());
-            conn.setConnectTimeout(connectTimeout);// 设置链接超时时间和 read 超时时间
+            conn.setConnectTimeout(connectTimeout);// Set connection timeout and read timeout
             conn.setReadTimeout(readTimeout);
         } catch (ProtocolException e) {
             log.warn("Protocol Exception on this URL: " + url, e);
@@ -179,17 +222,22 @@ public class Request implements HttpConstant {
         return conn;
     }
 
+    /**
+     * The response object created after sending the request
+     */
     private Response resp;
 
     /**
-     * Not null = Skip consume input stream to text.
+     * Custom consumer for handling the input stream directly.
+     * If not null, bypass the default behavior of converting the response to text.
      */
     private Consumer<InputStream> inputStreamConsumer;
 
     /**
-     * 发送请求，返回响应信息
+     * Sends the HTTP request and returns the response.
+     * Handles connection, reading the response, error processing, and logging.
      *
-     * @return 返回类型
+     * @return the Response object containing the server's response
      */
     public Response connect() {
         Response resp = new Response();
@@ -206,18 +254,19 @@ public class Request implements HttpConstant {
             resp.setHttpCode(responseCode);
 
 
-            if (responseCode >= 400) {// 如果返回的结果是 400 以上，那么就说明出问题了
+            if (responseCode >= 400) {// If response code is 400+ it indicates an error
                 /*
                  An error stream if any, null if there have been no errors, the connection is not connected or the server sent no useful data.
-                 在连接建立后服务器端并没有发数据，Stream是空的，只有在进行了 getHeaderFields() 操作后才会激活服务器进行数据发送，实验一下
+                 After connection is established, the server may not have sent data yet - stream is empty.
+                 The data transmission is activated after getHeaderFields() is called. Let's test this.
                  https://blog.csdn.net/xia4820723/article/details/47804797
                  */
                 conn.getExpiration();
                 resp.setOk(false);
-                in = conn.getErrorStream(); // 错误通常为文本
+                in = conn.getErrorStream(); // Errors are typically text
             } else {
                 resp.setOk(true);
-                in = conn.getInputStream();// 发起请求，接收响应
+                in = conn.getInputStream();// Send request and receive response
             }
 
             if (in != null) {
@@ -252,8 +301,23 @@ public class Request implements HttpConstant {
         return resp;
     }
 
+    /**
+     * Maximum length of a response text to print in logs
+     */
     private static final int MAX_LENGTH_TO_PRINT = 500;
 
+    /**
+     * Prints detailed log information about an HTTP request and response.
+     * Formats the log with request/response details, timing information, and status.
+     *
+     * @param isOk       whether the request was successful
+     * @param httpMethod the HTTP method used
+     * @param url        the URL requested
+     * @param data       the request data sent
+     * @param httpCode   the HTTP status code received
+     * @param returnText the response text (truncated if too long)
+     * @param startTime  the timestamp when the request started
+     */
     public static void printLog(boolean isOk, String httpMethod, String url, String data, Integer httpCode, String returnText, Long startTime) {
         if (returnText == null)
             returnText = "(ZERO byte returns OR controller by other process.)";
@@ -276,13 +340,20 @@ public class Request implements HttpConstant {
         log.info(sb);
     }
 
+    /**
+     * Initializes and writes data to the connection output stream.
+     * Configures the connection to allow input and output, then write the request data
+     * if any is available.
+     *
+     * @throws RuntimeException if there's error writing data to the connection
+     */
     public void initData() {
-        conn.setDoOutput(true); // 允许写入输出流
-        conn.setDoInput(true); // 允许读取输入流
+        conn.setDoOutput(true); // Allow writing to output stream
+        conn.setDoInput(true); // Allow reading from input stream
 
         if (data != null && data.length > 0) {
             try (OutputStream out = conn.getOutputStream()) {
-                out.write(data); // 通过输出流写入字节数据
+                out.write(data); // Write byte data through output stream
                 out.flush();
             } catch (IOException e) {
                 log.warn("Write data to connection failed!", e);

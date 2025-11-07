@@ -44,9 +44,9 @@ public class TestCryptography {
     @Test
     void testPBE() {
         byte[] salt = Cryptography.initSalt();
-        byte[] encData = Cryptography.PBE_encode(word, key, salt);
+        byte[] encData = Cryptography.PBE_encode(word, key, salt, 100);
 
-        assertEquals(word, Cryptography.PBE_decode(encData, key, salt));
+        assertEquals(word, Cryptography.PBE_decode(encData, key, salt, 100));
     }
 
     @Test

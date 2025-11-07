@@ -47,7 +47,7 @@ class TestPost {
 
         // note that data is Json, it is not a valid Json because it is missing the quotes around the first key 'b'
         // However, in Raw Body post, it's ok, only if the server can accept it
-        post = new Post("https://httpbin.org/post", "{a:1,\"b\":\"2\"}", HttpConstant.CONTENT_TYPE_JSON, conn -> {
+        post = new Post("https://httpbin.org/post", "{\"a\":1,\"b\":\"2\"}", HttpConstant.CONTENT_TYPE_JSON, conn -> {
         });
         assertTrue(post.getResp().responseAsJson().containsKey("form"));
 

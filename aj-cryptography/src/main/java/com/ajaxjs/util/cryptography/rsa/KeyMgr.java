@@ -5,6 +5,7 @@ import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.StringBytes;
 import com.ajaxjs.util.cryptography.Constant;
 import com.ajaxjs.util.cryptography.Cryptography;
+import com.ajaxjs.util.io.DataWriter;
 import com.ajaxjs.util.io.FileHelper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.UncheckedIOException;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -48,15 +49,18 @@ public class KeyMgr implements Constant {
      * @return Key pair object
      */
     public KeyPair generateKeyPair() {
-        try {
-            KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithmName);
-            generator.initialize(keySize);
-            keyPair = generator.generateKeyPair();
+        if (keySize == 1024 || keySize == 2048 || keySize == 4096)
+            try {
+                KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithmName);
+                generator.initialize(keySize);
+                keyPair = generator.generateKeyPair();
 
-            return keyPair;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
-        }
+                return keyPair;
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            }
+        else
+            throw new IllegalArgumentException("Invalid key size: " + keySize);
     }
 
     /**
@@ -269,22 +273,32 @@ public class KeyMgr implements Constant {
      * 该方法首先将输入流中的字节读取到 ByteArrayOutputStream 中，然后将其转换为字符串形式的私钥，
      * 最后调用另一方法 loadPrivateKey(String) 来解析并返回私钥对象
      *
-     * @param inputStream 包含私钥信息的输入流
+     * @param in 包含私钥信息的输入流
      * @return 解析后的 PrivateKey 对象
      * @throws IllegalArgumentException 如果输入流中的数据无法被正确读取或解析为私钥，则抛出此异常
      */
-    public static PrivateKey loadPrivateKey(InputStream inputStream) {
-        ByteArrayOutputStream os = new ByteArrayOutputStream(2048);
-        byte[] buffer = new byte[1024];
+    public static PrivateKey loadPrivateKey(InputStream in) {
+        return loadPrivateKey(in, CommonConstant.UTF8);
+    }
+
+    /**
+     * 从输入流中加载私钥
+     * 该方法首先将输入流中的字节读取到 ByteArrayOutputStream 中，然后将其转换为字符串形式的私钥，
+     * 最后调用另一方法 loadPrivateKey(String) 来解析并返回私钥对象
+     *
+     * @param in      包含私钥信息的输入流
+     * @param charset 字符集编码
+     * @return 解析后的 PrivateKey 对象
+     * @throws IllegalArgumentException 如果输入流中的数据无法被正确读取或解析为私钥，则抛出此异常
+     */
+    public static PrivateKey loadPrivateKey(InputStream in, String charset) {
         String privateKey;
 
-        try {
-            for (int length; (length = inputStream.read(buffer)) != -1; )
-                os.write(buffer, 0, length);
-
-            privateKey = os.toString(StandardCharsets.UTF_8.toString());
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream(2048);) {
+            new DataWriter(out).write(in);
+            privateKey = out.toString(charset);
         } catch (IOException e) {
-            throw new IllegalArgumentException("无效的密钥", e);
+            throw new UncheckedIOException("无效的密钥", e);
         }
 
         return restorePrivateKey(privateKey);

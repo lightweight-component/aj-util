@@ -1,6 +1,5 @@
 package com.ajaxjs.util.cryptography;
 
-
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.StringBytes;
 
@@ -42,7 +41,7 @@ public class CertificateUtils {
      * @throws UncheckedIOException 如果证书读取过程中发生 IO 错误，则抛出运行时异常
      */
     public static X509Certificate getCert(InputStream in) {
-        try {
+        try (InputStream input = in) {
             X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(in);
             cert.checkValidity();
 
@@ -53,12 +52,8 @@ public class CertificateUtils {
             throw new RuntimeException("Certificate is not yet valid", e); // 证书尚未生效
         } catch (CertificateException e) {
             throw new RuntimeException("Certificate validity failed.", e);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

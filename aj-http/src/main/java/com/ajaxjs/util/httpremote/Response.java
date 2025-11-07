@@ -11,64 +11,69 @@ import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents an HTTP response received after sending a request.
+ * This class stores all response-related information including status codes,
+ * response text, headers, and provides utility methods for parsing the response in different formats.
+ */
 @Data
 @Slf4j
 public class Response {
     /**
-     * 连接对象
+     * The underlying HTTP connection object
      */
     private HttpURLConnection connection;
 
     /**
-     * 请求地址
+     * The requested URL that generated this response
      */
     private String url;
 
     /**
-     * 请求方法
+     * The HTTP method used for this request
      */
     private String httpMethod;
 
     /**
-     * 请求参数
+     * The parameters sent with the request
      */
     private Map<String, Object> params;
 
     /**
-     * 是否成功（http 200 即表示成功，4xx/500x 表示不成功）
+     * Whether the request was successful (HTTP 200-299 status code)
      */
     private boolean isOk;
 
     /**
-     * 程序异常，比 HTTP 请求靠前，例如非法网址，或者 dns 不存在的 UnknownHostException
+     * Any exception that occurred during the request (null if successful)
      */
     private Exception ex;
 
     /**
-     * HTTP 状态码
+     * The HTTP status code returned by the server
      */
     private Integer httpCode;
 
     /**
-     * 响应消息字符串
+     * The response message content as a string
      */
     private String responseText;
 
     /**
-     * 结果的流
+     * The input stream containing the raw response data
      */
     private InputStream in;
 
     /**
-     * 开始请求时间
+     * Timestamp when the request was initiated
      */
     private Long startTime;
 
-
     /**
-     * Get the response as JSON List
+     * Parses the response as a JSON array of maps.
      *
-     * @return JSON List
+     * @return a list of maps representing the JSON array, or null if response is empty
+     * @throws IllegalStateException if the response content type is not JSON
      */
     public List<Map<String, Object>> responseAsJsonList() {
         checkIsJsonReturn();
@@ -77,9 +82,10 @@ public class Response {
     }
 
     /**
-     * Get the response as JSON
+     * Parses the response as a JSON object.
      *
-     * @return JSON
+     * @return a map representing the JSON object, or null if response is empty
+     * @throws IllegalStateException if the response content type is not JSON
      */
     public Map<String, Object> responseAsJson() {
         checkIsJsonReturn();
@@ -87,6 +93,12 @@ public class Response {
         return ObjectHelper.hasText(responseText) ? JsonUtil.json2map(responseText) : null;
     }
 
+    /**
+     * Checks if the response content type is JSON.
+     * Throws an exception if the content type is not JSON.
+     *
+     * @throws IllegalStateException if the content type is not JSON
+     */
     private void checkIsJsonReturn() {
         Map<String, List<String>> headers = connection.getHeaderFields();
         List<String> types = headers.get(HttpConstant.CONTENT_TYPE);
@@ -102,10 +114,11 @@ public class Response {
     }
 
     /**
-     * Get the response as Java Bean
+     * Converts the JSON response to a Java Bean of the specified class.
      *
-     * @param clz The Java Bean class
-     * @return Java Bean
+     * @param <T> the type of the Java Bean
+     * @param clz the class of the Java Bean to create
+     * @return the Java Bean instance populated with response data, or null if response was not successful
      */
     public <T> T responseAsBean(Class<T> clz) {
         if (!isOk)
@@ -116,22 +129,31 @@ public class Response {
         return map == null ? null : JsonUtil.map2pojo(map, clz);
     }
 
+    /**
+     * Parses the response as XML and converts it to a Map.
+     *
+     * @return a map representation of the XML content, or null if response is empty
+     */
     public Map<String, String> responseAsXML() {
         return ObjectHelper.hasText(responseText) ? MapTool.xmlToMap(responseText) : null;
     }
 
     /**
-     * 返回 JSON 时候的 Map 的 key
+     * Key name for error message in JSON response objects
      */
     public final static String ERR_MSG = "errMsg";
+
+    /**
+     * Key name for status code in JSON response objects
+     */
     public final static String STATUS = "status";
 
     /**
-     * Check the result of remote request that if it's ok.
-     * ONLY for AJ-Spring Response Structure.
+     * Checks if the remote request was successful based on AJ-Spring response structure.
+     * A response is considered successful if it contains a "status" key with value "1".
      *
-     * @param result Request result
-     * @return if it's ok
+     * @param result the response result map to check
+     * @return true if the request was successful, according to the response structure
      */
     public static boolean isOk(Map<String, Object> result) {
         return result != null && result.containsKey(STATUS) && "1".equals(result.get(STATUS).toString());

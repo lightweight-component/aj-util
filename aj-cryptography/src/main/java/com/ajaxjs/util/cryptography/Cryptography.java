@@ -2,6 +2,7 @@ package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.BytesHelper;
+import com.ajaxjs.util.RandomTools;
 import com.ajaxjs.util.StringBytes;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +11,8 @@ import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
-import java.util.Random;
 
 /**
  * AES/DES/3DES/PBE 对称加密/解密
@@ -76,7 +73,7 @@ public class Cryptography {
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-            throw new RuntimeException("加密原串的长度不能超过214字节", e);
+            throw new IllegalArgumentException("The input string can't over size of 214 bytes", e);
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid Key.", e);
         } catch (InvalidAlgorithmParameterException e) {
@@ -170,24 +167,24 @@ public class Cryptography {
      */
     public static byte[] initSalt() {
         byte[] salt = new byte[8];
-        new Random().nextBytes(salt);
+        RandomTools.RANDOM.nextBytes(salt);
 
         return salt;
     }
 
-    public static byte[] PBE_encode(String data, String key, byte[] salt) {
+    public static byte[] PBE_encode(String data, String key, byte[] salt, int iterationCount) {
         Cryptography cryptography = new Cryptography(Constant.PBE, Cipher.ENCRYPT_MODE);
         cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE, new PBEKeySpec(key.toCharArray())));
-        cryptography.setSpec(new PBEParameterSpec(salt, 100));
+        cryptography.setSpec(new PBEParameterSpec(salt, iterationCount));// 100
         cryptography.setDataStr(data);
 
         return cryptography.doCipher();
     }
 
-    public static String PBE_decode(byte[] data, String key, byte[] salt) {
+    public static String PBE_decode(byte[] data, String key, byte[] salt, int iterationCount) {
         Cryptography cryptography = new Cryptography(Constant.PBE, Cipher.DECRYPT_MODE);
         cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE, new PBEKeySpec(key.toCharArray())));
-        cryptography.setSpec(new PBEParameterSpec(salt, 100));
+        cryptography.setSpec(new PBEParameterSpec(salt, iterationCount));
         cryptography.setData(data);
 
         return cryptography.doCipherAsStr();

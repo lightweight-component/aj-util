@@ -8,48 +8,79 @@ import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Send HEAD request
- * HTTP HEAD doesn't have a response body, just cares about the response header.
- * Obtains the response headers from HttpURLConnection.
+ * HTTP HEAD request implementation.
+ * This class provides functionality for sending HTTP HEAD requests,
+ * which are identical to GET requests but only return headers in the response
+ * without the response body. This is useful for retrieving metadata about a resource
+ * without transferring the actual resource itself.
+ * It extends the base Request class and provides utility methods for header inspection.
  */
 public class Head extends Request {
+    /**
+     * Creates a new Head request with the specified HTTP method and URL.
+     *
+     * @param method The HTTP method to use
+     * @param url    The URL to send the request to
+     */
     public Head(HttpMethod method, String url) {
         super(method, url);
     }
 
+    /**
+     * Creates a new Head request with the specified URL.
+     * Configures the input stream consumer to do nothing since HEAD requests
+     * don't have response bodies, which saves resources.
+     *
+     * @param url The URL to send the HEAD request to
+     */
     public Head(String url) {
         super(HttpMethod.HEAD, url);
-        this.setInputStreamConsumer(in -> {// 不需要转化响应文本，节省资源
+        // Don't convert response text for HEAD requests to save resources
+        this.setInputStreamConsumer(in -> {
         });
     }
 
+    /**
+     * Initializes the HTTP connection with special configuration for HEAD requests.
+     * Disables automatic redirect following to allow manual handling of redirects.
+     *
+     * @param initConnection Consumer that configures the HTTP connection
+     * @return The initialized HttpURLConnection object
+     */
     @Override
     public HttpURLConnection init(Consumer<HttpURLConnection> initConnection) {
         Consumer<HttpURLConnection> beforeInit = conn -> {
-            conn.setInstanceFollowRedirects(false); // 必须设置 false，否则会自动 redirect 到 Location 的地址
+            // Must set too false to prevent automatic redirect to Location URL
+            conn.setInstanceFollowRedirects(false);
         };
 
         return super.init(initConnection == null ? beforeInit : beforeInit.andThen(initConnection));
     }
 
+    /**
+     * Initializes the HTTP connection with default settings for HEAD requests.
+     *
+     * @return The initialized HttpURLConnection object
+     */
     @Override
     public HttpURLConnection init() {
         return init(null);
     }
 
     /**
-     * Obtain the redirect address of HTTP 302.
+     * Obtains the redirect address from a 302 HTTP response.
      *
-     * @return The redirect address.
+     * @return The redirect URL from the Location header
      */
     public String get302redirect() {
         return getConn().getHeaderField("Location");
     }
 
     /**
-     * Detect whether the resource exists
+     * Checks if the requested resource does not exist (404 Not Found).
      *
-     * @return true = 404
+     * @return true if the HTTP status code is 404, indicating the resource was not found
+     * @throws RuntimeException if an I/O error occurs while retrieving the response code
      */
     public boolean is404() {
         try {
@@ -60,28 +91,28 @@ public class Head extends Request {
     }
 
     /**
-     * Obtain the file size.
+     * Retrieves the file size from the Content-Length header.
      *
-     * @return The file size.
+     * @return The content length in bytes, or -1 if the content length is not known
      */
     public long getFileSize() {
         return getConn().getContentLength();
     }
 
     /**
-     * 判断是否为 GZip 格式的输入流并返回相应的输入流
-     * 有些网站强制加入 Content-Encoding:gzip，而不管之前的是否有 GZip 的请求
+     * Checks if the input stream is GZIP-encoded and returns the appropriate input stream.
+     * Some websites automatically add Content-Encoding:gzip regardless of the request headers.
      *
-     * @param conn HTTP 连接
-     * @param in   输入流
-     * @return 如果Content-Encoding为gzip，则返回  GZIPInputStream 输入流，否则返回 null
+     * @param conn HTTP connection object
+     * @param in   Original input stream
+     * @return GZIPInputStream if Content-Encoding is gzip, otherwise null
      */
     public static InputStream gzip(HttpURLConnection conn, InputStream in) {
         if ("gzip".equals(conn.getHeaderField("Content-Encoding"))) {
             try {
                 return new GZIPInputStream(in);
             } catch (IOException e) {
-//                log.warn("ERROR>>", e);
+                // Logging commented out in original code
             }
         }
 
@@ -89,11 +120,12 @@ public class Head extends Request {
     }
 
     /**
-     * Transform Map to HTTP HEAD.
-     * This is a higher-order function
+     * Converts a Map of key-value pairs into an HTTP header configuration function.
+     * This is a higher-order function that returns a Consumer which can be used
+     * to set multiple request properties at once.
      *
-     * @param map The head data
-     * @return A lambda function
+     * @param map The map containing header names and values
+     * @return A lambda function that applies the header values to an HttpURLConnection
      */
     public static Consumer<HttpURLConnection> map2header(Map<String, ?> map) {
         return conn -> {
