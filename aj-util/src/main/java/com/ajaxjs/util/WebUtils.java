@@ -1,6 +1,5 @@
 package com.ajaxjs.util;
 
-
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.Cookie;

@@ -10,32 +10,56 @@ import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
 /**
- * Base64 encode/decode
+ * Utility class for Base64 encoding and decoding operations.
+ * Provides convenient methods for converting between byte arrays and strings
+ * using standard Base64 encoding, with support for URL-safe variant and
+ * customizable padding options.
  */
 @Data
 @Accessors(chain = true)
 public class Base64Utils {
+    /**
+     * The input byte array to encode or decode.
+     */
     private byte[] input;
 
+    /**
+     * Creates a new Base64Utils instance with byte array input.
+     *
+     * @param input the byte array to encode or decode
+     */
     public Base64Utils(byte[] input) {
         this.input = input;
     }
 
+    /**
+     * Creates a new Base64Utils instance with string input using UTF-8 charset.
+     *
+     * @param input the string to encode or decode
+     */
     public Base64Utils(String input) {
         this(input, StandardCharsets.UTF_8);
     }
 
+    /**
+     * Creates a new Base64Utils instance with string input using specified charset.
+     *
+     * @param input   the string to encode or decode
+     * @param charset the charset to use for string to byte conversion
+     */
     public Base64Utils(String input, Charset charset) {
         this.input = input.getBytes(charset);
     }
 
     /**
-     * Only for encoding.
+     * Flag indicating whether to omit padding characters in the encoded output.
+     * This option is only relevant for encoding operations.
      */
     private boolean withoutPadding = false;
 
     /**
-     * 是否 URL safe
+     * Flag indicating whether to use URL-safe Base64 encoding and decoding.
+     * URL-safe variant uses '-' instead of '+' and '_' instead of '/'.
      */
     private boolean urlSafe = false;
 
@@ -58,10 +82,9 @@ public class Base64Utils {
         return encoder.encode(input);
     }
 
-
     /**
      * Decode the input in BASE64 then returns the string.
-     * Charset ISO_8859_1 is enough for BASE64 result.
+     * Charset ISO_8859_1 is enough for a BASE64 result.
      *
      * @return The result in string.
      */
@@ -103,7 +126,12 @@ public class Base64Utils {
     }
 
     /**
-     * 格式化 Base64 字符串，每 64 个字符换行
+     * Formats a Base64 string by inserting a newline character every 64 characters.
+     * This follows the traditional Base64 format standard which recommends line breaks
+     * after every 64 characters for readability.
+     *
+     * @param base64 the Base64 string to format
+     * @return the formatted Base64 string with line breaks
      */
     public static String formatBase64String(String base64) {
         StringBuilder sb = new StringBuilder();

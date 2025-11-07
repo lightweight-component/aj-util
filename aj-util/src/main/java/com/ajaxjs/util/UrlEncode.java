@@ -12,6 +12,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * URL Encoding and Decoding Utility Class
+ * <p>
+ * This class provides methods for encoding and decoding URLs, handling Chinese characters in URLs,
+ * and parsing query strings into maps.
+ * It supports different encoding strategies and charset specifications.
+ */
 @Slf4j
 @Data
 @Accessors(chain = true)
@@ -48,7 +55,7 @@ public class UrlEncode {
     }
 
     /**
-     * Do the url encode with specified charset
+     * Encode the url with specified charset
      *
      * @return The string being URL encoded
      */
@@ -62,7 +69,7 @@ public class UrlEncode {
     }
 
     /**
-     * Do the url encode, best for GET request
+     * Encode the url, best for GET request
      * <p>
      * <a href="https://www.cnblogs.com/del88/p/6496825.html">...</a>
      *
@@ -85,9 +92,9 @@ public class UrlEncode {
     }
 
     /**
-     * Do the url decode
+     * Decode the url.
      *
-     * @return The string being URL decode
+     * @return The string being URL decode.
      */
     public String decode() {
         try {

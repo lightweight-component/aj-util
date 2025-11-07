@@ -11,7 +11,12 @@ import java.util.Enumeration;
 import java.util.zip.*;
 
 /**
- * ZIP 压缩/解压缩
+ * ZIP Compression and Decompression Utility Class
+ * <p>
+ * This class provides comprehensive functionality for working with ZIP files, including
+ * extracting ZIP contents, creating ZIP archives from files and directories,
+ * handling Chinese filenames, and utility methods for ZIP file operations.
+ * It supports both STORED (uncompressed) and DEFLATED (compressed) modes.
  */
 @Slf4j
 public class ZipHelper {
@@ -89,11 +94,14 @@ public class ZipHelper {
     }
 
     /**
-     * 一维文件数组压缩为 ZIP
+     * Compress an array of files into a ZIP archive
+     * <p>
+     * Takes an array of File objects and compresses them into a single ZIP file.
+     * All files are added to the root of the ZIP archive without preserving directory structure.
      *
-     * @param fileContent 文件数组
-     * @param saveZip     目标 zip 文件路径
-     * @param useStore    true: 仅存储(STORED)，false: 标准压缩(DEFLATED)
+     * @param fileContent Array of files to be compressed into the ZIP archive
+     * @param saveZip     Path where the resulting ZIP file will be saved
+     * @param useStore    Compression mode: true for STORED (no compression), false for DEFLATED (standard compression)
      */
     public static void zipFile(File[] fileContent, String saveZip, boolean useStore) {
         try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(saveZip)));
@@ -179,6 +187,8 @@ public class ZipHelper {
     /**
      * 获取 CRC32
      * CheckedInputStream 一种输入流，它还维护正在读取的数据的校验和。然后可以使用校验和来验证输入数据的完整性。
+     *
+     * @param file 必须是文件，不是目录
      */
     private static long getFileCRCCode(File file) {
         CRC32 crc32 = new CRC32();

@@ -36,9 +36,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Map 转换工具
- *
- * @author sp42 frank@ajaxjs.com
+ * Map Conversion Utility - Provides comprehensive map manipulation operations including
+ * joining maps to strings, converting between different map formats, XML serialization,
+ * and deep copying functionality.
  */
 @Slf4j
 public class MapTool {
@@ -140,8 +140,8 @@ public class MapTool {
             throw new UnsupportedOperationException("两个数组 size 不一样");
 
         Map<String, Object> map = new HashMap<>();
-
         int i = 0;
+
         for (String column : columns)
             map.put(column, fn.apply(values[i++]));
 

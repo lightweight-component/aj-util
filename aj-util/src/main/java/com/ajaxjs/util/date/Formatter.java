@@ -51,10 +51,23 @@ public class Formatter {
     }
 
     /* Some common formats */
+
+    /**
+     * Format the date value by specified format.
+     * The result's like "yyyy-MM-dd"
+     */
     public static final String DATE = "yyyy-MM-dd";
 
+    /**
+     * Format the date value by specified format.
+     * The result's like "yyyy-MM-dd HH:mm:ss"
+     */
     public static final String DATETIME = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * Format the date value by specified format.
+     * The result's like "yyyy-MM-dd HH:mm"
+     */
     public static final String DATETIME_SHORT = "yyyy-MM-dd HH:mm";
 
     /**

@@ -104,5 +104,4 @@ public class StringBytes {
     public static String showPlatformDefaultCharset() {
         return Charset.defaultCharset().toString();
     }
-
 }

@@ -7,20 +7,29 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * 方法相关的反射
+ * Reflection Utility for Methods - Provides comprehensive method reflection operations
+ * including method discovery, invocation, static method handling, and interface default methods.
+ *
+ * <p>This class supports method lookup with various strategies including
+ * - Direct method lookup by name and parameters
+ * - Upcasting search for parameter type matching
+ * - Interface method resolution
+ * - Static method invocation
+ * - Default method handling for interfaces
  */
 @Slf4j
 public class Methods {
     /**
-     * 根据类和方法名获取该类声明的方法
+     * Get a declared method from a class by method name.
+     * This method searches only for methods declared directly in the specified class.
      *
-     * @param clz        要查找方法的类
-     * @param methodName 方法名
-     * @return 声明的方法，如果方法不存在则返回 null
+     * @param clz        The class to search for methods
+     * @param methodName The name of the method to find
+     * @return The declared method, or null if method doesn't exist
+     * @throws RuntimeException if the method is not found
      */
     public static Method getDeclaredMethod(Class<?> clz, String methodName) {
         try {
@@ -32,12 +41,13 @@ public class Methods {
     }
 
     /**
-     * 根据类、方法的字符串和参数列表获取方法对象，支持重载的方法
+     * Get a method object from a class or instance with parameter types, supporting overloaded methods.
+     * This method searches for public methods including inherited ones.
      *
-     * @param obj    可以是实例对象，也可以是类对象
-     * @param method 方法名称
-     * @param args   明确的参数类型列表
-     * @return 匹配的方法对象，null 表示找不到
+     * @param obj    Can be either a class object or an instance object
+     * @param method The method name to search for
+     * @param args   Explicit parameter type list for method overloading resolution
+     * @return The matching method object, or null if not found
      */
     public static Method getMethod(Object obj, String method, Class<?>... args) {
         Class<?> cls = obj instanceof Class ? (Class<?>) obj : obj.getClass();
@@ -56,13 +66,14 @@ public class Methods {
     }
 
     /**
-     * 根据方法名称和参数列表查找方法。注意参数对象类型由于没有向上转型会造成不匹配而找不到方法，这时应使用上一个方法或
-     * getMethodByUpCastingSearch()
+     * Find a method by name and argument objects, converting arguments to their types.
+     * Note: This method doesn't support upcasting, so parameter types must match exactly.
+     * For upcasting support, use getMethodByUpCastingSearch().
      *
-     * @param obj    实例对象
-     * @param method 方法名称
-     * @param args   对应重载方法的参数列表
-     * @return 匹配的方法对象，null 表示找不到
+     * @param obj    Instance object to search methods from
+     * @param method Method name to find
+     * @param args   Argument objects used to determine parameter types
+     * @return Matching method object, or null if not found
      */
     public static Method getMethod(Object obj, String method, Object... args) {
         if (!ObjectHelper.isEmpty(args))
@@ -72,12 +83,14 @@ public class Methods {
     }
 
     /**
-     * 根据方法名称和参数列表查找方法。自动循环参数类型向上转型。仅支持一个参数。
+     * Find a method by name with automatic parameter type upcasting support.
+     * This method searches through the class hierarchy for compatible parameter types.
+     * Supports only single parameter methods currently.
      *
-     * @param clz    实例对象的类对象
-     * @param method 方法名称
-     * @param arg    参数对象，可能是子类或接口，所以要在这里找到对应的方法，当前只支持单个参数；且不能传 Class，必须为对象
-     * @return 匹配的方法对象，null 表示找不到
+     * @param clz    Class object to search methods from
+     * @param method Method name to find
+     * @param arg    Argument object (must be an object, not a Class) for parameter type matching
+     * @return Matching method object, or null if not found
      */
     public static Method getMethodByUpCastingSearch(Class<?> clz, String method, Object arg) {
         for (Class<?> clazz = arg.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
@@ -109,8 +122,7 @@ public class Methods {
             if (interfaces.length != 0) { // 有接口！
                 try {
                     for (Type _interface : interfaces) {
-                        // 旧方法，现在不行，不知道之前怎么可以的 methodObj = hostClazz.getDeclaredMethod(method,
-                        // (Class<?>)_interface);
+                        // 旧方法，现在不行，不知道之前怎么可以的 methodObj = hostClazz.getDeclaredMethod(method, (Class<?>)_interface);
                         // methodObj = cls.getMethod(methodName,
                         // ReflectNewInstance.getClassByInterface(_interface));
                         methodObj = getSuperClassDeclaredMethod(clz, method, Clazz.getClassByInterface(_interface));
@@ -168,6 +180,12 @@ public class Methods {
         return null;
     }
 
+    /**
+     * 获取所有父类
+     *
+     * @param clz 类对象
+     * @return 所有父类
+     */
     public static Class<?>[] getAllSuperClazz(Class<?> clz) {
         List<Class<?>> clzList = new ArrayList<>();
 

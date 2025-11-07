@@ -8,9 +8,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 正则表达式工具类
+ * Regular Expression Utility Class
+ * <p>
+ * Provides convenient methods for working with regular expressions in Java,
+ * including matching, finding patterns, and caching compiled patterns for improved performance.
  */
 public class RegExpUtils {
+    /**
+     * Checks if the given string matches the specified pattern
+     *
+     * @param pattern the compiled regular expression pattern
+     * @param str     the string to test
+     * @return true if the string matches the pattern, false otherwise
+     */
     public static boolean isMatch(Pattern pattern, String str) {
         return pattern.matcher(str).find();
     }
@@ -71,16 +81,45 @@ public class RegExpUtils {
         return list.toArray(new String[0]);
     }
 
+    /**
+     * Cache for compiled regular expression patterns
+     * <p>
+     * Improves performance by avoiding repeated compilation of the same regular expressions
+     */
     private final static Map<String, Pattern> CACHE = new ConcurrentHashMap<>();
 
+    /**
+     * Gets a compiled pattern for the given regular expression, using cache if available
+     *
+     * @param regexp the regular expression string
+     * @return the compiled Pattern object
+     */
     public static Pattern getPattern(String regexp) {
         return CACHE.computeIfAbsent(regexp, Pattern::compile);
     }
 
+    /**
+     * Determines if the entire string matches the given regular expression
+     * <p>
+     * Uses matches() which requires the pattern to match the entire input string
+     *
+     * @param regexp the regular expression to compile and use for matching
+     * @param str    the string to test
+     * @return true if the entire string matches the pattern, false otherwise
+     */
     public static boolean match(String regexp, String str) {
         return getPattern(regexp).matcher(str).matches();
     }
 
+    /**
+     * Tests if the string contains a match of the given regular expression
+     * <p>
+     * Uses find() which searches for any occurrence of the pattern in the string
+     *
+     * @param pattern the regular expression to compile and use for testing
+     * @param str     the string to test
+     * @return true if the string contains a match of the pattern, false otherwise
+     */
     public static boolean test(String pattern, String str) {
         return getPattern(pattern).matcher(str).find();
     }

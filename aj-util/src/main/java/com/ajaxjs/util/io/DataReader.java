@@ -44,6 +44,11 @@ public class DataReader {
      * 两端速度不匹配，需要协调 理想环境下，速度一样快，那就没必要搞流，直接一坨给弄过去就可以了
      * 但这是理想情况下，实际要考虑内存占用。
      * 于是采用流的概念来优化。流的意思很形象，就是一点一滴的，不是一坨坨大批量的
+     * Explanation of streaming concept:
+     * In ideal situations where both end process data at the same speed, streaming wouldn't be necessary,
+     * and we could transfer data in bulk.
+     * However, in real-world scenarios, we need to consider memory usage.
+     * Streaming optimizes this by processing data incrementally rather than all at once.
      */
 
     /**
@@ -127,5 +132,4 @@ public class DataReader {
             throw new UncheckedIOException("Error occurred when reading the data from stream as bytes.", e);
         }
     }
-
 }

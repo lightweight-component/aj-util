@@ -6,13 +6,20 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * Type Reflection Utility - Provides methods for working with Java reflection types,
+ * particularly for extracting generic type information from classes, methods, and types.
+ *
+ * <p>This class simplifies common operations for accessing and manipulating generic types
+ * in Java's reflection system, making it easier to work with parameterized types at runtime.
+ */
 @Slf4j
 public class Types {
     /**
-     * 获取泛型类型数组。
+     * Gets the array of generic type arguments.
      *
-     * @param type 要获取泛型类型数组的 Type 对象
-     * @return 返回泛型类型数组。如果指定的 Type 对象不是 ParameterizedType 类型，则返回 null。
+     * @param type The Type object to extract generic type arguments from
+     * @return The array of generic type arguments, or null if the specified Type is not a ParameterizedType
      */
     public static Type[] getActualType(Type type) {
         if (type instanceof ParameterizedType)
@@ -24,21 +31,22 @@ public class Types {
     }
 
     /**
-     * 获取方法返回值里面的泛型，如 List&lt;String&gt; 里面的 String，而不是 T。
+     * Gets the generic type arguments from a method's return type, such as String in List&lt;String&gt;
+     * rather than the generic parameter T.
      *
-     * @param method 方法
-     * @return 实际类型，可能多个
+     * @param method The method to analyze
+     * @return The actual type arguments, which may be multiple
      */
     public static Type[] getGenericReturnType(Method method) {
         return getActualType(method.getGenericReturnType());
     }
 
     /**
-     * 获取方法返回值里面的泛型，如 List&lt;String&gt; 里面的 String，而不是 T。
-     * 这个方法获取第一个类型，并转换为 Class
+     * Gets the generic type arguments from a method's return type, such as String in List&lt;String&gt;
+     * rather than the generic parameter T. This method retrieves only the first type and converts it to a Class.
      *
-     * @param method 方法
-     * @return 第一个实际类型
+     * @param method The method to analyze
+     * @return The first actual type as a Class
      */
     public static Class<?> getGenericFirstReturnType(Method method) {
         Type[] type = getGenericReturnType(method);
@@ -47,21 +55,21 @@ public class Types {
     }
 
     /**
-     * 获取如 List&lt;String&gt; 里面的泛型类型
+     * Gets the generic type arguments from a class definition, such as String in List&lt;String&gt;
      *
-     * @param clz 类必须先指向一个实例，参见
+     * @param clz The class to analyze. The class must point to an instance, see
      *            <a href="https://stackoverflow.com/questions/8436055/how-to-get-class-of-generic-type-when-there-is-no-parameter-of-it">...</a>
-     * @return 实际类型
+     * @return The actual type arguments
      */
     public static Type[] getActualType(Class<?> clz) {
         return getActualType(clz.getGenericSuperclass());
     }
 
     /**
-     * 获取实际类
+     * Gets the actual class from a generic type definition
      *
-     * @param clz 类型
-     * @return 实际类
+     * @param clz The class to analyze
+     * @return The actual class
      */
     public static Class<?> getActualClass(Class<?> clz) {
         Type[] actualType = getActualType(clz);
@@ -70,10 +78,10 @@ public class Types {
     }
 
     /**
-     * Type 接口转换为 Class
+     * Converts a Type interface to a Class
      *
-     * @param type Type 接口
-     * @return Class
+     * @param type The Type interface to convert
+     * @return The corresponding Class, or null if the type is not a Class
      */
     public static Class<?> type2class(Type type) {
         return type instanceof Class ? (Class<?>) type : null;

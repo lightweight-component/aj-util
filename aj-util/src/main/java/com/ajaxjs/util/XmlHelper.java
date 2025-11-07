@@ -34,17 +34,21 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * XML 处理工具类
+ * XML Processing Utility Class - Provides methods for parsing, manipulating, and querying XML documents.
  * <a href="https://blog.csdn.net/axman/article/details/420910">...</a>
+ *
+ * <p>This class simplifies common XML operations including XPath queries, DOM parsing,
+ * node text extraction, attribute retrieval, and conversion between XML formats.
+ * It provides a clean API for working with XML in Java applications.
  *
  * @author sp42 frank@ajaxjs.com
  */
 @Slf4j
 public class XmlHelper {
     /**
-     * XML 转换需要的对象
+     * Initializes and returns a DocumentBuilder for XML parsing operations.
      *
-     * @return XML 转换需要的对象
+     * @return A DocumentBuilder instance for XML transformation and parsing
      */
     public static DocumentBuilder initBuilder() {
         try {
@@ -56,11 +60,11 @@ public class XmlHelper {
     }
 
     /**
-     * 获取某个节点
+     * Retrieves a specific node using XPath query.
      *
-     * @param xml   XML 文件路径
-     * @param xpath XPath 路径
-     * @param fn    处理节点的函数，传入 Node 类型节点
+     * @param xml   The XML file path
+     * @param xpath The XPath expression to locate nodes
+     * @param fn    The consumer function to process each matched Node
      */
     public static void xPath(String xml, String xpath, Consumer<Node> fn) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -79,10 +83,10 @@ public class XmlHelper {
     }
 
     /**
-     * 解析 XML
+     * Parses XML content and processes nodes with a consumer function.
      *
-     * @param xml XML 内容
-     * @param fn  处理节点的函数，传入 Element 类型节点和 NodeList 类型子元素列表
+     * @param xml The XML content to parse
+     * @param fn  The bi-consumer function to process each Node and its NodeList of children
      */
     public static void parseXML(String xml, BiConsumer<Node, NodeList> fn) {
         try (InputStream in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
@@ -100,10 +104,10 @@ public class XmlHelper {
     }
 
     /**
-     * 根据给定的 XML 字符串获取根元素
+     * Gets the root element from the given XML string.
      *
-     * @param xml XML字符串
-     * @return 根元素
+     * @param xml The XML string content
+     * @return The root Element of the XML document
      */
     public static Element getRoot(String xml) {
         try (InputStream in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
@@ -115,11 +119,11 @@ public class XmlHelper {
     }
 
     /**
-     * 将节点所有属性都转换为 map
+     * Converts all attributes of a node to a map.
      *
-     * @param xml   XML 文件路径
-     * @param xpath XPath 路径
-     * @return 节点 map
+     * @param xml   The XML file path
+     * @param xpath The XPath expression to locate the node
+     * @return A map containing attribute names as keys and attribute values as values
      */
     public static Map<String, String> nodeAsMap(String xml, String xpath) {
         Map<String, String> map = new HashMap<>();
@@ -142,10 +146,10 @@ public class XmlHelper {
     }
 
     /**
-     * 获取节点内的文本内容，包括标签
+     * Gets the text content within a node, including nested tags.
      *
-     * @param node 节点对象
-     * @return innerBody
+     * @param node The node object to extract text from
+     * @return The inner text content
      */
     public static String getNodeText(Node node) {
         DOMImplementationLS lsImpl = (DOMImplementationLS) node.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
@@ -162,11 +166,11 @@ public class XmlHelper {
     }
 
     /**
-     * 获取节点属性值
+     * Gets a specific attribute value from a node.
      *
-     * @param node     节点对象
-     * @param attrName 属性名称
-     * @return 属性值，如果空返回 null
+     * @param node     The node object
+     * @param attrName The name of the attribute to retrieve
+     * @return The attribute value, or null if empty
      */
     public static String getNodeAttribute(Node node, String attrName) {
         NamedNodeMap attrs = node.getAttributes();
@@ -182,11 +186,11 @@ public class XmlHelper {
     }
 
     /**
-     * 获取指定的 attribute 值
+     * Gets a specific attribute value from a node.
      *
-     * @param el       节点
-     * @param attrName 属性名
-     * @return 属性值
+     * @param el       The node object
+     * @param attrName The name of the attribute to retrieve
+     * @return The attribute value
      */
     public static String getAttribute(Node el, String attrName) {
         NamedNodeMap attributes = el.getAttributes();

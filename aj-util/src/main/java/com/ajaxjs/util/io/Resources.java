@@ -9,6 +9,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
+/**
+ * Resource Loading Utility Class
+ * <p>
+ * This class provides methods for accessing resources from classpath, reading resource files,
+ * loading properties, and working with resources inside JAR files. It simplifies common resource
+ * access patterns in Java applications.
+ */
 @Slf4j
 public class Resources {
     /**
@@ -64,11 +71,15 @@ public class Resources {
     }
 
     /**
-     * url.getPath() 返回 /D:/project/a，需要转换一下
+     * Converts a URL to a file system path
+     * <p>
+     * Handles the conversion of URL paths (which may start with "/") to standard file system paths.
+     * It Also provides optional URL decoding to handle encoded characters in the path.
+     * For example, url.getPath() returns `/D:/project/a`
      *
-     * @param url      URL 对象
-     * @param isDecode 是否解码
-     * @return 转换路径
+     * @param url      The URL object to convert
+     * @param isDecode Whether to decode URL-encoded characters in the path
+     * @return The converted file system path, or null if the URL is null
      */
     private static String url2path(URL url, boolean isDecode) {
         if (url == null)
@@ -169,7 +180,8 @@ public class Resources {
     /**
      * 从类路径加载 properties 文件
      *
-     * @param filename properties 文件
+     * @param filename properties 文件路径
+     * @return properties 文件
      */
     public static Properties getProperties(String filename) {
         Properties prop = new Properties();

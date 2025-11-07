@@ -11,15 +11,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 类相关的反射
+ * Class Reflection Utility - Provides comprehensive methods for class reflection operations
+ * including class loading, instantiation, constructor management, and type conversion.
+ *
+ * <p>This class simplifies common reflection tasks in Java, making it easier to work with
+ * dynamic class loading, object creation, and interface implementations at runtime.
  */
 @Slf4j
 public class Clazz {
     /**
-     * 根据类名字符串获取类对象
+     * Gets a class object by its fully qualified name.
      *
-     * @param clzName 类全称。如果是内部类请注意用法
-     * @return 类对象
+     * @param clzName The fully qualified class name. Note special handling for inner classes.
+     * @return The corresponding class object
      */
     public static Class<?> getClassByName(String clzName) {
         try {
@@ -31,12 +35,12 @@ public class Clazz {
     }
 
     /**
-     * 根据类名字符串获取类对象，可强类型转换类型
+     * Gets a class object by its fully qualified name with strong type casting.
      *
-     * @param clzName 类全称
-     * @param clz     要转换的目标类型
-     * @param <T>     类引用
-     * @return 类对象
+     * @param clzName The fully qualified class name
+     * @param clz     The target type to cast to
+     * @param <T>     The class reference type
+     * @return The corresponding class object cast to the specified type
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getClassByName(String clzName, Class<T> clz) {
@@ -46,12 +50,12 @@ public class Clazz {
     }
 
     /**
-     * 把参数转换为类对象列表
-     * 这个 Java 函数将一个可变参数列表转换为一个类对象列表。它接受一个可变参数 args，返回一个 Class 类型的数组 clazz，
-     * 数组长度与参数列表的长度相同，并且每个元素的类型与对应参数的类型相同。
+     * Converts an array of objects to an array of their corresponding class objects.
+     * This function transforms a variable argument list into a Class array where
+     * each element represents the class type of the corresponding input argument.
      *
-     * @param args 可变参数列表
-     * @return 类对象列表
+     * @param args The variable argument list
+     * @return The array of corresponding class objects
      */
     public static Class<?>[] args2class(Object[] args) {
         Class<?>[] clazz = new Class[args.length];
@@ -63,10 +67,10 @@ public class Clazz {
     }
 
     /**
-     * 已知接口类型，获取它的 class
+     * Gets the class object for a given interface type.
      *
-     * @param type 接口类型
-     * @return 接口的类对象
+     * @param type The interface type
+     * @return The class object for the interface
      */
     public static Class<?> getClassByInterface(Type type) {
         String className = type.toString();
@@ -76,10 +80,10 @@ public class Clazz {
     }
 
     /**
-     * 获取某个类的所有接口
+     * Gets all interfaces implemented by a given class.
      *
-     * @param clz 目标类
-     * @return 类的所有接口
+     * @param clz The target class
+     * @return All interfaces implemented by the class
      */
     public static Class<?>[] getDeclaredInterface(Class<?> clz) {
         List<Class<?>> fields = new ArrayList<>();
@@ -93,15 +97,16 @@ public class Clazz {
     }
 
     /**
-     * 根据类创建实例，可传入构造器参数。
-     * 该函数根据给定的类对象和构造器参数创建一个实例。如果参数中的类是接口，将返回 null。
-     * 如果参数中的构造器参数为空或长度为0，则使用类的默认无参构造函数创建实例。
-     * 如果构造器参数不为空，将使用反射获取与参数类型匹配的构造函数，并使用构造函数创建实例。
+     * Creates an instance of a class with optional constructor arguments.
+     * This function creates an instance based on the given class object and constructor arguments.
+     * If the class is an interface, an IllegalArgumentException is thrown.
+     * If no arguments are provided, the default no-args constructor is used.
+     * If arguments are provided, the constructor matching those argument types is used.
      *
-     * @param clz  类对象
-     * @param args 获取指定参数类型的构造函数，这里传入我们想调用的构造函数所需的参数。可以不传。
-     * @param <T>  类引用
-     * @return 对象实例
+     * @param clz  The class object
+     * @param args Optional arguments for the constructor
+     * @param <T>  The class reference type
+     * @return The created object instance
      */
     public static <T> T newInstance(Class<T> clz, Object... args) {
         if (clz.isInterface())
@@ -122,13 +127,14 @@ public class Clazz {
     }
 
     /**
-     * 根据构造器创建实例
-     * 该函数根据给定的构造器和参数列表创建指定类的实例。它使用反射调用构造函数来实例化对象，并在实例化失败时返回 null。
+     * Creates an instance using a specific constructor and arguments.
+     * This function creates an instance of the class using the provided constructor
+     * and argument list through reflection.
      *
-     * @param constructor 类构造器
-     * @param args        获取指定参数类型的构造函数，这里传入我们想调用的构造函数所需的参数。可以不传。
-     * @param <T>         类引用
-     * @return 对象实例
+     * @param constructor The class constructor to use
+     * @param args        Optional arguments for the constructor
+     * @param <T>         The class reference type
+     * @return The created object instance
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
         try {
@@ -141,13 +147,12 @@ public class Clazz {
     }
 
     /**
-     * 传入的类是否有带参数的构造器
-     * 该函数通过传入的类对象，判断该类是否有带参数的构造函数，若有则返回true，否则返回false。函数首先获取类的所有构造函数，
-     * 然后遍历构造函数，判断构造函数的参数列表是否非空，若存在非空的参数列表则返回true。
-     * 如果遍历完所有的构造函数都没有找到带参数的构造函数，则返回false。
+     * Checks if a class has any constructors with parameters.
+     * This function determines whether the provided class has any constructors that
+     * accept parameters by examining all available constructors.
      *
-     * @param clz 类对象
-     * @return true 表示为有带参数
+     * @param clz The class object to check
+     * @return true if the class has at least one constructor with parameters
      */
     public static boolean hasArgsCon(Class<?> clz) {
         Constructor<?>[] constructors = clz.getConstructors();
@@ -161,11 +166,12 @@ public class Clazz {
     }
 
     /**
-     * 根据类全称创建实例，并转换到其接口的类型
+     * Creates an instance from a fully qualified class name and casts it to an interface type.
      *
-     * @param className 实际类的类型
-     * @param clazz     接口类型
-     * @return 对象实例
+     * @param className The fully qualified class name
+     * @param clazz     The interface type to cast to
+     * @param <T>       The class reference type
+     * @return The created object instance cast to the interface type
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(String className, Class<T> clazz) {
@@ -175,12 +181,13 @@ public class Clazz {
     }
 
     /**
-     * 根据类全称创建实例
-     * 该函数根据给定的类全称和参数，使用反射获取类对象并创建相应类型的对象实例。返回对象实例，类型为 Object。
+     * Creates an instance from a fully qualified class name with optional constructor arguments.
+     * This function uses reflection to load the class and create an instance based on the
+     * provided class name and constructor arguments.
      *
-     * @param clzName 类全称
-     * @param args    根据构造函数，创建指定类型的对象,传入的参数个数需要与上面传入的参数类型个数一致
-     * @return 对象实例，因为传入的类全称是字符串，无法创建泛型 T，所以统一返回 Object
+     * @param clzName The fully qualified class name
+     * @param args    Arguments for the constructor
+     * @return The created object instance as an Object type
      */
     public static Object newInstance(String clzName, Object... args) {
         Class<?> clazz = getClassByName(clzName);
@@ -189,15 +196,15 @@ public class Clazz {
     }
 
     /**
-     * 获取类的构造器，可以支持重载的构造器（不同参数的构造器）
-     * 这个函数用于获取类的构造函数。它接受两个参数，一个是类对象，一个是可选的参数类型数组。
-     * 如果传入了参数类型数组，则获取与该数组匹配的构造函数；如果没有传入参数类型数组，则获取空参数列表的构造函数。
-     * 如果找不到合适的构造函数，会记录日志并返回 null。
+     * Gets a constructor for a class, supporting overloaded constructors with different parameters.
+     * This function retrieves a constructor based on the provided class object and optional parameter types.
+     * If parameter types are provided, the matching constructor is returned;
+     * otherwise, the no-args constructor is returned.
      *
-     * @param clz    类对象
-     * @param argClz 指定构造函数的参数类型，这里传入我们想调用的构造函数所需的参数类型
-     * @param <T>    类引用
-     * @return 类的构造器
+     * @param clz    The class object
+     * @param argClz The parameter types for the desired constructor
+     * @param <T>    The class reference type
+     * @return The requested constructor
      */
     public static <T> Constructor<T> getConstructor(Class<T> clz, Class<?>... argClz) {
         try {

@@ -7,13 +7,18 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Random Tools.
+ * Random Tools - Utility class for generating various types of random values including
+ * numbers, strings, and UUIDs with version 7 support.
+ *
+ * <p>This class provides thread-safe random generation using ThreadLocalRandom
+ * for performance and SecureRandom for cryptographic-strength randomness.
  */
 public class RandomTools {
     /**
      * Generate a six-digit random integer.
+     * This method is a convenience wrapper for generateNumber(6).
      *
-     * @return Random integer
+     * @return Random integer in the range 100 thousand to 999999
      */
     public static int generateNumber() {
         return generateNumber(6);
@@ -21,9 +26,11 @@ public class RandomTools {
 
     /**
      * Generate a specified-digit random integer.
+     * For example, if numDigits is 3, the result will be between 100 and 999.
      *
-     * @param numDigits The number of digits
-     * @return Random integer
+     * @param numDigits The number of digits (must be greater than 0)
+     * @return Random integer with exactly the specified number of digits
+     * @throws IllegalArgumentException if numDigits is less than or equal to 0
      */
     public static int generateNumber(int numDigits) {
         if (numDigits <= 0)
@@ -36,25 +43,28 @@ public class RandomTools {
     }
 
     /**
-     * noinspection SpellCheckingInspection
+     * Character pool containing alphanumeric characters for random string generation.
+     * This includes both uppercase and lowercase letters and digits 0-9.
      */
     @SuppressWarnings("SpellCheckingInspection")
     private static final String STR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     /**
-     * Generate a six-length random string.
+     * Generate a six-character random string containing alphanumeric characters.
+     * This method is a convenience wrapper for generateRandomString(6).
      *
-     * @return Random string
+     * @return Random string of six characters from the alphanumeric character pool
      */
     public static String generateRandomString() {
         return generateRandomString(6);
     }
 
     /**
-     * Generate a specified-length random string.
+     * Generate a random string of specified length containing alphanumeric characters.
+     * The string consists of uppercase letters, lowercase letters, and digits.
      *
-     * @param length The length of the string to be generated
-     * @return Random string
+     * @param length The length of the string to be generated (must be greater than 0)
+     * @return Random string containing characters from the alphanumeric character pool
      */
     public static String generateRandomString(int length) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -68,12 +78,17 @@ public class RandomTools {
         return sb.toString();
     }
 
-    private static final SecureRandom RANDOM = new SecureRandom();
+    /**
+     * SecureRandom instance for cryptographic-strength random number generation.
+     * Used for UUID generation where security is important.
+     */
+    public static final SecureRandom RANDOM = new SecureRandom();
 
     /**
-     * Generate a UUIDv7.
+     * Generate a UUID version 7 (UUIDv7) using timestamp-based generation.
+     * UUIDv7 provides time-ordered UUIDs with better locality than random UUIDs.
      *
-     * @return UUIDv7
+     * @return UUIDv7 instance
      */
     public static UUID uuid() {
         byte[] value = randomBytes();
@@ -85,7 +100,7 @@ public class RandomTools {
     }
 
     /**
-     * Generate a UUIDv7 string without hyphen.
+     * Generate a UUIDv7 string without a hyphen.
      *
      * @return UUIDv7 string without hyphen.
      */

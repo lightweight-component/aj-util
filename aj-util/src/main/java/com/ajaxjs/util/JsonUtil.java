@@ -20,6 +20,9 @@ import java.util.TimeZone;
  */
 @Slf4j
 public class JsonUtil {
+    /**
+     * Cached ObjectMapper instance for JSON conversion. It can be used repeatedly without the need to re-initialize it.
+     */
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
@@ -128,8 +131,9 @@ public class JsonUtil {
     }
 
     /**
-     * json string converts to map
-     * This method is used to convert a JSON string into a Map object with String as the key type and Object as the value type.
+     * JSON string converts to map
+     * This method are used
+     * to convert a JSON string into a Map object with String as the key type and Object as the value type.
      * It simplifies the process of accessing and manipulating JSON data by converting it into a Map format.
      *
      * @param jsonStr The JSON string to be converted.
@@ -165,6 +169,12 @@ public class JsonUtil {
         return fromJson(jsonArrayStr, type);
     }
 
+    /**
+     * JSON array string converts to list with Java Bean
+     *
+     * @param jsonArrayStr The JSON array string, representing a list of objects
+     * @return Returns a list of Map objects converted from the JSON array string
+     */
     public static List<Map<String, Object>> json2mapList(String jsonArrayStr) {
         try {
             return OBJECT_MAPPER.readValue(jsonArrayStr, new TypeReference<List<Map<String, Object>>>() {
@@ -176,8 +186,9 @@ public class JsonUtil {
     }
 
     /**
-     * Converts an object to another object
-     * This method uses ObjectMapper from the Jackson library to convert an object of any type to another type specified by clazz
+     * Converts an object to another object.
+     * This method uses ObjectMapper from the Jackson library
+     * to convert an object of any type to another type specified by class
      * It is primarily used for data type conversion when the specific type is known at runtime
      *
      * @param obj   The object to be converted, can be of any type
@@ -190,9 +201,10 @@ public class JsonUtil {
     }
 
     /**
-     * Java Bean converts to map
-     * This method is used to convert a Java Bean object into a Map object, facilitating operations such as lookup, addition, and deletion
-     * It does not require detailed explanation for simple delegation to another overload method
+     * Java Bean converts to map.
+     * This method is used to convert a Java Bean object into a Map object,
+     * facilitating operations such as lookup, addition, and deletion.
+     * It does not require a detailed explanation for simple delegation to another overload method.
      *
      * @param obj The Java Bean object to be converted
      * @return Returns a Map object containing all the properties of the Java Bean
@@ -215,6 +227,14 @@ public class JsonUtil {
         return OBJECT_MAPPER.convertValue(obj, type);
     }
 
+    /**
+     * Map converts to Java Bean
+     *
+     * @param map   The map to be converted
+     * @param clazz The class type of the Java Bean
+     * @param <T>   The generic type of the Java Bean
+     * @return Returns a Java Bean object converted from the map
+     */
     public static <T> T map2pojo(Map<String, Object> map, Class<T> clazz) {
         return OBJECT_MAPPER.convertValue(map, clazz);
     }

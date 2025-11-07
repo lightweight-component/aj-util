@@ -13,15 +13,6 @@ class TestStrUtil {
     final static String str = "中国";
 
     @Test
-    @SuppressWarnings("SpellCheckingInspection")
-    void testConcatUrl() {
-        assertEquals("sdsd/aaa/bbb/sds", concatUrl("sdsd/aaa/", "/bbb/sds"));
-        assertEquals("sdsd/aaa/bbb/sds", concatUrl("sdsd/aaa", "bbb/sds"));
-        assertEquals("sdsd/aaa/bbb/sds", concatUrl("sdsd/aaa/", "bbb/sds"));
-        assertEquals("sdsd/aaa/bbb/sds", concatUrl("sdsd/aaa", "/bbb/sds"));
-    }
-
-    @Test
     void testLeftPad() {
         assertEquals("@@@@@12345", leftPad("12345", 10, "@"));
     }

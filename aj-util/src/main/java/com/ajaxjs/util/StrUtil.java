@@ -27,35 +27,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 字符串工具类
- *
- * @author sp42 frank@ajaxjs.com
+ * String Utility Class - Provides various string manipulation and formatting operations
+ * including URL concatenation, template substitution, joining arrays, and string padding.
  */
 public class StrUtil {
-
-    /**
-     * 连接两个 url 目录字符串，如果没有 / 则加上；如果有则去掉一个
-     *
-     * @param a 第一个 url 目录字符串
-     * @param b 第二个 url 目录字符串
-     * @return 拼接后的 url 目录字符串
-     */
-    public static String concatUrl(String a, String b) {
-        char last = a.charAt(a.length() - 1), first = b.charAt(0);
-
-        if (last == '/' && first == '/') // both has
-            return a + b.substring(1);
-        else if (last != '/' && first != '/') // haven't at all
-            return a + "/" + b;
-        else if (last == '/' && first != '/')// a 有 /，b 没有 /
-            return a + b;
-        else
-            return a + b;
-    }
-
     @SuppressWarnings("SpellCheckingInspection")
     private static final String DELIM_STR = "{}";
 
+    /**
+     * 格式化字符串模板，将模板中的占位符替换为对应的参数值
+     *
+     * @param tpl  字符串模板，其中包含占位符
+     * @param args 可变参数列表，用于替换模板中的占位符
+     * @return 格式化后的字符串，占位符被对应的参数值替换
+     */
     public static String print(String tpl, Object... args) {
         StringBuilder buffer = new StringBuilder(tpl.length() + 64);
         int beginIndex = 0, endIndex, count = 0;

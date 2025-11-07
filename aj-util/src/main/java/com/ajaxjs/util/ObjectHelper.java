@@ -19,17 +19,47 @@ package com.ajaxjs.util;
 import java.util.*;
 
 /**
- * A helper for Java Object.
+ * Object Utility Helper - Provides common utility methods for working with Java objects,
+ * collections, maps, and various data structures.
+ *
+ * <p>This class includes helper methods for:
+ * - Text content checking and validation
+ * - Collection and array emptiness checks
+ * - Convenient factory methods for creating collections (maps, lists, sets)
+ * - Capacity calculation utilities
+ * <p>
+ * It simplifies common object manipulation patterns across Java applications.
  */
 public class ObjectHelper {
+    /**
+     * Checks if the given String has actual text content.
+     * More specifically, returns {@code true} if the string is not {@code null},
+     * its length is greater than 0, and it contains at least one non-whitespace character.
+     *
+     * @param str the String to check
+     * @return {@code true} if the String has non-whitespace text content
+     */
     public static boolean hasText(String str) {
         return str != null && !str.isEmpty() && containsText(str);
     }
 
+    /**
+     * Checks if the given String is empty or contains only whitespace.
+     * This is the opposite of {@link #hasText(String)}.
+     *
+     * @param str the String to check
+     * @return {@code true} if the String is empty or contains only whitespace
+     */
     public static boolean isEmptyText(String str) {
         return !hasText(str);
     }
 
+    /**
+     * Checks if the given CharSequence contains any non-whitespace characters.
+     *
+     * @param str the CharSequence to check
+     * @return {@code true} if the CharSequence contains at least one non-whitespace character
+     */
     private static boolean containsText(CharSequence str) {
         int strLen = str.length();
 
@@ -46,6 +76,7 @@ public class ObjectHelper {
      * i.e. {@code null} or of zero length.
      *
      * @param array the array to check
+     * @return {@code true} if the array is {@code null} or of zero lengths
      */
     public static boolean isEmpty(Object[] array) {
         return (array == null || array.length == 0);
@@ -74,18 +105,18 @@ public class ObjectHelper {
     }
 
     /**
-     * Dummy Map
+     * An empty, immutable Map. Useful as a default or sentinel value when no parameters are needed.
      */
     public static final Map<String, Object> EMPTY_PARAMS_MAP = Collections.unmodifiableMap(new HashMap<>());
 
     /**
-     * 创建一个新的 HashMap
+     * Creates a new HashMap with a single key-value pair.
      *
-     * @param k1  键1
-     * @param v1  值1
-     * @param <K> k1 类型
-     * @param <V> v1 类型
-     * @return 新创建的 HashMap
+     * @param k1  the first key
+     * @param v1  the first value
+     * @param <K> the key type
+     * @param <V> the value type
+     * @return the newly created HashMap
      */
     public static <K, V> Map<K, V> mapOf(K k1, V v1) {
         Map<K, V> map = new HashMap<>();
@@ -95,15 +126,15 @@ public class ObjectHelper {
     }
 
     /**
-     * 创建一个新的 HashMap
+     * Creates a new HashMap with two key-value pairs.
      *
-     * @param k1  键1
-     * @param v1  值1
-     * @param k2  键2
-     * @param v2  值2
-     * @param <K> k1 类型
-     * @param <V> v1 类型
-     * @return 新创建的 HashMap
+     * @param k1  the first key
+     * @param v1  the first value
+     * @param k2  the second key
+     * @param v2  the second value
+     * @param <K> the key type
+     * @param <V> the value type
+     * @return the newly created HashMap
      */
     public static <K, V> Map<K, V> mapOf(K k1, V v1, K k2, V v2) {
         Map<K, V> map = new HashMap<>();
@@ -114,17 +145,17 @@ public class ObjectHelper {
     }
 
     /**
-     * 创建一个新的 HashMap
+     * Creates a new HashMap with three key-value pairs.
      *
-     * @param k1  键1
-     * @param v1  值1
-     * @param k2  键2
-     * @param v2  值2
-     * @param k3  键3
-     * @param v3  值3
-     * @param <K> k1 类型
-     * @param <V> v1 类型
-     * @return 新创建的 HashMap
+     * @param k1  the first key
+     * @param v1  the first value
+     * @param k2  the second key
+     * @param v2  the second value
+     * @param k3  the third key
+     * @param v3  the third value
+     * @param <K> the key type
+     * @param <V> the value type
+     * @return the newly created HashMap
      */
     public static <K, V> Map<K, V> mapOf(K k1, V v1, K k2, V v2, K k3, V v3) {
         Map<K, V> map = mapOf(3);
@@ -135,6 +166,9 @@ public class ObjectHelper {
         return map;
     }
 
+    /**
+     * Default load factor for hash maps, optimized for time and space efficiency.
+     */
     public static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
     /**
@@ -157,6 +191,15 @@ public class ObjectHelper {
         return initialCapacity;
     }
 
+    /**
+     * Creates a HashMap optimized for the expected number of entries.
+     * The initial capacity is calculated to minimize resizing operations.
+     *
+     * @param expectedSize the expected number of entries in the map
+     * @param <K>          the key type
+     * @param <V>          the value type
+     * @return a new HashMap with optimal initial capacity
+     */
     public static <K, V> Map<K, V> mapOf(int expectedSize) {
         return new HashMap<>(getInitialCapacity(expectedSize), DEFAULT_LOAD_FACTOR);// Create and return the HashMap with the calculated initial capacity and default load factor
     }
@@ -175,13 +218,14 @@ public class ObjectHelper {
     }
 
     /**
-     * 创建一个不可变的 Set，类似于 Java 9+ 的 Set.of()
-     * 支持可变参数，自动去重，返回不可修改的集合
+     * Creates an immutable Set containing the specified elements.
+     * Similar to Java 9+ Set.of() but available in earlier Java versions.
+     * Automatically removes duplicates and returns an unmodifiable collection.
      *
-     * @param elements 元素可变参数
-     * @param <T>      元素类型
-     * @return 不可变的 Set
-     * @throws IllegalArgumentException 如果传入 null 元素
+     * @param elements the elements to include in the set
+     * @param <T>      the element type
+     * @return an immutable Set containing the specified elements
+     * @throws IllegalArgumentException if null elements are provided
      */
     @SafeVarargs
     public static <T> Set<T> setOf(T... elements) {

@@ -37,7 +37,7 @@ public class TestFileHelper {
         System.out.println("File size: " + size + " bytes");
 
         // 复制文件或目录
-        new FileHelper(fullPath).setTarget("example_copy.txt").copTo();
+        new FileHelper(fullPath).setTarget("example_copy.txt").copyTo();
 
         // 移动文件或目录
         new FileHelper(fullPath).setTarget("moved_example.txt").moveTo();

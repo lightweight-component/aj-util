@@ -6,22 +6,41 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * The reflection utility class for creating new instances of classes.
+ */
 @Slf4j
 public class NewInstance<T> {
-    private Class<T> clz;
+    private final Class<T> clz;
 
+    private Object[] args;
+
+    /**
+     * 创建实例
+     *
+     * @param clz 要创建实例的类对象
+     */
     public NewInstance(Class<T> clz) {
         this.clz = clz;
     }
 
-    private Object[] args;
-
+    /**
+     * 创建实例
+     *
+     * @param clz  要创建实例的类对象
+     * @param args 构造函数参数列表
+     */
     public NewInstance(Class<T> clz, Object... args) {
         this(clz);
         this.args = args;
-
     }
 
+    /**
+     * 创建实例
+     * 该函数根据给定的参数列表创建指定类的实例。如果参数列表为空，则使用默认构造函数创建实例；否则，使用指定的构造函数创建实例。
+     *
+     * @return 创建的实例对象
+     */
     public T newInstance() {
         if (ObjectHelper.isEmpty(args))
             try {

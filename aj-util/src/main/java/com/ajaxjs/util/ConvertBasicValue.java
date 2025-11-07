@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * 尝试转换目标类型，注意并不是所有的类型都可以进行转换
+ * Basic Value Conversion Utility - Safely converts objects between different primitive types
+ * and wrapper classes with comprehensive type checking and fallback mechanisms.
+ *
+ * <p>Supports conversion between String, Boolean, Integer, Long, Float, Double, BigDecimal,
+ * arrays, enums, and date types with robust error handling and logging.
  */
 @Data
 @Slf4j

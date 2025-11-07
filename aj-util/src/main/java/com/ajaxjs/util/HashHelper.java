@@ -15,29 +15,54 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Utility class for cryptographic hash operations, supporting various hash algorithms
+ * (MD5, SHA-1, SHA-256) and HMAC operations.
+ * Provides methods for generating hashes from strings and byte arrays,
+ * with options for hexadecimal and Base64 output formats.
+ */
 @Slf4j
 @Data
 @Accessors(chain = true)
 public class HashHelper {
     /**
-     * The algorithm name.
+     * The name of the hash algorithm to use (e.g., "MD5", "SHA-1", "SHA-256").
      */
     private final String algorithmName;
 
     /**
-     * The input data.
+     * The input data to hash.
      */
     private byte[] input;
 
+    /**
+     * Creates a new HashHelper instance with the specified algorithm and byte array input.
+     *
+     * @param algorithmName the hash algorithm name (e.g., "MD5", "SHA-1", "SHA-256", "HmacMD5")
+     * @param input         the input data to hash
+     */
     public HashHelper(String algorithmName, byte[] input) {
         this.algorithmName = algorithmName;
         this.input = input;
     }
 
+    /**
+     * Creates a new HashHelper instance with the specified algorithm and string input.
+     * The string is converted to bytes using UTF-8 encoding.
+     *
+     * @param algorithmName the hash algorithm name
+     * @param input         the input string to hash
+     */
     public HashHelper(String algorithmName, String input) {
         this(algorithmName, new StringBytes(input).getUTF8_Bytes());
     }
 
+    /**
+     * Gets the message digest using the specified algorithm.
+     *
+     * @return the message digest as a byte array
+     * @throws RuntimeException if the specified algorithm is not available
+     */
     public byte[] getMessageDigest() {
         MessageDigest md;
 
@@ -51,22 +76,39 @@ public class HashHelper {
         return md.digest(input);
     }
 
+    /**
+     * The secret key used for HMAC operations.
+     */
     private byte[] key;
 
+    /**
+     * Sets the secret key for HMAC operations using UTF-8 encoding.
+     *
+     * @param key the secret key as a string
+     * @return this HashHelper instance for method chaining
+     */
     public HashHelper setKey(String key) {
         this.key = new StringBytes(key).getUTF8_Bytes();
         return this;
     }
 
+    /**
+     * Sets the secret key for HMAC operations by decoding a Base64 encoded string.
+     *
+     * @param key the Base64 encoded secret key
+     * @return this HashHelper instance for method chaining
+     */
     public HashHelper setKeyBase64(String key) {
         this.key = new Base64Utils(key).decode();
         return this;
     }
 
     /**
-     * 获取指定算法的 MAC 值（可设密钥）
+     * Gets the Message Authentication Code (MAC) value using the specified algorithm.
+     * If no key is set, a random key is generated.
      *
-     * @return 生成的 MAC 值
+     * @return the generated MAC value as a byte array
+     * @throws RuntimeException if the algorithm is not supported or the key is invalid
      */
     public byte[] getMac() {
         SecretKey sk;
@@ -93,113 +135,129 @@ public class HashHelper {
     }
 
     /**
-     * Do hash
+     * Performs the hash operation based on the current configuration.
+     * Uses MessageDigest if no key is set, or HMAC if a key is set.
      *
-     * @return The hash value in bytes.
+     * @return the hash value as a byte array
      */
     public byte[] hash() {
         return key == null ? getMessageDigest() : getMac();
     }
 
     /**
-     * Do hash
+     * Performs the hash operation and returns the result as a lowercase hexadecimal string.
      *
-     * @return The hash value in hex string, lowercase.
+     * @return the hash value as a lowercase hexadecimal string
      */
     public String hashAsStr() {
         return BytesHelper.bytesToHexStr(hash()).toLowerCase();
     }
 
     /**
-     * Get the result of hashed in BASE64
+     * Gets the result of the hash operation encoded in Base64 format.
      *
-     * @param isWithoutPadding 是否去掉末尾的 = 号
-     * @return The result of hashed in BASE64
+     * @param isWithoutPadding whether to omit the padding '=' characters
+     * @return the hash value as a Base64 encoded string
      */
     public String hashAsBase64(boolean isWithoutPadding) {
         return new Base64Utils(hash()).setWithoutPadding(isWithoutPadding).encodeAsString();
     }
 
     /**
-     * Get the result of hashed in BASE64
+     * Gets the result of the hash operation encoded in Base64 format with padding.
      *
-     * @return The result of hashed in BASE64
+     * @return the hash value as a Base64 encoded string with padding
      */
     public String hashAsBase64() {
         return hashAsBase64(false);
     }
 
+    /**
+     * Constant for MD5 hash algorithm.
+     */
     public static final String MD5 = "MD5";
 
+    /**
+     * Constant for SHA-1 hash algorithm.
+     */
     public static final String SHA1 = "SHA1";
 
+    /**
+     * Constant for SHA-256 hash algorithm.
+     */
     public static final String SHA256 = "SHA-256";
 
     /**
-     * Generates MD5 hash value for a string. It's equivalent to Spring's DigestUtils.md5DigestAsHex()
+     * Generates an MD5 hash value for a string.
+     * This is equivalent to Spring's DigestUtils.md5DigestAsHex() method.
      *
-     * @param str Input string
-     * @return MD5 hash value
+     * @param str the input string
+     * @return the MD5 hash value as a lowercase hexadecimal string
      */
     public static String md5(String str) {
         return new HashHelper(MD5, str).hashAsStr();
     }
 
     /**
-     * Generates SHA1 hash value for a string.
+     * Generates an SHA-1 hash value for a string.
      *
-     * @param str Input string
-     * @return SHA1 hash value
+     * @param str the input string
+     * @return the SHA-1 hash value as a lowercase hexadecimal string
      */
     public static String getSHA1(String str) {
         return new HashHelper(SHA1, str).hashAsStr();
     }
 
     /**
-     * Generates SHA256 hash value for a string.
+     * Generates an SHA-256 hash value for a string.
      *
-     * @param str Input string
-     * @return SHA256 hash value
+     * @param str the input string
+     * @return the SHA-256 hash value as a lowercase hexadecimal string
      */
     public static String getSHA256(String str) {
         return new HashHelper(SHA256, str).hashAsStr();
     }
 
     /**
-     * Generates HMAC-MD5 hash value for a string.
+     * Creates a HashHelper configured for HMAC-MD5 operations with the specified input and key.
      *
-     * @param str Input string
-     * @param key Key string
-     * @return HMAC-MD5 hash value
+     * @param str the input string
+     * @param key the secret key
+     * @return a HashHelper instance configured for HMAC-MD5 operations
      */
-    @SuppressWarnings("SpellCheckingInspection")
     public static HashHelper getHmacMD5(String str, String key) {
         return new HashHelper("HmacMD5", str).setKey(key);
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
+    /**
+     * Constant for HMAC-SHA1 message authentication code algorithm.
+     */
     public static final String HMAC_SHA1 = "HmacSHA1";
 
-    @SuppressWarnings("SpellCheckingInspection")
+    /**
+     * Constant for HMAC-SHA256 message authentication code algorithm.
+     */
     public static final String HMAC_SHA256 = "HmacSHA256";
 
     /**
-     * Generates HMAC-SHA256 hash value for a string.
+     * Generates an HMAC-SHA256 hash value for a string and returns it as a Base64 encoded string.
      *
-     * @param str Input string
-     * @param key Key string
-     * @return HMAC-SHA256 hash value
+     * @param str              the input string
+     * @param key              the secret key
+     * @param isWithoutPadding whether to omit padding in the Base64 output
+     * @return the HMAC-SHA256 hash value as a Base64 encoded string
      */
-    @SuppressWarnings("SpellCheckingInspection")
     public static String getHmacSHA256(String str, String key, boolean isWithoutPadding) {
         return new HashHelper(HMAC_SHA256, str).setKey(key).hashAsBase64(isWithoutPadding);
     }
 
     /**
-     * Calculate the MD5 of a file.
+     * Calculates the MD5 hash of a file from an input stream.
+     * The file is processed in chunks to handle large files efficiently.
      *
-     * @param in The file stream.
-     * @return The MD5 result in lowercase.
+     * @param in the input stream containing the file data
+     * @return the MD5 hash value as a lowercase hexadecimal string
+     * @throws RuntimeException if MD5 algorithm is not available
      */
     public static String calcFileMD5(InputStream in) {
         try {
@@ -214,10 +272,10 @@ public class HashHelper {
     }
 
     /**
-     * Calculate the MD5 of a file.
+     * Calculates the MD5 hash of a byte array.
      *
-     * @param bytes The file bytes.
-     * @return The MD5 result in lowercase.
+     * @param bytes the byte array containing the file data
+     * @return the MD5 hash value as a lowercase hexadecimal string
      */
     public static String calcFileMD5(byte[] bytes) {
         return calcFileMD5(new ByteArrayInputStream(bytes));

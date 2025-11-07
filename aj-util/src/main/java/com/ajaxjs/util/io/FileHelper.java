@@ -17,28 +17,53 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Utility class for file operations, providing methods for reading, writing, copying,
+ * moving, deleting, and manipulating files and directories in Java.
+ * This class uses Java NIO Path and Files API for efficient file operations.
+ * All methods throw UncheckedIOException for IO errors, wrapping the checked IOException.
+ */
 @Data
 @Slf4j
 @Accessors(chain = true)
 public class FileHelper {
+    /**
+     * The path to the file or directory.
+     */
     private final Path path;
 
+    /**
+     * Creates a new FileHelper instance with the specified Path object.
+     *
+     * @param path the path to the file or directory
+     */
     public FileHelper(Path path) {
         this.path = path;
     }
 
+    /**
+     * Creates a new FileHelper instance with the specified File object.
+     *
+     * @param path the file or directory
+     */
     public FileHelper(File path) {
         this.path = path.toPath();
     }
 
+    /**
+     * Creates a new FileHelper instance with the specified path string.
+     *
+     * @param path the path string to the file or directory
+     */
     public FileHelper(String path) {
         this.path = Paths.get(path);
     }
 
     /**
-     * Read the file text content
+     * Reads the text content of a file.
      *
-     * @return Text content
+     * @return the text content of the file
+     * @throws UncheckedIOException if an IO error occurs during reading
      */
     public String getFileContent() {
         try {
@@ -58,8 +83,8 @@ public class FileHelper {
 
             return sb.toString();
         } catch (IOException e) {
-            log.error("读取文件 " + path + "时发生错误", e);
-            throw new UncheckedIOException("读取文件 " + path + "时发生错误", e);
+            log.error("Error reading file " + path, e);
+            throw new UncheckedIOException("Error reading file " + path, e);
         }
     }
 
@@ -72,29 +97,33 @@ public class FileHelper {
         try {
             return Files.readAllBytes(path);
         } catch (IOException e) {
-            log.error("读取文件 " + path + "(byes) 时发生错误", e);
-            throw new UncheckedIOException("读取文件 " + path + "(byes) 时发生错误", e);
+            log.error("Error reading file " + path + "(bytes)", e);
+            throw new UncheckedIOException("Error reading file " + path + "(bytes)", e);
         }
     }
 
     /**
-     * 将字符串内容写入文件。
+     * Write string content to a file.
      *
-     * @param content 要写入的内容
-     * @throws UncheckedIOException 如果写入文件时发生错误
+     * @param content The content to write to the file
+     * @throws UncheckedIOException if an error occurs during file writing
      */
     public void writeFileContent(String content) {
         try {
             Files.write(path, content.getBytes());
         } catch (IOException e) {
-            log.error("将字符串内容写入文件", e);
-            throw new UncheckedIOException("将字符串内容写入文件", e);
+            log.error("Error writing string content to file", e);
+            throw new UncheckedIOException("Error writing string content to file", e);
         }
     }
 
     /**
-     * Delete a folder or a file.
-     * If it's a folder, delete all files and sub-folders under it.
+     * Deletes a file or directory.
+     * <p>
+     * For directories, recursively delete all files and subdirectories using reverse order traversal.
+     * For files, delete the file directly.
+     *
+     * @throws UncheckedIOException if an IO error occurs during deletion
      */
     public void delete() {
         try {
@@ -113,9 +142,11 @@ public class FileHelper {
     }
 
     /**
-     * List the contents of a directory.
+     * Lists the contents of a directory.
      *
-     * @return The contents of the directory.
+     * @return the list of file/directory names in the directory
+     * @throws IllegalArgumentException if the path is not a directory
+     * @throws UncheckedIOException     if an IO error occurs during listing
      */
     public List<String> listDirectoryContents() {
         if (!Files.isDirectory(path))
@@ -130,8 +161,9 @@ public class FileHelper {
     }
 
     /**
-     * Create a directory.
-     * It can create multiple levels of directories.
+     * Creates a directory or multiple levels of directories.
+     *
+     * @throws UncheckedIOException if an IO error occurs during directory creation
      */
     public void createDirectory() {
         try {
@@ -143,9 +175,10 @@ public class FileHelper {
     }
 
     /**
-     * Get the size of a file or directory.
+     * Gets the size of a file or directory in bytes.
      *
-     * @return Size in bytes.
+     * @return the size in bytes
+     * @throws UncheckedIOException if an IO error occurs during size calculation
      */
     public long getFileSize() {
         try {
@@ -159,24 +192,45 @@ public class FileHelper {
     }
 
     /**
-     * The target location.
+     * The target location for copy or move operations.
      */
     private Path target;
 
+    /**
+     * Sets the target file location for copy or move operations.
+     *
+     * @param target the target file
+     * @return this FileHelper instance for method chaining
+     */
     public FileHelper setTarget(File target) {
         this.target = target.toPath();
         return this;
     }
 
+    /**
+     * Sets the target path location for copy or move operations.
+     *
+     * @param target the target path string
+     * @return this FileHelper instance for method chaining
+     */
     public FileHelper setTarget(String target) {
         this.target = Paths.get(target);
         return this;
     }
 
     /**
-     * Copy a file or directory to another location.
+     * Copies a file or directory to another location.
+     * <p>
+     * For directories, recursively copy all files and subdirectories while preserving the relative structure.
+     * Use StandardCopyOption.REPLACE_EXISTING to overwrite
+     * files with the same name at the destination.
+     * <p>
+     * Note: The target path must be set before calling this method using setTarget().
+     *
+     * @throws IllegalStateException if the target path is not set
+     * @throws UncheckedIOException  if an IO error occurs during copying
      */
-    public void copTo() {
+    public void copyTo() {
         try {
             if (Files.isDirectory(path)) {
                 try (Stream<Path> walk = Files.walk(path)) {
@@ -186,8 +240,8 @@ public class FileHelper {
                         try {
                             Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
                         } catch (IOException e) {
-                            log.error("Copy failed, on: " + path, e);
-                            throw new UncheckedIOException("Copy failed, on: " + path, e);
+                            log.error("Copy failed for: " + sourceFilePath, e);
+                            throw new UncheckedIOException("Copy failed for: " + sourceFilePath, e);
                         }
                     });
                 }
@@ -200,20 +254,37 @@ public class FileHelper {
     }
 
     /**
-     * Move a file or directory to another location.
+     * Moves a file or directory to another location.
+     * <p>
+     * This operation renames or moves a file to a target file or directory.
+     * If the target is a directory, the source is moved into that directory.
+     * Use StandardCopyOption.REPLACE_EXISTING to overwrite
+     * files with the same name at the destination.
+     * <p>
+     * Note: The target path must be set before calling this method using setTarget().
+     *
+     * @throws IllegalStateException if the target path is not set
+     * @throws UncheckedIOException  if an IO error occurs during moving
      */
     public void moveTo() {
         try {
+            if (target == null)
+                throw new IllegalStateException("Target path not set");
+
             Files.move(path, target, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            log.error("Move failed, on: " + path, e);
-            throw new UncheckedIOException("Move failed, on: " + path, e);
+            log.error("Move file failed: " + path, e);
+            throw new UncheckedIOException("Move file failed: " + path, e);
         }
     }
 
     /**
-     * 对文件按照指定大小进行分片，在文件所在目录生成分片后的文件块儿
-     * 使用零拷贝对文件高效的切片和合并
+     * Splits a file into chunks of the specified size in the same directory.
+     * Uses zero-copy for efficient file slicing and merging operations.
+     *
+     * @param chunkSize the size of each chunk in bytes
+     * @throws IllegalArgumentException if the file doesn't exist, is a directory, or chunkSize is less than 1
+     * @throws UncheckedIOException     if an IO error occurs during chunking
      */
     public void chunkFile(long chunkSize) {
         if (Files.notExists(path) || Files.isDirectory(path))
@@ -252,9 +323,11 @@ public class FileHelper {
     }
 
     /**
-     * 把多个文件合并为一个文件
+     * Merges multiple chunk files into a single file.
      *
-     * @param chunkFiles 分片文件
+     * @param chunkFiles the chunk files to merge
+     * @throws IllegalArgumentException if chunkFiles is null or empty
+     * @throws UncheckedIOException     if an IO error occurs during merging
      */
     public void mergeFile(Path... chunkFiles) {
         if (chunkFiles == null || chunkFiles.length == 0)
@@ -268,7 +341,7 @@ public class FileHelper {
             }
         } catch (IOException e) {
             log.error("Merge file failed", e);
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("Error merging files", e);
         }
     }
 }

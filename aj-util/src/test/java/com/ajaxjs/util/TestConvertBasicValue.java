@@ -10,10 +10,10 @@ import java.util.List;
 import static com.ajaxjs.util.ConvertBasicValue.*;
 import static org.junit.jupiter.api.Assertions.*;
 
- class TestConvertBasicValue {
+class TestConvertBasicValue {
     @Test
     @SuppressWarnings("SpellCheckingInspection")
-     void testToBoolean() {
+    void testToBoolean() {
         assertTrue(toBoolean(true));
         assertTrue(toBoolean("true"));
         assertTrue(toBoolean("True"));
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void testObject2Int() {
+    void testObject2Int() {
         // 测试传入 null 值，返回 0
         assertEquals(0, object2int(null));
 
@@ -50,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void testObject2Long() {
+    void testObject2Long() {
         // 测试传入 null 值，返回 0
         assertEquals(0L, object2long(null));
 
@@ -83,7 +83,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void testObject2Double() {
+    void testObject2Double() {
         // 测试传入 null 值，返回 0.0
         assertEquals(0.0, object2double(null), 0.0001);
 
@@ -116,7 +116,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void testObject2Float() {
+    void testObject2Float() {
         // 测试传入 null 值，返回 0.0
         assertEquals(0.0f, object2float(null), 0.0001);
 
@@ -149,7 +149,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void testToArray() {
+    void testToArray() {
         ArrayList<String> input = new ArrayList<>();
         input.add("foo");
         input.add("bar");
@@ -184,7 +184,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void testBasicConvert() {
+    void testBasicConvert() {
         assertTrue((boolean) ConvertBasicValue.basicConvert("true", boolean.class));
         assertEquals(1000, (int) ConvertBasicValue.basicConvert("1000", int.class));
         assertEquals(1L, (long) ConvertBasicValue.basicConvert("1", long.class));
@@ -216,7 +216,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void testToJavaValue() {
+    void testToJavaValue() {
         String input = "null";
         Object expected = null;
 

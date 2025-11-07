@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
- class TestRegexpUtils {
+class TestRegexpUtils {
     @SuppressWarnings("SpellCheckingInspection")
     static String json = "{\"magic\":254,\"len\":28,\"sysid\":3,\"compid\":1,\"payload\":{\"pitchspeed\":-2.2399216E-4,"
             + "\"roll\":2.8490436,\"pitch\":0.9943852,\"rollspeed\":-5.5177254E-5,\"yawspeed\":0.0013602356,"
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 //    }
 
     @Test
-     void testRegMatch() {
+    void testRegMatch() {
         assertEquals(RegExpUtils.regMatch("^a", "abc"), "a");// 匹配结果，只有匹配第一个
         assertEquals(RegExpUtils.regMatch("^a", "abc", 0), "a");// 可指定分组
         assertEquals(RegExpUtils.regMatch("^a(b)", "abc", 1), "b");
