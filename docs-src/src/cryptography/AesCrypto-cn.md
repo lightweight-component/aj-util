@@ -1,122 +1,69 @@
 ---
-title: AesCrypto
+title: AES/DES 加密解密
 subTitle: 2025-02-23 by Frank Cheung
 description: AesCrypto
 date: 2025-02-23
 tags:
-  - AesCrypto
+  - AES/DES 加密解密
 layout: layouts/aj-util-cn.njk
 ---
 
-# AesCrypto 教程
+# AES/DES 加密解密
 
-本教程提供了 `AesCrypto` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`AesCrypto` 提供了一系列使用 AES、DES、3DES 和 PBE 等算法进行对称加密和解密的实用方法。
-
-## 简介
-
-`AesCrypto` 类提供了使用各种对称加密算法对数据进行加密和解密的方法。它实现了单例模式，并提供了一套完整的安全数据加密工具。
-
-## 方法
-
-### 1. `getInstance()`
-
-返回 `AesCrypto` 类的单例实例。
-
-* **返回值：** `AesCrypto` 的单例实例。
-
-**示例：**
-
+## AES
+对称加密多基于`javax.crypto`包进行封装，封装在类`com.ajaxjs.util.cryptography`中。先看看 AES 的，
 ```java
-AesCrypto crypto = AesCrypto.getInstance();
+final String key = "abc";
+final String word = "123";
+
+@Test
+void testAES() {
+    String encWord = Cryptography.AES_encode(word, key);
+    assertEquals(word, Cryptography.AES_decode(encWord, key));
+}
 ```
-
-### 2. `getSecretKey(String algorithmName, SecureRandom secure)`
-
-使用提供的安全随机生成器为指定算法生成密钥，并将其作为 Base64 编码的字符串返回。
-
-* **参数：**
-  * `algorithmName`：加密算法的名称。
-  * `secure`：安全随机生成器。
-* **返回值：** 密钥的 Base64 编码字符串表示。
-
-**示例：**
-
+咦~怎么还是静态方法？噢——对了，我们通过静态方法`Cryptography.AES_encode()`封装了一层，其实质是：
 ```java
-SecureRandom secureRandom = new SecureRandom();
-String secretKey = AesCrypto.getSecretKey("AES", secureRandom);
+public static String AES_encode(String data, String key) {
+    Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
+    cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
+    cryptography.setDataStr(data);
+
+    return cryptography.doCipherAsHexStr();
+}
 ```
+要说每次实例化对象，当然比静态方法耗资源，不过在 Java 编译器优化的今天，这多出了一点的消耗可以忽略不计。
 
-### 3. `DES_encode(String res, String key)` 和 `DES_decode(String res, String key)`
-
-使用 DES 算法加密或解密数据。
-
-* **参数：**
-  * `res`：要加密/解密的数据。
-  * `key`：加密/解密密钥。
-* **返回值：** 加密/解密后的数据。
-
-**示例：**
-
+## DES/TripleDES
+其余 DES/TripleDES 如此类推，只是算法不同~
 ```java
-AesCrypto crypto = AesCrypto.getInstance();
-String encrypted = crypto.DES_encode("你好，世界！", "mySecretKey");
-String decrypted = crypto.DES_decode(encrypted, "mySecretKey");
+@Test
+void testDES() {
+    String encWord = Cryptography.DES_encode(word, key);
+    assertEquals(word, Cryptography.DES_decode(encWord, key));
+}
+
+@SuppressWarnings("restriction")
+@Test
+void test3DES() {
+    // 添加新安全算法,如果用 JCE 就要把它添加进去
+    // 这里 addProvider 方法是增加一个新的加密算法提供者(个人理解没有找到好的答案,求补充)
+//		Security.addProvider(new com.sun.crypto.provider.SunJCE());
+    // byte 数组(用来生成密钥的)
+    final byte[] keyBytes = {0x11, 0x22, 0x4F, 0x58, (byte) 0x88, 0x10, 0x40, 0x38, 0x28, 0x25, 0x79, 0x51, (byte) 0xCB, (byte) 0xDD, 0x55, 0x66, 0x77, 0x29, 0x74,
+            (byte) 0x98, 0x30, 0x40, 0x36, (byte) 0xE2};
+    String word = "This is a 3DES test. 测试";
+
+    byte[] encoded = Cryptography.tripleDES_encode(word, keyBytes);
+
+    assertEquals(word, Cryptography.tripleDES_decode(encoded, keyBytes));
+}
 ```
-
-### 4. `AES_encode(String res, String key)` 和 `AES_decode(String res, String key)`
-
-使用 AES 算法和 128 位密钥大小加密或解密数据。
-
-* **参数：**
-  * `res`：要加密/解密的数据。
-  * `key`：加密/解密密钥。
-* **返回值：** 加密/解密后的数据。
-
-**示例：**
-
+## PBE
+这里说说 PBE 算法。PBE 是 DES 的加强，增加一个 Salt 盐值使其更安全。
 ```java
-AesCrypto crypto = AesCrypto.getInstance();
-String encrypted = crypto.AES_encode("你好，世界！", "mySecretKey");
-String decrypted = crypto.AES_decode(encrypted, "mySecretKey");
+byte[] salt = Cryptography.initSalt();
+byte[] encData = Cryptography.PBE_encode(word, key, salt);
+
+assertEquals(word, Cryptography.PBE_decode(encData, key, salt));
 ```
-
-### 5. `encryptTripleDES(byte[] key, String data)` 和 `decryptTripleDES(byte[] key, byte[] data)`
-
-使用三重 DES (3DES) 算法加密或解密数据。
-
-* **参数：**
-  * `key`：加密/解密密钥（三重 DES 需要 24 字节）。
-  * `data`：要加密/解密的数据。
-* **返回值：** 加密/解密后的数据。
-
-**示例：**
-
-```java
-byte[] key = new byte[24]; // 生成或获取一个 24 字节的密钥
-new SecureRandom().nextBytes(key);
-
-byte[] encrypted = AesCrypto.encryptTripleDES(key, "你好，世界！");
-String decrypted = AesCrypto.decryptTripleDES(key, encrypted);
-```
-
-### 6. `initSalt()`、`encryptPBE(String key, byte[] salt, String data)` 和 `decryptPBE(String key, byte[] salt, byte[] data)`
-
-基于密码的加密 (PBE) 方法。
-
-* **initSalt()**：生成一个随机的 8 字节盐值。
-* **encryptPBE()**：使用提供的密钥和盐值通过 PBE 加密数据。
-* **decryptPBE()**：使用提供的密钥和盐值通过 PBE 解密数据。
-
-**示例：**
-
-```java
-byte[] salt = AesCrypto.initSalt();
-String key = "mySecretPassword";
-
-byte[] encrypted = AesCrypto.encryptPBE(key, salt, "你好，世界！");
-String decrypted = AesCrypto.decryptPBE(key, salt, encrypted);
-```
-
-## 结论
-
-`AesCrypto` 类提供了一套全面的对称加密和解密工具。它支持多种算法（AES、DES、3DES、PBE）并为安全数据处理提供了简单的接口。请记住安全地存储加密密钥，并遵循加密实现的最佳实践。

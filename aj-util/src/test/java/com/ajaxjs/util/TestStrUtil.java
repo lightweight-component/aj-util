@@ -12,6 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TestStrUtil {
     final static String str = "中国";
 
+    public static void main(String[] args) {
+        System.out.println("你好 %s".replace("%s", "张三"));
+    }
+
     @Test
     void testLeftPad() {
         assertEquals("@@@@@12345", leftPad("12345", 10, "@"));
@@ -31,10 +35,5 @@ class TestStrUtil {
         list.add("c");
 
         System.out.println(join(list, "&"));
-    }
-
-    @Test
-    void testPrint() {
-        System.out.println(print("{} {} {}", "a", "b", "c"));
     }
 }

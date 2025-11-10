@@ -1,136 +1,103 @@
 ---
-title: RsaCrypto
+title: RSA 加密解密
 subTitle: 2025-02-23 by Frank Cheung
 description: RsaCrypto
 date: 2025-02-23
 tags:
-  - RsaCrypto
+  - RSA 加密解密
 layout: layouts/aj-util-cn.njk
 ---
 
-# RsaCrypto 教程
+# RSA 加密解密
+RSA 非对称加密，事情比较多，可以分解为下面的子任务：
 
-本教程提供了 `RsaCrypto` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`RsaCrypto` 提供了一系列使用 RSA 算法进行非对称加密、解密和数字签名的实用方法。
+- 签名，封装在`com.ajaxjs.util.cryptography.rsa.DoSignature`完成
+- 校验签名，封装在`com.ajaxjs.util.cryptography.rsa.DoVerify`完成
+- 密钥管理，封装在`com.ajaxjs.util.cryptography.rsa.KeyMgr`完成
+- 本身的 RSA 加密解密
 
-## 简介
+下面分别进行介绍。
+## 签名
+入参包括算法、输入数据及私钥，执行`sign()`返回签名。涉及的类型如下：
 
-`RsaCrypto` 类提供了生成 RSA 密钥对、使用公钥和私钥加密和解密数据以及创建和验证数字签名的方法。RSA 是一种非对称加密算法，使用一对密钥：公钥用于加密，私钥用于解密。
-
-## 方法
-
-### 1. `init()`
-
-初始化并返回一个密钥长度为 1024 位的 RSA 密钥对。
-
-* **返回值：** 包含公钥和私钥的字节数组映射。
-
-**示例：**
+- 输入数据，可以是`byte[]`或字符串
+- 私钥，可以是 PrivateKey 对象或者字符串，字符串的话会经过`KeyMgr.restoreKey`还原为 PrivateKey 对象
+- 返回的签名数据，是`byte[]`，可以调用`signToString()`返回 base64 编码的字符串
 
 ```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
+// 生成公钥私钥
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String privateKey = keyMgr.getPrivateKeyStr();
+
+byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).sign();
+String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
+
+assertEquals(EncodeTools.base64EncodeToString(helloWorlds), result);
 ```
 
-### 2. `getPublicKey(Map<String, byte[]> map)` 和 `getPrivateKey(Map<String, byte[]> map)`
+值得一提的是，私钥哪里来？你可以通过如上的`KeyMgr`生成。
 
-从密钥对映射中检索公钥或私钥，并以 Base64 编码的字符串形式返回。
+## 校验签名
+入参包括算法、输入数据、签名数据及公钥，执行`verify()`返回签名。涉及的类型如下：
 
-* **参数：**
-  * `map`：包含密钥对的映射。
-* **返回值：** 密钥的 Base64 编码字符串表示。
-
-**示例：**
+- 输入数据，可以是`byte[]`或字符串
+- 签名数据，可以是`byte[]`或 Base64 字符串
+- 公钥，可以是 PublicKey 对象或者字符串，字符串的话会经过`KeyMgr.restoreKey`还原为 PublicKey 对象
+- 返的签名是否合法，是`boolean`
 
 ```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
+// 生成公钥私钥
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
+String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
+boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData("hello world").setPublicKeyStr(publicKey).setSignatureBase64(result).verify();
+
+assertTrue(verified);
 ```
 
-### 3. `sign(String privateKey, byte[] data)`
+值得一提的是，公钥、私钥哪里来？你可以通过如上的`KeyMgr`生成。
 
-使用私钥为提供的数据创建数字签名。
-
-* **参数：**
-  * `privateKey`：Base64 编码的私钥。
-  * `data`：要签名的数据。
-* **返回值：** Base64 编码的数字签名。
-
-**示例：**
-
+## RSA 加密解密
+没什么好说的了，直接上 API 例子。
 ```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-String signature = RsaCrypto.sign(privateKey, "你好，世界！".getBytes());
+// 生成公钥私钥
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
+
+System.out.println("公钥: \n\r" + publicKey);
+System.out.println("私钥： \n\r" + privateKey);
+//		System.out.println("公钥加密--------私钥解密");
+
+String word = "你好，世界！";
+
+byte[] encWord = KeyMgr.publicKeyEncrypt(word.getBytes(), publicKey);
+String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
+
+String eBody = EncodeTools.base64EncodeToString(encWord);
+String decWord2 = new String(KeyMgr.privateKeyDecrypt(EncodeTools.base64Decode(eBody), privateKey));
+System.out.println("加密前: " + word + "\n\r密文：" + eBody + "\n解密后: " + decWord2);
+assertEquals(word, decWord);
+
+//		System.out.println("私钥加密--------公钥解密");
+
+String english = "Hello, World!";
+byte[] encEnglish = KeyMgr.privateKeyEncrypt(english.getBytes(), privateKey);
+String decEnglish = new String(KeyMgr.publicKeyDecrypt(encEnglish, publicKey));
+//		System.out.println("加密前: " + english + "\n\r" + "解密后: " + decEnglish);
+
+assertEquals(english, decEnglish);
+//		System.out.println("私钥签名——公钥验证签名");
+
+// 产生签名
+String sign = new DoSignature(Constant.MD5_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
+//		System.out.println("签名:\r" + sign);
+// 验证签名
+assertTrue(new DoVerify(Constant.MD5_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
 ```
+## 密钥管理
+关于密钥的一些工具方法在`KeyMgr`，包括公钥和私钥的。一般开源的都喜欢把`KeyPair`封装为 Map，而笔者觉得直接使用`KeyPair`本身就可以了，如果不太满足，则增加某些方法。例如`getPublicKeyBytes()`、`getPublicKeyStr()`、`getPublicToPem()`，相比使用 Map 更加清晰。
 
-### 4. `verify(byte[] data, String publicKey, String sign)`
-
-使用公钥验证数字签名。
-
-* **参数：**
-  * `data`：原始数据。
-  * `publicKey`：Base64 编码的公钥。
-  * `sign`：要验证的 Base64 编码签名。
-* **返回值：** 如果签名有效则返回 `true`，否则返回 `false`。
-
-**示例：**
-
-```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-
-byte[] data = "你好，世界！".getBytes();
-String signature = RsaCrypto.sign(privateKey, data);
-
-boolean isValid = RsaCrypto.verify(data, publicKey, signature);
-// isValid 应该为 true
-```
-
-### 5. 公钥操作：`encryptByPublicKey(byte[] data, String key)` 和 `decryptByPublicKey(byte[] data, String key)`
-
-使用公钥加密或解密数据。
-
-* **参数：**
-  * `data`：要加密/解密的数据。
-  * `key`：Base64 编码的公钥。
-* **返回值：** 加密/解密后的数据字节数组。
-
-**示例：**
-
-```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-
-byte[] data = "你好，世界！".getBytes();
-byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
-```
-
-### 6. 私钥操作：`encryptByPrivateKey(byte[] data, String key)` 和 `decryptByPrivateKey(byte[] data, String key)`
-
-使用私钥加密或解密数据。
-
-* **参数：**
-  * `data`：要加密/解密的数据。
-  * `key`：Base64 编码的私钥。
-* **返回值：** 加密/解密后的数据字节数组。
-
-**示例：**
-
-```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-
-// 使用公钥加密
-byte[] data = "你好，世界！".getBytes();
-byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
-
-// 使用私钥解密
-byte[] decrypted = RsaCrypto.decryptByPrivateKey(encrypted, privateKey);
-// decrypted 应该等于原始数据
-```
-
-## 结论
-
-`RsaCrypto` 类提供了一套全面的 RSA 非对称加密、解密和数字签名工具。它提供了密钥对生成、使用公钥和私钥进行数据加密/解密以及签名创建/验证的方法。请记住安全地存储私钥，并遵循加密实现的最佳实践。
+另外对于密钥本身还可以加密解密，安全性更高。
