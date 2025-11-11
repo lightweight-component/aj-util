@@ -7,9 +7,7 @@ import com.ajaxjs.util.httpremote.Request;
 import com.ajaxjs.util.httpremote.call.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
@@ -35,25 +33,24 @@ public class CallHandler implements InvocationHandler {
 
         if (method.isAnnotationPresent(GET.class)) {
             GET get = method.getAnnotation(GET.class);
-            String url = getUrl(rootUrl, get);
-            Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, get.initConnection());
+            String url = getUrl(rootUrl, get.value());
 
             request = new Request(HttpConstant.HttpMethod.GET, url);
         } else if (method.isAnnotationPresent(POST.class)) {
             POST post = method.getAnnotation(POST.class);
-            String url = getUrl(rootUrl, post);
+            String url = getUrl(rootUrl, post.value());
 
             initByMethod = post.initConnection();
             request = new Request(HttpConstant.HttpMethod.POST, url);
         } else if (method.isAnnotationPresent(PUT.class)) {
             PUT put = method.getAnnotation(PUT.class);
-            String url = getUrl(rootUrl, put);
+            String url = getUrl(rootUrl, put.value());
 
             initByMethod = put.initConnection();
             request = new Request(HttpConstant.HttpMethod.PUT, url);
         } else if (method.isAnnotationPresent(DELETE.class)) {
             DELETE delete = method.getAnnotation(DELETE.class);
-            String url = getUrl(rootUrl, delete);
+            String url = getUrl(rootUrl, delete.value());
 
             initByMethod = delete.initConnection();
             request = new Request(HttpConstant.HttpMethod.DELETE, url);
@@ -74,18 +71,18 @@ public class CallHandler implements InvocationHandler {
             throw new UnsupportedOperationException("Config API error");
     }
 
-    static String getUrl(String rootUrl, Annotation annotation) {
-        String valueOnMethod;
-
-        try {
-            Method method = annotation.annotationType().getMethod("value");
-            Object value = method.invoke(annotation);
-
-            valueOnMethod = value == null ? CommonConstant.EMPTY_STRING : value.toString();
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            log.warn("There is NO such method when calling " + annotation.annotationType().getSimpleName() + ".value", e);
-            throw new RuntimeException(e);
-        }
+    private static String getUrl(String rootUrl, String valueOnMethod/*Annotation annotation*/) {
+//        String valueOnMethod;
+//
+//        try {
+//            Method method = annotation.annotationType().getMethod("value");
+//            Object value = method.invoke(annotation);
+//
+//            valueOnMethod = value == null ? CommonConstant.EMPTY_STRING : value.toString();
+//        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+//            log.warn("There is NO such method when calling " + annotation.annotationType().getSimpleName() + ".value", e);
+//            throw new RuntimeException(e);
+//        }
 
         if (CommonConstant.EMPTY_STRING.equals(valueOnMethod))
             return rootUrl;
