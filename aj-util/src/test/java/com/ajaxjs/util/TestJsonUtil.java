@@ -1,9 +1,15 @@
 package com.ajaxjs.util;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,5 +55,25 @@ class TestJsonUtil {
 
         assertTrue(exception.getMessage().contains("Failed to convert JSON to object"),
                 "Exception message should indicate JSON conversion failure.");
+    }
+
+    @Data
+    static class MyPojoWithDate {
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        private Date createTime;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        private Date updateTime;
+    }
+
+    @Test // failed
+    void testDate() {
+        Map<String, Object> sourceMap = new HashMap<>();
+        sourceMap.put("name", "Test Device");
+        sourceMap.put("createTime", LocalDateTime.of(2023, 10, 27, 10, 30, 0)); // Example LocalDateTime
+        sourceMap.put("updateTime", LocalDateTime.now());
+
+        MyPojoWithDate pojo = JsonUtil.map2pojo(sourceMap, MyPojoWithDate.class);
+        System.out.println("Converted POJO: " + pojo);
     }
 }

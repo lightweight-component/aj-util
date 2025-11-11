@@ -12,7 +12,10 @@ import java.util.function.Consumer;
 public @interface POST {
     String value() default "";
 
-
-
+    /**
+     * How to initialize the connection?
+     *
+     * @return The callback class to initialize the connection.
+     */
     Class<? extends Consumer<HttpURLConnection>> initConnection() default NoOp.class;
 }

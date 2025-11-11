@@ -10,7 +10,17 @@ import java.util.function.Consumer;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GET {
+    /**
+     * The URL to call.
+     *
+     * @return The URL to call.
+     */
     String value() default "";
 
+    /**
+     * How to initialize the connection?
+     *
+     * @return The callback class to initialize the connection.
+     */
     Class<? extends Consumer<HttpURLConnection>> initConnection() default NoOp.class;
 }
