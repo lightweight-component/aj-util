@@ -6,7 +6,7 @@ import com.ajaxjs.util.httpremote.call.annotation.Url;
 import java.util.Map;
 
 @Url("https://httpbin.org/get")
-public interface DoRequest {
+public interface DoRequest extends BaseCall {
     @GET
     String get();
 

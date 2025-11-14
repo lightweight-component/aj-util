@@ -49,8 +49,13 @@ public abstract class BasePost extends Request {
         this.setContentType(contentType);
 
         // Automatically add JSON content type header
-        if (contentType.equals(HttpConstant.CONTENT_TYPE_JSON))
-            initConnection = initConnection.andThen(conn -> conn.setRequestProperty(CONTENT_TYPE, HttpConstant.CONTENT_TYPE_JSON));
+        if (contentType.equals(HttpConstant.CONTENT_TYPE_JSON)) {
+            if (initConnection == null)
+                initConnection = conn -> conn.setRequestProperty(CONTENT_TYPE, HttpConstant.CONTENT_TYPE_JSON);
+            else
+                initConnection = initConnection.andThen(conn -> conn.setRequestProperty(CONTENT_TYPE, HttpConstant.CONTENT_TYPE_JSON));
+        }
+
 
         // Set request body based on a data type
         if (data != null) {

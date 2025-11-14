@@ -1,5 +1,8 @@
 package com.ajaxjs.util.httpremote.call.annotation;
 
+import com.ajaxjs.util.httpremote.call.NoOp;
+import com.ajaxjs.util.httpremote.model.PayloadType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,6 +14,8 @@ import java.util.function.Consumer;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface POST {
     String value() default "";
+
+    PayloadType type() default PayloadType.FORM;
 
     /**
      * How to initialize the connection?

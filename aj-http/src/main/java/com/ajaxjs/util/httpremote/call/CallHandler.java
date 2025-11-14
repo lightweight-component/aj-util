@@ -1,14 +1,18 @@
 package com.ajaxjs.util.httpremote.call;
 
 import com.ajaxjs.util.CommonConstant;
+import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.UrlHelper;
 import com.ajaxjs.util.httpremote.HttpConstant;
+import com.ajaxjs.util.httpremote.Post;
+import com.ajaxjs.util.httpremote.Put;
 import com.ajaxjs.util.httpremote.Request;
 import com.ajaxjs.util.httpremote.call.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.util.Map;
@@ -19,6 +23,8 @@ import java.util.function.Consumer;
 public class CallHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
+//        String methodName = method.getName();
+
         Class<?> declaringClass = method.getDeclaringClass();
         Url urlAnn = declaringClass.getAnnotation(Url.class);
 
@@ -29,37 +35,62 @@ public class CallHandler implements InvocationHandler {
         Class<?> returnType = method.getReturnType();
         Request request = null;
         Class<? extends Consumer<HttpURLConnection>> initClzByClz = urlAnn.initConnection();
-        Class<? extends Consumer<HttpURLConnection>> initByMethod = null;
 
         if (method.isAnnotationPresent(GET.class)) {
             GET get = method.getAnnotation(GET.class);
-            String url = getUrl(rootUrl, get.value());
+            String url = getUrl(rootUrl, get.value(), method, args);
 
             request = new Request(HttpConstant.HttpMethod.GET, url);
+
+            Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, get.initConnection());
+            request.init(init);
+            request.connect();
         } else if (method.isAnnotationPresent(POST.class)) {
             POST post = method.getAnnotation(POST.class);
-            String url = getUrl(rootUrl, post.value());
+            String url = getUrl(rootUrl, post.value(), method, args);
+            Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, post.initConnection());
+            Map<String, Object> mapParam = getMapParam(args);
 
-            initByMethod = post.initConnection();
-            request = new Request(HttpConstant.HttpMethod.POST, url);
+            switch (post.type()) {
+                case JSON_BODY:
+                    request = new Post(url, mapParam, HttpConstant.CONTENT_TYPE_JSON, init);
+                    break;
+                case FILE_UPLOAD:
+                    request = new Post(url, mapParam, HttpConstant.CONTENT_TYPE_FORM_UPLOAD, init);
+                    break;
+                case FORM:
+                default:
+                    request = new Post(url, mapParam, HttpConstant.CONTENT_TYPE_FORM, init);
+            }
         } else if (method.isAnnotationPresent(PUT.class)) {
             PUT put = method.getAnnotation(PUT.class);
-            String url = getUrl(rootUrl, put.value());
+            String url = getUrl(rootUrl, put.value(), method, args);
 
-            initByMethod = put.initConnection();
-            request = new Request(HttpConstant.HttpMethod.PUT, url);
+            Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, put.initConnection());
+            Map<String, Object> mapParam = getMapParam(args);
+
+            switch (put.type()) {
+                case JSON_BODY:
+                    request = new Put(url, mapParam, HttpConstant.CONTENT_TYPE_JSON, init);
+                    break;
+                case FILE_UPLOAD:
+                    request = new Put(url, mapParam, HttpConstant.CONTENT_TYPE_FORM_UPLOAD, init);
+                    break;
+                case FORM:
+                default:
+                    request = new Put(url, mapParam, HttpConstant.CONTENT_TYPE_FORM, init);
+            }
         } else if (method.isAnnotationPresent(DELETE.class)) {
             DELETE delete = method.getAnnotation(DELETE.class);
-            String url = getUrl(rootUrl, delete.value());
-
-            initByMethod = delete.initConnection();
+            String url = getUrl(rootUrl, delete.value(), method, args);
             request = new Request(HttpConstant.HttpMethod.DELETE, url);
+
+            Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, delete.initConnection());
+            request.init(init);
+            request.connect();
         }
 
         if (request != null) {
-            Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, initByMethod);
-            request.init(init);
-            request.connect();
 
             if (returnType == String.class)
                 return request.getResp().getResponseText();
@@ -71,7 +102,20 @@ public class CallHandler implements InvocationHandler {
             throw new UnsupportedOperationException("Config API error");
     }
 
-    private static String getUrl(String rootUrl, String valueOnMethod/*Annotation annotation*/) {
+    private Map<String, Object> getMapParam(Object[] args) {
+        if (ObjectHelper.isEmpty(args))
+            return null;
+
+        for (Object arg : args) {
+            if (arg instanceof Map)
+                return (Map<String, Object>) arg;
+        }
+
+        return null;
+    }
+
+    private static String getUrl(String rootUrl, String valueOnMethod, Method method, Object[] args/*Annotation annotation*/) {
+        String url;
 //        String valueOnMethod;
 //
 //        try {
@@ -85,9 +129,25 @@ public class CallHandler implements InvocationHandler {
 //        }
 
         if (CommonConstant.EMPTY_STRING.equals(valueOnMethod))
-            return rootUrl;
+            url = rootUrl;
         else
-            return UrlHelper.concatUrl(rootUrl, valueOnMethod);
+            url = UrlHelper.concatUrl(rootUrl, valueOnMethod);
+
+        if (url.contains("{") && url.contains("}")) { // deal with path variables
+            Parameter[] parameters = method.getParameters();
+
+            for (int i = 0; i < parameters.length; i++) {
+                Parameter param = parameters[i];
+                Class<?> paramType = param.getType();
+
+                if (paramType == Map.class)
+                    continue;
+
+                url = url.replace("{" + param.getName() + "}", args[i].toString());
+            }
+        }
+
+        return url;
     }
 
     private Consumer<HttpURLConnection> getInitConnection(
@@ -136,5 +196,13 @@ public class CallHandler implements InvocationHandler {
     @SuppressWarnings("unchecked")
     public static <T> T create(Class<T> clazz) {
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, HANDLER);
+    }
+
+    public static <T extends BaseCall> T create2(Class<T> clazz) {
+        T proxy = (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, HANDLER);
+
+        proxy.init();
+
+        return proxy;
     }
 }

@@ -288,4 +288,51 @@ public class MapTool {
             return null;
         }
     }
+
+
+    /**
+     * 将嵌套的 Map 扁平化为单层 Map。
+     * 键使用点号 '.' 连接，表示原始结构中的路径。
+     *
+     * @param nestedMap 原始的嵌套 Map (可能包含 Map 或其他对象)
+     * @return 扁平化后的 Map，键为路径字符串 (如 "a.b.c")，值为原始叶子节点的值。
+     */
+    public static Map<String, Object> flatten(Map<?, ?> nestedMap) {
+        Map<String, Object> flatMap = new HashMap<>();
+        if (nestedMap != null)  // 处理 null 输入
+            flattenHelper(nestedMap, "", flatMap);
+
+        return flatMap;
+    }
+
+    /**
+     * 递归辅助方法，用于执行实际的扁平化操作。
+     *
+     * @param currentMap 当前正在处理的 Map 层级。
+     * @param prefix     到达当前层级的键路径前缀 (不以点结尾)。
+     * @param result     存放扁平化结果的 Map。
+     */
+    private static void flattenHelper(Map<?, ?> currentMap, String prefix, Map<String, Object> result) {
+        for (Map.Entry<?, ?> entry : currentMap.entrySet()) {
+            Object rawKey = entry.getKey();// 安全地获取键和值，处理 null 键的情况
+            Object value = entry.getValue();
+
+            String keyPart;   // 决定当前键部分的字符串表示
+            if (rawKey == null)
+                keyPart = "null"; // 或者可以选择跳过 null 键，或抛出异常
+            else
+                keyPart = rawKey.toString();
+
+            String path;// 构造到当前项的完整路径
+            if (prefix.isEmpty())
+                path = keyPart; // 根级别的键
+            else
+                path = prefix + "." + keyPart; // 嵌套级别的键路径
+
+            if (value instanceof Map) // 检查值是否为 Map 并且非 null，如果是则递归展开
+                flattenHelper((Map<?, ?>) value, path, result);// 递归调用，传递新的路径作为前缀
+            else
+                result.put(path, value);// 如果值不是 Map 或者是 null，将其添加到结果中
+        }
+    }
 }

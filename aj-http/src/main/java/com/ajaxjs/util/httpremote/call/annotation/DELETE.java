@@ -1,5 +1,7 @@
 package com.ajaxjs.util.httpremote.call.annotation;
 
+import com.ajaxjs.util.httpremote.call.NoOp;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

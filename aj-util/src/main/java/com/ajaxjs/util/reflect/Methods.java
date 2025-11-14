@@ -55,12 +55,12 @@ public class Methods {
         try {
             return ObjectHelper.isEmpty(args) ? cls.getMethod(method) : cls.getMethod(method, args);
         } catch (NoSuchMethodException | SecurityException e) {
-            StringBuilder str = new StringBuilder();
+//            StringBuilder str = new StringBuilder();
+//
+//            for (Class<?> clz : args)
+//                str.append(clz.getName());
 
-            for (Class<?> clz : args)
-                str.append(clz.getName());
-
-            log.warn("类找不到这个方法 {}.{}({})。", cls.getName(), method, str.toString().isEmpty() ? "void" : str.toString());
+//            log.warn("类找不到这个方法 {}.{}({})。", cls.getName(), method, str.toString().isEmpty() ? "void" : str.toString());
             return null;
         }
     }

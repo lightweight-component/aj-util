@@ -1,4 +1,4 @@
-package com.ajaxjs.util.httpremote.call.annotation;
+package com.ajaxjs.util.httpremote.call;
 
 import java.net.HttpURLConnection;
 import java.util.function.Consumer;

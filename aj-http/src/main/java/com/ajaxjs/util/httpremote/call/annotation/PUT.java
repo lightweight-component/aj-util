@@ -1,5 +1,8 @@
 package com.ajaxjs.util.httpremote.call.annotation;
 
+import com.ajaxjs.util.httpremote.call.NoOp;
+import com.ajaxjs.util.httpremote.model.PayloadType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,6 +19,8 @@ public @interface PUT {
      * @return The URL to call.
      */
     String value() default "";
+
+    PayloadType type() default PayloadType.JSON_BODY;
 
     /**
      * How to initialize the connection?
