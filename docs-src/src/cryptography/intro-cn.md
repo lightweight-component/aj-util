@@ -27,7 +27,7 @@ Maven 依赖引用，需要 Java8+
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>aj-cryptography</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 该组件 jar 包体积很小，才 20kb~。只依赖了我自己写的一个工具库。

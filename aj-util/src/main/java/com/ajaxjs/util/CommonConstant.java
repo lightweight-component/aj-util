@@ -17,6 +17,7 @@ public interface CommonConstant {
      * Represents a hyphen character '-' (ASCII 45)
      */
     char HYPHEN = '-';
+
     /**
      * Represents a hyphen string "-"
      */
