@@ -88,7 +88,7 @@ public class Response {
      * @throws IllegalStateException if the response content type is not JSON
      */
     public Map<String, Object> responseAsJson() {
-        checkIsJsonReturn();
+//        checkIsJsonReturn();
 
         return ObjectHelper.hasText(responseText) ? JsonUtil.json2map(responseText) : null;
     }
