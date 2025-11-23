@@ -3,6 +3,7 @@ package com.ajaxjs.util;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -84,6 +85,8 @@ public class RandomTools {
      */
     public static final SecureRandom RANDOM = new SecureRandom();
 
+    public static final Random SIMPLE_RANDOM = new Random();
+
     /**
      * Generate a UUID version 7 (UUIDv7) using timestamp-based generation.
      * UUIDv7 provides time-ordered UUIDs with better locality than random UUIDs.
@@ -104,22 +107,22 @@ public class RandomTools {
      *
      * @return UUIDv7 string without hyphen.
      */
-
     public static String uuidStr() {
         return uuid().toString().replace(CommonConstant.HYPHEN_STR, CommonConstant.EMPTY_STRING);
     }
 
+    /**
+     * Generate random bytes for UUIDv7 generation.
+     *
+     * @return Random bytes
+     */
     private static byte[] randomBytes() {
-        // random bytes
-        byte[] value = new byte[16];
-        RANDOM.nextBytes(value);
+        byte[] value = new byte[16]; // random bytes
+        SIMPLE_RANDOM.nextBytes(value);
 
-        // current timestamp in ms
-        ByteBuffer timestamp = ByteBuffer.allocate(Long.BYTES);
+        ByteBuffer timestamp = ByteBuffer.allocate(Long.BYTES);// current timestamp in ms
         timestamp.putLong(System.currentTimeMillis());
-
-        // timestamp
-        System.arraycopy(timestamp.array(), 2, value, 0, 6);
+        System.arraycopy(timestamp.array(), 2, value, 0, 6);// timestamp
 
         // version and variant
         value[6] = (byte) ((value[6] & 0x0F) | 0x70);

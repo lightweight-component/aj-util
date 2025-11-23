@@ -7,130 +7,103 @@ tags:
   - RsaCrypto
 layout: layouts/aj-util.njk
 ---
+# RSA Encryption and Decryption
 
-# RsaCrypto Tutorial
+RSA asymmetric encryption involves many tasks, which can be decomposed into the following sub-tasks:
 
-This tutorial provides an overview of the `RsaCrypto` class, which is part of the `lightweight-component/aj-util` library. `RsaCrypto` offers a collection of utility methods for asymmetric encryption, decryption, and digital signatures using the RSA algorithm.
+- Signing, encapsulated in `com.ajaxjs.util.cryptography.rsa.DoSignature`
+- Signature verification, encapsulated in `com.ajaxjs.util.cryptography.rsa.DoVerify`
+- Key management, encapsulated in `com.ajaxjs.util.cryptography.rsa.KeyMgr`
+- RSA encryption and decryption itself
 
-## Introduction
+Each will be introduced separately below.
 
-The `RsaCrypto` class provides methods for generating RSA key pairs, encrypting and decrypting data using public and private keys, and creating and verifying digital signatures. RSA is an asymmetric cryptographic algorithm that uses a pair of keys: a public key for encryption and a private key for decryption.
+## Signing
+Input parameters include algorithm, input data, and private key. Execute `sign()` to return the signature. The involved types are as follows:
 
-## Methods
-
-### 1. `init()`
-
-Initializes and returns an RSA key pair with a key size of 1024 bits.
-
-* **Returns:** A map containing the public and private keys as byte arrays.
-
-**Example:**
-
-```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-```
-
-### 2. `getPublicKey(Map<String, byte[]> map)` and `getPrivateKey(Map<String, byte[]> map)`
-
-Retrieves the public or private key from a key pair map as a Base64 encoded string.
-
-* **Parameters:**
-  * `map`: The map containing the key pair.
-* **Returns:** The Base64 encoded string representation of the key.
-
-**Example:**
+- Input data, can be `byte[]` or string
+- Private key, can be a PrivateKey object or string. If it's a string, it will be restored to a PrivateKey object through `KeyMgr.restoreKey`
+- The returned signature data is `byte[]`, and `signToString()` can be called to return a base64-encoded string
 
 ```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
+// Generate public and private keys
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String privateKey = keyMgr.getPrivateKeyStr();
+
+byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).sign();
+String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
+
+assertEquals(EncodeTools.base64EncodeToString(helloWorlds), result);
 ```
 
-### 3. `sign(String privateKey, byte[] data)`
 
-Creates a digital signature for the provided data using the private key.
+It's worth mentioning that where does the private key come from? You can generate it through the above KeyMgr.
 
-* **Parameters:**
-  * `privateKey`: The Base64 encoded private key.
-  * `data`: The data to sign.
-* **Returns:** The Base64 encoded digital signature.
+## Signature Verification
+Input parameters include algorithm, input data, signature data, and public key. Execute `verify()` to verify the signature. The involved types are as follows:
 
-**Example:**
+- Input data, can be `byte[]` or string
+- Signature data, can be `byte[]` or Base64 string
+- Public key, can be a PublicKey object or string. If it's a string, it will be restored to a PublicKey object through `KeyMgr`
+- Whether the returned signature is valid, is `boolean`
 
 ```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-String signature = RsaCrypto.sign(privateKey, "Hello, World!".getBytes());
+// Generate public and private keys
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
+String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
+boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData("hello world").setPublicKeyStr(publicKey).setSignatureBase64(result).verify();
+
+assertTrue(verified);
 ```
 
-### 4. `verify(byte[] data, String publicKey, String sign)`
 
-Verifies a digital signature using the public key.
+It's worth mentioning that where do the public and private keys come from? You can generate them through the above `KeyMgr`.
 
-* **Parameters:**
-  * `data`: The original data.
-  * `publicKey`: The Base64 encoded public key.
-  * `sign`: The Base64 encoded signature to verify.
-* **Returns:** `true` if the signature is valid, `false` otherwise.
-
-**Example:**
+## RSA Encryption and Decryption
+Nothing more to say, directly show the API examples.
 
 ```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
+// Generate public and private keys
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
 
-byte[] data = "Hello, World!".getBytes();
-String signature = RsaCrypto.sign(privateKey, data);
+System.out.println("Public Key: \n\r" + publicKey);
+System.out.println("Private Key: \n\r" + privateKey);
+//		System.out.println("Public Key Encryption--------Private Key Decryption");
 
-boolean isValid = RsaCrypto.verify(data, publicKey, signature);
-// isValid should be true
+String word = "你好，世界！";
+
+byte[] encWord = KeyMgr.publicKeyEncrypt(word.getBytes(), publicKey);
+String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
+
+String eBody = EncodeTools.base64EncodeToString(encWord);
+String decWord2 = new String(KeyMgr.privateKeyDecrypt(EncodeTools.base64Decode(eBody), privateKey));
+System.out.println("Before Encryption: " + word + "\n\rCiphertext: " + eBody + "\nAfter Decryption: " + decWord2);
+assertEquals(word, decWord);
+
+//		System.out.println("Private Key Encryption--------Public Key Decryption");
+
+String english = "Hello, World!";
+byte[] encEnglish = KeyMgr.privateKeyEncrypt(english.getBytes(), privateKey);
+String decEnglish = new String(KeyMgr.publicKeyDecrypt(encEnglish, publicKey));
+//		System.out.println("Before Encryption: " + english + "\n\r" + "After Decryption: " + decEnglish);
+
+assertEquals(english, decEnglish);
+//		System.out.println("Private Key Signing——Public Key Signature Verification");
+
+// Generate signature
+String sign = new DoSignature(Constant.MD5_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
+//		System.out.println("Signature:\r" + sign);
+// Verify signature
+assertTrue(new DoVerify(Constant.MD5_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
 ```
 
-### 5. Public Key Operations: `encryptByPublicKey(byte[] data, String key)` and `decryptByPublicKey(byte[] data, String key)`
 
-Encrypts or decrypts data using the public key.
+## Key Management
+Some utility methods for keys are in `KeyMgr`, including both public and private keys. Generally, open-source projects like to encapsulate `KeyPair` as a Map, but the author thinks using `KeyPair` itself is sufficient. If not fully satisfied, certain methods can be added, such as `getPublicKeyBytes()`, `getPublicKeyStr()`, `getPublicToPem()`, which are clearer compared to using Map.
 
-* **Parameters:**
-  * `data`: The data to encrypt/decrypt.
-  * `key`: The Base64 encoded public key.
-* **Returns:** The encrypted/decrypted data as a byte array.
-
-**Example:**
-
-```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-
-byte[] data = "Hello, World!".getBytes();
-byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
-```
-
-### 6. Private Key Operations: `encryptByPrivateKey(byte[] data, String key)` and `decryptByPrivateKey(byte[] data, String key)`
-
-Encrypts or decrypts data using the private key.
-
-* **Parameters:**
-  * `data`: The data to encrypt/decrypt.
-  * `key`: The Base64 encoded private key.
-* **Returns:** The encrypted/decrypted data as a byte array.
-
-**Example:**
-
-```java
-Map<String, byte[]> keyPair = RsaCrypto.init();
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-
-// Encrypt with public key
-byte[] data = "Hello, World!".getBytes();
-byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
-
-// Decrypt with private key
-byte[] decrypted = RsaCrypto.decryptByPrivateKey(encrypted, privateKey);
-// decrypted should be equal to the original data
-```
-
-## Conclusion
-
-The `RsaCrypto` class provides a comprehensive set of tools for RSA asymmetric encryption, decryption, and digital signatures. It offers methods for key pair generation, data encryption/decryption using both public and private keys, and signature creation/verification. Remember to store private keys securely and follow best practices for cryptographic implementations.
+Additionally, the keys themselves can also be encrypted and decrypted for higher security.

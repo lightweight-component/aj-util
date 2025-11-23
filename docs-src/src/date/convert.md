@@ -1,55 +1,71 @@
 ---
-title: SecurityTextType
-description: Enums for security-related text encoding and hashing types
+title: Basic Process
+description: Basic Process for date handling
 tags:
-  - Encoding
-  - Hashing
-  - Cryptography
+  - date
 layout: layouts/aj-util.njk
 ---
 
-# SecurityTextType Tutorial
+# Basic Process
 
-This tutorial provides an overview of the `SecurityTextType` interface, which is part of the `lightweight-component/aj-util` library. The `SecurityTextType` interface defines enums for various security-related text encoding and hashing types.
+The most primitive expression of encryption is `ciphertext = encryption_function(plaintext)`. Here, let's also mention MD5, which conforms to the definition of `ciphertext = encryption_function(plaintext)`. It appears to encrypt the input, but actually it is a type of hash function, which is completely different from encryption. More accurately, it returns a "characteristic" result of the input parameter, and this characteristic is unique. Since the same result is returned each time it is executed, a dictionary table can be constructed for comparison. As long as the dictionary table is large enough, MD5 is very insecure.
 
-## Introduction
+Therefore, we modify this encryption process by adding the key parameter, hoping that different keys will produce different ciphertexts each time, i.e., `ciphertext = encryption_function(plaintext, key)`.
 
-The `SecurityTextType` interface contains nested enums that categorize different types of:
-
-- Text encoding formats
-- Digest (hash) algorithms
-- Cryptographic operations
-
-## Enums
-
-### 1. Encode
-
-Defines various text encoding formats:
-
-1. `BASE16` - Hexadecimal encoding
-2. `BASE32` - Base32 encoding
-3. `BASE58` - Base58 encoding (used in Bitcoin)
-4. `BASE64` - Base64 encoding
-5. `BASE91` - Base91 encoding
-
-### 2. Digest
-
-Defines message digest (hash) algorithms:
-
-1. `Md5` - MD5 hash
-2. `Md5WithSalt` - MD5 hash with salt
-
-### 3. Cryptography
-
-Currently empty, reserved for future cryptographic operation types.
-
-## Usage Examples
+AES (Advanced Encryption Standard) symmetric encryption also conforms to this original process. A rough Java API implementation is as follows:
 
 ```java
-SecurityTextType.Encode encoding = SecurityTextType.Encode.BASE64;
-SecurityTextType.Digest digest = SecurityTextType.Digest.Md5WithSalt;
+/**
+ * Is it decryption mode or encryption mode?
+ */
+private final int mode;
+
+/**
+ * The name of the algorithm
+ */
+private final String algorithmName;
+
+/**
+ * Key
+ */
+private Key key;
+
+private byte[] data;
+    
+public byte[] doCipher() {
+    try {
+        Cipher cipher = Cipher.getInstance(algorithmName);
+
+        if (spec != null)
+            cipher.init(mode, key, spec);
+        else
+            cipher.init(mode, key);
+
+        if (associatedData != null)
+            cipher.updateAAD(associatedData);
+
+        return cipher.doFinal(data);
+    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+        throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+    } catch (IllegalBlockSizeException | BadPaddingException e) {
+        throw new RuntimeException("The length of the encrypted string cannot exceed 214 bytes", e);
+    } catch (InvalidKeyException e) {
+        throw new IllegalArgumentException("Invalid Key.", e);
+    } catch (InvalidAlgorithmParameterException e) {
+        throw new IllegalArgumentException("Invalid Algorithm Parameter.", e);
+    }
+}
 ```
 
-## Conclusion
 
-The `SecurityTextType` interface provides a type-safe way to reference different security-related text encoding and hashing algorithms throughout the application.
+Firstly, we can see that we didn't adopt a functional style to define [doCipher()](file://D:\code\ajaxjs\aj-util\aj-cryptography\src\main\java\com\ajaxjs\util\cryptography\Cryptography.java#L59-L81), but rather used getters/setters for parameters (with Lombok generating them beforehand). These parameters are all the basic primitive data types required for [doCipher()](file://D:\code\ajaxjs\aj-util\aj-cryptography\src\main\java\com\ajaxjs\util\cryptography\Cryptography.java#L59-L81) execution. Secondly, let's abstract the main process:
+
+1. Determine which algorithm: AES or DES or RSA?
+2. Determine decryption mode or encryption mode?
+3. Pass in the key (is it `byte[]`? Or Java `Key` object?), and additionally, is `AlgorithmParameterSpec spec` parameter needed?
+4. Input data (is it `byte[]`? Or String or Base64 String?), then execute encryption/decryption
+5. The raw return is `byte[]`, so does the caller want to return String directly, or Base64 String, or HexString?
+
+It seems that the core data type of the encryption/decryption process is `byte[]`. Regardless of which type of input parameter is used, it must ultimately be converted to `byte[]`. The more input parameter types we consider, the more convenient it becomes (no need for API callers to manually convert), and accordingly, we need to arrange more setters for conversion.
+
+The general coding style approach is determined, and then we can proceed with coding.

@@ -8,158 +8,133 @@ tags:
 layout: layouts/aj-util.njk
 ---
 
-# FileHelper
 
-The `FileHelper` class simplifies common file system operations, such as reading and writing file content, deleting
-files or directories, listing directory contents, creating directories, and checking for the existence
-of files or directories. It leverages the `java.nio.file` package for efficient and modern file I/O.
+# FileHelper Tutorial
 
-## Methods
+FileHelper is a file operation utility class that provides methods for reading, writing, copying, moving, deleting, and manipulating files and directories. This class uses Java NIO Path and Files API for efficient file operations, and all methods throw UncheckedIOException for IO errors.
 
-### 1. `readFileContent(String filePath)`
+## Main Features
 
-Reads the entire content of a file into a string.
+1. **Multiple Construction Methods**: Supports creating instances with Path, File, and String paths
+2. **File Read/Write Operations**: Supports reading and writing text and byte content
+3. **File Management Operations**: Copy, move, delete, and create directories
+4. **Directory Operations**: List directory contents, get file sizes
+5. **File Chunking**: Supports large file chunking and merging
+6. **Chainable Calls**: Supports method chaining
 
-* **Parameters:**
-    * `filePath`: The path to the file.
-* **Returns:** The content of the file as a string.
-* **Throws:** `UncheckedIOException` if an error occurs during file reading.
+## Basic Usage
 
-**Example:**
+### 1. Creating Instances
 
 ```java
-String content = FileHelper.readFileContent("path/to/my/file.txt");
-System.out.println(content);
+// Create with path string
+FileHelper helper1 = new FileHelper("path/to/file.txt");
+
+// Create with Path object
+Path path = Paths.get("path/to/file.txt");
+FileHelper helper2 = new FileHelper(path);
+
+// Create with File object
+File file = new File("path/to/file.txt");
+FileHelper helper3 = new FileHelper(file);
 ```
 
-### 2. `writeFileContent(String filePath, String content)`
 
-Writes a string to a file, overwriting any existing content.
-
-* **Parameters:**
-    * `filePath`: The path to the file.
-    * `content`: The string to write to the file.
-* **Throws:** `UncheckedIOException` if an error occurs during file writing.
-
-**Example:**
+### 2. File Reading
 
 ```java
-FileHelper.writeFileContent("path/to/my/file.txt", "Hello, World!");
+// Read file text content
+String content = new FileHelper("example.txt").getFileContent();
+
+// Read file byte content
+byte[] bytes = new FileHelper("example.txt").readFileBytes();
 ```
 
-### 3. `deleteFileOrDirectory(String filePath)`
 
-Deletes a file or directory. If the path is a directory, it will recursively delete all files and subdirectories within
-it.
-
-* **Parameters:**
-    * `filePath`: The path to the file or directory.
-* **Throws:** `UncheckedIOException` if an error occurs during deletion.
-
-**Example:**
+### 3. File Writing
 
 ```java
-FileHelper.deleteFileOrDirectory("path/to/my/file.txt");
-FileHelper.deleteFileOrDirectory("path/to/my/directory");
+// Write string content to file
+new FileHelper("output.txt").writeFileContent("Hello World");
 ```
 
-### 4. `listDirectoryContents(String directoryPath)`
 
-Lists the names of the files and subdirectories within a directory.
-
-* **Parameters:**
-    * `directoryPath`: The path to the directory.
-* **Returns:** A list of strings, where each string is the name of a file or subdirectory.
-* **Throws:** `UncheckedIOException` if an error occurs during directory listing.
-
-**Example:**
+### 4. File Deletion
 
 ```java
-List<String> contents = FileHelper.listDirectoryContents("path/to/my/directory");
-for (String item : contents) {
-    System.out.println(item);
+// Delete file or directory (recursively delete directories)
+new FileHelper("file-or-directory").delete();
+```
+
+
+### 5. Directory Operations
+
+```java
+// List directory contents
+List<String> contents = new FileHelper("directory").listDirectoryContents();
+
+// Create directory (supports multi-level directories)
+new FileHelper("new/directory/path").createDirectory();
+
+// Get file or directory size
+long size = new FileHelper("file-or-directory").getFileSize();
+```
+
+
+### 6. File Copying and Moving
+
+```java
+// Copy file or directory
+new FileHelper("source.txt")
+    .setTarget("destination.txt")
+    .copyTo();
+
+// Move file or directory
+new FileHelper("old-location.txt")
+    .setTarget("new-location.txt")
+    .moveTo();
+```
+
+
+### 7. File Chunking Operations
+
+```java
+// Chunk file (1MB per chunk)
+new FileHelper("large-file.zip").chunkFile(1024 * 1024);
+
+// Merge chunk files
+Path[] chunks = {Paths.get("file-1"), Paths.get("file-2")};
+new FileHelper("merged-file").mergeFile(chunks);
+```
+
+
+## Chainable Call Example
+
+```java
+// Chainable call example
+new FileHelper("input.txt")
+    .setTarget("backup.txt")
+    .copyTo()
+    .setTarget("moved.txt")
+    .moveTo();
+```
+
+
+## Exception Handling
+
+All IO operations throw `UncheckedIOException` when errors occur, which can be handled with try-catch:
+
+```java
+try {
+    String content = new FileHelper("nonexistent.txt").getFileContent();
+} catch (UncheckedIOException e) {
+    System.err.println("File operation failed: " + e.getMessage());
 }
 ```
 
-### 5. `createDirectory(String directoryPath)`
 
-Creates a directory, including any necessary parent directories.
+### Notes
 
-* **Parameters:**
-    * `directoryPath`: The path to the directory to create.
-* **Throws:** `UncheckedIOException` if an error occurs during directory creation.
-
-**Example:**
-
-```java
-FileHelper.createDirectory("path/to/my/new/directory");
-```
-
-### 6. `exists(String filePath)`
-
-Checks if a file or directory exists.
-
-* **Parameters:**
-    * `filePath`: The path to the file or directory.
-* **Returns:** `true` if the file or directory exists, `false` otherwise.
-
-**Example:**
-
-```java
-boolean exists = FileHelper.exists("path/to/my/file.txt");
-if (exists) {
-    System.out.println("File exists!");
-} else {
-    System.out.println("File does not exist.");
-}
-```
-
-## Unit Test Example
-
-Here's an example of how `FileHelper` might be used in a unit test:
-
-```java
-package com.ajaxjs.util.io;
-
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.util.List;
-
-public class TestFileHelper {
-    final String dir = Resources.getResourcesFromClass(TestFileHelper.class, "");
-    final String fullPath = dir + File.separator + "test.txt";
-
-    @Test
-    public void test() {
-        // 读取文件内容
-        String content = FileHelper.readFileContent(fullPath);
-        System.out.println("File content: " + content);
-
-        // 写入文件内容
-        FileHelper.writeFileContent(fullPath, "Hello, World! 你好世界");
-
-        // 列出目录内容
-        List<String> directoryContents = FileHelper.listDirectoryContents(dir);
-        System.out.println("Directory contents: " + directoryContents);
-
-        // 创建目录
-        FileHelper.createDirectory(dir + File.separator + "newdirectory");
-
-        // 检查文件或目录是否存在
-        boolean exists = FileHelper.exists(fullPath);
-        System.out.println("File exists: " + exists);
-
-        // 删除文件或目录 - commented out to prevent accidental deletion during testing
-        // FileHelper.deleteFileOrDirectory("output.txt");
-    }
-}
-```
-
-**Note:** The `getFileSize()`, `copyFileOrDirectory()`, and `moveFileOrDirectory()` methods are present in the test code
-but not in the provided `FileHelper` class code.
-
-## Conclusion
-
-The `FileHelper` class provides a convenient set of utilities for performing common file system operations in Java. By
-using these methods, you can simplify your code and avoid writing repetitive file I/O logic.
+1. Target path must be set before copy and move operations
+2. File chunking uses zero-copy technology for improved large file processing efficiency
+3. Directory deletion uses reverse traversal to ensure proper deletion of all subdirectories and files

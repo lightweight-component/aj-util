@@ -8,156 +8,133 @@ tags:
 layout: layouts/aj-util-cn.njk
 ---
 
-# FileHelper
+## FileHelper 使用教程
 
-`FileHelper` 类简化了常见的文件系统操作，例如读取和写入文件内容、删除文件或目录、列出目录内容、创建目录以及检查文件或目录是否存在。
-它利用 `java.nio.file` 包来实现高效且现代的文件 I/O。
+FileHelper 是一个文件操作工具类，提供了读取、写入、复制、移动、删除和操作文件及目录的方法。该类使用 Java NIO Path 和 Files API 实现高效的文件操作，所有方法在发生 IO 错误时都会抛出 UncheckedIOException。
 
-## 方法
+### 主要功能特性
 
-### 1. `readFileContent(String filePath)`
+1. **多种构造方式**：支持 Path、File、String 路径创建实例
+2. **文件读写操作**：支持文本和字节内容的读取与写入
+3. **文件管理操作**：复制、移动、删除、创建目录
+4. **目录操作**：列出目录内容、获取文件大小
+5. **文件分片处理**：支持大文件分片和合并
+6. **链式调用**：支持方法链式调用
 
-将文件的全部内容读取到字符串中。
+## 基本使用方法
 
-* **参数：**
-    * `filePath`：文件的路径。
-* **返回值：** 文件的内容，以字符串形式表示。
-* **抛出：** 如果在文件读取期间发生错误，则抛出 `UncheckedIOException`。
-
-**示例：**
+### 1. 创建实例
 
 ```java
-String content = FileHelper.readFileContent("path/to/my/file.txt");
-System.out.println(content);
+// 通过路径字符串创建
+FileHelper helper1 = new FileHelper("path/to/file.txt");
+
+// 通过 Path 对象创建
+Path path = Paths.get("path/to/file.txt");
+FileHelper helper2 = new FileHelper(path);
+
+// 通过 File 对象创建
+File file = new File("path/to/file.txt");
+FileHelper helper3 = new FileHelper(file);
 ```
 
-### 2. `writeFileContent(String filePath, String content)`
 
-将字符串写入文件，覆盖任何现有内容。
-
-* **参数：**
-    * `filePath`：文件的路径。
-    * `content`：要写入文件的字符串。
-* **抛出：** 如果在文件写入期间发生错误，则抛出 `UncheckedIOException`。
-
-**示例：**
+### 2. 文件读取
 
 ```java
-FileHelper.writeFileContent("path/to/my/file.txt", "你好，世界！");
+// 读取文件文本内容
+String content = new FileHelper("example.txt").getFileContent();
+
+// 读取文件字节内容
+byte[] bytes = new FileHelper("example.txt").readFileBytes();
 ```
 
-### 3. `deleteFileOrDirectory(String filePath)`
 
-删除文件或目录。 如果路径是目录，它将递归删除其中的所有文件和子目录。
-
-* **参数：**
-    * `filePath`：文件或目录的路径。
-* **抛出：** 如果在删除期间发生错误，则抛出 `UncheckedIOException`。
-
-**示例：**
+### 3. 文件写入
 
 ```java
-FileHelper.deleteFileOrDirectory("path/to/my/file.txt");
-FileHelper.deleteFileOrDirectory("path/to/my/directory");
+// 写入字符串内容到文件
+new FileHelper("output.txt").writeFileContent("Hello World");
 ```
 
-### 4. `listDirectoryContents(String directoryPath)`
 
-列出目录中文件和子目录的名称。
-
-* **参数：**
-    * `directoryPath`：目录的路径。
-* **返回值：** 字符串列表，其中每个字符串是文件或子目录的名称。
-* **抛出：** 如果在目录列表期间发生错误，则抛出 `UncheckedIOException`。
-
-**示例：**
+### 4. 文件删除
 
 ```java
-List<String> contents = FileHelper.listDirectoryContents("path/to/my/directory");
-for (String item : contents) {
-    System.out.println(item);
+// 删除文件或目录（递归删除目录）
+new FileHelper("file-or-directory").delete();
+```
+
+
+### 5. 目录操作
+
+```java
+// 列出目录内容
+List<String> contents = new FileHelper("directory").listDirectoryContents();
+
+// 创建目录（支持多级目录）
+new FileHelper("new/directory/path").createDirectory();
+
+// 获取文件或目录大小
+long size = new FileHelper("file-or-directory").getFileSize();
+```
+
+
+### 6. 文件复制和移动
+
+```java
+// 复制文件或目录
+new FileHelper("source.txt")
+    .setTarget("destination.txt")
+    .copyTo();
+
+// 移动文件或目录
+new FileHelper("old-location.txt")
+    .setTarget("new-location.txt")
+    .moveTo();
+```
+
+
+### 7. 文件分片处理
+
+```java
+// 将文件分片（每片1MB）
+new FileHelper("large-file.zip").chunkFile(1024 * 1024);
+
+// 合并分片文件
+Path[] chunks = {Paths.get("file-1"), Paths.get("file-2")};
+new FileHelper("merged-file").mergeFile(chunks);
+```
+
+
+## 链式调用示例
+
+```java
+// 链式调用示例
+new FileHelper("input.txt")
+    .setTarget("backup.txt")
+    .copyTo()
+    .setTarget("moved.txt")
+    .moveTo();
+```
+
+
+## 异常处理
+
+所有 IO 操作都会在出错时抛出 UncheckedIOException，可以使用 try-catch 进行处理：
+
+```java
+try {
+    String content = new FileHelper("nonexistent.txt").getFileContent();
+} catch (UncheckedIOException e) {
+    System.err.println("文件操作失败: " + e.getMessage());
 }
 ```
 
-### 5. `createDirectory(String directoryPath)`
 
-创建目录，包括任何必要的父目录。
+## 注意事项
 
-* **参数：**
-    * `directoryPath`：要创建的目录的路径。
-* **抛出：** 如果在目录创建期间发生错误，则抛出 `UncheckedIOException`。
+1. 复制和移动操作前必须设置目标路径
+2. 文件分片使用零拷贝技术，提高大文件处理效率
+3. 目录删除采用反向遍历，确保正确删除所有子目录和文件
 
-**示例：**
-
-```java
-FileHelper.createDirectory("path/to/my/new/directory");
-```
-
-### 6. `exists(String filePath)`
-
-检查文件或目录是否存在。
-
-* **参数：**
-    * `filePath`：文件或目录的路径。
-* **返回值：** 如果文件或目录存在，则返回 `true`；否则返回 `false`。
-
-**示例：**
-
-```java
-boolean exists = FileHelper.exists("path/to/my/file.txt");
-if (exists) {
-    System.out.println("文件存在！");
-} else {
-    System.out.println("文件不存在。");
-}
-```
-
-## 单元测试示例
-
-以下是如何在单元测试中使用 `FileHelper` 的示例：
-
-```java
-package com.ajaxjs.util.io;
-
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.util.List;
-
-public class TestFileHelper {
-    final String dir = Resources.getResourcesFromClass(TestFileHelper.class, "");
-    final String fullPath = dir + File.separator + "test.txt";
-
-    @Test
-    public void test() {
-        // 读取文件内容
-        String content = FileHelper.readFileContent(fullPath);
-        System.out.println("文件内容: " + content);
-
-        // 写入文件内容
-        FileHelper.writeFileContent(fullPath, "你好，世界！Hello, World!");
-
-        // 列出目录内容
-        List<String> directoryContents = FileHelper.listDirectoryContents(dir);
-        System.out.println("目录内容: " + directoryContents);
-
-        // 创建目录
-        FileHelper.createDirectory(dir + File.separator + "newdirectory");
-
-        // 检查文件或目录是否存在
-        boolean exists = FileHelper.exists(fullPath);
-        System.out.println("文件是否存在: " + exists);
-
-        // 删除文件或目录 - 已注释掉，以防止在测试期间意外删除
-        // FileHelper.deleteFileOrDirectory("output.txt");
-    }
-}
-```
-
-**注意：** `getFileSize()`、`copyFileOrDirectory()` 和 `moveFileOrDirectory()`
-方法存在于测试代码中，但不存在于提供的 `FileHelper` 类代码中。
-
-## 结论
-
-`FileHelper` 类提供了一组方便的实用程序，用于在 Java 中执行常见的文件系统操作。 通过使用这些方法，您可以简化代码并避免编写重复的文件
-I/O 逻辑。

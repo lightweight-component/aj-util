@@ -8,109 +8,172 @@ tags:
 layout: layouts/aj-util.njk
 ---
 
-# StreamHelper
 
-The `StreamHelper` class provides static methods to perform common operations on Java streams. It focuses on simplifying
-the conversion of input streams to strings and efficiently copying data between streams.
+# DataReader Tutorial
 
-## Methods
+DataReader  is a reader class for reading data from an input stream. It supports reading raw byte data from sources such as files, network sockets, or memory buffers, while providing functionality for handling both text and binary data.
 
-### 1. `copyToString(InputStream in)`
+## Main Features
 
-Reads an input stream and converts it to a string using the default UTF-8 charset.
+1. **Multiple Data Reading Methods**: Supports various reading methods including byte streams, text lines, and complete strings
+2. **Character Encoding Support**: Character encoding can be specified, defaults to UTF-8
+3. **Streaming Processing**: Supports chunked processing of large files to avoid memory overflow
+4. **Functional Programming**: Uses functional interfaces to process read data
 
-* **Parameters:**
-    * `in`: The input stream to read from. The stream is not closed by this method.
-* **Returns:** The content of the input stream as a string.
+## Basic Usage
 
-**Example:**
+### 1. Creating Instances
 
 ```java
-InputStream inputStream = new ByteArrayInputStream("Hello, World!".getBytes(StandardCharsets.UTF_8));
-String content = StreamHelper.copyToString(inputStream);
-System.out.println(content); // Output: Hello, World!\n
+// Create instance with default UTF-8 encoding
+InputStream inputStream = new FileInputStream("example.txt");
+DataReader reader = new DataReader(inputStream);
+
+// Create instance with specified character encoding
+DataReader readerWithEncoding = new DataReader(inputStream, StandardCharsets.UTF_8);
 ```
 
-### 2. `copyToString(InputStream in, Charset encode)`
 
-Reads an input stream and converts it to a string using the specified charset.
-
-* **Parameters:**
-    * `in`: The input stream to read from. The stream is not closed by this method.
-    * `encode`: The charset to use for decoding the input stream.
-* **Returns:** The content of the input stream as a string.
-
-**Example:**
+### 2. Reading Byte Data
 
 ```java
-InputStream inputStream = new ByteArrayInputStream("你好，世界！".getBytes(StandardCharsets.UTF_8));
-String content = StreamHelper.copyToString(inputStream, StandardCharsets.UTF_8);
-System.out.println(content); // Output: 你好，世界！\n
-```
+// Read stream data as bytes
+InputStream inputStream = new FileInputStream("large-file.bin");
+DataReader reader = new DataReader(inputStream);
 
-### 3. `read(InputStream in, Charset encode, Consumer<String> fn)`
-
-Reads the input stream line by line and applies the given consumer function to each line.
-
-* **Parameters:**
-    * `in`: The input stream to read from. The stream is closed within the method.
-    * `encode`: The charset to use for decoding the input stream.
-    * `fn`: A `Consumer` that accepts a string (a line from the input stream) and performs an action.
-
-**Example:**
-
-```java
-InputStream inputStream = new ByteArrayInputStream("Line 1\nLine 2\nLine 3".getBytes(StandardCharsets.UTF_8));
-StreamHelper.read(inputStream, StandardCharsets.UTF_8, line -> {
-    System.out.println("Line: " + line);
+reader.readStreamAsBytes(8192, (readSize, buffer) -> {
+    // Process the read data
+    System.out.println("Read " + readSize + " bytes of data");
+    // Can process data in buffer here
 });
-// Output:
-// Line: Line 1
-// Line: Line 2
-// Line: Line 3
 ```
 
-## Unit Test Examples
+
+### 3. Reading Text Lines
 
 ```java
-package com.ajaxjs.util.io;
+// Read text data line by line
+InputStream inputStream = new FileInputStream("text-file.txt");
+DataReader reader = new DataReader(inputStream);
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class TestStreamHelper {
-    private InputStream inputStream;
-    private String testString;
-
-    @BeforeEach
-    public void setUp() {
-        testString = "测试字符串";
-        inputStream = new ByteArrayInputStream(testString.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Test
-    public void copyToString_WithDefaultCharset_ReturnsCorrectString() {
-        String result = StreamHelper.copyToString(inputStream);
-        assertEquals(testString + "\n", result);
-    }
-
-    @Test
-    public void copyToString_WithSpecifiedCharset_ReturnsCorrectString() {
-        String result = StreamHelper.copyToString(inputStream, StandardCharsets.UTF_8);
-        assertEquals(testString + "\n", result);
-    }
-}
+reader.readAsLineString(line -> {
+    System.out.println("Read a line: " + line);
+    // Process each line of text
+});
 ```
 
-**Note:** The `inputStream2Byte` method is present in the test code but not in the provided `StreamHelper` class code.
 
-## Conclusion
+### 4. Reading Complete String
 
-The `StreamHelper` class provides a convenient way to perform common stream operations in Java. By using these methods,
-you can simplify your code and avoid writing repetitive stream I/O logic.
+```java
+// Read entire input stream as string
+InputStream inputStream = new FileInputStream("text-file.txt");
+DataReader reader = new DataReader(inputStream);
+
+String content = reader.readAsString();
+System.out.println("File content: " + content);
+```
+
+
+### 5. Reading Byte Array
+
+```java
+// Read entire input stream as byte array
+InputStream inputStream = new FileInputStream("binary-file.bin");
+DataReader reader = new DataReader(inputStream);
+
+byte[] bytes = reader.readAsBytes();
+System.out.println("Byte array length: " + bytes.length);
+```
+
+
+
+### Notes
+
+1. The `readStreamAsBytes` method automatically closes the input stream when reading is complete
+2. All methods throw `UncheckedIOException` when IO errors occur
+3. For large file processing, it's recommended to use the `readStreamAsBytes` method for chunked processing
+4. The `readAsString` method appends a newline character at the end of each line
+
+# DataWriter Tutorial
+
+DataWriter is a writer class for writing data to an output stream. It supports writing raw byte data to destinations such as files, sockets, or buffers, and provides buffering functionality to improve write efficiency.
+
+## Main Features
+
+1. **Multiple Data Writing Methods**: Supports copying data from input streams, writing byte arrays, etc.
+2. **Buffering Support**: Buffering functionality is enabled by default to improve write performance
+3. **Flexible Byte Array Writing**: Supports writing complete byte arrays or specified ranges of data
+4. **No Automatic Stream Closing**: Does not automatically close output streams, managed by the caller
+
+## Basic Usage
+
+### 1. Creating Instances
+
+```java
+// Create DataWriter instance
+OutputStream outputStream = new FileOutputStream("output.txt");
+DataWriter writer = new DataWriter(outputStream);
+```
+
+
+### 2. Copying Data from Input Stream
+
+```java
+// Copy data from input stream to output stream
+InputStream inputStream = new FileInputStream("input.txt");
+OutputStream outputStream = new FileOutputStream("output.txt");
+DataWriter writer = new DataWriter(outputStream);
+
+writer.write(inputStream); // Copy data
+// Note: Need to manually close streams
+inputStream.close();
+outputStream.close();
+```
+
+
+### 3. Writing Byte Arrays
+
+```java
+// Write complete byte array
+byte[] data = "Hello World".getBytes();
+OutputStream outputStream = new FileOutputStream("output.txt");
+DataWriter writer = new DataWriter(outputStream);
+
+writer.write(data);
+outputStream.close();
+```
+
+
+### 4. Writing Specified Range of Byte Array
+
+```java
+// Write specified range of byte array
+byte[] data = "Hello World".getBytes();
+OutputStream outputStream = new FileOutputStream("output.txt");
+DataWriter writer = new DataWriter(outputStream);
+
+// Write 5 bytes starting from offset 2
+writer.write(data, 2, 5); // Write "llo W"
+outputStream.close();
+```
+
+
+
+
+## Configuration Options
+
+```java
+// Disable buffering (not recommended)
+OutputStream outputStream = new FileOutputStream("output.txt");
+DataWriter writer = new DataWriter(outputStream);
+writer.setBuffered(false);
+```
+
+
+## Notes
+
+1. DataWriter does not automatically close output streams, the caller needs to manually manage stream closing
+2. Buffering is enabled by default, disabling buffering will give a warning prompt
+3. All methods throw `UncheckedIOException` when IO errors occur
+4. When both offset and length are 0, the `write(byte[], int, int)` method writes the entire byte array

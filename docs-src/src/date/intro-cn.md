@@ -1,10 +1,8 @@
 ---
-title: 一个简洁、清晰的 Java 日期 API
-description: 整个库中使用的常见加密实用工具
+title: 日期处理简介
+description: 一个简洁、清晰的 Java 日期 API
 tags:
-  - 加密
-  - 解密
-  - 实用工具
+  - 日期处理
 layout: layouts/aj-util-cn.njk
 ---
 

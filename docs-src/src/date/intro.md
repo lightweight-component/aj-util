@@ -1,94 +1,42 @@
 ---
-title: CommonUtil
-description: Common cryptographic utilities used throughout the library
+title: A Clean and Clear Java Date API
+description: A Clean and Clear Java Date API
 tags:
-  - Encryption
-  - Decryption
-  - Utilities
+  - Date handling
 layout: layouts/aj-util.njk
 ---
+# A Clean and Clear Java Date API
 
-# CommonUtil Tutorial
+When it comes to date types, they are relatively more tricky to handle compared to other primitive data types (int/long/boolean/string), and there are multiple reasons for this. Firstly, date is a broad concept - year-month-day can be called a date, year-month-day-hour-minute-second can also be called a date, or even just hour-minute-second alone can be considered a date. So which date are you actually referring to? The traditional Java date type `java.util.Date` does exactly this - one type encompasses all the above date concepts, which is the root cause of the混乱 in date APIs. Secondly, the way dates are expressed, also known as "format", can be `2025-12-22 11:05`, or `2025-12-22 11-05` or even `3 Jun 2025 11:05`, with many varieties. Finally, dates also have the concept of time zones, such as `2024-12-03T10:15:30+01:00[Europe/Paris]`, `Tue, 3 Jun 2025 11:05:30 GMT`, etc.
 
-This tutorial provides an overview of the `CommonUtil` class, which is part of the `lightweight-component/aj-util` library. The `CommonUtil` class provides common cryptographic utilities used throughout the library.
+## About the `Date` Type
 
-## Introduction
+In early Java versions, the `java.util.Date` type dominated everything, with many date processing methods built around it (before Java 1.1). In later version refactoring, many of these methods were deprecated and replaced by `java.util.Calendar` and `java.text.DateFormat`. Did Calendar solve the tricky date problems? Not really. Although Calendar handles dates more flexibly, it is still overly complex to use, and setting, comparing, and formatting remain troublesome and verbose. Therefore, the community came up with a replacement - Joda-Time, which was adopted by many projects. This excellent open-source project gradually became part of the Java standard, known as JSR310, and was finally integrated into Java 8 as `java.time`!
 
-The `CommonUtil` class contains static methods for various cryptographic operations including:
+In summary, the date types we advocate using are `Instant` and `LocalDateTime` from `java.time`. `Instant` represents a moment in time, roughly corresponding to a timestamp, and can support nanosecond precision. `LocalDateTime` might be more commonly used by us, along with its other derived precise types.
 
-- General cipher operations (encryption/decryption)
-- XOR encryption/decryption
-- Private key loading and management
-- Certificate deserialization
+### 📅 New Java Common Date/Time Types
 
-## Main Features
+| Type | Package | Java Version | Description | Recommended |
+|------|---------|--------------|-------------|-------------|
+| `Instant` | `java.time.Instant` | 8+ | Represents an instantaneous point on the timeline (UTC), precise to nanoseconds | ✅ Recommended for timestamps |
+| `LocalDate` | `java.time.LocalDate` | 8+ | **Date only** (year-month-day), such as `2025-03-08` | ✅ Strongly recommended for "pure date" scenarios (such as train departure dates) |
+| `LocalTime` | `java.time.LocalTime` | 8+ | **Time only** (hour:minute:second.nanosecond), such as `14:30:00` | ✅ Recommended for "pure time" scenarios (such as departure times) |
+| `LocalDateTime` | `java.time.LocalDateTime` | 8+ | Date + Time (no time zone), such as `2025-03-08T14:30:00` | ✅ Recommended for local time (such as train schedules) |
+| `ZonedDateTime` | `java.time.ZonedDateTime` | 8+ | Date/time with time zone, supports daylight saving time, etc. | ✅ Recommended for cross-timezone systems |
+| `OffsetDateTime` | `java.time.OffsetDateTime` | 8+ | Time with offset (such as `+08:00`) | ✅ Suitable for storing database times |
+| `Duration` | `java.time.Duration` | 8+ | Represents a time period (seconds, nanoseconds), such as 2 hours | ✅ Recommended for calculating time differences |
+| `Period` | `java.time.Period` | 8+ | Represents a time period (years, months, days), such as 1 month later | ✅ Recommended for calendar period calculations |
+| `DateTimeFormatter` | `java.time.format.DateTimeFormatter` | 8+ | Thread-safe formatting/parsing tool | ✅ Replacement for `SimpleDateFormat` |
 
-- Unified cipher operation handling
-- Simple XOR encryption/decryption
-- Private key loading from various sources
-- Certificate deserialization and validation
-- Support for multiple cryptographic algorithms
+So is the Date type completely obsolete and unused? ——Not exactly. Although the related APIs around Date were deprecated as early as after Java 1.1, this doesn't mean the Date type itself is deprecated. If it were deprecated, why wouldn't you find the `@Deprecated` annotation in the new JDK17? This indicates that the type is still retained. Using Date as a value object (Value Object) itself isn't problematic. For example, two constructor usages are still retained: `new Date()` and `new Date(long timestamp)`.
 
-## Methods
+## API Introduction
 
-### 1. Cipher Operations
+This date API encapsulated by the author mainly has three functions:
 
-1. `doCipher(String algorithmName, int mode, Key key, byte[] data)` - Basic cipher operation
-2. `doCipher(String algorithmName, int mode, Key key, byte[] data, AlgorithmParameterSpec spec)` - Cipher with parameters
-3. `doCipher(String algorithmName, int mode, byte[] keyData, AlgorithmParameterSpec spec, String cipherText, byte[] associatedData)` - AES cipher with associated data
+1. Date type conversion. Facing such a variety of date types: Date, Instant, Int/Long/String, LocalDate/LocalDateTime/LocalTime, ZonedDateTime, etc., providing methods that can convert between each other, i.e., input `T returned date = input(Object anyType).to(Class<T> expected type)`.
+2. Universal date formatting.
+3. `now()` function that returns the current date and other utility functions.
 
-### 2. XOR Encryption
-
-1. `XOR_encode(String res, String key)` - Simple XOR encryption
-2. `XOR_decode(String res, String key)` - XOR decryption
-3. `XOR(int res, String key)` - Integer XOR operation
-
-### 3. Key Management
-
-1. `loadPrivateKeyByPath(String privateKeyPath)` - Load private key from file
-2. `loadPrivateKey(String privateKey)` - Load private key from string
-3. `loadPrivateKey(InputStream inputStream)` - Load private key from stream
-
-### 4. Certificate Handling
-
-1. `deserializeToCerts(String apiV3Key, Map<String, Object> pMap)` - Deserialize and decrypt certificates
-
-## Usage Examples
-
-### Cipher Operations
-```java
-byte[] encrypted = CommonUtil.doCipher("AES/CBC/PKCS5Padding", 
-    Cipher.ENCRYPT_MODE, key, data, ivSpec);
-
-String decrypted = CommonUtil.doCipher("AES/GCM/NoPadding",
-    Cipher.DECRYPT_MODE, keyBytes, gcmSpec, cipherText, aad);
-```
-
-### XOR Encryption
-```java
-String encoded = CommonUtil.XOR_encode("secret", "password");
-String decoded = CommonUtil.XOR_decode(encoded, "password");
-```
-
-### Key Loading
-```java
-PrivateKey key = CommonUtil.loadPrivateKeyByPath("keys/private.pem");
-PrivateKey key2 = CommonUtil.loadPrivateKey(privateKeyString);
-```
-
-### Certificate Handling
-```java
-Map<BigInteger, X509Certificate> certs = 
-    CommonUtil.deserializeToCerts(apiV3Key, responseMap);
-```
-
-## Implementation Notes
-
-- Handles various cryptographic exceptions
-- Supports multiple key formats
-- Includes basic certificate validation
-- Provides simple XOR encryption for basic obfuscation
-
-## Conclusion
-
-The `CommonUtil` class provides foundational cryptographic utilities that are used by other security-related classes in the library, offering consistent handling of common cryptographic operations.
+Source code at: [https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date](https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date).

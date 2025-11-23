@@ -1,159 +1,110 @@
 ---
-title: BytesHelper Tutorial
-description: Utility methods for byte array manipulation
+title: Base64 Utils Tutorial
+description: Utility methods for Base64 manipulation
 tags:
   - byte arrays
-  - hexadecimal
+  - Base64
   - Java
 layout: layouts/aj-util.njk
 ---
 
-# BytesHelper Tutorial
+# Base64 Utils Tutorial
 
-This tutorial provides an overview of the `BytesHelper` class, which is part of the `lightweight-component/aj-util`
-library.  `BytesHelper` offers a collection of utility methods for working with byte arrays in Java.
-This guide will cover the purpose of each method and provide usage examples.
+The `Base64Utils` is a utility class for Base64 encoding and decoding operations, providing convenient methods for conversion between byte arrays and strings.
 
-## Introduction
+### Main Features
 
-The `BytesHelper` class provides several useful methods for manipulating byte arrays, including:
+1. **Supports standard and URL-safe Base64 encoding**
+2. **Configurable padding omission**
+3. **Multiple charset support**
+4. **Chainable API design**
 
-* Extracting subarrays
-* Finding the index of a byte array within another
-* Concatenating byte arrays
-* Converting byte arrays to hexadecimal strings and vice versa
+### Basic Usage
 
-These methods can be helpful in various scenarios, such as network programming, file I/O, and data processing.
-
-## Methods
-
-### 1. `subBytes(byte[] data, int off, int length)`
-
-Extracts a subarray from a given byte array.
-
-* **Parameters:**
-    * `data`: The input byte array.
-    * `off`: The starting offset (index) for the subarray.
-    * `length`: The length of the subarray to extract.
-* **Returns:** A new byte array containing the extracted subarray.
-
-**Example:**
+#### 1. Creating Instances
 
 ```java
-byte[]original={0x01,0x02,0x03,0x04,0x05};
-        byte[]sub=BytesHelper.subBytes(original,1,3); // Extract from index 1, length 3
-// sub will be {0x02, 0x03, 0x04}
+// Create from byte array
+byte[] data = "Hello World".getBytes();
+Base64Utils utils = new Base64Utils(data);
+
+// Create from string (default UTF-8)
+Base64Utils utils = new Base64Utils("Hello World");
+
+// Create from string (specified charset)
+Base64Utils utils = new Base64Utils("Hello World", StandardCharsets.UTF_8);
 ```
 
-### 2. `byteIndexOf(byte[] data, byte[] search, int start)`
 
-Finds the index of a byte array (`search`) within another byte array (`data`), starting the search from a specified
-index (`start`).
-
-* **Parameters:**
-    * `data`: The byte array to search within.
-    * `search`: The byte array to search for.
-    * `start`: The index to start the search from.
-* **Returns:** The index of the first occurrence of `search` within `data`, or -1 if not found.
-
-**Example:**
+#### 2. Base64 Encoding
 
 ```java
-byte[]data={0x01,0x02,0x03,0x04,0x05};
-        byte[]search={0x03,0x04};
-        int index=BytesHelper.byteIndexOf(data,search,0); // Search from the beginning
-// index will be 2
+// Basic encoding
+String encoded = new Base64Utils("Hello World").encodeAsString();
+// Output: SGVsbG8gV29ybGQ=
+
+// URL-safe encoding
+String urlSafeEncoded = new Base64Utils("Hello World")
+    .setUrlSafe(true)
+    .encodeAsString();
+// Output: SGVsbG8gV29ybGQ=
+
+// Encoding without padding
+String noPadding = new Base64Utils("Hello World")
+    .setWithoutPadding(true)
+    .encodeAsString();
+// Output: SGVsbG8gV29ybGQ (without trailing =)
 ```
 
-### 3. `byteIndexOf(byte[] data, byte[] search)`
 
-Finds the index of a byte array (`search`) within another byte array (`data`), starting the search from the beginning (
-index 0). This is an overloaded version of the previous method.
-
-* **Parameters:**
-    * `data`: The byte array to search within.
-    * `search`: The byte array to search for.
-* **Returns:** The index of the first occurrence of `search` within `data`, or -1 if not found.
-
-**Example:**
+#### 3. Base64 Decoding
 
 ```java
-byte[]data={0x01,0x02,0x03,0x04,0x05};
-        byte[]search={0x03,0x04};
-        int index=BytesHelper.byteIndexOf(data,search); // Search from the beginning
-// index will be 2
+// Basic decoding
+String decoded = new Base64Utils("SGVsbG8gV29ybGQ=").decodeAsString();
+// Output: Hello World
+
+// Decoding with specified charset
+String decodedWithCharset = new Base64Utils("SGVsbG8gV29ybGQ=")
+    .decodeAsString(StandardCharsets.UTF_8);
+
+// URL-safe decoding
+String urlDecoded = new Base64Utils("SGVsbG8gV29ybGQ=", true)
+    .setUrlSafe(true)
+    .decodeAsString();
 ```
 
-### 4. `concat(byte[] a, byte[] b)`
 
-Concatenates two byte arrays into a new byte array.
+#### 4. Chainable Calls
 
-* **Parameters:**
-    * `a`: The first byte array.
-    * `b`: The second byte array.
-* **Returns:** A new byte array containing the elements of `a` followed by the elements of `b`.
-
-**Example:**
+Due to the `@Accessors(chain = true)` annotation, chainable calls are supported:
 
 ```java
-byte[]a={0x01,0x02};
-        byte[]b={0x03,0x04};
-        byte[]combined=BytesHelper.concat(a,b);
-// combined will be {0x01, 0x02, 0x03, 0x04}
+String result = new Base64Utils("Hello World")
+    .setUrlSafe(true)
+    .setWithoutPadding(true)
+    .encodeAsString();
 ```
 
-### 5. `bytesToHexStr(byte[] bytes)`
 
-Converts a byte array to its hexadecimal string representation.
-
-* **Parameters:**
-    * `bytes`: The byte array to convert.
-* **Returns:** A string representing the hexadecimal value of each byte in the array.
-
-**Example:**
+#### 5. Formatting Base64 Strings
 
 ```java
-byte[]bytes={0x1A,0x2B,0x3C};
-        String hexString=BytesHelper.bytesToHexStr(bytes);
-// hexString will be "1A2B3C"
+// Format long Base64 string with line break every 64 characters
+String longBase64 = "SGVsbG8gV29ybGQhIEkgYW0gYSBsb25nIHN0cmluZyBmb3IgdGVzdGluZyB0aGUgZm9ybWF0dGluZyBmdW5jdGlvbi4=";
+String formatted = Base64Utils.formatBase64String(longBase64);
 ```
 
-### 6. `parseHexStr2Byte(String hex)` (Hypothetical - Not found in the provided code, but good to include if it existed or you implemented it)
 
-Converts a hexadecimal string to a byte array. This method appears in the test code, so it's likely part of the library,
-or intended to be.
+### Parameter Description
 
-* **Parameters:**
-    * `hex`: The hexadecimal string to convert.
-* **Returns:** A byte array representing the converted hexadecimal string.
+- [withoutPadding](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L57-L57): Whether to omit trailing `=` characters in the encoding result
+- [urlSafe](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L63-L63): Whether to use URL-safe Base64 variant (using `-` instead of `+`, `_` instead of `/`)
 
-**Example:**
+### Notes
 
-```java
-String hexString="1A2B3C";
-        byte[]bytes=BytesHelper.parseHexStr2Byte(hexString);
-// bytes will be {0x1A, 0x2B, 0x3C}
-```
+1. Calling encoding or decoding methods without setting input data will throw `IllegalStateException`
+2. Encoding results are converted to strings using `ISO_8859_1` charset by default
+3. Decoding uses `UTF-8` charset by default
 
-**Unit Test Example (Based on the provided test code):**
-
-```java
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class TestBytesHelper {
-    @Test
-    public void testParseHexStr2Byte() {
-        byte[] bs = BytesHelper.parseHexStr2Byte("1A2B3C");
-        assert bs != null;
-        assertEquals(0x1A, bs[0]);
-    }
-}
-```
-
-## Conclusion
-
-The `BytesHelper` class provides a convenient set of utilities for common byte array manipulations in Java. By using
-these methods, you can simplify your code and avoid writing repetitive byte array handling logic.
-Remember to consult the library's Javadoc for the most up-to-date information and additional methods.
+This utility class simplifies Base64 operations in Java, especially suitable for scenarios requiring frequent Base64 encoding and decoding.

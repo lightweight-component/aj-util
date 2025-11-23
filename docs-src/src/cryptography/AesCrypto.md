@@ -7,115 +7,71 @@ tags:
   - AesCrypto
 layout: layouts/aj-util.njk
 ---
-# AesCrypto Tutorial
+# AES/DES Encryption and Decryption
 
-This tutorial provides an overview of the `AesCrypto` class, which is part of the `lightweight-component/aj-util` library. `AesCrypto` offers a collection of utility methods for symmetric encryption and decryption using algorithms like AES, DES, 3DES, and PBE.
-
-## Introduction
-
-The `AesCrypto` class provides methods for encrypting and decrypting data using various symmetric encryption algorithms. It implements the Singleton pattern and offers a comprehensive set of tools for secure data encryption.
-
-## Methods
-
-### 1. `getInstance()`
-
-Returns the singleton instance of the `AesCrypto` class.
-
-* **Returns:** The singleton instance of `AesCrypto`.
-
-**Example:**
+## AES
+Symmetric encryption is mostly encapsulated based on the `javax.crypto` package, encapsulated in the class `com.ajaxjs.util.cryptography`. Let's first look at AES:
 
 ```java
-AesCrypto crypto = AesCrypto.getInstance();
+final String key = "abc";
+final String word = "123";
+
+@Test
+void testAES() {
+    String encWord = Cryptography.AES_encode(word, key);
+    assertEquals(word, Cryptography.AES_decode(encWord, key));
+}
 ```
 
-### 2. `getSecretKey(String algorithmName, SecureRandom secure)`
 
-Generates a secret key for the specified algorithm using the provided secure random generator and returns it as a Base64 encoded string.
-
-* **Parameters:**
-  * `algorithmName`: The name of the encryption algorithm.
-  * `secure`: The secure random generator.
-* **Returns:** A Base64 encoded string representation of the secret key.
-
-**Example:**
+Hey~ Why are these still static methods? Oh—right, we encapsulated them with static methods like [Cryptography.AES_encode()](file://D:\code\ajaxjs\aj-util\aj-cryptography\src\main\java\com\ajaxjs\util\cryptography\Cryptography.java#L107-L113), but the essence is:
 
 ```java
-SecureRandom secureRandom = new SecureRandom();
-String secretKey = AesCrypto.getSecretKey("AES", secureRandom);
+public static String AES_encode(String data, String key) {
+    Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
+    cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
+    cryptography.setDataStr(data);
+
+    return cryptography.doCipherAsHexStr();
+}
 ```
 
-### 3. `DES_encode(String res, String key)` and `DES_decode(String res, String key)`
 
-Encrypts or decrypts data using the DES algorithm.
+Speaking of instantiating objects each time, it certainly consumes more resources than static methods. However, with today's Java compiler optimizations, this additional consumption can be negligible.
 
-* **Parameters:**
-  * `res`: The data to encrypt/decrypt.
-  * `key`: The encryption/decryption key.
-* **Returns:** The encrypted/decrypted data.
-
-**Example:**
+## DES/TripleDES
+The rest DES/TripleDES follow the same pattern, just with different algorithms~
 
 ```java
-AesCrypto crypto = AesCrypto.getInstance();
-String encrypted = crypto.DES_encode("Hello, World!", "mySecretKey");
-String decrypted = crypto.DES_decode(encrypted, "mySecretKey");
+@Test
+void testDES() {
+    String encWord = Cryptography.DES_encode(word, key);
+    assertEquals(word, Cryptography.DES_decode(encWord, key));
+}
+
+@SuppressWarnings("restriction")
+@Test
+void test3DES() {
+    // Add new security algorithms, if using JCE it needs to be added
+    // The addProvider method here adds a new encryption algorithm provider (personal understanding, no good answer found, need补充)
+//		Security.addProvider(new com.sun.crypto.provider.SunJCE());
+    // byte array (used to generate the key)
+    final byte[] keyBytes = {0x11, 0x22, 0x4F, 0x58, (byte) 0x88, 0x10, 0x40, 0x38, 0x28, 0x25, 0x79, 0x51, (byte) 0xCB, (byte) 0xDD, 0x55, 0x66, 0x77, 0x29, 0x74,
+            (byte) 0x98, 0x30, 0x40, 0x36, (byte) 0xE2};
+    String word = "This is a 3DES test. 测试";
+
+    byte[] encoded = Cryptography.tripleDES_encode(word, keyBytes);
+
+    assertEquals(word, Cryptography.tripleDES_decode(encoded, keyBytes));
+}
 ```
 
-### 4. `AES_encode(String res, String key)` and `AES_decode(String res, String key)`
-
-Encrypts or decrypts data using the AES algorithm with a 128-bit key size.
-
-* **Parameters:**
-  * `res`: The data to encrypt/decrypt.
-  * `key`: The encryption/decryption key.
-* **Returns:** The encrypted/decrypted data.
-
-**Example:**
+## PBE
+Here let's talk about the PBE algorithm. PBE is an enhancement of DES, adding a Salt value to make it more secure.
 
 ```java
-AesCrypto crypto = AesCrypto.getInstance();
-String encrypted = crypto.AES_encode("Hello, World!", "mySecretKey");
-String decrypted = crypto.AES_decode(encrypted, "mySecretKey");
+byte[] salt = Cryptography.initSalt();
+byte[] encData = Cryptography.PBE_encode(word, key, salt);
+
+assertEquals(word, Cryptography.PBE_decode(encData, key, salt));
 ```
-
-### 5. `encryptTripleDES(byte[] key, String data)` and `decryptTripleDES(byte[] key, byte[] data)`
-
-Encrypts or decrypts data using the Triple DES (3DES) algorithm.
-
-* **Parameters:**
-  * `key`: The encryption/decryption key (24 bytes for Triple DES).
-  * `data`: The data to encrypt/decrypt.
-* **Returns:** The encrypted/decrypted data.
-
-**Example:**
-
-```java
-byte[] key = new byte[24]; // Generate or obtain a 24-byte key
-new SecureRandom().nextBytes(key);
-
-byte[] encrypted = AesCrypto.encryptTripleDES(key, "Hello, World!");
-String decrypted = AesCrypto.decryptTripleDES(key, encrypted);
-```
-
-### 6. `initSalt()`, `encryptPBE(String key, byte[] salt, String data)`, and `decryptPBE(String key, byte[] salt, byte[] data)`
-
-Methods for Password-Based Encryption (PBE).
-
-* **initSalt()**: Generates a random 8-byte salt.
-* **encryptPBE()**: Encrypts data using PBE with the provided key and salt.
-* **decryptPBE()**: Decrypts data using PBE with the provided key and salt.
-
-**Example:**
-
-```java
-byte[] salt = AesCrypto.initSalt();
-String key = "mySecretPassword";
-
-byte[] encrypted = AesCrypto.encryptPBE(key, salt, "Hello, World!");
-String decrypted = AesCrypto.decryptPBE(key, salt, encrypted);
-```
-
-## Conclusion
-
-The `AesCrypto` class provides a comprehensive set of tools for symmetric encryption and decryption. It supports multiple algorithms (AES, DES, 3DES, PBE) and offers a simple interface for secure data handling. Remember to store encryption keys securely and follow best practices for cryptographic implementations.

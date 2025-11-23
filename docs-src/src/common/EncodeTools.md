@@ -1,5 +1,5 @@
 ---
-title: EncodeTools Tutorial
+title: UrlEncode Tutorial
 description: Utility methods for URL encoding/decoding and Base64 encoding/decoding
 tags:
   - URL encoding
@@ -8,100 +8,93 @@ tags:
 layout: layouts/aj-util.njk
 ---
 
-# EncodeTools Tutorial
+# UrlEncode Tutorial
 
-The `EncodeTools` class provides methods for URL encoding, URL decoding, Base64 encoding, and Base64 decoding. These
-methods can be used to handle string encoding and decoding for various purposes, such as preparing
-strings for HTTP requests or encoding binary data.
+UrlEncode is a URL encoding and decoding utility class that provides methods for encoding and decoding URLs, handling Chinese characters in URLs, and parsing query strings into Maps.
 
-## Methods
+### Main Features
 
-### 1. `urlEncode(String str)`
+1. **URL Encoding and Decoding**: Supports different encoding strategies and charset specifications
+2. **Chinese Character Handling**: Special handling for Chinese characters in URLs
+3. **Query String Parsing**: Converts strings in `xxx=xxx&xxx=xxx` format to Map
+4. **Multiple Encoding Modes**: Supports regular encoding, GET request optimized encoding, and safe encoding
 
-Encodes a string using URL encoding.
+### Basic Usage
 
-* **Parameters:**
-    * `str`: The input string to encode.
-* **Returns:** The URL-encoded string.
-
-**Example:**
+#### 1. Creating Instances
 
 ```java
-String encoded = EncodeTools.urlEncode("Hello World!");
-// encoded will be "Hello%20World%21"
+// Create instance with default UTF-8 charset
+UrlEncode encoder = new UrlEncode("Hello World");
+
+// Create instance with specified charset
+UrlEncode encoder = new UrlEncode("Hello World", StandardCharsets.UTF_8);
 ```
 
-### 2. `urlDecode(String str)`
 
-Decodes a URL-encoded string.
-
-* **Parameters:**
-    * `str`: The URL-encoded string to decode.
-* **Returns:** The decoded string.
-
-**Example:**
+#### 2. URL Encoding
 
 ```java
-String decoded = EncodeTools.urlDecode("Hello%20World%21");
-// decoded will be "Hello World!"
+// Basic URL encoding
+String encoded = new UrlEncode("Hello World").encode();
+// Output: Hello+World
+
+// GET request optimized encoding (replaces + with %20)
+String queryEncoded = new UrlEncode("Hello World").encodeQuery();
+// Output: Hello%20World
+
+// Safe encoding (handles special characters)
+String safeEncoded = new UrlEncode("Hello*World~Test").encodeSafe();
+// Output: Hello%2AWorld%7ETest
 ```
 
-### 3. `base64Encode(byte[] bytes)`
 
-Encodes a byte array using Base64 encoding.
-
-* **Parameters:**
-    * `bytes`: The byte array to encode.
-* **Returns:** The Base64-encoded byte array.
-
-**Example:**
+#### 3. URL Decoding
 
 ```java
-byte[] encodedBytes = EncodeTools.base64Encode("Hello World!".getBytes());
-// encodedBytes will be the Base64-encoded byte array
+// URL decoding
+String decoded = new UrlEncode("Hello%20World").decode();
+// Output: Hello World
 ```
 
-### 4. `base64EncodeToString(byte[] bytes)`
 
-Encodes a byte array using Base64 encoding and returns the result as a string.
+#### 4. Chainable Calls
 
-* **Parameters:**
-    * `bytes`: The byte array to encode.
-* **Returns:** The Base64-encoded string.
-
-**Example:**
+Thanks to the `@Accessors(chain = true)` annotation, chainable calls are supported:
 
 ```java
-String encodedString = EncodeTools.base64EncodeToString("Hello World!".getBytes());
-// encodedString will be "SGVsbG8gV29ybGQh"
+String result = new UrlEncode("Hello World")
+    .setCharset(StandardCharsets.UTF_8)
+    .encodeQuery();
 ```
 
-### 5. `base64Decode(String str)`
 
-Decodes a Base64-encoded string.
+### Static Utility Methods
 
-* **Parameters:**
-    * `str`: The Base64-encoded string to decode.
-* **Returns:** The decoded byte array.
-
-**Example:**
+#### 1. Chinese Character Processing
 
 ```java
-byte[] decodedBytes = EncodeTools.base64Decode("SGVsbG8gV29ybGQh");
-// decodedBytes will be the decoded byte array
+// Handle Chinese characters in URLs
+String chineseStr = "你好世界";
+String processed = UrlEncode.urlChinese(chineseStr);
 ```
 
-### 6. `base64DecodeToString(String str)`
 
-Decodes a Base64-encoded string and returns the result as a string.
-
-* **Parameters:**
-    * `str`: The Base64-encoded string to decode.
-* **Returns:** The decoded string.
-
-**Example:**
+#### 2. Query String to Map Conversion
 
 ```java
-String decodedString = EncodeTools.base64DecodeToString("SGVsbG8gV29ybGQh");
-// decodedString will be "Hello World!"
+// Convert query string to Map
+String queryString = "name=张三&age=25&city=北京";
+Map<String, String> paramMap = UrlEncode.parseStringToMap(queryString);
+
+// Result:
+// name -> 张三
+// age -> 25
+// city -> 北京
 ```
+
+### Notes
+
+1. `encodeSafe` method has issues in unit tests and needs fixing
+2. If Tomcat filter already sets UTF-8, the `urlChinese`method may not need repeated transcoding
+3. All encoding and decoding operations support custom charsets

@@ -1,153 +1,108 @@
 ---
-title: BytesHelper 教程
-description: BytesHelper 类提供了字节数组操作的实用方法
+title: Base64Utils 教程
+description: Base64Utils 是一个用于 Base64 编码和解码操作的工具类
 tags:
-  - 字节数组
-  - 十六进制
+  - Base64
   - Java
 layout: layouts/aj-util-cn.njk
 ---
+# Base64Utils 使用教程
 
-# BytesHelper 教程
+Base64Utils 是一个用于 Base64 编码和解码操作的工具类，提供了便捷的方法在字节数组和字符串之间进行转换。
 
-本教程概述了 `lightweight-component/aj-util` 库中的 `BytesHelper` 类。`BytesHelper` 提供了一系列用于在 Java
-中处理字节数组的实用方法。本指南将介绍每个方法的用途并提供使用示例。
+### 主要功能特性
 
-## 简介
+1. **支持标准和URL安全的Base64编码**
+2. **可配置是否省略填充字符**
+3. **支持多种字符集**
+4. **链式调用API设计**
 
-`BytesHelper` 类提供了一些有用的方法来操作字节数组，包括：
+### 基本使用方法
 
-* 提取子数组
-* 查找字节数组在另一个字节数组中的索引
-* 连接字节数组
-* 将字节数组转换为十六进制字符串，反之亦然
-
-这些方法在各种场景中都非常有用，例如网络编程、文件 I/O 和数据处理。
-
-## 方法
-
-### 1. `subBytes(byte[] data, int off, int length)`
-
-从给定的字节数组中提取子数组。
-
-* **参数：**
-    * `data`: 输入字节数组。
-    * `off`: 子数组的起始偏移量（索引）。
-    * `length`: 要提取的子数组的长度。
-* **返回：** 包含提取的子数组的新字节数组。
-
-**示例：**
+#### 1. 创建实例
 
 ```java
-byte[] original = {0x01, 0x02, 0x03, 0x04, 0x05};
-byte[] sub = BytesHelper.subBytes(original, 1, 3); // 从索引 1 提取，长度为 3
-// sub 将为 {0x02, 0x03, 0x04}
+// 从字节数组创建
+byte[] data = "Hello World".getBytes();
+Base64Utils utils = new Base64Utils(data);
+
+// 从字符串创建（默认UTF-8）
+Base64Utils utils = new Base64Utils("Hello World");
+
+// 从字符串创建（指定字符集）
+Base64Utils utils = new Base64Utils("Hello World", StandardCharsets.UTF_8);
 ```
 
-### 2. `byteIndexOf(byte[] data, byte[] search, int start)`
 
-在字节数组 (`data`) 中查找字节数组 (`search`) 的索引，从指定的索引 (`start`) 开始搜索。
-
-* **参数：**
-    * `data`: 要在其中搜索的字节数组。
-    * `search`: 要搜索的字节数组。
-    * `start`: 开始搜索的索引。
-* **返回：** `search` 在 `data` 中首次出现的索引，如果未找到则返回 -1。
-
-**示例：**
+#### 2. Base64编码
 
 ```java
-byte[] data = {0x01, 0x02, 0x03, 0x04, 0x05};
-byte[] search = {0x03, 0x04};
-int index = BytesHelper.byteIndexOf(data, search, 0); // 从头开始搜索
-// index 将为 2
+// 基本编码
+String encoded = new Base64Utils("Hello World").encodeAsString();
+// 输出: SGVsbG8gV29ybGQ=
+
+// URL安全编码
+String urlSafeEncoded = new Base64Utils("Hello World")
+    .setUrlSafe(true)
+    .encodeAsString();
+// 输出: SGVsbG8gV29ybGQ=
+
+// 不带填充的编码
+String noPadding = new Base64Utils("Hello World")
+    .setWithoutPadding(true)
+    .encodeAsString();
+// 输出: SGVsbG8gV29ybGQ (没有末尾的=)
 ```
 
-### 3. `byteIndexOf(byte[] data, byte[] search)`
 
-在字节数组 (`data`) 中查找字节数组 (`search`) 的索引，从头开始（索引 0）搜索。 这是前一个方法的重载版本。
-
-* **参数：**
-    * `data`: 要在其中搜索的字节数组。
-    * `search`: 要搜索的字节数组。
-* **返回：** `search` 在 `data` 中首次出现的索引，如果未找到则返回 -1。
-
-**示例：**
+#### 3. Base64解码
 
 ```java
-byte[] data = {0x01, 0x02, 0x03, 0x04, 0x05};
-byte[] search = {0x03, 0x04};
-int index = BytesHelper.byteIndexOf(data, search); // 从头开始搜索
-// index 将为 2
+// 基本解码
+String decoded = new Base64Utils("SGVsbG8gV29ybGQ=").decodeAsString();
+// 输出: Hello World
+
+// 指定字符集解码
+String decodedWithCharset = new Base64Utils("SGVsbG8gV29ybGQ=")
+    .decodeAsString(StandardCharsets.UTF_8);
+
+// URL安全解码
+String urlDecoded = new Base64Utils("SGVsbG8gV29ybGQ=", true)
+    .setUrlSafe(true)
+    .decodeAsString();
 ```
 
-### 4. `concat(byte[] a, byte[] b)`
 
-将两个字节数组连接成一个新的字节数组。
+#### 4. 链式调用
 
-* **参数：**
-    * `a`: 第一个字节数组。
-    * `b`: 第二个字节数组。
-* **返回：** 包含 `a` 的元素，后跟 `b` 的元素的新字节数组。
-
-**示例：**
+由于使用了 `@Accessors(chain = true)` 注解，可以进行链式调用：
 
 ```java
-byte[] a = {0x01, 0x02};
-byte[] b = {0x03, 0x04};
-byte[] combined = BytesHelper.concat(a, b);
-// combined 将为 {0x01, 0x02, 0x03, 0x04}
+String result = new Base64Utils("Hello World")
+    .setUrlSafe(true)
+    .setWithoutPadding(true)
+    .encodeAsString();
 ```
 
-### 5. `bytesToHexStr(byte[] bytes)`
 
-将字节数组转换为其十六进制字符串表示形式。
-
-* **参数：**
-    * `bytes`: 要转换的字节数组。
-* **返回：** 一个字符串，表示数组中每个字节的十六进制值。
-
-**示例：**
+#### 5. 格式化Base64字符串
 
 ```java
-byte[] bytes = {0x1A, 0x2B, 0x3C};
-String hexString = BytesHelper.bytesToHexStr(bytes);
-// hexString 将为 "1A2B3C"
+// 将长Base64字符串格式化为每64个字符一行
+String longBase64 = "SGVsbG8gV29ybGQhIEkgYW0gYSBsb25nIHN0cmluZyBmb3IgdGVzdGluZyB0aGUgZm9ybWF0dGluZyBmdW5jdGlvbi4=";
+String formatted = Base64Utils.formatBase64String(longBase64);
 ```
 
-### 6. `parseHexStr2Byte(String hex)` (假设 - 在提供的代码中未找到，但如果它存在或您实现了它，则包含它会很好)
 
-将十六进制字符串转换为字节数组。 此方法出现在测试代码中，因此它可能是库的一部分，或者打算成为库的一部分。
+### 参数说明
 
-* **参数：**
-    * `hex`: 要转换的十六进制字符串。
-* **返回：** 表示转换后的十六进制字符串的字节数组。
+- [withoutPadding](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L57-L57): 是否省略编码结果末尾的 `=` 字符
+- [urlSafe](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L63-L63): 是否使用URL安全的Base64变体（使用 `-` 替代 `+`，`_` 替代 `/`）
 
-**示例：**
+### 注意事项
 
-```java
-String hexString = "1A2B3C";
-byte[] bytes = BytesHelper.parseHexStr2Byte(hexString);
-// bytes 将为 {0x1A, 0x2B, 0x3C}
-```
+1. 如果未设置输入数据就调用编码或解码方法，会抛出 `IllegalStateException`
+2. 编码结果默认使用 `ISO_8859_1` 字符集转换为字符串
+3. 解码默认使用 `UTF-8` 字符集转换为字符串
 
-**单元测试示例（基于提供的测试代码）：**
-
-```java
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class TestBytesHelper {
-    @Test
-    public void testParseHexStr2Byte() {
-        byte[] bs = BytesHelper.parseHexStr2Byte("1A2B3C");
-        assert bs != null;
-        assertEquals(0x1A, bs[0]);
-    }
-}
-```
-
-## 结论
-
-`BytesHelper` 类提供了一组方便的实用程序，用于 Java 中常见的字节数组操作。 通过使用这些方法，您可以简化代码并避免编写重复的字节数组处理逻辑。
-请记住查阅库的 Javadoc 以获取最新信息和其他方法。
+这个工具类简化了Java中的Base64操作，特别适合需要频繁进行Base64编解码的场景。

@@ -1,94 +1,37 @@
 ---
-title: CommonUtil
-description: Common cryptographic utilities used throughout the library
+title: Introduction to Encryption and Decryption Package
+description: Introduction to Encryption and Decryption Package
 tags:
   - Encryption
   - Decryption
   - Utilities
 layout: layouts/aj-util.njk
 ---
+# Introduction to Encryption and Decryption Package
 
-# CommonUtil Tutorial
+## Java AES/DES/RSA Encryption and Decryption API
 
-This tutorial provides an overview of the `CommonUtil` class, which is part of the `lightweight-component/aj-util` library. The `CommonUtil` class provides common cryptographic utilities used throughout the library.
+The JDK contains mainstream encryption and decryption APIs, including AES/DES/3DES/RSA. These functionalities are mainly provided by the `javax.crypto` (JCE, Java Cryptography Extension) and `java.security` packages. Among these, only RSA belongs to asymmetric encryption (Asymmetric Encryption), while the others are symmetric encryption (Symmetric Encryption). The similarities and differences between them are as follows:
 
-## Introduction
+- It is called "symmetric encryption" because the same key is used for both encryption and decryption, which is "symmetric". Conversely, if one key is used for encryption and another for decryption, it is "asymmetric"
+- Symmetric encryption generally executes faster, but its security is relatively poor compared to asymmetric encryption; asymmetric encryption is the opposite, with higher security but relatively poor execution efficiency
+- There is no absolute superiority between the two, and the optimal choice should be made according to the occasion requirements
 
-The `CommonUtil` class contains static methods for various cryptographic operations including:
+## Source Code
 
-- General cipher operations (encryption/decryption)
-- XOR encryption/decryption
-- Private key loading and management
-- Certificate deserialization
+The final code is [here](https://gitcode.com/lightweight-component/aj-util/tree/main/src/main/java/com/ajaxjs/util/cryptography).
 
-## Main Features
+Usage can be referenced in [unit tests](https://gitcode.com/lightweight-component/aj-util/blob/main/src/test/java/com/ajaxjs/util/cryptography/TestCryptography.java).
 
-- Unified cipher operation handling
-- Simple XOR encryption/decryption
-- Private key loading from various sources
-- Certificate deserialization and validation
-- Support for multiple cryptographic algorithms
+Maven dependency reference, requires Java 8+
 
-## Methods
-
-### 1. Cipher Operations
-
-1. `doCipher(String algorithmName, int mode, Key key, byte[] data)` - Basic cipher operation
-2. `doCipher(String algorithmName, int mode, Key key, byte[] data, AlgorithmParameterSpec spec)` - Cipher with parameters
-3. `doCipher(String algorithmName, int mode, byte[] keyData, AlgorithmParameterSpec spec, String cipherText, byte[] associatedData)` - AES cipher with associated data
-
-### 2. XOR Encryption
-
-1. `XOR_encode(String res, String key)` - Simple XOR encryption
-2. `XOR_decode(String res, String key)` - XOR decryption
-3. `XOR(int res, String key)` - Integer XOR operation
-
-### 3. Key Management
-
-1. `loadPrivateKeyByPath(String privateKeyPath)` - Load private key from file
-2. `loadPrivateKey(String privateKey)` - Load private key from string
-3. `loadPrivateKey(InputStream inputStream)` - Load private key from stream
-
-### 4. Certificate Handling
-
-1. `deserializeToCerts(String apiV3Key, Map<String, Object> pMap)` - Deserialize and decrypt certificates
-
-## Usage Examples
-
-### Cipher Operations
-```java
-byte[] encrypted = CommonUtil.doCipher("AES/CBC/PKCS5Padding", 
-    Cipher.ENCRYPT_MODE, key, data, ivSpec);
-
-String decrypted = CommonUtil.doCipher("AES/GCM/NoPadding",
-    Cipher.DECRYPT_MODE, keyBytes, gcmSpec, cipherText, aad);
+```xml
+<dependency>
+    <groupId>com.ajaxjs</groupId>
+    <artifactId>aj-cryptography</artifactId>
+    <version>1.1</version>
+</dependency>
 ```
 
-### XOR Encryption
-```java
-String encoded = CommonUtil.XOR_encode("secret", "password");
-String decoded = CommonUtil.XOR_decode(encoded, "password");
-```
 
-### Key Loading
-```java
-PrivateKey key = CommonUtil.loadPrivateKeyByPath("keys/private.pem");
-PrivateKey key2 = CommonUtil.loadPrivateKey(privateKeyString);
-```
-
-### Certificate Handling
-```java
-Map<BigInteger, X509Certificate> certs = 
-    CommonUtil.deserializeToCerts(apiV3Key, responseMap);
-```
-
-## Implementation Notes
-
-- Handles various cryptographic exceptions
-- Supports multiple key formats
-- Includes basic certificate validation
-- Provides simple XOR encryption for basic obfuscation
-
-## Conclusion
-
-The `CommonUtil` class provides foundational cryptographic utilities that are used by other security-related classes in the library, offering consistent handling of common cryptographic operations.
+The component jar package is very small, only about 20kb. It only depends on a utility library I wrote myself.

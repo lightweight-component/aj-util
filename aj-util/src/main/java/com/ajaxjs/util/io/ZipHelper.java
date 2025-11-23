@@ -75,9 +75,9 @@ public class ZipHelper {
                 ZipEntry entry = entries.nextElement();
                 File newFile = new File(save, entry.getName());
 
-                if (entry.isDirectory()) {
+                if (entry.isDirectory())
                     newFile.mkdirs();
-                } else {
+                else {
                     initFolder(newFile);
                     try (InputStream is = zipFile.getInputStream(entry);
                          FileOutputStream fos = new FileOutputStream(newFile)) {
