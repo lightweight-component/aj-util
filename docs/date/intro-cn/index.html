@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-日期处理简介</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  一个简洁、清晰的 Java 日期 API" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 日期处理" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>一个简洁、清晰的 Java 日期 API</h1>
+<p>说起日期类型，相对其他原始数据类型（int/long/boolean/string）处理起来是比较棘手的，原因也是多方面的，首先日期是个笼统的概念，年月日可以说成是日期，年月日时分秒也可以说成日期，或者说单独的时分秒也是日期，——那你到底说着哪个日期呢，是不是？Java 传统日期类型<code>java.util.Date</code>就是这么干的，一个类型囊括上述所有的日期概念，也是造成日期 API 混乱的根源；其次日期的表达方式，也称之为“格式 Format”，可以<code>2025-12-22 11:05</code>，也可以<code>2025-12-22 11-05</code>甚至<code>3 Jun 2025 11:05</code>，种类繁多；最后日期还有时区的概念，比如<code>2024-12-03T10:15:30+01:00[Europe/Paris]</code>，<code>Tue, 3 Jun 2025 11:05:30 GMT</code>等等。</p>
+<h2>关于<code>Date</code>类型</h2>
+<p>早期 Java 版本中就是基于<code>java.util.Date</code>类型一统天下，很多日期处理方法都是围绕它进行的（Java 1.1 之前）。后来版本重构中废弃了很多的这些方法，改由<code>java.util.Calendar</code>与<code>java.text.DateFormat</code>完成。Calendar 解决了日期的棘手问题了吗？并没有，虽然 Calendar 处理日期起来更灵活但是使用仍然过于复杂，设置、比较、格式化仍旧比较麻烦、冗长，所以社区又有了代替品 Joda-Time，被许多项目所采用。于是这个优秀的开源项目渐渐地成为 Java 标准的一部分，便是 JSR310，最后集成到 Java 8 中变成<code>java.time</code>！</p>
+<p>总之，我们主张使用的日期类型就是<code>java.time</code>里面的 Instant 及 LocalDateTime，其中 Instant 表示某一时刻的时间，大致对应时间戳，可支持纳秒的级别。LocalDateTime 可能更我们更常用一些，以及它衍生的其他精确类型。</p>
+<h3>📅 新 Java 常用日期时间类型</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>所在包</th>
+<th>Java 版本</th>
+<th>说明</th>
+<th>是否推荐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Instant</code></td>
+<td><code>java.time.Instant</code></td>
+<td>8+</td>
+<td>表示时间线上的一个瞬时点（UTC），精确到纳秒</td>
+<td>✅ 推荐用于时间戳</td>
+</tr>
+<tr>
+<td><code>LocalDate</code></td>
+<td><code>java.time.LocalDate</code></td>
+<td>8+</td>
+<td><strong>只包含日期</strong>（年-月-日），如 <code>2025-03-08</code></td>
+<td>✅ 强烈推荐用于“纯日期”场景（如列车出发日）</td>
+</tr>
+<tr>
+<td><code>LocalTime</code></td>
+<td><code>java.time.LocalTime</code></td>
+<td>8+</td>
+<td><strong>只包含时间</strong>（时:分:秒.纳秒），如 <code>14:30:00</code></td>
+<td>✅ 推荐用于“纯时间”场景（如发车时间）</td>
+</tr>
+<tr>
+<td><code>LocalDateTime</code></td>
+<td><code>java.time.LocalDateTime</code></td>
+<td>8+</td>
+<td>日期 + 时间（无时区），如 <code>2025-03-08T14:30:00</code></td>
+<td>✅ 推荐用于本地时间（如列车时刻表）</td>
+</tr>
+<tr>
+<td><code>ZonedDateTime</code></td>
+<td><code>java.time.ZonedDateTime</code></td>
+<td>8+</td>
+<td>带时区的日期时间，支持夏令时等</td>
+<td>✅ 推荐用于跨时区系统</td>
+</tr>
+<tr>
+<td><code>OffsetDateTime</code></td>
+<td><code>java.time.OffsetDateTime</code></td>
+<td>8+</td>
+<td>带偏移量的时间（如 <code>+08:00</code>）</td>
+<td>✅ 适合存储数据库时间</td>
+</tr>
+<tr>
+<td><code>Duration</code></td>
+<td><code>java.time.Duration</code></td>
+<td>8+</td>
+<td>表示时间段（秒、纳秒），如 2 小时</td>
+<td>✅ 推荐用于计算时间差</td>
+</tr>
+<tr>
+<td><code>Period</code></td>
+<td><code>java.time.Period</code></td>
+<td>8+</td>
+<td>表示时间段（年、月、日），如 1个月后</td>
+<td>✅ 推荐用于日历周期计算</td>
+</tr>
+<tr>
+<td><code>DateTimeFormatter</code></td>
+<td><code>java.time.format.DateTimeFormatter</code></td>
+<td>8+</td>
+<td>线程安全的格式化/解析工具</td>
+<td>✅ 替代 <code>SimpleDateFormat</code></td>
+</tr>
+</tbody>
+</table>
+<p>那么 Date 类型就不用，完全废弃了吗？——并不是，虽然围绕 Date 的相关 API 早在 Java 1.1 之后就被废弃，但是不代表 Date 本身被废弃。如果废弃了，为什么你在新版 JDK17 上找不到<code>@Deprecated</code>注解？说明该类型还是保留着的。作为值对象（Value Object）使用 Date 本身没什么问题，例如两种构造器的用法仍保留：<code>new Date()</code>以及<code>new Date(long timestamp)</code>。</p>
+<h2>API 简介</h2>
+<p>这套笔者封装的 日期 API，主要功能有以下三点：</p>
+<ol>
+<li>日期类型的转换。面对如此繁多的日期类型：Date、Instant、Int/Long/String、LocalDate/LocalDateTime/LocalTime、ZonedDateTime 等等，给出一个相互之间都能够转换的方法，即输入<code>T 返回的日期 = input(Object anyType).to(Class&lt;T&gt; 期望类型)</code>。</li>
+<li>通用的日期格式化。</li>
+<li>返回当前日期的<code>now()</code>函数及其他工具函数。</li>
+</ol>
+<p>源码在：<a href="https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date">https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date</a>。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

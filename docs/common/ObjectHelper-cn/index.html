@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,62 +85,124 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>ObjectHelper 教程</h1>
-<p>本教程提供了 <code>ObjectHelper</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>ObjectHelper</code> 类为处理 Java 对象提供了实用工具方法。</p>
-<h2>简介</h2>
-<p><code>ObjectHelper</code> 类包含用于对象克隆和映射创建的静态方法。</p>
-<h2>主要特性</h2>
-<ul>
-<li>可序列化对象的深度克隆</li>
-<li>方便的映射创建方法</li>
-<li>优化的映射初始化</li>
-<li>空映射常量</li>
-</ul>
-<h2>常量</h2>
+                <h1>ObjectHelper 使用教程</h1>
+<p><code>ObjectHelper</code> 是一个对象工具类，提供了处理 Java 对象、集合、映射和各种数据结构的通用工具方法。</p>
+<h3>主要功能特性</h3>
 <ol>
-<li><code>EMPTY_PARAMS_MAP</code> - 不可变的空映射</li>
+<li><strong>文本内容检查和验证</strong></li>
+<li><strong>集合和数组空值检查</strong></li>
+<li><strong>创建集合的便捷工厂方法（映射、列表、集合）</strong></li>
+<li><strong>容量计算工具</strong></li>
 </ol>
-<h2>方法</h2>
-<h3>1. 克隆</h3>
-<ol>
-<li><code>clone(T obj)</code> - 深度克隆可序列化对象</li>
-</ol>
-<h3>2. 映射创建</h3>
-<ol>
-<li><code>mapOf(K k1, V v1)</code> - 创建包含单个条目的映射</li>
-<li><code>mapOf(K k1, V v1, K k2, V v2)</code> - 创建包含两个条目的映射</li>
-<li><code>mapOf(K k1, V v1, K k2, V v2, K k3, V v3)</code> - 创建包含三个条目的映射</li>
-<li><code>mapOf(int expectedSize)</code> - 创建具有预期大小的优化 HashMap</li>
-</ol>
-<h2>使用示例</h2>
-<h3>对象克隆</h3>
-<pre><code class="language-java">MyClass original = new MyClass();
-MyClass cloned = ObjectHelper.clone(original);
+<h3>文本检查方法</h3>
+<h4>1. hasText 方法</h4>
+<p>检查给定字符串是否有实际文本内容：</p>
+<pre><code class="language-java">// 检查字符串是否包含非空白字符
+boolean result1 = ObjectHelper.hasText(&quot;Hello&quot;);     // true
+boolean result2 = ObjectHelper.hasText(&quot;   &quot;);       // false
+boolean result3 = ObjectHelper.hasText(&quot;&quot;);          // false
+boolean result4 = ObjectHelper.hasText(null);        // false
 </code></pre>
-<h3>映射创建</h3>
-<pre><code class="language-java">Map&lt;String, Integer&gt; map1 = ObjectHelper.mapOf(&quot;a&quot;, 1);
-Map&lt;String, Integer&gt; map2 = ObjectHelper.mapOf(&quot;a&quot;, 1, &quot;b&quot;, 2);
-Map&lt;String, Integer&gt; map3 = ObjectHelper.mapOf(&quot;a&quot;, 1, &quot;b&quot;, 2, &quot;c&quot;, 3);
+<h4>2. isEmptyText 方法</h4>
+<p>检查给定字符串是否为空或仅包含空白字符：</p>
+<pre><code class="language-java">// 检查字符串是否为空或仅包含空白字符
+boolean result1 = ObjectHelper.isEmptyText(&quot;Hello&quot;); // false
+boolean result2 = ObjectHelper.isEmptyText(&quot;   &quot;);   // true
+boolean result3 = ObjectHelper.isEmptyText(&quot;&quot;);      // true
+boolean result4 = ObjectHelper.isEmptyText(null);    // true
+</code></pre>
+<h3>空值检查方法</h3>
+<h4>1. 数组空值检查</h4>
+<pre><code class="language-java">// 检查数组是否为空
+String[] array1 = null;
+String[] array2 = new String[0];
+String[] array3 = {&quot;Hello&quot;};
 
-// 优化映射
-Map&lt;String, Integer&gt; map = ObjectHelper.mapOf(100); // 预分配约100个条目的空间
+boolean result1 = ObjectHelper.isEmpty(array1); // true
+boolean result2 = ObjectHelper.isEmpty(array2); // true
+boolean result3 = ObjectHelper.isEmpty(array3); // false
 </code></pre>
-<h3>空映射</h3>
-<pre><code class="language-java">Map&lt;String, Object&gt; empty = ObjectHelper.EMPTY_PARAMS_MAP;
+<h4>2. 集合空值检查</h4>
+<pre><code class="language-java">// 检查集合是否为空
+List&lt;String&gt; list1 = null;
+List&lt;String&gt; list2 = new ArrayList&lt;&gt;();
+List&lt;String&gt; list3 = Arrays.asList(&quot;Hello&quot;);
+
+boolean result1 = ObjectHelper.isEmpty(list1); // true
+boolean result2 = ObjectHelper.isEmpty(list2); // true
+boolean result3 = ObjectHelper.isEmpty(list3); // false
 </code></pre>
-<h2>实现说明</h2>
+<h4>3. 映射空值检查</h4>
+<pre><code class="language-java">// 检查映射是否为空
+Map&lt;String, String&gt; map1 = null;
+Map&lt;String, String&gt; map2 = new HashMap&lt;&gt;();
+Map&lt;String, String&gt; map3 = new HashMap&lt;&gt;();
+map3.put(&quot;key&quot;, &quot;value&quot;);
+
+boolean result1 = ObjectHelper.isEmpty(map1); // true
+boolean result2 = ObjectHelper.isEmpty(map2); // true
+boolean result3 = ObjectHelper.isEmpty(map3); // false
+</code></pre>
+<h3>集合创建方法</h3>
+<h4>1. 创建映射</h4>
+<pre><code class="language-java">// 创建单键值对映射
+Map&lt;String, String&gt; map1 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;value1&quot;);
+
+// 创建双键值对映射
+Map&lt;String, String&gt; map2 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;);
+
+// 创建三键值对映射
+Map&lt;String, String&gt; map3 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;, &quot;key3&quot;, &quot;value3&quot;);
+
+// 创建指定容量的映射
+Map&lt;String, String&gt; map4 = ObjectHelper.mapOf(10); // 优化容量的HashMap
+</code></pre>
+<h4>2. 创建列表</h4>
+<pre><code class="language-java">// 创建不可变列表
+List&lt;String&gt; list1 = ObjectHelper.listOf(&quot;item1&quot;);
+List&lt;String&gt; list2 = ObjectHelper.listOf(&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;);
+List&lt;String&gt; list3 = ObjectHelper.listOf(); // 空列表
+</code></pre>
+<h4>3. 创建集合</h4>
+<pre><code class="language-java">// 创建不可变集合
+Set&lt;String&gt; set1 = ObjectHelper.setOf(&quot;item1&quot;);
+Set&lt;String&gt; set2 = ObjectHelper.setOf(&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;);
+Set&lt;String&gt; set3 = ObjectHelper.setOf(); // 空集合
+
+// 自动去重
+Set&lt;String&gt; set4 = ObjectHelper.setOf(&quot;item1&quot;, &quot;item1&quot;, &quot;item2&quot;); // 只包含&quot;item1&quot;和&quot;item2&quot;
+</code></pre>
+<h3>常量</h3>
 <ul>
-<li><code>clone()</code> 使用 Java 序列化进行深度克隆</li>
-<li><code>mapOf()</code> 方法提供了方便的映射初始化</li>
-<li><code>mapOf(int)</code> 通过计算理想的初始容量来优化 HashMap 创建</li>
+<li><code>EMPTY_PARAMS_MAP</code>: 空的不可变映射，当不需要参数时可用作默认值或标记值</li>
+<li><code>DEFAULT_LOAD_FACTOR</code>: 哈希映射的默认负载因子，针对时间和空间效率进行了优化</li>
 </ul>
-<h2>结论</h2>
-<p><code>ObjectHelper</code> 类提供了有用的工具，用于对象克隆和映射创建，简化了 Java 应用程序中常见的对象相关操作。</p>
+<h3>注意事项</h3>
+<ol>
+<li><code>listOf</code> 和 <code>setOf</code> 方法创建的是不可变集合</li>
+<li><code>setOf</code> 方法不允许包含 null 元素</li>
+<li><code>mapOf</code> 方法会根据预期大小优化初始容量，减少重新调整大小的操作</li>
+</ol>
 
             </article>
         </div>

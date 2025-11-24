@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-StreamHelper 教程</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  StreamHelper 类提供了流操作和转换的实用方法" />
+        <title>AJ Utils-DataReader/ 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  DataReader/ 类提供了流操作和转换的实用方法" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 流操作,I/O,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,105 +85,146 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>StreamHelper</h1>
-<p><code>StreamHelper</code> 类提供静态方法来对 Java 流执行常见操作。 它侧重于简化将输入流转换为字符串以及有效地在流之间复制数据。</p>
-<h2>方法</h2>
-<h3>1. <code>copyToString(InputStream in)</code></h3>
-<p>读取输入流并使用默认的 UTF-8 字符集将其转换为字符串。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>in</code>：要从中读取的输入流。 此方法不会关闭流。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 输入流的内容，以字符串形式表示。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">InputStream inputStream = new ByteArrayInputStream(&quot;你好，世界！&quot;.getBytes(StandardCharsets.UTF_8));
-String content = StreamHelper.copyToString(inputStream);
-System.out.println(content); // Output: 你好，世界！\n
+                <h1>DataReader 使用教程</h1>
+<p>DataReader 是一个用于从输入流读取数据的读取器类。它支持从文件、网络套接字或内存缓冲区等源读取原始字节数据，同时提供了处理文本和二进制数据的功能。</p>
+<h2>主要功能特性</h2>
+<ol>
+<li><strong>多种数据读取方式</strong>：支持字节流、文本行、完整字符串等多种读取方式</li>
+<li><strong>字符编码支持</strong>：可指定字符编码，默认使用 UTF-8</li>
+<li><strong>流式处理</strong>：支持大文件的分块处理，避免内存溢出</li>
+<li><strong>函数式编程</strong>：使用函数式接口处理读取的数据</li>
+</ol>
+<h2>基本使用方法</h2>
+<h3>1. 创建实例</h3>
+<pre><code class="language-java">// 使用默认 UTF-8 编码创建实例
+InputStream inputStream = new FileInputStream(&quot;example.txt&quot;);
+DataReader reader = new DataReader(inputStream);
+
+// 指定字符编码创建实例
+DataReader readerWithEncoding = new DataReader(inputStream, StandardCharsets.UTF_8);
 </code></pre>
-<h3>2. <code>copyToString(InputStream in, Charset encode)</code></h3>
-<p>读取输入流并使用指定的字符集将其转换为字符串。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>in</code>：要从中读取的输入流。 此方法不会关闭流。</li>
-<li><code>encode</code>：用于解码输入流的字符集。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 输入流的内容，以字符串形式表示。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">InputStream inputStream = new ByteArrayInputStream(&quot;你好，世界！&quot;.getBytes(StandardCharsets.UTF_8));
-String content = StreamHelper.copyToString(inputStream, StandardCharsets.UTF_8);
-System.out.println(content); // Output: 你好，世界！\n
-</code></pre>
-<h3>3. <code>read(InputStream in, Charset encode, Consumer&lt;String&gt; fn)</code></h3>
-<p>逐行读取输入流，并将给定的 consumer 函数应用于每一行。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>in</code>：要从中读取的输入流。 该方法内部会关闭流。</li>
-<li><code>encode</code>：用于解码输入流的字符集。</li>
-<li><code>fn</code>：一个 <code>Consumer</code>，它接受一个字符串（输入流中的一行）并执行一个动作。</li>
-</ul>
-</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">InputStream inputStream = new ByteArrayInputStream(&quot;第一行\n第二行\n第三行&quot;.getBytes(StandardCharsets.UTF_8));
-StreamHelper.read(inputStream, StandardCharsets.UTF_8, line -&gt; {
-    System.out.println(&quot;行: &quot; + line);
+<h3>2. 读取字节数据</h3>
+<pre><code class="language-java">// 以字节形式读取流数据
+InputStream inputStream = new FileInputStream(&quot;large-file.bin&quot;);
+DataReader reader = new DataReader(inputStream);
+
+reader.readStreamAsBytes(8192, (readSize, buffer) -&gt; {
+    // 处理读取到的数据
+    System.out.println(&quot;读取到 &quot; + readSize + &quot; 字节数据&quot;);
+    // 可以在这里处理 buffer 中的数据
 });
-// Output:
-// 行: 第一行
-// 行: 第二行
-// 行: 第三行
 </code></pre>
-<h2>单元测试示例</h2>
-<pre><code class="language-java">package com.ajaxjs.util.io;
+<h3>3. 读取文本行</h3>
+<pre><code class="language-java">// 逐行读取文本数据
+InputStream inputStream = new FileInputStream(&quot;text-file.txt&quot;);
+DataReader reader = new DataReader(inputStream);
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class TestStreamHelper {
-    private InputStream inputStream;
-    private String testString;
-
-    @BeforeEach
-    public void setUp() {
-        testString = &quot;测试字符串&quot;;
-        inputStream = new ByteArrayInputStream(testString.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Test
-    public void copyToString_WithDefaultCharset_ReturnsCorrectString() {
-        String result = StreamHelper.copyToString(inputStream);
-        assertEquals(testString + &quot;\n&quot;, result);
-    }
-
-    @Test
-    public void copyToString_WithSpecifiedCharset_ReturnsCorrectString() {
-        String result = StreamHelper.copyToString(inputStream, StandardCharsets.UTF_8);
-        assertEquals(testString + &quot;\n&quot;, result);
-    }
-}
+reader.readAsLineString(line -&gt; {
+    System.out.println(&quot;读取到一行: &quot; + line);
+    // 处理每一行文本
+});
 </code></pre>
-<p><strong>注意：</strong> <code>inputStream2Byte</code> 方法存在于测试代码中，但不存在于提供的 <code>StreamHelper</code> 类代码中。</p>
-<h2>结论</h2>
-<p><code>StreamHelper</code> 类提供了一种方便的方式来在 Java 中执行常见的流操作。 通过使用这些方法，您可以简化代码并避免编写重复的流 I/O
-逻辑。</p>
+<h3>4. 读取完整字符串</h3>
+<pre><code class="language-java">// 读取整个输入流为字符串
+InputStream inputStream = new FileInputStream(&quot;text-file.txt&quot;);
+DataReader reader = new DataReader(inputStream);
+
+String content = reader.readAsString();
+System.out.println(&quot;文件内容: &quot; + content);
+</code></pre>
+<h3>5. 读取字节数组</h3>
+<pre><code class="language-java">// 读取整个输入流为字节数组
+InputStream inputStream = new FileInputStream(&quot;binary-file.bin&quot;);
+DataReader reader = new DataReader(inputStream);
+
+byte[] bytes = reader.readAsBytes();
+System.out.println(&quot;字节数组长度: &quot; + bytes.length);
+</code></pre>
+<h3>注意事项</h3>
+<ol>
+<li>readStreamAsBytes 方法会在读取完成后自动关闭输入流</li>
+<li>所有方法在发生 IO 错误时都会抛出 <code>UncheckedIOException</code></li>
+<li>对于大文件处理，推荐使用 readStreamAsBytes 方法进行分块处理</li>
+<li>readAsString 方法会在每行末尾添加换行符</li>
+</ol>
+<h1>DataWriter 使用教程</h1>
+<p>DataWriter 是一个用于向输出流写入数据的写入器类。它支持向文件、套接字或缓冲区等目标写入原始字节数据，并提供了缓冲功能以提高写入效率。</p>
+<h2>主要功能特性</h2>
+<ol>
+<li><strong>多种数据写入方式</strong>：支持从输入流复制数据、写入字节数组等</li>
+<li><strong>缓冲支持</strong>：默认启用缓冲功能，提高写入性能</li>
+<li><strong>灵活的字节数组写入</strong>：支持写入完整字节数组或指定范围的数据</li>
+<li><strong>不自动关闭流</strong>：不会自动关闭输出流，由调用者负责管理</li>
+</ol>
+<h2>基本使用方法</h2>
+<h3>1. 创建实例</h3>
+<pre><code class="language-java">// 创建 DataWriter 实例
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+</code></pre>
+<h3>2. 从输入流复制数据</h3>
+<pre><code class="language-java">// 从输入流复制数据到输出流
+InputStream inputStream = new FileInputStream(&quot;input.txt&quot;);
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+
+writer.write(inputStream); // 复制数据
+// 注意：需要手动关闭流
+inputStream.close();
+outputStream.close();
+</code></pre>
+<h3>3. 写入字节数组</h3>
+<pre><code class="language-java">// 写入完整字节数组
+byte[] data = &quot;Hello World&quot;.getBytes();
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+
+writer.write(data);
+outputStream.close();
+</code></pre>
+<h3>4. 写入字节数组指定范围</h3>
+<pre><code class="language-java">// 写入字节数组的指定范围
+byte[] data = &quot;Hello World&quot;.getBytes();
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+
+// 写入从偏移量2开始的5个字节
+writer.write(data, 2, 5); // 写入 &quot;llo W&quot;
+outputStream.close();
+</code></pre>
+<h2>配置选项</h2>
+<pre><code class="language-java">// 禁用缓冲功能（不推荐）
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+writer.setBuffered(false);
+</code></pre>
+<h3>注意事项</h3>
+<ol>
+<li>DataWriter 不会自动关闭输出流，需要调用者手动管理流的关闭</li>
+<li>默认启用缓冲功能，禁用缓冲会给出警告提示</li>
+<li>所有方法在发生IO错误时都会抛出 <code>UncheckedIOException</code></li>
+<li>当偏移量和长度都为0时，<code>write(byte[], int, int)</code> 方法会写入整个字节数组</li>
+</ol>
 
             </article>
         </div>

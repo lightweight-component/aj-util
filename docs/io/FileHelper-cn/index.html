@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,149 +85,116 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>FileHelper</h1>
-<p><code>FileHelper</code> 类简化了常见的文件系统操作，例如读取和写入文件内容、删除文件或目录、列出目录内容、创建目录以及检查文件或目录是否存在。
-它利用 <code>java.nio.file</code> 包来实现高效且现代的文件 I/O。</p>
-<h2>方法</h2>
-<h3>1. <code>readFileContent(String filePath)</code></h3>
-<p>将文件的全部内容读取到字符串中。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>filePath</code>：文件的路径。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 文件的内容，以字符串形式表示。</li>
-<li><strong>抛出：</strong> 如果在文件读取期间发生错误，则抛出 <code>UncheckedIOException</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">String content = FileHelper.readFileContent(&quot;path/to/my/file.txt&quot;);
-System.out.println(content);
+                <h2>FileHelper 使用教程</h2>
+<p>FileHelper 是一个文件操作工具类，提供了读取、写入、复制、移动、删除和操作文件及目录的方法。该类使用 Java NIO Path 和 Files API 实现高效的文件操作，所有方法在发生 IO 错误时都会抛出 UncheckedIOException。</p>
+<h3>主要功能特性</h3>
+<ol>
+<li><strong>多种构造方式</strong>：支持 Path、File、String 路径创建实例</li>
+<li><strong>文件读写操作</strong>：支持文本和字节内容的读取与写入</li>
+<li><strong>文件管理操作</strong>：复制、移动、删除、创建目录</li>
+<li><strong>目录操作</strong>：列出目录内容、获取文件大小</li>
+<li><strong>文件分片处理</strong>：支持大文件分片和合并</li>
+<li><strong>链式调用</strong>：支持方法链式调用</li>
+</ol>
+<h2>基本使用方法</h2>
+<h3>1. 创建实例</h3>
+<pre><code class="language-java">// 通过路径字符串创建
+FileHelper helper1 = new FileHelper(&quot;path/to/file.txt&quot;);
+
+// 通过 Path 对象创建
+Path path = Paths.get(&quot;path/to/file.txt&quot;);
+FileHelper helper2 = new FileHelper(path);
+
+// 通过 File 对象创建
+File file = new File(&quot;path/to/file.txt&quot;);
+FileHelper helper3 = new FileHelper(file);
 </code></pre>
-<h3>2. <code>writeFileContent(String filePath, String content)</code></h3>
-<p>将字符串写入文件，覆盖任何现有内容。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>filePath</code>：文件的路径。</li>
-<li><code>content</code>：要写入文件的字符串。</li>
-</ul>
-</li>
-<li><strong>抛出：</strong> 如果在文件写入期间发生错误，则抛出 <code>UncheckedIOException</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">FileHelper.writeFileContent(&quot;path/to/my/file.txt&quot;, &quot;你好，世界！&quot;);
+<h3>2. 文件读取</h3>
+<pre><code class="language-java">// 读取文件文本内容
+String content = new FileHelper(&quot;example.txt&quot;).getFileContent();
+
+// 读取文件字节内容
+byte[] bytes = new FileHelper(&quot;example.txt&quot;).readFileBytes();
 </code></pre>
-<h3>3. <code>deleteFileOrDirectory(String filePath)</code></h3>
-<p>删除文件或目录。 如果路径是目录，它将递归删除其中的所有文件和子目录。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>filePath</code>：文件或目录的路径。</li>
-</ul>
-</li>
-<li><strong>抛出：</strong> 如果在删除期间发生错误，则抛出 <code>UncheckedIOException</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">FileHelper.deleteFileOrDirectory(&quot;path/to/my/file.txt&quot;);
-FileHelper.deleteFileOrDirectory(&quot;path/to/my/directory&quot;);
+<h3>3. 文件写入</h3>
+<pre><code class="language-java">// 写入字符串内容到文件
+new FileHelper(&quot;output.txt&quot;).writeFileContent(&quot;Hello World&quot;);
 </code></pre>
-<h3>4. <code>listDirectoryContents(String directoryPath)</code></h3>
-<p>列出目录中文件和子目录的名称。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>directoryPath</code>：目录的路径。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 字符串列表，其中每个字符串是文件或子目录的名称。</li>
-<li><strong>抛出：</strong> 如果在目录列表期间发生错误，则抛出 <code>UncheckedIOException</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">List&lt;String&gt; contents = FileHelper.listDirectoryContents(&quot;path/to/my/directory&quot;);
-for (String item : contents) {
-    System.out.println(item);
+<h3>4. 文件删除</h3>
+<pre><code class="language-java">// 删除文件或目录（递归删除目录）
+new FileHelper(&quot;file-or-directory&quot;).delete();
+</code></pre>
+<h3>5. 目录操作</h3>
+<pre><code class="language-java">// 列出目录内容
+List&lt;String&gt; contents = new FileHelper(&quot;directory&quot;).listDirectoryContents();
+
+// 创建目录（支持多级目录）
+new FileHelper(&quot;new/directory/path&quot;).createDirectory();
+
+// 获取文件或目录大小
+long size = new FileHelper(&quot;file-or-directory&quot;).getFileSize();
+</code></pre>
+<h3>6. 文件复制和移动</h3>
+<pre><code class="language-java">// 复制文件或目录
+new FileHelper(&quot;source.txt&quot;)
+    .setTarget(&quot;destination.txt&quot;)
+    .copyTo();
+
+// 移动文件或目录
+new FileHelper(&quot;old-location.txt&quot;)
+    .setTarget(&quot;new-location.txt&quot;)
+    .moveTo();
+</code></pre>
+<h3>7. 文件分片处理</h3>
+<pre><code class="language-java">// 将文件分片（每片1MB）
+new FileHelper(&quot;large-file.zip&quot;).chunkFile(1024 * 1024);
+
+// 合并分片文件
+Path[] chunks = {Paths.get(&quot;file-1&quot;), Paths.get(&quot;file-2&quot;)};
+new FileHelper(&quot;merged-file&quot;).mergeFile(chunks);
+</code></pre>
+<h2>链式调用示例</h2>
+<pre><code class="language-java">// 链式调用示例
+new FileHelper(&quot;input.txt&quot;)
+    .setTarget(&quot;backup.txt&quot;)
+    .copyTo()
+    .setTarget(&quot;moved.txt&quot;)
+    .moveTo();
+</code></pre>
+<h2>异常处理</h2>
+<p>所有 IO 操作都会在出错时抛出 UncheckedIOException，可以使用 try-catch 进行处理：</p>
+<pre><code class="language-java">try {
+    String content = new FileHelper(&quot;nonexistent.txt&quot;).getFileContent();
+} catch (UncheckedIOException e) {
+    System.err.println(&quot;文件操作失败: &quot; + e.getMessage());
 }
 </code></pre>
-<h3>5. <code>createDirectory(String directoryPath)</code></h3>
-<p>创建目录，包括任何必要的父目录。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>directoryPath</code>：要创建的目录的路径。</li>
-</ul>
-</li>
-<li><strong>抛出：</strong> 如果在目录创建期间发生错误，则抛出 <code>UncheckedIOException</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">FileHelper.createDirectory(&quot;path/to/my/new/directory&quot;);
-</code></pre>
-<h3>6. <code>exists(String filePath)</code></h3>
-<p>检查文件或目录是否存在。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>filePath</code>：文件或目录的路径。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 如果文件或目录存在，则返回 <code>true</code>；否则返回 <code>false</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">boolean exists = FileHelper.exists(&quot;path/to/my/file.txt&quot;);
-if (exists) {
-    System.out.println(&quot;文件存在！&quot;);
-} else {
-    System.out.println(&quot;文件不存在。&quot;);
-}
-</code></pre>
-<h2>单元测试示例</h2>
-<p>以下是如何在单元测试中使用 <code>FileHelper</code> 的示例：</p>
-<pre><code class="language-java">package com.ajaxjs.util.io;
-
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.util.List;
-
-public class TestFileHelper {
-    final String dir = Resources.getResourcesFromClass(TestFileHelper.class, &quot;&quot;);
-    final String fullPath = dir + File.separator + &quot;test.txt&quot;;
-
-    @Test
-    public void test() {
-        // 读取文件内容
-        String content = FileHelper.readFileContent(fullPath);
-        System.out.println(&quot;文件内容: &quot; + content);
-
-        // 写入文件内容
-        FileHelper.writeFileContent(fullPath, &quot;你好，世界！Hello, World!&quot;);
-
-        // 列出目录内容
-        List&lt;String&gt; directoryContents = FileHelper.listDirectoryContents(dir);
-        System.out.println(&quot;目录内容: &quot; + directoryContents);
-
-        // 创建目录
-        FileHelper.createDirectory(dir + File.separator + &quot;newdirectory&quot;);
-
-        // 检查文件或目录是否存在
-        boolean exists = FileHelper.exists(fullPath);
-        System.out.println(&quot;文件是否存在: &quot; + exists);
-
-        // 删除文件或目录 - 已注释掉，以防止在测试期间意外删除
-        // FileHelper.deleteFileOrDirectory(&quot;output.txt&quot;);
-    }
-}
-</code></pre>
-<p><strong>注意：</strong> <code>getFileSize()</code>、<code>copyFileOrDirectory()</code> 和 <code>moveFileOrDirectory()</code>
-方法存在于测试代码中，但不存在于提供的 <code>FileHelper</code> 类代码中。</p>
-<h2>结论</h2>
-<p><code>FileHelper</code> 类提供了一组方便的实用程序，用于在 Java 中执行常见的文件系统操作。 通过使用这些方法，您可以简化代码并避免编写重复的文件
-I/O 逻辑。</p>
+<h2>注意事项</h2>
+<ol>
+<li>复制和移动操作前必须设置目标路径</li>
+<li>文件分片使用零拷贝技术，提高大文件处理效率</li>
+<li>目录删除采用反向遍历，确保正确删除所有子目录和文件</li>
+</ol>
 
             </article>
         </div>

@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-BytesHelper Tutorial</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for byte array manipulation" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, byte arrays,hexadecimal,Java" />
+        <title>AJ Utils-Base64 Utils Tutorial</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for Base64 manipulation" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, byte arrays,Base64,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
@@ -55,77 +55,27 @@
                 </ul>
                 <h3>Common</h3>
                 <ul>
-                    <li class="data">
-                        <a href="/common/BytesHelper/">BytesHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
-                    </li>
-                    <li>
-                        <a href="/common/EnumsUtil/">EnumsUtil</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/RandomTools/">RandomTools</a>
-                    </li>
-                    <li>
-                        <a href="/common/RegExpUtils/">RegExpUtils</a>
-                    </li>
-                    <li>
-                        <a href="/common/XmlHelper/">XmlHelper</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/EncodeTools/">EncodeTools</a>
-                    </li> 
-                </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP Request</h3>
-                <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
-                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
-                </ul>
-
-                <h3>Cryptography</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
-                </ul>
-
-                <h3>Common</h3>
-                <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils/">CollUtils</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
-                    <li><a href="/common/Version/">Version</a></li>
-                    <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
                     <li><a href="/common/MapTool/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/date/intro/">Introduction</a></li>
+                    <li><a href="/date/convert/">Date Converter</a></li>
+                    <li><a href="/date/formatter/">Date Formatter</a></li>
+                </ul>
                 <h3>Reflection</h3>
                 <ul>
                     <li><a href="/reflect/Methods/">Methods</a></li>
@@ -137,147 +87,102 @@
                 <ul>
                     <li><a href="/io/FileHelper/">FileHelper</a></li>
                     <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper/">ZipHelper</a></li>
                 </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
     
-           
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/cryptography/intro/">Introduction</a></li>
+                <li><a href="/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+               </ul>
             </menu>
             <article class="aj-text">
-                <h1>BytesHelper Tutorial</h1>
-<p>This tutorial provides an overview of the <code>BytesHelper</code> class, which is part of the <code>lightweight-component/aj-util</code>
-library.  <code>BytesHelper</code> offers a collection of utility methods for working with byte arrays in Java.
-This guide will cover the purpose of each method and provide usage examples.</p>
-<h2>Introduction</h2>
-<p>The <code>BytesHelper</code> class provides several useful methods for manipulating byte arrays, including:</p>
-<ul>
-<li>Extracting subarrays</li>
-<li>Finding the index of a byte array within another</li>
-<li>Concatenating byte arrays</li>
-<li>Converting byte arrays to hexadecimal strings and vice versa</li>
-</ul>
-<p>These methods can be helpful in various scenarios, such as network programming, file I/O, and data processing.</p>
-<h2>Methods</h2>
-<h3>1. <code>subBytes(byte[] data, int off, int length)</code></h3>
-<p>Extracts a subarray from a given byte array.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>data</code>: The input byte array.</li>
-<li><code>off</code>: The starting offset (index) for the subarray.</li>
-<li><code>length</code>: The length of the subarray to extract.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> A new byte array containing the extracted subarray.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">byte[]original={0x01,0x02,0x03,0x04,0x05};
-        byte[]sub=BytesHelper.subBytes(original,1,3); // Extract from index 1, length 3
-// sub will be {0x02, 0x03, 0x04}
-</code></pre>
-<h3>2. <code>byteIndexOf(byte[] data, byte[] search, int start)</code></h3>
-<p>Finds the index of a byte array (<code>search</code>) within another byte array (<code>data</code>), starting the search from a specified
-index (<code>start</code>).</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>data</code>: The byte array to search within.</li>
-<li><code>search</code>: The byte array to search for.</li>
-<li><code>start</code>: The index to start the search from.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The index of the first occurrence of <code>search</code> within <code>data</code>, or -1 if not found.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">byte[]data={0x01,0x02,0x03,0x04,0x05};
-        byte[]search={0x03,0x04};
-        int index=BytesHelper.byteIndexOf(data,search,0); // Search from the beginning
-// index will be 2
-</code></pre>
-<h3>3. <code>byteIndexOf(byte[] data, byte[] search)</code></h3>
-<p>Finds the index of a byte array (<code>search</code>) within another byte array (<code>data</code>), starting the search from the beginning (
-index 0). This is an overloaded version of the previous method.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>data</code>: The byte array to search within.</li>
-<li><code>search</code>: The byte array to search for.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The index of the first occurrence of <code>search</code> within <code>data</code>, or -1 if not found.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">byte[]data={0x01,0x02,0x03,0x04,0x05};
-        byte[]search={0x03,0x04};
-        int index=BytesHelper.byteIndexOf(data,search); // Search from the beginning
-// index will be 2
-</code></pre>
-<h3>4. <code>concat(byte[] a, byte[] b)</code></h3>
-<p>Concatenates two byte arrays into a new byte array.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>a</code>: The first byte array.</li>
-<li><code>b</code>: The second byte array.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> A new byte array containing the elements of <code>a</code> followed by the elements of <code>b</code>.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">byte[]a={0x01,0x02};
-        byte[]b={0x03,0x04};
-        byte[]combined=BytesHelper.concat(a,b);
-// combined will be {0x01, 0x02, 0x03, 0x04}
-</code></pre>
-<h3>5. <code>bytesToHexStr(byte[] bytes)</code></h3>
-<p>Converts a byte array to its hexadecimal string representation.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>bytes</code>: The byte array to convert.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> A string representing the hexadecimal value of each byte in the array.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">byte[]bytes={0x1A,0x2B,0x3C};
-        String hexString=BytesHelper.bytesToHexStr(bytes);
-// hexString will be &quot;1A2B3C&quot;
-</code></pre>
-<h3>6. <code>parseHexStr2Byte(String hex)</code> (Hypothetical - Not found in the provided code, but good to include if it existed or you implemented it)</h3>
-<p>Converts a hexadecimal string to a byte array. This method appears in the test code, so it's likely part of the library,
-or intended to be.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>hex</code>: The hexadecimal string to convert.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> A byte array representing the converted hexadecimal string.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">String hexString=&quot;1A2B3C&quot;;
-        byte[]bytes=BytesHelper.parseHexStr2Byte(hexString);
-// bytes will be {0x1A, 0x2B, 0x3C}
-</code></pre>
-<p><strong>Unit Test Example (Based on the provided test code):</strong></p>
-<pre><code class="language-java">import org.junit.jupiter.api.Test;
+                <h1>Base64 Utils Tutorial</h1>
+<p>The <code>Base64Utils</code> is a utility class for Base64 encoding and decoding operations, providing convenient methods for conversion between byte arrays and strings.</p>
+<h3>Main Features</h3>
+<ol>
+<li><strong>Supports standard and URL-safe Base64 encoding</strong></li>
+<li><strong>Configurable padding omission</strong></li>
+<li><strong>Multiple charset support</strong></li>
+<li><strong>Chainable API design</strong></li>
+</ol>
+<h3>Basic Usage</h3>
+<h4>1. Creating Instances</h4>
+<pre><code class="language-java">// Create from byte array
+byte[] data = &quot;Hello World&quot;.getBytes();
+Base64Utils utils = new Base64Utils(data);
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+// Create from string (default UTF-8)
+Base64Utils utils = new Base64Utils(&quot;Hello World&quot;);
 
-public class TestBytesHelper {
-    @Test
-    public void testParseHexStr2Byte() {
-        byte[] bs = BytesHelper.parseHexStr2Byte(&quot;1A2B3C&quot;);
-        assert bs != null;
-        assertEquals(0x1A, bs[0]);
-    }
-}
+// Create from string (specified charset)
+Base64Utils utils = new Base64Utils(&quot;Hello World&quot;, StandardCharsets.UTF_8);
 </code></pre>
-<h2>Conclusion</h2>
-<p>The <code>BytesHelper</code> class provides a convenient set of utilities for common byte array manipulations in Java. By using
-these methods, you can simplify your code and avoid writing repetitive byte array handling logic.
-Remember to consult the library's Javadoc for the most up-to-date information and additional methods.</p>
+<h4>2. Base64 Encoding</h4>
+<pre><code class="language-java">// Basic encoding
+String encoded = new Base64Utils(&quot;Hello World&quot;).encodeAsString();
+// Output: SGVsbG8gV29ybGQ=
+
+// URL-safe encoding
+String urlSafeEncoded = new Base64Utils(&quot;Hello World&quot;)
+    .setUrlSafe(true)
+    .encodeAsString();
+// Output: SGVsbG8gV29ybGQ=
+
+// Encoding without padding
+String noPadding = new Base64Utils(&quot;Hello World&quot;)
+    .setWithoutPadding(true)
+    .encodeAsString();
+// Output: SGVsbG8gV29ybGQ (without trailing =)
+</code></pre>
+<h4>3. Base64 Decoding</h4>
+<pre><code class="language-java">// Basic decoding
+String decoded = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;).decodeAsString();
+// Output: Hello World
+
+// Decoding with specified charset
+String decodedWithCharset = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;)
+    .decodeAsString(StandardCharsets.UTF_8);
+
+// URL-safe decoding
+String urlDecoded = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;, true)
+    .setUrlSafe(true)
+    .decodeAsString();
+</code></pre>
+<h4>4. Chainable Calls</h4>
+<p>Due to the <code>@Accessors(chain = true)</code> annotation, chainable calls are supported:</p>
+<pre><code class="language-java">String result = new Base64Utils(&quot;Hello World&quot;)
+    .setUrlSafe(true)
+    .setWithoutPadding(true)
+    .encodeAsString();
+</code></pre>
+<h4>5. Formatting Base64 Strings</h4>
+<pre><code class="language-java">// Format long Base64 string with line break every 64 characters
+String longBase64 = &quot;SGVsbG8gV29ybGQhIEkgYW0gYSBsb25nIHN0cmluZyBmb3IgdGVzdGluZyB0aGUgZm9ybWF0dGluZyBmdW5jdGlvbi4=&quot;;
+String formatted = Base64Utils.formatBase64String(longBase64);
+</code></pre>
+<h3>Parameter Description</h3>
+<ul>
+<li>[withoutPadding](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L57-L57): Whether to omit trailing <code>=</code> characters in the encoding result</li>
+<li>[urlSafe](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L63-L63): Whether to use URL-safe Base64 variant (using <code>-</code> instead of <code>+</code>, <code>_</code> instead of <code>/</code>)</li>
+</ul>
+<h3>Notes</h3>
+<ol>
+<li>Calling encoding or decoding methods without setting input data will throw <code>IllegalStateException</code></li>
+<li>Encoding results are converted to strings using <code>ISO_8859_1</code> charset by default</li>
+<li>Decoding uses <code>UTF-8</code> charset by default</li>
+</ol>
+<p>This utility class simplifies Base64 operations in Java, especially suitable for scenarios requiring frequent Base64 encoding and decoding.</p>
 
             </article>
         </div>

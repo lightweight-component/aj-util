@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-BytesHelper 教程</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  BytesHelper 类提供了字节数组操作的实用方法" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 字节数组,十六进制,Java" />
+        <title>AJ Utils-Base64Utils 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  Base64Utils 是一个用于 Base64 编码和解码操作的工具类" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Base64,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,139 +85,102 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>BytesHelper 教程</h1>
-<p>本教程概述了 <code>lightweight-component/aj-util</code> 库中的 <code>BytesHelper</code> 类。<code>BytesHelper</code> 提供了一系列用于在 Java
-中处理字节数组的实用方法。本指南将介绍每个方法的用途并提供使用示例。</p>
-<h2>简介</h2>
-<p><code>BytesHelper</code> 类提供了一些有用的方法来操作字节数组，包括：</p>
-<ul>
-<li>提取子数组</li>
-<li>查找字节数组在另一个字节数组中的索引</li>
-<li>连接字节数组</li>
-<li>将字节数组转换为十六进制字符串，反之亦然</li>
-</ul>
-<p>这些方法在各种场景中都非常有用，例如网络编程、文件 I/O 和数据处理。</p>
-<h2>方法</h2>
-<h3>1. <code>subBytes(byte[] data, int off, int length)</code></h3>
-<p>从给定的字节数组中提取子数组。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>data</code>: 输入字节数组。</li>
-<li><code>off</code>: 子数组的起始偏移量（索引）。</li>
-<li><code>length</code>: 要提取的子数组的长度。</li>
-</ul>
-</li>
-<li><strong>返回：</strong> 包含提取的子数组的新字节数组。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">byte[] original = {0x01, 0x02, 0x03, 0x04, 0x05};
-byte[] sub = BytesHelper.subBytes(original, 1, 3); // 从索引 1 提取，长度为 3
-// sub 将为 {0x02, 0x03, 0x04}
-</code></pre>
-<h3>2. <code>byteIndexOf(byte[] data, byte[] search, int start)</code></h3>
-<p>在字节数组 (<code>data</code>) 中查找字节数组 (<code>search</code>) 的索引，从指定的索引 (<code>start</code>) 开始搜索。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>data</code>: 要在其中搜索的字节数组。</li>
-<li><code>search</code>: 要搜索的字节数组。</li>
-<li><code>start</code>: 开始搜索的索引。</li>
-</ul>
-</li>
-<li><strong>返回：</strong> <code>search</code> 在 <code>data</code> 中首次出现的索引，如果未找到则返回 -1。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">byte[] data = {0x01, 0x02, 0x03, 0x04, 0x05};
-byte[] search = {0x03, 0x04};
-int index = BytesHelper.byteIndexOf(data, search, 0); // 从头开始搜索
-// index 将为 2
-</code></pre>
-<h3>3. <code>byteIndexOf(byte[] data, byte[] search)</code></h3>
-<p>在字节数组 (<code>data</code>) 中查找字节数组 (<code>search</code>) 的索引，从头开始（索引 0）搜索。 这是前一个方法的重载版本。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>data</code>: 要在其中搜索的字节数组。</li>
-<li><code>search</code>: 要搜索的字节数组。</li>
-</ul>
-</li>
-<li><strong>返回：</strong> <code>search</code> 在 <code>data</code> 中首次出现的索引，如果未找到则返回 -1。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">byte[] data = {0x01, 0x02, 0x03, 0x04, 0x05};
-byte[] search = {0x03, 0x04};
-int index = BytesHelper.byteIndexOf(data, search); // 从头开始搜索
-// index 将为 2
-</code></pre>
-<h3>4. <code>concat(byte[] a, byte[] b)</code></h3>
-<p>将两个字节数组连接成一个新的字节数组。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>a</code>: 第一个字节数组。</li>
-<li><code>b</code>: 第二个字节数组。</li>
-</ul>
-</li>
-<li><strong>返回：</strong> 包含 <code>a</code> 的元素，后跟 <code>b</code> 的元素的新字节数组。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">byte[] a = {0x01, 0x02};
-byte[] b = {0x03, 0x04};
-byte[] combined = BytesHelper.concat(a, b);
-// combined 将为 {0x01, 0x02, 0x03, 0x04}
-</code></pre>
-<h3>5. <code>bytesToHexStr(byte[] bytes)</code></h3>
-<p>将字节数组转换为其十六进制字符串表示形式。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>bytes</code>: 要转换的字节数组。</li>
-</ul>
-</li>
-<li><strong>返回：</strong> 一个字符串，表示数组中每个字节的十六进制值。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">byte[] bytes = {0x1A, 0x2B, 0x3C};
-String hexString = BytesHelper.bytesToHexStr(bytes);
-// hexString 将为 &quot;1A2B3C&quot;
-</code></pre>
-<h3>6. <code>parseHexStr2Byte(String hex)</code> (假设 - 在提供的代码中未找到，但如果它存在或您实现了它，则包含它会很好)</h3>
-<p>将十六进制字符串转换为字节数组。 此方法出现在测试代码中，因此它可能是库的一部分，或者打算成为库的一部分。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>hex</code>: 要转换的十六进制字符串。</li>
-</ul>
-</li>
-<li><strong>返回：</strong> 表示转换后的十六进制字符串的字节数组。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">String hexString = &quot;1A2B3C&quot;;
-byte[] bytes = BytesHelper.parseHexStr2Byte(hexString);
-// bytes 将为 {0x1A, 0x2B, 0x3C}
-</code></pre>
-<p><strong>单元测试示例（基于提供的测试代码）：</strong></p>
-<pre><code class="language-java">import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+                <h1>Base64Utils 使用教程</h1>
+<p>Base64Utils 是一个用于 Base64 编码和解码操作的工具类，提供了便捷的方法在字节数组和字符串之间进行转换。</p>
+<h3>主要功能特性</h3>
+<ol>
+<li><strong>支持标准和URL安全的Base64编码</strong></li>
+<li><strong>可配置是否省略填充字符</strong></li>
+<li><strong>支持多种字符集</strong></li>
+<li><strong>链式调用API设计</strong></li>
+</ol>
+<h3>基本使用方法</h3>
+<h4>1. 创建实例</h4>
+<pre><code class="language-java">// 从字节数组创建
+byte[] data = &quot;Hello World&quot;.getBytes();
+Base64Utils utils = new Base64Utils(data);
 
-public class TestBytesHelper {
-    @Test
-    public void testParseHexStr2Byte() {
-        byte[] bs = BytesHelper.parseHexStr2Byte(&quot;1A2B3C&quot;);
-        assert bs != null;
-        assertEquals(0x1A, bs[0]);
-    }
-}
+// 从字符串创建（默认UTF-8）
+Base64Utils utils = new Base64Utils(&quot;Hello World&quot;);
+
+// 从字符串创建（指定字符集）
+Base64Utils utils = new Base64Utils(&quot;Hello World&quot;, StandardCharsets.UTF_8);
 </code></pre>
-<h2>结论</h2>
-<p><code>BytesHelper</code> 类提供了一组方便的实用程序，用于 Java 中常见的字节数组操作。 通过使用这些方法，您可以简化代码并避免编写重复的字节数组处理逻辑。
-请记住查阅库的 Javadoc 以获取最新信息和其他方法。</p>
+<h4>2. Base64编码</h4>
+<pre><code class="language-java">// 基本编码
+String encoded = new Base64Utils(&quot;Hello World&quot;).encodeAsString();
+// 输出: SGVsbG8gV29ybGQ=
+
+// URL安全编码
+String urlSafeEncoded = new Base64Utils(&quot;Hello World&quot;)
+    .setUrlSafe(true)
+    .encodeAsString();
+// 输出: SGVsbG8gV29ybGQ=
+
+// 不带填充的编码
+String noPadding = new Base64Utils(&quot;Hello World&quot;)
+    .setWithoutPadding(true)
+    .encodeAsString();
+// 输出: SGVsbG8gV29ybGQ (没有末尾的=)
+</code></pre>
+<h4>3. Base64解码</h4>
+<pre><code class="language-java">// 基本解码
+String decoded = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;).decodeAsString();
+// 输出: Hello World
+
+// 指定字符集解码
+String decodedWithCharset = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;)
+    .decodeAsString(StandardCharsets.UTF_8);
+
+// URL安全解码
+String urlDecoded = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;, true)
+    .setUrlSafe(true)
+    .decodeAsString();
+</code></pre>
+<h4>4. 链式调用</h4>
+<p>由于使用了 <code>@Accessors(chain = true)</code> 注解，可以进行链式调用：</p>
+<pre><code class="language-java">String result = new Base64Utils(&quot;Hello World&quot;)
+    .setUrlSafe(true)
+    .setWithoutPadding(true)
+    .encodeAsString();
+</code></pre>
+<h4>5. 格式化Base64字符串</h4>
+<pre><code class="language-java">// 将长Base64字符串格式化为每64个字符一行
+String longBase64 = &quot;SGVsbG8gV29ybGQhIEkgYW0gYSBsb25nIHN0cmluZyBmb3IgdGVzdGluZyB0aGUgZm9ybWF0dGluZyBmdW5jdGlvbi4=&quot;;
+String formatted = Base64Utils.formatBase64String(longBase64);
+</code></pre>
+<h3>参数说明</h3>
+<ul>
+<li>[withoutPadding](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L57-L57): 是否省略编码结果末尾的 <code>=</code> 字符</li>
+<li>[urlSafe](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L63-L63): 是否使用URL安全的Base64变体（使用 <code>-</code> 替代 <code>+</code>，<code>_</code> 替代 <code>/</code>）</li>
+</ul>
+<h3>注意事项</h3>
+<ol>
+<li>如果未设置输入数据就调用编码或解码方法，会抛出 <code>IllegalStateException</code></li>
+<li>编码结果默认使用 <code>ISO_8859_1</code> 字符集转换为字符串</li>
+<li>解码默认使用 <code>UTF-8</code> 字符集转换为字符串</li>
+</ol>
+<p>这个工具类简化了Java中的Base64操作，特别适合需要频繁进行Base64编解码的场景。</p>
 
             </article>
         </div>

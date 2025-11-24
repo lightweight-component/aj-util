@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-MessageDigestHelper 教程</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  MessageDigestHelper 类提供了消息摘要算法的实用工具方法" />
+        <title>AJ Utils-HashHelper 使用教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  HashHelper 类提供了消息摘要算法的实用工具方法" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 加密,哈希,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,82 +85,118 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>MessageDigestHelper 教程</h1>
-<p><code>MessageDigestHelper</code> 类提供了使用不同算法生成消息摘要的方法，如 MD5、SHA-1 和 SHA-256。这些方法可用于创建哈希以验证数据完整性、安全存储密码等加密用途。</p>
-<h2>方法</h2>
-<h3>1. <code>getMd5(String str)</code></h3>
-<p>生成给定字符串的 MD5 哈希。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要哈希的输入字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 输入字符串的 MD5 哈希。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String md5Hash = MessageDigestHelper.getMd5(&quot;Hello World!&quot;);
-// md5Hash 将是 &quot;Hello World!&quot; 的 MD5 哈希
+                <h1>HashHelper 使用教程</h1>
+<p><code>HashHelper</code> 是一个用于密码学哈希操作的工具类，支持多种哈希算法（MD5、SHA-1、SHA-256）和 HMAC 操作。它提供了从字符串和字节数组生成哈希值的方法，并支持十六进制和 Base64 输出格式。</p>
+<h3>主要功能特性</h3>
+<ol>
+<li><strong>支持多种哈希算法</strong>: MD5, SHA-1, SHA-256</li>
+<li><strong>支持 HMAC 消息认证码</strong>: HmacMD5, HmacSHA1, HmacSHA256</li>
+<li><strong>多种输出格式</strong>: 十六进制字符串、Base64 编码</li>
+<li><strong>链式调用 API 设计</strong></li>
+<li><strong>文件 MD5 计算</strong>: 支持大文件分块处理</li>
+</ol>
+<h3>基本使用方法</h3>
+<h4>1. 创建实例</h4>
+<pre><code class="language-java">// 使用指定算法和字节数组创建实例
+HashHelper helper = new HashHelper(&quot;MD5&quot;, &quot;Hello World&quot;.getBytes());
+
+// 使用指定算法和字符串创建实例（自动转为 UTF-8 字节）
+HashHelper helper = new HashHelper(&quot;SHA-256&quot;, &quot;Hello World&quot;);
 </code></pre>
-<h3>2. <code>getSHA1(String str)</code></h3>
-<p>生成给定字符串的 SHA-1 哈希。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要哈希的输入字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 输入字符串的 SHA-1 哈希。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String sha1Hash = MessageDigestHelper.getSHA1(&quot;Hello World!&quot;);
-// sha1Hash 将是 &quot;Hello World!&quot; 的 SHA-1 哈希
+<h4>2. 基本哈希计算</h4>
+<pre><code class="language-java">// 获取字节数组形式的哈希值
+byte[] hashBytes = new HashHelper(&quot;MD5&quot;, &quot;Hello World&quot;).hash();
+
+// 获取十六进制字符串形式的哈希值（小写）
+String hexHash = new HashHelper(&quot;SHA-256&quot;, &quot;Hello World&quot;).hashAsStr();
+
+// 获取 Base64 编码的哈希值
+String base64Hash = new HashHelper(&quot;SHA-1&quot;, &quot;Hello World&quot;).hashAsBase64();
+String base64HashNoPadding = new HashHelper(&quot;SHA-1&quot;, &quot;Hello World&quot;).hashAsBase64(true);
 </code></pre>
-<h3>3. <code>getSHA256(String str)</code></h3>
-<p>生成给定字符串的 SHA-256 哈希。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要哈希的输入字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 输入字符串的 SHA-256 哈希。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String sha256Hash = MessageDigestHelper.getSHA256(&quot;Hello World!&quot;);
-// sha256Hash 将是 &quot;Hello World!&quot; 的 SHA-256 哈希
+<h4>3. HMAC 计算</h4>
+<pre><code class="language-java">// 设置密钥并计算 HMAC
+byte[] hmacBytes = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
+    .setKey(&quot;secret-key&quot;)
+    .hash();
+
+// 获取 HMAC 的十六进制字符串
+String hmacHex = new HashHelper(&quot;HmacMD5&quot;, &quot;Hello World&quot;)
+    .setKey(&quot;secret-key&quot;)
+    .hashAsStr();
+
+// 获取 HMAC 的 Base64 编码
+String hmacBase64 = new HashHelper(&quot;HmacSHA1&quot;, &quot;Hello World&quot;)
+    .setKey(&quot;secret-key&quot;)
+    .hashAsBase64();
 </code></pre>
-<h3>4. <code>getMd5AsBase64(String str)</code></h3>
-<p>生成给定字符串的 MD5 哈希，并使用 Base64 编码。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要哈希的输入字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 输入字符串的 Base64 编码的 MD5 哈希。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String md5Base64Hash = MessageDigestHelper.getMd5AsBase64(&quot;Hello World!&quot;);
-// md5Base64Hash 将是 &quot;Hello World!&quot; 的 Base64 编码的 MD5 哈希
+<h4>4. 链式调用</h4>
+<p>由于使用了 <code>@Accessors(chain = true)</code> 注解，可以进行链式调用：</p>
+<pre><code class="language-java">String result = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
+    .setKey(&quot;my-secret-key&quot;)
+    .hashAsBase64(true);
 </code></pre>
-<h3>5. <code>getResult()</code></h3>
-<p>返回配置的算法、输入字符串和密钥（如果提供）的哈希结果。</p>
-<ul>
-<li><strong>返回值:</strong> 哈希结果字符串。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">MessageDigestHelper helper = new MessageDigestHelper()
-    .setAlgorithmName(&quot;SHA-256&quot;)
-    .setValue(&quot;Hello World!&quot;);
-String hashResult = helper.getResult();
-// hashResult 将是 &quot;Hello World!&quot; 的 SHA-256 哈希
+<h4>5. 静态便捷方法</h4>
+<pre><code class="language-java">// MD5 哈希（最常用）
+String md5Hash = HashHelper.md5(&quot;Hello World&quot;);
+
+// SHA-1 哈希
+String sha1Hash = HashHelper.getSHA1(&quot;Hello World&quot;);
+
+// SHA-256 哈希
+String sha256Hash = HashHelper.getSHA256(&quot;Hello World&quot;);
+
+// HMAC-MD5
+HashHelper hmacMd5 = HashHelper.getHmacMD5(&quot;Hello World&quot;, &quot;secret-key&quot;);
+
+// HMAC-SHA256 返回 Base64
+String hmacSha256Base64 = HashHelper.getHmacSHA256(&quot;Hello World&quot;, &quot;secret-key&quot;, false);
 </code></pre>
+<h4>6. 文件 MD5 计算</h4>
+<pre><code class="language-java">// 从输入流计算文件 MD5
+try (InputStream inputStream = new FileInputStream(&quot;example.txt&quot;)) {
+    String fileMd5 = HashHelper.calcFileMD5(inputStream);
+}
+
+// 从字节数组计算文件 MD5
+byte[] fileBytes = Files.readAllBytes(Paths.get(&quot;example.txt&quot;));
+String fileMd5 = HashHelper.calcFileMD5(fileBytes);
+</code></pre>
+<h3>常量定义</h3>
+<ul>
+<li>MD5: MD5 哈希算法常量</li>
+<li>SHA1: SHA-1 哈希算法常量</li>
+<li>SHA256: SHA-256 哈希算法常量</li>
+<li>HMAC_SHA1: HMAC-SHA1 算法常量</li>
+<li>HMAC_SHA256: HMAC-SHA256 算法常量</li>
+</ul>
+<h3>注意事项</h3>
+<ol>
+<li>当使用 HMAC 操作且未设置密钥时，会自动生成随机密钥</li>
+<li>所有哈希结果默认以小写十六进制字符串返回</li>
+<li>Base64 编码默认包含填充字符，可通过参数控制</li>
+<li>大文件处理采用分块读取方式，避免内存溢出</li>
+</ol>
 
             </article>
         </div>

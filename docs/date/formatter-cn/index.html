@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-基本流程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  RsaCrypto" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 基本流程" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/cn">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                    | 🚀<a href="">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>小型、干净、简单的 Java 工具库
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/cn">首页</a>
+                    </li>
+                </ul>
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/io/Resources-cn/">Resources</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+                </ul>
+            </menu>
+            <article class="aj-text chinese">
+                <h1>基本流程</h1>
+<p>加密最原始的表达是<code>密文=加密函数(明文)</code>。这里顺便说说 MD5，它符合<code>密文=加密函数(明文)</code>的定义，看似对输入进行了加密，实则不然，它是哈希函数的一种，跟加密完全不是一个概念，更准确地说它返回了输入参数的“特征”结果，这个特征是唯一的。又因为每次执行都是返回相同的结果，这样的话，可以构成字典表去查对。只要这个字典表足够大，那么 MD5 是非常不安全的。</p>
+<p>于是乎，我们对这个加密过程改造，增加入参 key 密钥，希望根据 key 的不同每次返回的密文也不一样，即<code>密文=加密函数(明文, 密钥)</code>。</p>
+<p>AES（Advanced Encryption Standard） 对称加密也是符合这个原始的流程，粗糙的 Java API 实现如下：</p>
+<pre><code class="language-java">/**
+ * 是解密模式还是加密模式？
+ */
+private final int mode;
+
+/**
+ * The name of the algorithm
+ */
+private final String algorithmName;
+
+/**
+ * 密钥
+ */
+private Key key;
+
+private byte[] data;
+    
+public byte[] doCipher() {
+    try {
+        Cipher cipher = Cipher.getInstance(algorithmName);
+
+        if (spec != null)
+            cipher.init(mode, key, spec);
+        else
+            cipher.init(mode, key);
+
+        if (associatedData != null)
+            cipher.updateAAD(associatedData);
+
+        return cipher.doFinal(data);
+    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+        throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+    } catch (IllegalBlockSizeException | BadPaddingException e) {
+        throw new RuntimeException(&quot;加密原串的长度不能超过214字节&quot;, e);
+    } catch (InvalidKeyException e) {
+        throw new IllegalArgumentException(&quot;Invalid Key.&quot;, e);
+    } catch (InvalidAlgorithmParameterException e) {
+        throw new IllegalArgumentException(&quot;Invalid Algorithm Parameter.&quot;, e);
+    }
+}
+</code></pre>
+<p>首先可见我们没有采用函数风格去定义<code>doCipher()</code>，而是通过 getter/setter 去入参（前面有 lombak 去生成）。这些入参都是<code>doCipher()</code>执行所需的基本原始数据类型。其次我们抽象一下主要的流程：</p>
+<ol>
+<li>确定是哪种算法：AES or DES or RSA?</li>
+<li>确定解密模式还是加密模式？</li>
+<li>key 传入密钥（是<code>byte[]</code>？还是 Java <code>Key</code>对象），另外还有是否需要<code>AlgorithmParameterSpec spec</code>入参？</li>
+<li>输入数据 data（是<code>byte[]</code>？还是 String  还是 Base64 String？），然后执行加密/解密</li>
+<li>原始返回是<code>byte[]</code>，那么调用者希望是要直接返回 String，还是 Base64 String，抑或 HexString?</li>
+</ol>
+<p>看来加解密过程核心数据类型都是<code>byte[]</code>。无论哪种类型入参都要最终转换到<code>byte[]</code>。每多考虑一种数据类型入参，便利性就多一点（不需要 API 调用者去手动转换），那么相应地就要安排多一个 setter 来进行转换。</p>
+<p>大致的代码风格思路确定了，接着就可以着手进行编码了。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>
