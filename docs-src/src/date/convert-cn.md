@@ -1,72 +1,134 @@
 ---
-title: 基本流程
+title: 万能日期类型转换
 subTitle: 2025-02-23 by Frank Cheung
-description: RsaCrypto
+description: 万能日期类型转换
 date: 2025-02-23
 tags:
   - 基本流程
 layout: layouts/aj-util-cn.njk
 ---
 
-# 基本流程
-加密最原始的表达是`密文=加密函数(明文)`。这里顺便说说 MD5，它符合`密文=加密函数(明文)`的定义，看似对输入进行了加密，实则不然，它是哈希函数的一种，跟加密完全不是一个概念，更准确地说它返回了输入参数的“特征”结果，这个特征是唯一的。又因为每次执行都是返回相同的结果，这样的话，可以构成字典表去查对。只要这个字典表足够大，那么 MD5 是非常不安全的。
+# 万能日期类型转换
+起初想到的转换方式是这样的，一个类型对应着一个类型逐个转换。
 
-于是乎，我们对这个加密过程改造，增加入参 key 密钥，希望根据 key 的不同每次返回的密文也不一样，即`密文=加密函数(明文, 密钥)`。
+```java
+@SuppressWarnings("unchecked")
+public <T> T to(Class<T> clz, ZoneId zoneId) {
+    if (input != null) {
+        if (clz == LocalDate.class) {
+            LocalDate localDate = input.toInstant()
+                    .atZone(zoneId == null ? ZoneId.systemDefault() : zoneId)
+                    .toLocalDate();
 
-AES（Advanced Encryption Standard） 对称加密也是符合这个原始的流程，粗糙的 Java API 实现如下：
+            return (T) localDate;
+        }
+    }
+
+    if (localDate != null) {
+        if (clz == Date.class) {
+            Date date = Date.from(localDate.atStartOfDay(zoneId == null ? ZoneId.systemDefault() : zoneId).toInstant());
+
+            return (T) date;
+        }
+    }
+
+    throw new UnsupportedOperationException("Can not transform this date type to another date type");
+}
+```
+可是这样的方式太累了，代码也啰嗦。于是咨询了一下 AI 的意见，改为下面清爽的代码。
 
 ```java
 /**
- * 是解密模式还是加密模式？
+ * Convert the input to the specified date type
+ *
+ * @param clz    The target date type
+ * @param zoneId The time zone. Optional, defaults to system default if passed null
+ * @param <T>    The target date type
+ * @return The converted date
  */
-private final int mode;
+@SuppressWarnings("unchecked")
+public <T> T to(Class<T> clz, ZoneId zoneId) {
+    ZoneId zone = zoneId != null ? zoneId : ZoneId.systemDefault();
+    Instant baseInstant;
 
-/**
- * The name of the algorithm
- */
-private final String algorithmName;
+    if (input != null) {/* SB way, actually u can set any values to Instant by constructor or setter method */
+        baseInstant = input.toInstant();
+    } else if (sqlDate != null) {
+        baseInstant = sqlDate.toLocalDate().atStartOfDay(zone).toInstant();
+    } else if (sqlTimestamp != null) {
+        baseInstant = sqlTimestamp.toInstant();
+    } else if (localDate != null) {
+        baseInstant = localDate.atStartOfDay(zone).toInstant();
+    } else if (localDateTime != null) {
+        baseInstant = localDateTime.atZone(zone).toInstant();
+    } else if (zonedDateTime != null) {
+        baseInstant = zonedDateTime.toInstant();
+    } else if (offsetDateTime != null) {
+        baseInstant = offsetDateTime.toInstant();
+    } else if (offsetTime != null) {
+        baseInstant = offsetTime.atDate(LocalDate.now()).toInstant();
+    } else if (instant != null) {
+        baseInstant = instant;
+    } else if (timestamp != 0L) {
+        baseInstant = Instant.ofEpochMilli(timestamp);
+    } else
+        throw new UnsupportedOperationException("No input date/time set.");
 
-/**
- * 密钥
- */
-private Key key;
+    // Convert baseInstant to target
+    if (clz == Instant.class) {
+        return (T) baseInstant;
+    } else if (clz == Date.class) {
+        return (T) Date.from(baseInstant);
+    } else if (clz == java.sql.Date.class) {
+        return (T) java.sql.Date.valueOf(baseInstant.atZone(zone).toLocalDate());
+    } else if (clz == Timestamp.class) {
+        return (T) Timestamp.from(baseInstant);
+    } else if (clz == LocalDate.class) {
+        return (T) baseInstant.atZone(zone).toLocalDate();
+    } else if (clz == LocalTime.class) {
+        return (T) baseInstant.atZone(zone).toLocalTime();
+    } else if (clz == LocalDateTime.class) {
+        return (T) baseInstant.atZone(zone).toLocalDateTime();
+    } else if (clz == ZonedDateTime.class) {
+        return (T) baseInstant.atZone(zone);
+    } else if (clz == OffsetDateTime.class) {
+        return (T) baseInstant.atOffset(zone.getRules().getOffset(baseInstant));
+    } else if (clz == OffsetTime.class) {
+        return (T) baseInstant.atZone(zone).toOffsetDateTime().toOffsetTime();
+    } else if (clz == Calendar.class) {
+        Calendar calendar = Calendar.getInstance();
+        baseInstant.atZone(zone);
+        calendar.setTimeInMillis(baseInstant.toEpochMilli());
 
-private byte[] data;
-    
-public byte[] doCipher() {
-    try {
-        Cipher cipher = Cipher.getInstance(algorithmName);
-
-        if (spec != null)
-            cipher.init(mode, key, spec);
-        else
-            cipher.init(mode, key);
-
-        if (associatedData != null)
-            cipher.updateAAD(associatedData);
-
-        return cipher.doFinal(data);
-    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-        throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
-    } catch (IllegalBlockSizeException | BadPaddingException e) {
-        throw new RuntimeException("加密原串的长度不能超过214字节", e);
-    } catch (InvalidKeyException e) {
-        throw new IllegalArgumentException("Invalid Key.", e);
-    } catch (InvalidAlgorithmParameterException e) {
-        throw new IllegalArgumentException("Invalid Algorithm Parameter.", e);
+        return (T) calendar;
     }
+
+    throw new UnsupportedOperationException("Unsupported target type: " + clz.getName());
 }
 ```
 
-首先可见我们没有采用函数风格去定义`doCipher()`，而是通过 getter/setter 去入参（前面有 lombak 去生成）。这些入参都是`doCipher()`执行所需的基本原始数据类型。其次我们抽象一下主要的流程：
-
-1. 确定是哪种算法：AES or DES or RSA?
-1. 确定解密模式还是加密模式？
-1. key 传入密钥（是`byte[]`？还是 Java `Key`对象），另外还有是否需要`AlgorithmParameterSpec spec`入参？
-1. 输入数据 data（是`byte[]`？还是 String  还是 Base64 String？），然后执行加密/解密
-1. 原始返回是`byte[]`，那么调用者希望是要直接返回 String，还是 Base64 String，抑或 HexString?
+主要就是不管什么输入类型，先统一转换到`Instant`类再转为目标类型。
 
 
-看来加解密过程核心数据类型都是`byte[]`。无论哪种类型入参都要最终转换到`byte[]`。每多考虑一种数据类型入参，便利性就多一点（不需要 API 调用者去手动转换），那么相应地就要安排多一个 setter 来进行转换。
+下面是一些用法例子：
 
-大致的代码风格思路确定了，接着就可以着手进行编码了。
+```java
+long timestamp = System.currentTimeMillis();
+Instant expected = Instant.ofEpochMilli(timestamp);
+
+Instant result = new DateTypeConvert(timestamp).to(Instant.class, null);
+assertEquals(expected, result);
+
+
+Instant instant = Instant.now();
+LocalDateTime expected = instant.atZone(zone).toLocalDateTime();
+
+LocalDateTime result = new DateTypeConvert(instant).to(LocalDateTime.class, null);
+assertEquals(expected, result);
+
+LocalDate localDate = LocalDate.of(2025, 10, 23);
+Date expected = Date.from(localDate.atStartOfDay(zone).toInstant());
+
+Date result = new DateTypeConvert(localDate).to(Date.class, null);
+assertEquals(expected, result);
+```

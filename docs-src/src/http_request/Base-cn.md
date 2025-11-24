@@ -7,146 +7,111 @@ tags:
   - Base API
 layout: layouts/aj-util-cn.njk
 ---
-# HTTP 请求 Base 教程
 
-本教程提供了 HTTP 请求包中 `Base` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`Base` 类为 Java 应用程序中的 HTTP 请求提供了基础功能。
+HTTP客户端系统在aj-http模块内提供了一个全面的HTTP通信层。它提供了两种互补的编程范式来发起HTTP请求：一种是使用动态代理的声明式基于注解的API，另一种是用于直接编程控制的命令式基于类的API。这两种方法都抽象了Java的`HttpURLConnection`，同时提供了自动JSON/表单编码、可配置超时、自定义头部和结构化响应处理等功能。
 
-## 简介
+本文档提供了HTTP客户端架构和两种API风格的概述。有关实现细节，请参见：
 
-`Base` 类使用 Java 内置的 `HttpURLConnection` 提供了 HTTP 请求的核心功能。它处理连接初始化、配置和 HTTP 请求的执行。该类作为包中其他 HTTP 请求类（如 `Get`、`Post`、`Delete` 等）的基础。
+- 基础请求生命周期：基础请求框架
+- 具体的HTTP方法类：HTTP方法
+- 动态代理和注解：注解驱动API
+- 连接初始化和头部：请求配置
+- 响应解析和错误处理：响应处理
+- 文件上传和下载：文件操作
+- 
+# Get 类使用教程
 
-## 主要特性
+Get 类是 HTTP GET 请求的实现类，用于从服务器获取资源。它扩展了基础的 Request 类，提供了多种便捷的方法来与 API 交互并以不同格式获取数据。
 
-- 简单的 HTTP 请求接口
-- 连接超时和读取超时处理
-- 错误处理和日志记录
-- 支持自定义 HTTP 头
-- 响应处理
+### 主要功能特性
 
-## 方法
+1. **多种构造方式**：支持基本 URL 构造和带连接初始化的构造
+2. **文本响应获取**：直接获取纯文本响应
+3. **JSON 响应处理**：自动解析 JSON 响应为 Map 或 Java 对象
+4. **XML 响应处理**：解析 XML 响应为 Map
+5. **认证支持**：内置 Bearer Token 认证支持
+6. **自定义连接配置**：支持自定义 HTTP 连接配置
 
-### 1. `printErrorLog(String httpMethod, String url, String httpCode, String returnText)`
+### 基本使用方法
 
-打印格式化的错误日志，包含请求方法、URL、HTTP状态码和返回文本。
-
-* **参数：**
-  * `httpMethod`: HTTP方法
-  * `url`: 请求URL
-  * `httpCode`: HTTP状态码
-  * `returnText`: 返回的错误文本
-
-### 2. `initHttpConnection(String url, String method)`
-
-为指定的 URL 和 HTTP 方法初始化 `HttpURLConnection`。
-
-* **参数：**
-  * `url`：HTTP 请求的目标 URL。
-  * `method`：HTTP 方法（GET、POST、PUT、DELETE 等）。
-* **返回值：** 初始化的 `HttpURLConnection` 对象。
-
-**示例：**
+#### 1. 创建实例
 
 ```java
-HttpURLConnection conn = Base.initHttpConnection("https://api.example.com/data", "GET");
-```
+// 基本构造方式
+Get getRequest = new Get("https://api.example.com/data");
 
-### 2. `connect(HttpURLConnection conn)`
-
-使用提供的连接执行 HTTP 请求并返回响应。
-
-* **参数：**
-  * `conn`：用于请求的 `HttpURLConnection` 对象。
-* **返回值：** 包含响应详情的 `ResponseEntity` 对象。
-
-**示例：**
-
-```java
-HttpURLConnection conn = Base.initHttpConnection("https://api.example.com/data", "GET");
-ResponseEntity response = Base.connect(conn);
-```
-
-### 3. `connect(String url, String method, Consumer<HttpURLConnection> fn)`
-
-一个便捷方法，将初始化和连接合并为一个调用，并可选择自定义连接的函数。
-
-* **参数：**
-  * `url`：HTTP 请求的目标 URL。
-  * `method`：HTTP 方法（GET、POST、PUT、DELETE 等）。
-  * `fn`：用于自定义连接的可选函数（例如，添加头信息）。
-* **返回值：** 包含响应详情的 `ResponseEntity` 对象。
-
-**示例：**
-
-```java
-ResponseEntity response = Base.connect("https://api.example.com/data", "GET", conn -> {
-    conn.setRequestProperty("Accept", "application/json");
-    conn.setRequestProperty("Authorization", "Bearer token123");
+// 带连接初始化的构造方式
+Get getRequest = new Get("https://api.example.com/data", conn -> {
+    conn.setRequestProperty("User-Agent", "MyApp/1.0");
 });
 ```
 
-## 连接配置
 
-`Base` 类设置了默认的连接参数：
-
-- **连接超时**：10 秒（10,000 毫秒）
-- **读取超时**：15 秒（15,000 毫秒）
-
-这些超时确保在网络问题时请求不会无限期挂起。
-
-## 错误处理
-
-`Base` 类包含全面的错误处理：
-
-1. 对于 HTTP 响应代码 >= 400，它：
-   - 在 `ResponseEntity` 中将 `ok` 标志设置为 `false`
-   - 检索错误流
-   - 记录错误详情
-
-2. 对于连接异常，它：
-   - 将 `ok` 标志设置为 `false`
-   - 在 `ResponseEntity` 中存储异常
-   - 记录异常详情
-
-## ResponseEntity
-
-`connect` 方法返回包含以下内容的 `ResponseEntity` 对象：
-
-- HTTP 响应代码
-- 响应体（作为文本或输入流）
-- 使用的 URL 和 HTTP 方法
-- 请求时间信息
-- 成功/失败状态
-- 发生的任何异常
-
-## 使用示例
-
-以下是使用 `Base` 类进行 GET 请求的完整示例：
+#### 2. 获取文本响应
 
 ```java
-try {
-    ResponseEntity response = Base.connect("https://api.example.com/data", "GET", conn -> {
-        conn.setRequestProperty("Accept", "application/json");
-    });
-    
-    if (response.isOk()) {
-        // 处理成功的响应
-        String responseText = StreamHelper.copyToString(response.getIn());
-        System.out.println("响应: " + responseText);
-    } else {
-        // 处理错误
-        System.err.println("错误: " + response.getHttpCode() + " - " + response.getResponseText());
-    }
-} catch (Exception e) {
-    e.printStackTrace();
-}
+// 简单的文本获取
+String response = Get.text("https://api.example.com/data");
+
+// 带自定义连接配置的文本获取
+String response = Get.text("https://api.example.com/data", conn -> {
+    conn.setRequestProperty("Accept", "text/plain");
+});
 ```
 
-## 常量
 
-### `ERR_MSG`
+#### 3. 获取 JSON 响应
 
-错误消息的键名，值为"errMsg"。
+```java
+// 获取 JSON 响应为 Map
+Map<String, Object> jsonResponse = Get.api("https://api.example.com/data");
 
-## 结论
+// 带认证令牌的 JSON 获取
+Map<String, Object> jsonResponse = Get.api("https://api.example.com/data", "your-token");
 
-`Base` 类为 Java 应用程序中的 HTTP 请求提供了坚实的基础。它处理连接管理、错误处理和响应处理的底层细节，使您能够专注于应用程序的业务逻辑。对于特定的 HTTP 方法，请考虑使用基于 `Base` 构建的专用类，如 `Get`、`Post` 等。
+// 带自定义连接配置的 JSON 获取
+Map<String, Object> jsonResponse = Get.api("https://api.example.com/data", conn -> {
+    conn.setRequestProperty("Accept", "application/json");
+});
+```
+
+
+#### 4. 映射 JSON 响应到 Java 对象
+
+```java
+// 映射到指定类类型
+MyDataClass data = Get.api("https://api.example.com/data", MyDataClass.class);
+
+// 带认证令牌的映射
+MyDataClass data = Get.api("https://api.example.com/data", MyDataClass.class, "your-token");
+
+// 带自定义连接配置的映射
+MyDataClass data = Get.api("https://api.example.com/data", MyDataClass.class, conn -> {
+    conn.setRequestProperty("Accept", "application/json");
+});
+```
+
+
+#### 5. 获取 XML 响应
+
+```java
+// 获取 XML 响应为 Map
+Map<String, String> xmlResponse = Get.apiXml("https://api.example.com/data.xml", conn -> {
+    conn.setRequestProperty("Accept", "application/xml");
+});
+```
+
+
+### 参数说明
+
+- `url`: 请求的目标 URL 地址
+- `initConnection`: 用于配置 HTTP 连接的函数式接口
+- `token`: Bearer 认证令牌
+- `clz`: 目标 Java 类类型，用于 JSON 响应映射
+
+### 注意事项
+
+1. 所有静态方法都会自动执行请求并返回结果
+2. 带 `initConnection` 参数的方法允许自定义 HTTP 请求头和其他连接属性
+3. JSON 响应可以自动映射到 Java 对象，对象字段需要与 JSON 键匹配
+4. XML 响应解析为简单的键值对 Map

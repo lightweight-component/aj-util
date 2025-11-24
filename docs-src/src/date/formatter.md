@@ -1,55 +1,85 @@
 ---
-title: SecurityTextType
-description: Enums for security-related text encoding and hashing types
+title: Date Formatting
+description: Date Formatting
 tags:
-  - Encoding
-  - Hashing
-  - Cryptography
+  - Date Formatting
 layout: layouts/aj-util.njk
 ---
+# Date Formatting
 
-# SecurityTextType Tutorial
+The new version recommends using `DateTimeFormatter` instead of `SimpleDateFormat` to achieve thread safety and a clearer API. Since `DateTimeFormatter.ofPattern()` instantiation has certain overhead, especially for custom patterns (such as "yyyy-MM-dd HH:mm:ss"), we can optimize by caching `DateTimeFormatter` instances.
 
-This tutorial provides an overview of the `SecurityTextType` interface, which is part of the `lightweight-component/aj-util` library. The `SecurityTextType` interface defines enums for various security-related text encoding and hashing types.
-
-## Introduction
-
-The `SecurityTextType` interface contains nested enums that categorize different types of:
-
-- Text encoding formats
-- Digest (hash) algorithms
-- Cryptographic operations
-
-## Enums
-
-### 1. Encode
-
-Defines various text encoding formats:
-
-1. `BASE16` - Hexadecimal encoding
-2. `BASE32` - Base32 encoding
-3. `BASE58` - Base58 encoding (used in Bitcoin)
-4. `BASE64` - Base64 encoding
-5. `BASE91` - Base91 encoding
-
-### 2. Digest
-
-Defines message digest (hash) algorithms:
-
-1. `Md5` - MD5 hash
-2. `Md5WithSalt` - MD5 hash with salt
-
-### 3. Cryptography
-
-Currently empty, reserved for future cryptographic operation types.
-
-## Usage Examples
+Formatter usage is as follows:
 
 ```java
-SecurityTextType.Encode encoding = SecurityTextType.Encode.BASE64;
-SecurityTextType.Digest digest = SecurityTextType.Digest.Md5WithSalt;
+new Formatter(TemporalAccessor temporal).format();
+new Formatter(TemporalAccessor temporal).format(String format)
 ```
 
-## Conclusion
 
-The `SecurityTextType` interface provides a type-safe way to reference different security-related text encoding and hashing algorithms throughout the application.
+The `TemporalAccessor` interface is implemented by common date types, so we can pass them in the constructor and then specify the date format string.
+
+# Utility Functions
+
+Mainly utility functions for `now()` that return the current time as a string.
+
+```java
+/**
+ * Obtain current time by specified format.
+ *
+ * @param formatter The formatter object
+ * @return The current time
+ */
+public static String now(DateTimeFormatter formatter) {
+    return LocalDateTime.now().format(formatter);
+}
+
+/**
+ * Obtain current time by specified format.
+ *
+ * @param format The format string
+ * @return The current time
+ */
+public static String now(String format) {
+    return now(Formatter.getDateFormatter(format));
+}
+
+/**
+ * Obtain current time, which is formatted by default like "yyyy-MM-dd HH:mm:ss".
+ *
+ * @return The current time
+ */
+public static String now() {
+    return now(Formatter.getDateTimeFormatter());
+}
+
+/**
+ * Obtain current time, which is formatted like "yyyy-MM-dd HH:mm".
+ *
+ * @return The current time
+ */
+public static String nowShort() {
+    return now(Formatter.getDateTimeShortFormatter());
+}
+
+/**
+ * Request timestamp, format must conform to RFC1123 date format
+ *
+ * @return The current time
+ */
+public static String nowGMTDate() {
+    return Formatter.GMT_FORMATTER.format(Instant.now());
+}
+
+/**
+ * Request timestamp. Following ISO8601 standard representation, using UTC time, format is yyyy-MM-ddTHH:mm:ssZ
+ *
+ * @return The current time
+ */
+public static String newISO8601Date() {
+    return Formatter.ISO8601_FORMATTER.format(Instant.now());
+}
+```
+
+
+Additionally, there is a function for converting strings to dates, which mainly uses regular expressions to match whether the string is a date string and then performs the conversion.
