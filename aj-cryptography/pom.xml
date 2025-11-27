@@ -33,11 +33,5 @@
             <artifactId>ajaxjs-util</artifactId>
             <version>1.3.0</version>
         </dependency>
-
-        <!-- 编译为 jar 包时依赖的 -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
     </dependencies>
 </project>
