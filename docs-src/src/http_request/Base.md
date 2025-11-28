@@ -118,3 +118,63 @@ Map<String, String> xmlResponse = Get.apiXml("https://api.example.com/data.xml",
 2. Methods with `initConnection` parameter allow custom HTTP headers and other connection properties
 3. JSON responses can be automatically mapped to Java objects, object fields need to match JSON keys
 4. XML responses are parsed into simple key-value pair Map
+
+
+
+# Post Class Tutorial
+
+The `Post` class is an HTTP POST request implementation that extends the `BasePost` class, used for sending HTTP POST requests with various content types and data formats.
+
+### Main Features
+
+1. **Multiple Construction Methods**: Supports different parameter combinations for constructing POST requests
+2. **JSON Data Sending**: Built-in support for sending JSON format data
+3. **Custom Connection Configuration**: Supports custom HTTP connection initialization configuration
+4. **Automatic Response Parsing**: Automatically parses responses into Map objects
+
+### Basic Usage
+
+#### 1. Creating Instances
+
+```java
+// Basic construction method
+Post postRequest = new Post("https://api.example.com/data", 
+                           "{\"name\":\"test\"}", 
+                           "application/json");
+
+// Construction with custom connection configuration
+Post postRequest = new Post("https://api.example.com/data",
+                           "{\"name\":\"test\"}",
+                           "application/json",
+                           conn -> {
+                               conn.setRequestProperty("Authorization", "Bearer token");
+                           });
+```
+
+
+#### 2. Sending JSON API Requests
+
+```java
+// Send JSON data and get response
+Map<String, Object> data = Map.of("name", "test", "value", 123);
+Map<String, Object> response = Post.api("https://api.example.com/data", data);
+
+// JSON request with custom connection configuration
+Map<String, Object> response = Post.api("https://api.example.com/data", 
+                                       data,
+                                       conn -> {
+                                           conn.setRequestProperty("Custom-Header", "value");
+                                       });
+```
+
+
+### Constructor Descriptions
+
+- `Post(HttpMethod method, String url)`: Creates a request with specified HTTP method and URL
+- `Post(String url, Object data, String contentType)`: Creates a request with URL, data, and content type
+- `Post(String url, Object data, String contentType, Consumer<HttpURLConnection> initConnection)`: Fully configured constructor
+
+### Static Methods
+
+- `api(String url, Object data)`: Sends a JSON format POST request and returns parsed Map
+- `api(String url, Object data, Consumer<HttpURLConnection> initConnection)`: JSON POST request with custom connection configuration

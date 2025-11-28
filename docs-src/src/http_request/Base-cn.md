@@ -115,3 +115,61 @@ Map<String, String> xmlResponse = Get.apiXml("https://api.example.com/data.xml",
 2. 带 `initConnection` 参数的方法允许自定义 HTTP 请求头和其他连接属性
 3. JSON 响应可以自动映射到 Java 对象，对象字段需要与 JSON 键匹配
 4. XML 响应解析为简单的键值对 Map
+
+# Post 类使用教程
+
+Post 类是 HTTP POST 请求的实现类，继承自 BasePost 类，用于发送带有各种内容类型和数据格式的 HTTP POST 请求。
+
+### 主要功能特性
+
+1. **多种构造方式**：支持不同的参数组合构造 POST 请求
+2. **JSON 数据发送**：内置 JSON 格式数据发送支持
+3. **自定义连接配置**：支持自定义 HTTP 连接初始化配置
+4. **响应自动解析**：自动将响应解析为 Map 对象
+
+### 基本使用方法
+
+#### 1. 创建实例
+
+```java
+// 基本构造方式
+Post postRequest = new Post("https://api.example.com/data", 
+                           "{\"name\":\"test\"}", 
+                           "application/json");
+
+// 带自定义连接配置的构造方式
+Post postRequest = new Post("https://api.example.com/data",
+                           "{\"name\":\"test\"}",
+                           "application/json",
+                           conn -> {
+                               conn.setRequestProperty("Authorization", "Bearer token");
+                           });
+```
+
+
+#### 2. 发送 JSON API 请求
+
+```java
+// 发送 JSON 数据并获取响应
+Map<String, Object> data = Map.of("name", "test", "value", 123);
+Map<String, Object> response = Post.api("https://api.example.com/data", data);
+
+// 带自定义连接配置的 JSON 请求
+Map<String, Object> response = Post.api("https://api.example.com/data", 
+                                       data,
+                                       conn -> {
+                                           conn.setRequestProperty("Custom-Header", "value");
+                                       });
+```
+
+
+### 构造函数说明
+
+- `Post(HttpMethod method, String url)`: 使用指定的 HTTP 方法和 URL 创建请求
+- `Post(String url, Object data, String contentType)`: 使用 URL、数据和内容类型创建请求
+- `Post(String url, Object data, String contentType, Consumer<HttpURLConnection> initConnection)`: 完整配置的构造函数
+
+### 静态方法
+
+- `api(String url, Object data)`: 发送 JSON 格式的 POST 请求并返回解析后的 Map
+- `api(String url, Object data, Consumer<HttpURLConnection> initConnection)`: 带自定义连接配置的 JSON POST 请求
