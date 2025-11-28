@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-EncodeTools 教程</title>
+        <title>AJ Utils-UrlEncode 教程</title>
         <meta name="description" content="Small Java utilities with many useful functions.  提供URL编码/解码和Base64编码/解码的工具类" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, URL编码,Base64,工具类" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,99 +85,89 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>EncodeTools 教程</h1>
-<p><code>EncodeTools</code> 类提供了 URL 编码、URL 解码、Base64 编码和 Base64 解码的方法。这些方法可用于处理字符串编码和解码的各种用途，如准备
-HTTP 请求的字符串或编码二进制数据。</p>
-<h2>方法</h2>
-<h3>1. <code>urlEncode(String str)</code></h3>
-<p>使用 URL 编码对字符串进行编码。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要编码的输入字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> URL 编码后的字符串。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String encoded = EncodeTools.urlEncode(&quot;Hello World!&quot;);
-// encoded 将是 &quot;Hello%20World%21&quot;
+                <h1>UrlEncode 使用教程</h1>
+<p>UrlEncode 是一个 URL 编码和解码的工具类，提供了对 URL 进行编码和解码的方法，处理 URL 中的中文字符，并能将查询字符串解析为 Map。</p>
+<h3>主要功能特性</h3>
+<ol>
+<li><strong>URL 编码和解码</strong>：支持不同编码策略和字符集规范</li>
+<li><strong>中文字符处理</strong>：专门处理 URL 中的中文乱码问题</li>
+<li><strong>查询字符串解析</strong>：将格式为 <code>xxx=xxx&amp;xxx=xxx</code> 的字符串转换为 Map</li>
+<li><strong>多种编码模式</strong>：支持普通编码、GET 请求优化编码和安全编码</li>
+</ol>
+<h3>基本使用方法</h3>
+<h4>1. 创建实例</h4>
+<pre><code class="language-java">// 使用默认 UTF-8 字符集创建实例
+UrlEncode encoder = new UrlEncode(&quot;Hello World&quot;);
+
+// 使用指定字符集创建实例
+UrlEncode encoder = new UrlEncode(&quot;Hello World&quot;, StandardCharsets.UTF_8);
 </code></pre>
-<h3>2. <code>urlDecode(String str)</code></h3>
-<p>解码 URL 编码的字符串。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要解码的 URL 编码字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 解码后的字符串。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String decoded = EncodeTools.urlDecode(&quot;Hello%20World%21&quot;);
-// decoded 将是 &quot;Hello World!&quot;
+<h4>2. URL 编码</h4>
+<pre><code class="language-java">// 基本 URL 编码
+String encoded = new UrlEncode(&quot;Hello World&quot;).encode();
+// 输出: Hello+World
+
+// GET 请求优化编码（将 + 替换为 %20）
+String queryEncoded = new UrlEncode(&quot;Hello World&quot;).encodeQuery();
+// 输出: Hello%20World
+
+// 安全编码（处理特殊字符）
+String safeEncoded = new UrlEncode(&quot;Hello*World~Test&quot;).encodeSafe();
+// 输出: Hello%2AWorld%7ETest
 </code></pre>
-<h3>3. <code>base64Encode(byte[] bytes)</code></h3>
-<p>使用 Base64 编码对字节数组进行编码。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>bytes</code>: 要编码的字节数组。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> Base64 编码后的字节数组。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">byte[] encodedBytes = EncodeTools.base64Encode(&quot;Hello World!&quot;.getBytes());
-// encodedBytes 将是 Base64 编码后的字节数组
+<h4>3. URL 解码</h4>
+<pre><code class="language-java">// URL 解码
+String decoded = new UrlEncode(&quot;Hello%20World&quot;).decode();
+// 输出: Hello World
 </code></pre>
-<h3>4. <code>base64EncodeToString(byte[] bytes)</code></h3>
-<p>使用 Base64 编码对字节数组进行编码，并返回结果字符串。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>bytes</code>: 要编码的字节数组。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> Base64 编码后的字符串。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String encodedString = EncodeTools.base64EncodeToString(&quot;Hello World!&quot;.getBytes());
-// encodedString 将是 &quot;SGVsbG8gV29ybGQh&quot;
+<h4>4. 链式调用</h4>
+<p>由于使用了 <code>@Accessors(chain = true)</code> 注解，可以进行链式调用：</p>
+<pre><code class="language-java">String result = new UrlEncode(&quot;Hello World&quot;)
+    .setCharset(StandardCharsets.UTF_8)
+    .encodeQuery();
 </code></pre>
-<h3>5. <code>base64Decode(String str)</code></h3>
-<p>解码 Base64 编码的字符串。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要解码的 Base64 编码字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 解码后的字节数组。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">byte[] decodedBytes = EncodeTools.base64Decode(&quot;SGVsbG8gV29ybGQh&quot;);
-// decodedBytes 将是解码后的字节数组
+<h3>静态工具方法</h3>
+<h4>1. 中文字符处理</h4>
+<pre><code class="language-java">// 处理 URL 中的中文乱码
+String chineseStr = &quot;你好世界&quot;;
+String processed = UrlEncode.urlChinese(chineseStr);
 </code></pre>
-<h3>6. <code>base64DecodeToString(String str)</code></h3>
-<p>解码 Base64 编码的字符串，并返回结果字符串。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>str</code>: 要解码的 Base64 编码字符串。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 解码后的字符串。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String decodedString = EncodeTools.base64DecodeToString(&quot;SGVsbG8gV29ybGQh&quot;);
-// decodedString 将是 &quot;Hello World!&quot;
+<h4>2. 查询字符串转 Map</h4>
+<pre><code class="language-java">// 将查询字符串转换为 Map
+String queryString = &quot;name=张三&amp;age=25&amp;city=北京&quot;;
+Map&lt;String, String&gt; paramMap = UrlEncode.parseStringToMap(queryString);
+
+// 结果:
+// name -&gt; 张三
+// age -&gt; 25
+// city -&gt; 北京
 </code></pre>
+<h3>注意事项</h3>
+<ol>
+<li><code>encodeSafe</code> 方法在单元测试中有问题，需要修复</li>
+<li>如果 Tomcat 过滤器已设置 UTF-8，则 <code>urlChinese</code> 方法可能不需要重复转码</li>
+<li>所有编码和解码操作都支持自定义字符集</li>
+</ol>
 
             </article>
         </div>

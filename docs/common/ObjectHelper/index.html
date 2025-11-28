@@ -55,77 +55,27 @@
                 </ul>
                 <h3>Common</h3>
                 <ul>
-                    <li class="data">
-                        <a href="/common/BytesHelper/">BytesHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
-                    </li>
-                    <li>
-                        <a href="/common/EnumsUtil/">EnumsUtil</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/RandomTools/">RandomTools</a>
-                    </li>
-                    <li>
-                        <a href="/common/RegExpUtils/">RegExpUtils</a>
-                    </li>
-                    <li>
-                        <a href="/common/XmlHelper/">XmlHelper</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/EncodeTools/">EncodeTools</a>
-                    </li> 
-                </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP Request</h3>
-                <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
-                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
-                </ul>
-
-                <h3>Cryptography</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
-                </ul>
-
-                <h3>Common</h3>
-                <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils/">CollUtils</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
-                    <li><a href="/common/Version/">Version</a></li>
-                    <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
                     <li><a href="/common/MapTool/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/date/intro/">Introduction</a></li>
+                    <li><a href="/date/convert/">Date Converter</a></li>
+                    <li><a href="/date/formatter/">Date Formatter</a></li>
+                </ul>
                 <h3>Reflection</h3>
                 <ul>
                     <li><a href="/reflect/Methods/">Methods</a></li>
@@ -137,64 +87,124 @@
                 <ul>
                     <li><a href="/io/FileHelper/">FileHelper</a></li>
                     <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper/">ZipHelper</a></li>
                 </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
     
-           
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/cryptography/intro/">Introduction</a></li>
+                <li><a href="/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+               </ul>
             </menu>
             <article class="aj-text">
                 <h1>ObjectHelper Tutorial</h1>
-<p>This tutorial provides an overview of the <code>ObjectHelper</code> class, which is part of the <code>lightweight-component/aj-util</code> library. The <code>ObjectHelper</code> class provides utility methods for working with Java objects.</p>
-<h2>Introduction</h2>
-<p>The <code>ObjectHelper</code> class contains static methods for object cloning and map creation utilities.</p>
-<h2>Main Features</h2>
-<ul>
-<li>Deep cloning of Serializable objects</li>
-<li>Convenient map creation methods</li>
-<li>Optimized map initialization</li>
-<li>Empty map constant</li>
-</ul>
-<h2>Constants</h2>
+<p><code>ObjectHelper</code> is an object utility class that provides common utility methods for working with Java objects, collections, maps, and various data structures.</p>
+<h3>Main Features</h3>
 <ol>
-<li><code>EMPTY_PARAMS_MAP</code> - Immutable empty map</li>
+<li><strong>Text content checking and validation</strong></li>
+<li><strong>Collection and array emptiness checks</strong></li>
+<li><strong>Convenient factory methods for creating collections (maps, lists, sets)</strong></li>
+<li><strong>Capacity calculation utilities</strong></li>
 </ol>
-<h2>Methods</h2>
-<h3>1. Cloning</h3>
-<ol>
-<li><code>clone(T obj)</code> - Deep clone a Serializable object</li>
-</ol>
-<h3>2. Map Creation</h3>
-<ol>
-<li><code>mapOf(K k1, V v1)</code> - Create map with single entry</li>
-<li><code>mapOf(K k1, V v1, K k2, V v2)</code> - Create map with two entries</li>
-<li><code>mapOf(K k1, V v1, K k2, V v2, K k3, V v3)</code> - Create map with three entries</li>
-<li><code>mapOf(int expectedSize)</code> - Create optimized HashMap with expected size</li>
-</ol>
-<h2>Usage Examples</h2>
-<h3>Object Cloning</h3>
-<pre><code class="language-java">MyClass original = new MyClass();
-MyClass cloned = ObjectHelper.clone(original);
+<h3>Text Checking Methods</h3>
+<h4>1. hasText Method</h4>
+<p>Checks if the given string has actual text content:</p>
+<pre><code class="language-java">// Check if string has non-whitespace content
+boolean result1 = ObjectHelper.hasText(&quot;Hello&quot;);     // true
+boolean result2 = ObjectHelper.hasText(&quot;   &quot;);       // false
+boolean result3 = ObjectHelper.hasText(&quot;&quot;);          // false
+boolean result4 = ObjectHelper.hasText(null);        // false
 </code></pre>
-<h3>Map Creation</h3>
-<pre><code class="language-java">Map&lt;String, Integer&gt; map1 = ObjectHelper.mapOf(&quot;a&quot;, 1);
-Map&lt;String, Integer&gt; map2 = ObjectHelper.mapOf(&quot;a&quot;, 1, &quot;b&quot;, 2);
-Map&lt;String, Integer&gt; map3 = ObjectHelper.mapOf(&quot;a&quot;, 1, &quot;b&quot;, 2, &quot;c&quot;, 3);
+<h4>2. isEmptyText Method</h4>
+<p>Checks if the given string is empty or contains only whitespace:</p>
+<pre><code class="language-java">// Check if string is empty or contains only whitespace
+boolean result1 = ObjectHelper.isEmptyText(&quot;Hello&quot;); // false
+boolean result2 = ObjectHelper.isEmptyText(&quot;   &quot;);   // true
+boolean result3 = ObjectHelper.isEmptyText(&quot;&quot;);      // true
+boolean result4 = ObjectHelper.isEmptyText(null);    // true
+</code></pre>
+<h3>Emptiness Checking Methods</h3>
+<h4>1. Array Emptiness Check</h4>
+<pre><code class="language-java">// Check if array is empty
+String[] array1 = null;
+String[] array2 = new String[0];
+String[] array3 = {&quot;Hello&quot;};
 
-// Optimized map
-Map&lt;String, Integer&gt; map = ObjectHelper.mapOf(100); // Pre-sized for ~100 entries
+boolean result1 = ObjectHelper.isEmpty(array1); // true
+boolean result2 = ObjectHelper.isEmpty(array2); // true
+boolean result3 = ObjectHelper.isEmpty(array3); // false
 </code></pre>
-<h3>Empty Map</h3>
-<pre><code class="language-java">Map&lt;String, Object&gt; empty = ObjectHelper.EMPTY_PARAMS_MAP;
+<h4>2. Collection Emptiness Check</h4>
+<pre><code class="language-java">// Check if collection is empty
+List&lt;String&gt; list1 = null;
+List&lt;String&gt; list2 = new ArrayList&lt;&gt;();
+List&lt;String&gt; list3 = Arrays.asList(&quot;Hello&quot;);
+
+boolean result1 = ObjectHelper.isEmpty(list1); // true
+boolean result2 = ObjectHelper.isEmpty(list2); // true
+boolean result3 = ObjectHelper.isEmpty(list3); // false
 </code></pre>
-<h2>Implementation Notes</h2>
+<h4>3. Map Emptiness Check</h4>
+<pre><code class="language-java">// Check if map is empty
+Map&lt;String, String&gt; map1 = null;
+Map&lt;String, String&gt; map2 = new HashMap&lt;&gt;();
+Map&lt;String, String&gt; map3 = new HashMap&lt;&gt;();
+map3.put(&quot;key&quot;, &quot;value&quot;);
+
+boolean result1 = ObjectHelper.isEmpty(map1); // true
+boolean result2 = ObjectHelper.isEmpty(map2); // true
+boolean result3 = ObjectHelper.isEmpty(map3); // false
+</code></pre>
+<h3>Collection Creation Methods</h3>
+<h4>1. Creating Maps</h4>
+<pre><code class="language-java">// Create single key-value pair map
+Map&lt;String, String&gt; map1 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;value1&quot;);
+
+// Create double key-value pair map
+Map&lt;String, String&gt; map2 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;);
+
+// Create triple key-value pair map
+Map&lt;String, String&gt; map3 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;, &quot;key3&quot;, &quot;value3&quot;);
+
+// Create map with specified capacity
+Map&lt;String, String&gt; map4 = ObjectHelper.mapOf(10); // HashMap with optimized capacity
+</code></pre>
+<h4>2. Creating Lists</h4>
+<pre><code class="language-java">// Create immutable list
+List&lt;String&gt; list1 = ObjectHelper.listOf(&quot;item1&quot;);
+List&lt;String&gt; list2 = ObjectHelper.listOf(&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;);
+List&lt;String&gt; list3 = ObjectHelper.listOf(); // Empty list
+</code></pre>
+<h4>3. Creating Sets</h4>
+<pre><code class="language-java">// Create immutable set
+Set&lt;String&gt; set1 = ObjectHelper.setOf(&quot;item1&quot;);
+Set&lt;String&gt; set2 = ObjectHelper.setOf(&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;);
+Set&lt;String&gt; set3 = ObjectHelper.setOf(); // Empty set
+
+// Automatic deduplication
+Set&lt;String&gt; set4 = ObjectHelper.setOf(&quot;item1&quot;, &quot;item1&quot;, &quot;item2&quot;); // Contains only &quot;item1&quot; and &quot;item2&quot;
+</code></pre>
+<h3>Constants</h3>
 <ul>
-<li><code>clone()</code> uses Java serialization for deep cloning</li>
-<li><code>mapOf()</code> methods provide convenient map initialization</li>
-<li><code>mapOf(int)</code> optimizes HashMap creation by calculating ideal initial capacity</li>
+<li><code>EMPTY_PARAMS_MAP</code>: An empty, immutable map useful as a default or sentinel value when no parameters are needed</li>
+<li><code>DEFAULT_LOAD_FACTOR</code>: Default load factor for hash maps, optimized for time and space efficiency</li>
 </ul>
-<h2>Conclusion</h2>
-<p>The <code>ObjectHelper</code> class provides useful utilities for object cloning and map creation, simplifying common object-related operations in Java applications.</p>
+<h3>Notes</h3>
+<ol>
+<li><code>listOf</code> methods create immutable collections</li>
+<li><code>setOf</code> method does not allow null elements</li>
+<li><code>mapOf</code> methods optimize initial capacity based on expected size to minimize resizing operations</li>
+</ol>
 
             </article>
         </div>

@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-RsaCrypto</title>
+        <title>AJ Utils-RSA 加密解密</title>
         <meta name="description" content="Small Java utilities with many useful functions.  RsaCrypto" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, RsaCrypto" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, RSA 加密解密" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,122 +85,111 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>RsaCrypto 教程</h1>
-<p>本教程提供了 <code>RsaCrypto</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>RsaCrypto</code> 提供了一系列使用 RSA 算法进行非对称加密、解密和数字签名的实用方法。</p>
-<h2>简介</h2>
-<p><code>RsaCrypto</code> 类提供了生成 RSA 密钥对、使用公钥和私钥加密和解密数据以及创建和验证数字签名的方法。RSA 是一种非对称加密算法，使用一对密钥：公钥用于加密，私钥用于解密。</p>
-<h2>方法</h2>
-<h3>1. <code>init()</code></h3>
-<p>初始化并返回一个密钥长度为 1024 位的 RSA 密钥对。</p>
+                <h1>RSA 加密解密</h1>
+<p>RSA 非对称加密，事情比较多，可以分解为下面的子任务：</p>
 <ul>
-<li><strong>返回值：</strong> 包含公钥和私钥的字节数组映射。</li>
+<li>签名，封装在<code>com.ajaxjs.util.cryptography.rsa.DoSignature</code>完成</li>
+<li>校验签名，封装在<code>com.ajaxjs.util.cryptography.rsa.DoVerify</code>完成</li>
+<li>密钥管理，封装在<code>com.ajaxjs.util.cryptography.rsa.KeyMgr</code>完成</li>
+<li>本身的 RSA 加密解密</li>
 </ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
-</code></pre>
-<h3>2. <code>getPublicKey(Map&lt;String, byte[]&gt; map)</code> 和 <code>getPrivateKey(Map&lt;String, byte[]&gt; map)</code></h3>
-<p>从密钥对映射中检索公钥或私钥，并以 Base64 编码的字符串形式返回。</p>
+<p>下面分别进行介绍。</p>
+<h2>签名</h2>
+<p>入参包括算法、输入数据及私钥，执行<code>sign()</code>返回签名。涉及的类型如下：</p>
 <ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>map</code>：包含密钥对的映射。</li>
+<li>输入数据，可以是<code>byte[]</code>或字符串</li>
+<li>私钥，可以是 PrivateKey 对象或者字符串，字符串的话会经过<code>KeyMgr.restoreKey</code>还原为 PrivateKey 对象</li>
+<li>返回的签名数据，是<code>byte[]</code>，可以调用<code>signToString()</code>返回 base64 编码的字符串</li>
 </ul>
-</li>
-<li><strong>返回值：</strong> 密钥的 Base64 编码字符串表示。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-</code></pre>
-<h3>3. <code>sign(String privateKey, byte[] data)</code></h3>
-<p>使用私钥为提供的数据创建数字签名。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>privateKey</code>：Base64 编码的私钥。</li>
-<li><code>data</code>：要签名的数据。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> Base64 编码的数字签名。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-String signature = RsaCrypto.sign(privateKey, &quot;你好，世界！&quot;.getBytes());
-</code></pre>
-<h3>4. <code>verify(byte[] data, String publicKey, String sign)</code></h3>
-<p>使用公钥验证数字签名。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>data</code>：原始数据。</li>
-<li><code>publicKey</code>：Base64 编码的公钥。</li>
-<li><code>sign</code>：要验证的 Base64 编码签名。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 如果签名有效则返回 <code>true</code>，否则返回 <code>false</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
+<pre><code class="language-java">// 生成公钥私钥
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String privateKey = keyMgr.getPrivateKeyStr();
 
-byte[] data = &quot;你好，世界！&quot;.getBytes();
-String signature = RsaCrypto.sign(privateKey, data);
+byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData(&quot;hello world&quot;).setPrivateKeyStr(privateKey).sign();
+String result = new DoSignature(Constant.SHA256_RSA).setStrData(&quot;hello world&quot;).setPrivateKeyStr(privateKey).signToString();
 
-boolean isValid = RsaCrypto.verify(data, publicKey, signature);
-// isValid 应该为 true
+assertEquals(EncodeTools.base64EncodeToString(helloWorlds), result);
 </code></pre>
-<h3>5. 公钥操作：<code>encryptByPublicKey(byte[] data, String key)</code> 和 <code>decryptByPublicKey(byte[] data, String key)</code></h3>
-<p>使用公钥加密或解密数据。</p>
+<p>值得一提的是，私钥哪里来？你可以通过如上的<code>KeyMgr</code>生成。</p>
+<h2>校验签名</h2>
+<p>入参包括算法、输入数据、签名数据及公钥，执行<code>verify()</code>返回签名。涉及的类型如下：</p>
 <ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>data</code>：要加密/解密的数据。</li>
-<li><code>key</code>：Base64 编码的公钥。</li>
+<li>输入数据，可以是<code>byte[]</code>或字符串</li>
+<li>签名数据，可以是<code>byte[]</code>或 Base64 字符串</li>
+<li>公钥，可以是 PublicKey 对象或者字符串，字符串的话会经过<code>KeyMgr.restoreKey</code>还原为 PublicKey 对象</li>
+<li>返的签名是否合法，是<code>boolean</code></li>
 </ul>
-</li>
-<li><strong>返回值：</strong> 加密/解密后的数据字节数组。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
-String publicKey = RsaCrypto.getPublicKey(keyPair);
+<pre><code class="language-java">// 生成公钥私钥
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
+String result = new DoSignature(Constant.SHA256_RSA).setStrData(&quot;hello world&quot;).setPrivateKeyStr(privateKey).signToString();
+boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData(&quot;hello world&quot;).setPublicKeyStr(publicKey).setSignatureBase64(result).verify();
 
-byte[] data = &quot;你好，世界！&quot;.getBytes();
-byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
+assertTrue(verified);
 </code></pre>
-<h3>6. 私钥操作：<code>encryptByPrivateKey(byte[] data, String key)</code> 和 <code>decryptByPrivateKey(byte[] data, String key)</code></h3>
-<p>使用私钥加密或解密数据。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>data</code>：要加密/解密的数据。</li>
-<li><code>key</code>：Base64 编码的私钥。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 加密/解密后的数据字节数组。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">Map&lt;String, byte[]&gt; keyPair = RsaCrypto.init();
-String privateKey = RsaCrypto.getPrivateKey(keyPair);
-String publicKey = RsaCrypto.getPublicKey(keyPair);
+<p>值得一提的是，公钥、私钥哪里来？你可以通过如上的<code>KeyMgr</code>生成。</p>
+<h2>RSA 加密解密</h2>
+<p>没什么好说的了，直接上 API 例子。</p>
+<pre><code class="language-java">// 生成公钥私钥
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+keyMgr.generateKeyPair();
+String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
 
-// 使用公钥加密
-byte[] data = &quot;你好，世界！&quot;.getBytes();
-byte[] encrypted = RsaCrypto.encryptByPublicKey(data, publicKey);
+System.out.println(&quot;公钥: \n\r&quot; + publicKey);
+System.out.println(&quot;私钥： \n\r&quot; + privateKey);
+//		System.out.println(&quot;公钥加密--------私钥解密&quot;);
 
-// 使用私钥解密
-byte[] decrypted = RsaCrypto.decryptByPrivateKey(encrypted, privateKey);
-// decrypted 应该等于原始数据
+String word = &quot;你好，世界！&quot;;
+
+byte[] encWord = KeyMgr.publicKeyEncrypt(word.getBytes(), publicKey);
+String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
+
+String eBody = EncodeTools.base64EncodeToString(encWord);
+String decWord2 = new String(KeyMgr.privateKeyDecrypt(EncodeTools.base64Decode(eBody), privateKey));
+System.out.println(&quot;加密前: &quot; + word + &quot;\n\r密文：&quot; + eBody + &quot;\n解密后: &quot; + decWord2);
+assertEquals(word, decWord);
+
+//		System.out.println(&quot;私钥加密--------公钥解密&quot;);
+
+String english = &quot;Hello, World!&quot;;
+byte[] encEnglish = KeyMgr.privateKeyEncrypt(english.getBytes(), privateKey);
+String decEnglish = new String(KeyMgr.publicKeyDecrypt(encEnglish, publicKey));
+//		System.out.println(&quot;加密前: &quot; + english + &quot;\n\r&quot; + &quot;解密后: &quot; + decEnglish);
+
+assertEquals(english, decEnglish);
+//		System.out.println(&quot;私钥签名——公钥验证签名&quot;);
+
+// 产生签名
+String sign = new DoSignature(Constant.MD5_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
+//		System.out.println(&quot;签名:\r&quot; + sign);
+// 验证签名
+assertTrue(new DoVerify(Constant.MD5_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
 </code></pre>
-<h2>结论</h2>
-<p><code>RsaCrypto</code> 类提供了一套全面的 RSA 非对称加密、解密和数字签名工具。它提供了密钥对生成、使用公钥和私钥进行数据加密/解密以及签名创建/验证的方法。请记住安全地存储私钥，并遵循加密实现的最佳实践。</p>
+<h2>密钥管理</h2>
+<p>关于密钥的一些工具方法在<code>KeyMgr</code>，包括公钥和私钥的。一般开源的都喜欢把<code>KeyPair</code>封装为 Map，而笔者觉得直接使用<code>KeyPair</code>本身就可以了，如果不太满足，则增加某些方法。例如<code>getPublicKeyBytes()</code>、<code>getPublicKeyStr()</code>、<code>getPublicToPem()</code>，相比使用 Map 更加清晰。</p>
+<p>另外对于密钥本身还可以加密解密，安全性更高。</p>
 
             </article>
         </div>

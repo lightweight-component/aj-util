@@ -55,77 +55,27 @@
                 </ul>
                 <h3>Common</h3>
                 <ul>
-                    <li class="data">
-                        <a href="/common/BytesHelper/">BytesHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
-                    </li>
-                    <li>
-                        <a href="/common/EnumsUtil/">EnumsUtil</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/RandomTools/">RandomTools</a>
-                    </li>
-                    <li>
-                        <a href="/common/RegExpUtils/">RegExpUtils</a>
-                    </li>
-                    <li>
-                        <a href="/common/XmlHelper/">XmlHelper</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/EncodeTools/">EncodeTools</a>
-                    </li> 
-                </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP Request</h3>
-                <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
-                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
-                </ul>
-
-                <h3>Cryptography</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
-                </ul>
-
-                <h3>Common</h3>
-                <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils/">CollUtils</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
-                    <li><a href="/common/Version/">Version</a></li>
-                    <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
                     <li><a href="/common/MapTool/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/date/intro/">Introduction</a></li>
+                    <li><a href="/date/convert/">Date Converter</a></li>
+                    <li><a href="/date/formatter/">Date Formatter</a></li>
+                </ul>
                 <h3>Reflection</h3>
                 <ul>
                     <li><a href="/reflect/Methods/">Methods</a></li>
@@ -137,107 +87,79 @@
                 <ul>
                     <li><a href="/io/FileHelper/">FileHelper</a></li>
                     <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper/">ZipHelper</a></li>
                 </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
     
-           
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/cryptography/intro/">Introduction</a></li>
+                <li><a href="/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+               </ul>
             </menu>
             <article class="aj-text">
-                <h1>AesCrypto Tutorial</h1>
-<p>This tutorial provides an overview of the <code>AesCrypto</code> class, which is part of the <code>lightweight-component/aj-util</code> library. <code>AesCrypto</code> offers a collection of utility methods for symmetric encryption and decryption using algorithms like AES, DES, 3DES, and PBE.</p>
-<h2>Introduction</h2>
-<p>The <code>AesCrypto</code> class provides methods for encrypting and decrypting data using various symmetric encryption algorithms. It implements the Singleton pattern and offers a comprehensive set of tools for secure data encryption.</p>
-<h2>Methods</h2>
-<h3>1. <code>getInstance()</code></h3>
-<p>Returns the singleton instance of the <code>AesCrypto</code> class.</p>
-<ul>
-<li><strong>Returns:</strong> The singleton instance of <code>AesCrypto</code>.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">AesCrypto crypto = AesCrypto.getInstance();
-</code></pre>
-<h3>2. <code>getSecretKey(String algorithmName, SecureRandom secure)</code></h3>
-<p>Generates a secret key for the specified algorithm using the provided secure random generator and returns it as a Base64 encoded string.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>algorithmName</code>: The name of the encryption algorithm.</li>
-<li><code>secure</code>: The secure random generator.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> A Base64 encoded string representation of the secret key.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">SecureRandom secureRandom = new SecureRandom();
-String secretKey = AesCrypto.getSecretKey(&quot;AES&quot;, secureRandom);
-</code></pre>
-<h3>3. <code>DES_encode(String res, String key)</code> and <code>DES_decode(String res, String key)</code></h3>
-<p>Encrypts or decrypts data using the DES algorithm.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>res</code>: The data to encrypt/decrypt.</li>
-<li><code>key</code>: The encryption/decryption key.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The encrypted/decrypted data.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">AesCrypto crypto = AesCrypto.getInstance();
-String encrypted = crypto.DES_encode(&quot;Hello, World!&quot;, &quot;mySecretKey&quot;);
-String decrypted = crypto.DES_decode(encrypted, &quot;mySecretKey&quot;);
-</code></pre>
-<h3>4. <code>AES_encode(String res, String key)</code> and <code>AES_decode(String res, String key)</code></h3>
-<p>Encrypts or decrypts data using the AES algorithm with a 128-bit key size.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>res</code>: The data to encrypt/decrypt.</li>
-<li><code>key</code>: The encryption/decryption key.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The encrypted/decrypted data.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">AesCrypto crypto = AesCrypto.getInstance();
-String encrypted = crypto.AES_encode(&quot;Hello, World!&quot;, &quot;mySecretKey&quot;);
-String decrypted = crypto.AES_decode(encrypted, &quot;mySecretKey&quot;);
-</code></pre>
-<h3>5. <code>encryptTripleDES(byte[] key, String data)</code> and <code>decryptTripleDES(byte[] key, byte[] data)</code></h3>
-<p>Encrypts or decrypts data using the Triple DES (3DES) algorithm.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>key</code>: The encryption/decryption key (24 bytes for Triple DES).</li>
-<li><code>data</code>: The data to encrypt/decrypt.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The encrypted/decrypted data.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">byte[] key = new byte[24]; // Generate or obtain a 24-byte key
-new SecureRandom().nextBytes(key);
+                <h1>AES/DES Encryption and Decryption</h1>
+<h2>AES</h2>
+<p>Symmetric encryption is mostly encapsulated based on the <code>javax.crypto</code> package, encapsulated in the class <code>com.ajaxjs.util.cryptography</code>. Let's first look at AES:</p>
+<pre><code class="language-java">final String key = &quot;abc&quot;;
+final String word = &quot;123&quot;;
 
-byte[] encrypted = AesCrypto.encryptTripleDES(key, &quot;Hello, World!&quot;);
-String decrypted = AesCrypto.decryptTripleDES(key, encrypted);
+@Test
+void testAES() {
+    String encWord = Cryptography.AES_encode(word, key);
+    assertEquals(word, Cryptography.AES_decode(encWord, key));
+}
 </code></pre>
-<h3>6. <code>initSalt()</code>, <code>encryptPBE(String key, byte[] salt, String data)</code>, and <code>decryptPBE(String key, byte[] salt, byte[] data)</code></h3>
-<p>Methods for Password-Based Encryption (PBE).</p>
-<ul>
-<li><strong>initSalt()</strong>: Generates a random 8-byte salt.</li>
-<li><strong>encryptPBE()</strong>: Encrypts data using PBE with the provided key and salt.</li>
-<li><strong>decryptPBE()</strong>: Decrypts data using PBE with the provided key and salt.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">byte[] salt = AesCrypto.initSalt();
-String key = &quot;mySecretPassword&quot;;
+<p>Hey~ Why are these still static methods? Oh—right, we encapsulated them with static methods like [Cryptography.AES_encode()](file://D:\code\ajaxjs\aj-util\aj-cryptography\src\main\java\com\ajaxjs\util\cryptography\Cryptography.java#L107-L113), but the essence is:</p>
+<pre><code class="language-java">public static String AES_encode(String data, String key) {
+    Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
+    cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
+    cryptography.setDataStr(data);
 
-byte[] encrypted = AesCrypto.encryptPBE(key, salt, &quot;Hello, World!&quot;);
-String decrypted = AesCrypto.decryptPBE(key, salt, encrypted);
+    return cryptography.doCipherAsHexStr();
+}
 </code></pre>
-<h2>Conclusion</h2>
-<p>The <code>AesCrypto</code> class provides a comprehensive set of tools for symmetric encryption and decryption. It supports multiple algorithms (AES, DES, 3DES, PBE) and offers a simple interface for secure data handling. Remember to store encryption keys securely and follow best practices for cryptographic implementations.</p>
+<p>Speaking of instantiating objects each time, it certainly consumes more resources than static methods. However, with today's Java compiler optimizations, this additional consumption can be negligible.</p>
+<h2>DES/TripleDES</h2>
+<p>The rest DES/TripleDES follow the same pattern, just with different algorithms~</p>
+<pre><code class="language-java">@Test
+void testDES() {
+    String encWord = Cryptography.DES_encode(word, key);
+    assertEquals(word, Cryptography.DES_decode(encWord, key));
+}
+
+@SuppressWarnings(&quot;restriction&quot;)
+@Test
+void test3DES() {
+    // Add new security algorithms, if using JCE it needs to be added
+    // The addProvider method here adds a new encryption algorithm provider (personal understanding, no good answer found, need补充)
+//		Security.addProvider(new com.sun.crypto.provider.SunJCE());
+    // byte array (used to generate the key)
+    final byte[] keyBytes = {0x11, 0x22, 0x4F, 0x58, (byte) 0x88, 0x10, 0x40, 0x38, 0x28, 0x25, 0x79, 0x51, (byte) 0xCB, (byte) 0xDD, 0x55, 0x66, 0x77, 0x29, 0x74,
+            (byte) 0x98, 0x30, 0x40, 0x36, (byte) 0xE2};
+    String word = &quot;This is a 3DES test. 测试&quot;;
+
+    byte[] encoded = Cryptography.tripleDES_encode(word, keyBytes);
+
+    assertEquals(word, Cryptography.tripleDES_decode(encoded, keyBytes));
+}
+</code></pre>
+<h2>PBE</h2>
+<p>Here let's talk about the PBE algorithm. PBE is an enhancement of DES, adding a Salt value to make it more secure.</p>
+<pre><code class="language-java">byte[] salt = Cryptography.initSalt();
+byte[] encData = Cryptography.PBE_encode(word, key, salt);
+
+assertEquals(word, Cryptography.PBE_decode(encData, key, salt));
+</code></pre>
 
             </article>
         </div>

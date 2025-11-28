@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-Introduction to Encryption and Decryption Package</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Introduction to Encryption and Decryption Package" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Encryption,Decryption,Utilities" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                </ul>
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/date/intro/">Introduction</a></li>
+                    <li><a href="/date/convert/">Date Converter</a></li>
+                    <li><a href="/date/formatter/">Date Formatter</a></li>
+                </ul>
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
+    
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/cryptography/intro/">Introduction</a></li>
+                <li><a href="/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+               </ul>
+            </menu>
+            <article class="aj-text">
+                <h1>Introduction to Encryption and Decryption Package</h1>
+<h2>Java AES/DES/RSA Encryption and Decryption API</h2>
+<p>The JDK contains mainstream encryption and decryption APIs, including AES/DES/3DES/RSA. These functionalities are mainly provided by the <code>javax.crypto</code> (JCE, Java Cryptography Extension) and <code>java.security</code> packages. Among these, only RSA belongs to asymmetric encryption (Asymmetric Encryption), while the others are symmetric encryption (Symmetric Encryption). The similarities and differences between them are as follows:</p>
+<ul>
+<li>It is called &quot;symmetric encryption&quot; because the same key is used for both encryption and decryption, which is &quot;symmetric&quot;. Conversely, if one key is used for encryption and another for decryption, it is &quot;asymmetric&quot;</li>
+<li>Symmetric encryption generally executes faster, but its security is relatively poor compared to asymmetric encryption; asymmetric encryption is the opposite, with higher security but relatively poor execution efficiency</li>
+<li>There is no absolute superiority between the two, and the optimal choice should be made according to the occasion requirements</li>
+</ul>
+<h2>Source Code</h2>
+<p>The final code is <a href="https://gitcode.com/lightweight-component/aj-util/tree/main/src/main/java/com/ajaxjs/util/cryptography">here</a>.</p>
+<p>Usage can be referenced in <a href="https://gitcode.com/lightweight-component/aj-util/blob/main/src/test/java/com/ajaxjs/util/cryptography/TestCryptography.java">unit tests</a>.</p>
+<p>Maven dependency reference, requires Java 8+</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-cryptography&lt;/artifactId&gt;
+    &lt;version&gt;1.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>The component jar package is very small, only about 20kb. It only depends on a utility library I wrote myself.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

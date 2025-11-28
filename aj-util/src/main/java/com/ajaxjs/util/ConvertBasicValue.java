@@ -1,5 +1,6 @@
 package com.ajaxjs.util;
 
+import com.ajaxjs.util.date.DateTools;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,8 +74,7 @@ public class ConvertBasicValue {
         else if (clz == double.class || clz == Double.class)
             return object2double(value);
         else if (clz == Date.class)
-            return null; // TODO : wait for DateHelper
-//            return DateHelper.object2Date(value);
+            return DateTools.object2Date(value);
         else if (clz == BigDecimal.class) {
             if (value instanceof String || value instanceof Number)
                 return new BigDecimal(value.toString());

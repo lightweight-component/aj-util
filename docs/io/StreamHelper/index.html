@@ -55,77 +55,27 @@
                 </ul>
                 <h3>Common</h3>
                 <ul>
-                    <li class="data">
-                        <a href="/common/BytesHelper/">BytesHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/ConvertBasicValue/">ConvertBasicValue</a>
-                    </li>
-                    <li>
-                        <a href="/common/EnumsUtil/">EnumsUtil</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/RandomTools/">RandomTools</a>
-                    </li>
-                    <li>
-                        <a href="/common/RegExpUtils/">RegExpUtils</a>
-                    </li>
-                    <li>
-                        <a href="/common/XmlHelper/">XmlHelper</a>
-                    </li>
-                    <li class="data">
-                        <a href="/common/MessageDigestHelper/">MessageDigestHelper</a>
-                    </li>
-                    <li>
-                        <a href="/common/EncodeTools/">EncodeTools</a>
-                    </li> 
-                </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP Request</h3>
-                <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
-                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
-                </ul>
-
-                <h3>Cryptography</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil/">CommonUtil</a></li>
-                </ul>
-
-                <h3>Common</h3>
-                <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils/">CollUtils</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Helper</a></li>
-                    <li><a href="/common/Version/">Version</a></li>
-                    <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
                     <li><a href="/common/MapTool/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/date/intro/">Introduction</a></li>
+                    <li><a href="/date/convert/">Date Converter</a></li>
+                    <li><a href="/date/formatter/">Date Formatter</a></li>
+                </ul>
                 <h3>Reflection</h3>
                 <ul>
                     <li><a href="/reflect/Methods/">Methods</a></li>
@@ -137,108 +87,146 @@
                 <ul>
                     <li><a href="/io/FileHelper/">FileHelper</a></li>
                     <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper/">ZipHelper</a></li>
                 </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                    <li><a href="/http_request/Base/">Base</a></li>
+                </ul>
     
-           
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/cryptography/intro/">Introduction</a></li>
+                <li><a href="/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+               </ul>
             </menu>
             <article class="aj-text">
-                <h1>StreamHelper</h1>
-<p>The <code>StreamHelper</code> class provides static methods to perform common operations on Java streams. It focuses on simplifying
-the conversion of input streams to strings and efficiently copying data between streams.</p>
-<h2>Methods</h2>
-<h3>1. <code>copyToString(InputStream in)</code></h3>
-<p>Reads an input stream and converts it to a string using the default UTF-8 charset.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>in</code>: The input stream to read from. The stream is not closed by this method.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The content of the input stream as a string.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">InputStream inputStream = new ByteArrayInputStream(&quot;Hello, World!&quot;.getBytes(StandardCharsets.UTF_8));
-String content = StreamHelper.copyToString(inputStream);
-System.out.println(content); // Output: Hello, World!\n
+                <h1>DataReader Tutorial</h1>
+<p>DataReader  is a reader class for reading data from an input stream. It supports reading raw byte data from sources such as files, network sockets, or memory buffers, while providing functionality for handling both text and binary data.</p>
+<h2>Main Features</h2>
+<ol>
+<li><strong>Multiple Data Reading Methods</strong>: Supports various reading methods including byte streams, text lines, and complete strings</li>
+<li><strong>Character Encoding Support</strong>: Character encoding can be specified, defaults to UTF-8</li>
+<li><strong>Streaming Processing</strong>: Supports chunked processing of large files to avoid memory overflow</li>
+<li><strong>Functional Programming</strong>: Uses functional interfaces to process read data</li>
+</ol>
+<h2>Basic Usage</h2>
+<h3>1. Creating Instances</h3>
+<pre><code class="language-java">// Create instance with default UTF-8 encoding
+InputStream inputStream = new FileInputStream(&quot;example.txt&quot;);
+DataReader reader = new DataReader(inputStream);
+
+// Create instance with specified character encoding
+DataReader readerWithEncoding = new DataReader(inputStream, StandardCharsets.UTF_8);
 </code></pre>
-<h3>2. <code>copyToString(InputStream in, Charset encode)</code></h3>
-<p>Reads an input stream and converts it to a string using the specified charset.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>in</code>: The input stream to read from. The stream is not closed by this method.</li>
-<li><code>encode</code>: The charset to use for decoding the input stream.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The content of the input stream as a string.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">InputStream inputStream = new ByteArrayInputStream(&quot;你好，世界！&quot;.getBytes(StandardCharsets.UTF_8));
-String content = StreamHelper.copyToString(inputStream, StandardCharsets.UTF_8);
-System.out.println(content); // Output: 你好，世界！\n
-</code></pre>
-<h3>3. <code>read(InputStream in, Charset encode, Consumer&lt;String&gt; fn)</code></h3>
-<p>Reads the input stream line by line and applies the given consumer function to each line.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>in</code>: The input stream to read from. The stream is closed within the method.</li>
-<li><code>encode</code>: The charset to use for decoding the input stream.</li>
-<li><code>fn</code>: A <code>Consumer</code> that accepts a string (a line from the input stream) and performs an action.</li>
-</ul>
-</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">InputStream inputStream = new ByteArrayInputStream(&quot;Line 1\nLine 2\nLine 3&quot;.getBytes(StandardCharsets.UTF_8));
-StreamHelper.read(inputStream, StandardCharsets.UTF_8, line -&gt; {
-    System.out.println(&quot;Line: &quot; + line);
+<h3>2. Reading Byte Data</h3>
+<pre><code class="language-java">// Read stream data as bytes
+InputStream inputStream = new FileInputStream(&quot;large-file.bin&quot;);
+DataReader reader = new DataReader(inputStream);
+
+reader.readStreamAsBytes(8192, (readSize, buffer) -&gt; {
+    // Process the read data
+    System.out.println(&quot;Read &quot; + readSize + &quot; bytes of data&quot;);
+    // Can process data in buffer here
 });
-// Output:
-// Line: Line 1
-// Line: Line 2
-// Line: Line 3
 </code></pre>
-<h2>Unit Test Examples</h2>
-<pre><code class="language-java">package com.ajaxjs.util.io;
+<h3>3. Reading Text Lines</h3>
+<pre><code class="language-java">// Read text data line by line
+InputStream inputStream = new FileInputStream(&quot;text-file.txt&quot;);
+DataReader reader = new DataReader(inputStream);
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class TestStreamHelper {
-    private InputStream inputStream;
-    private String testString;
-
-    @BeforeEach
-    public void setUp() {
-        testString = &quot;测试字符串&quot;;
-        inputStream = new ByteArrayInputStream(testString.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Test
-    public void copyToString_WithDefaultCharset_ReturnsCorrectString() {
-        String result = StreamHelper.copyToString(inputStream);
-        assertEquals(testString + &quot;\n&quot;, result);
-    }
-
-    @Test
-    public void copyToString_WithSpecifiedCharset_ReturnsCorrectString() {
-        String result = StreamHelper.copyToString(inputStream, StandardCharsets.UTF_8);
-        assertEquals(testString + &quot;\n&quot;, result);
-    }
-}
+reader.readAsLineString(line -&gt; {
+    System.out.println(&quot;Read a line: &quot; + line);
+    // Process each line of text
+});
 </code></pre>
-<p><strong>Note:</strong> The <code>inputStream2Byte</code> method is present in the test code but not in the provided <code>StreamHelper</code> class code.</p>
-<h2>Conclusion</h2>
-<p>The <code>StreamHelper</code> class provides a convenient way to perform common stream operations in Java. By using these methods,
-you can simplify your code and avoid writing repetitive stream I/O logic.</p>
+<h3>4. Reading Complete String</h3>
+<pre><code class="language-java">// Read entire input stream as string
+InputStream inputStream = new FileInputStream(&quot;text-file.txt&quot;);
+DataReader reader = new DataReader(inputStream);
+
+String content = reader.readAsString();
+System.out.println(&quot;File content: &quot; + content);
+</code></pre>
+<h3>5. Reading Byte Array</h3>
+<pre><code class="language-java">// Read entire input stream as byte array
+InputStream inputStream = new FileInputStream(&quot;binary-file.bin&quot;);
+DataReader reader = new DataReader(inputStream);
+
+byte[] bytes = reader.readAsBytes();
+System.out.println(&quot;Byte array length: &quot; + bytes.length);
+</code></pre>
+<h3>Notes</h3>
+<ol>
+<li>The <code>readStreamAsBytes</code> method automatically closes the input stream when reading is complete</li>
+<li>All methods throw <code>UncheckedIOException</code> when IO errors occur</li>
+<li>For large file processing, it's recommended to use the <code>readStreamAsBytes</code> method for chunked processing</li>
+<li>The <code>readAsString</code> method appends a newline character at the end of each line</li>
+</ol>
+<h1>DataWriter Tutorial</h1>
+<p>DataWriter is a writer class for writing data to an output stream. It supports writing raw byte data to destinations such as files, sockets, or buffers, and provides buffering functionality to improve write efficiency.</p>
+<h2>Main Features</h2>
+<ol>
+<li><strong>Multiple Data Writing Methods</strong>: Supports copying data from input streams, writing byte arrays, etc.</li>
+<li><strong>Buffering Support</strong>: Buffering functionality is enabled by default to improve write performance</li>
+<li><strong>Flexible Byte Array Writing</strong>: Supports writing complete byte arrays or specified ranges of data</li>
+<li><strong>No Automatic Stream Closing</strong>: Does not automatically close output streams, managed by the caller</li>
+</ol>
+<h2>Basic Usage</h2>
+<h3>1. Creating Instances</h3>
+<pre><code class="language-java">// Create DataWriter instance
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+</code></pre>
+<h3>2. Copying Data from Input Stream</h3>
+<pre><code class="language-java">// Copy data from input stream to output stream
+InputStream inputStream = new FileInputStream(&quot;input.txt&quot;);
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+
+writer.write(inputStream); // Copy data
+// Note: Need to manually close streams
+inputStream.close();
+outputStream.close();
+</code></pre>
+<h3>3. Writing Byte Arrays</h3>
+<pre><code class="language-java">// Write complete byte array
+byte[] data = &quot;Hello World&quot;.getBytes();
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+
+writer.write(data);
+outputStream.close();
+</code></pre>
+<h3>4. Writing Specified Range of Byte Array</h3>
+<pre><code class="language-java">// Write specified range of byte array
+byte[] data = &quot;Hello World&quot;.getBytes();
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+
+// Write 5 bytes starting from offset 2
+writer.write(data, 2, 5); // Write &quot;llo W&quot;
+outputStream.close();
+</code></pre>
+<h2>Configuration Options</h2>
+<pre><code class="language-java">// Disable buffering (not recommended)
+OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
+DataWriter writer = new DataWriter(outputStream);
+writer.setBuffered(false);
+</code></pre>
+<h2>Notes</h2>
+<ol>
+<li>DataWriter does not automatically close output streams, the caller needs to manually manage stream closing</li>
+<li>Buffering is enabled by default, disabling buffering will give a warning prompt</li>
+<li>All methods throw <code>UncheckedIOException</code> when IO errors occur</li>
+<li>When both offset and length are 0, the <code>write(byte[], int, int)</code> method writes the entire byte array</li>
+</ol>
 
             </article>
         </div>

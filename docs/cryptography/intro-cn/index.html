@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Version 教程</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  提供了环境检测和配置工具" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 环境,配置,版本" />
+        <title>AJ Utils-加密解密包简介</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  整个库中使用的常见加密实用工具" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 加密,解密,实用工具" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,52 +51,29 @@
                         <a href="/cn">首页</a>
                     </li>
                 </ul>
-
-                <h3>UUID</h3>
-                <ul>
-                    <li><a href="/uuid/ULID-cn/">ULID</a></li>
-                    <li><a href="/uuid/MonotonicULID-cn/">MonotonicULID</a></li>
-                    <li><a href="/uuid/UUIDv7-cn/">UUIDv7</a></li>
-                </ul>
-
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
-                </ul>
-
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/AesCrypto-cn/">AesCrypto</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RsaCrypto</a></li>
-                    <li><a href="/cryptography/WeiXinCrypto-cn/">WeiXinCrypto</a></li>
-                    <li><a href="/cryptography/SecurityTextType-cn/">SecurityTextType</a></li>
-                    <li><a href="/cryptography/CommonUtil-cn/">CommonUtil</a></li>
-                </ul>
-
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/DateHelper-cn/">DateHelper</a></li>
-                    <li><a href="/common/CollUtils-cn/">CollUtils</a></li>
                     <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
-                    <li><a href="/common/Version-cn/">Version</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">MessageDigestHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/EncodeTools-cn/">EncodeTools</a></li>
-                    <li><a href="/common/EnumsUtil-cn/">EnumsUtil</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
+                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
-
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/date/intro-cn/">简介</a></li>
+                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
+                </ul>
                 <h3>Reflection 反射</h3>
                 <ul>
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
@@ -108,56 +85,44 @@
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
                     <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">StreamHelper</a></li>
+                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
+                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
+                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>Version 教程</h1>
-<p>本教程提供了 <code>Version</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>Version</code> 类提供了环境检测和配置工具。</p>
-<h2>简介</h2>
-<p><code>Version</code> 类包含用于检测运行时环境特征和配置默认设置的静态方法和字段。</p>
-<h2>主要特性</h2>
+                <h1>Java AES/DES/RSA 加密解密 API</h1>
+<p>JDK 中蕴含了主流的加密解密 API，包括 AES/DES/3DES/RSA，这些功能主要由<code>javax.crypto</code>（JCE, Java Cryptography Extension）和<code>java.security</code>包提供。其中只有 RSA 属于非对称加密（Asymmetric Encryption），其他都是对称加密（Symmetric Encryption），它们之间的异同如下：</p>
 <ul>
-<li>操作系统检测</li>
-<li>调试模式检测</li>
-<li>时区配置</li>
-<li>单元测试检测</li>
+<li>之所以被称为“对称加密”，即无论加密还是解密都是同一一个密钥（key），即为“对称”，反之加密一个密钥、解密另外一个密钥的话，则为“非对称”</li>
+<li>对称加密一般执行速度较快，但相对于非对称加密安全性较差；而非对称加密则恰恰相反，安全性较高但执行效率相对差</li>
+<li>两者之间没有绝对优劣之分，应视乎场合需求择优选用</li>
 </ul>
-<h2>字段</h2>
-<ol>
-<li><code>OS_NAME</code> - 操作系统名称（小写）</li>
-<li><code>isDebug</code> - 指示调试/开发模式的标志</li>
-<li><code>isRunningTest</code> - 单元测试检测的缓存</li>
-</ol>
-<h2>方法</h2>
-<h3>1. <code>isRunningTest()</code></h3>
-<p>通过检查堆栈跟踪中的 JUnit 运行器来检测代码是否在 JUnit 测试环境中运行。</p>
-<ul>
-<li><strong>返回值:</strong> 如果在测试环境中运行则为 true</li>
-</ul>
-<h2>静态初始化</h2>
-<p>该类自动：</p>
-<ol>
-<li>检查并将默认时区设置为 Asia/Shanghai（如果尚未设置）</li>
-<li>根据操作系统确定调试模式（非 Linux = 调试模式）</li>
-</ol>
-<h2>使用示例</h2>
-<h3>检查调试模式</h3>
-<pre><code class="language-java">if (Version.isDebug) {
-    // 开发环境特定代码
-}
+<h1>源码</h1>
+<p>最终的代码在<a href="https://gitcode.com/lightweight-component/aj-util/tree/main/src/main/java/com/ajaxjs/util/cryptography">这里</a>。</p>
+<p>使用方式可以参见<a href="https://gitcode.com/lightweight-component/aj-util/blob/main/src/test/java/com/ajaxjs/util/cryptography/TestCryptography.java">单测</a>。</p>
+<p>Maven 依赖引用，需要 Java8+</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-cryptography&lt;/artifactId&gt;
+    &lt;version&gt;1.1&lt;/version&gt;
+&lt;/dependency&gt;
 </code></pre>
-<h3>检测测试环境</h3>
-<pre><code class="language-java">if (Version.isRunningTest()) {
-    // 测试特定设置
-}
-</code></pre>
-<h3>获取操作系统信息</h3>
-<pre><code class="language-java">String os = Version.OS_NAME; // &quot;windows 10&quot;, &quot;linux&quot; 等
-</code></pre>
-<h2>结论</h2>
-<p><code>Version</code> 类提供了简单的工具，用于检测运行时环境特征和配置默认设置（如时区）。</p>
+<p>该组件 jar 包体积很小，才 20kb~。只依赖了我自己写的一个工具库。</p>
 
             </article>
         </div>
