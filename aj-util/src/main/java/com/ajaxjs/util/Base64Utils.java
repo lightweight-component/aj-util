@@ -54,6 +54,8 @@ public class Base64Utils {
     /**
      * Flag indicating whether to omit padding characters in the encoded output.
      * This option is only relevant for encoding operations.
+     * There two advantages if it's to be true: shorter for strings and without URL encoding for the character '='.
+     * For example, in the use of JWT, it's not necessary to use padding characters.
      */
     private boolean withoutPadding = false;
 
