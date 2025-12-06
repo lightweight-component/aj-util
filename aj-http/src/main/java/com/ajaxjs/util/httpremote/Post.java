@@ -70,4 +70,8 @@ public class Post extends BasePost {
     public static Map<String, Object> api(String url, Object data, Consumer<HttpURLConnection> initConnection) {
         return new Post(url, data, CONTENT_TYPE_JSON, initConnection).getResp().responseAsJson();
     }
+
+    public static Map<String, Object> form(String url, Object data, Consumer<HttpURLConnection> initConnection) {
+        return new Post(url, data, CONTENT_TYPE_FORM, initConnection).getResp().responseAsJson();
+    }
 }
