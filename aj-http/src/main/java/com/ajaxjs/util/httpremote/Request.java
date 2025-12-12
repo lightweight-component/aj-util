@@ -304,7 +304,7 @@ public class Request implements HttpConstant {
     /**
      * Maximum length of a response text to print in logs
      */
-    private static final int MAX_LENGTH_TO_PRINT = 500;
+    private static final int MAX_LENGTH_TO_PRINT = 460;
 
     /**
      * Prints detailed log information about an HTTP request and response.

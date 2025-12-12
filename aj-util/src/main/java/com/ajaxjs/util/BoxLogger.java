@@ -41,7 +41,7 @@ public class BoxLogger {
     /**
      * Default width of the log box
      */
-    private static final int BOX_WIDTH = 97;
+    protected static final int BOX_WIDTH = 137;
 
     /**
      * Key for trace ID in logs
