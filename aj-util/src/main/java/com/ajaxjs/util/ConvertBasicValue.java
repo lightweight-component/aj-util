@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +63,9 @@ public class ConvertBasicValue {
             return null;
         }
 
+        if (value.getClass() == clz) // The same type, no need to convert.
+            return value;
+
         if (clz == String.class)
             return value.toString();
         else if (clz == boolean.class || clz == Boolean.class)
@@ -73,7 +78,7 @@ public class ConvertBasicValue {
             return object2float(value);
         else if (clz == double.class || clz == Double.class)
             return object2double(value);
-        else if (clz == Date.class)
+        else if (clz == Date.class || clz == LocalDateTime.class || clz == LocalDate.class)
             return DateTools.object2Date(value);
         else if (clz == BigDecimal.class) {
             if (value instanceof String || value instanceof Number)
