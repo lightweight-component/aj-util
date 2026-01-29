@@ -14,7 +14,7 @@
     <artifactId>aj-net</artifactId>
     <name>aj-http</name>
     <description>A Small HTTP Request Component.</description>
-    <version>1.8</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <url>https://aj-util.ajaxjs.com/</url>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.ajaxjs</groupId>
             <artifactId>ajaxjs-util</artifactId>
-            <version>1.3.1</version>
+            <version>1.3.2</version>
         </dependency>
     </dependencies>
 </project>

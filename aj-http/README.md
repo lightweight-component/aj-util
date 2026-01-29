@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/aj-net?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/aj-net)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.6-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/aj-net)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.9-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/aj-net)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
 
@@ -23,6 +23,6 @@ Runs on Java 8+. Maven:
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>aj-net</artifactId>
-    <version>1.6</version>
+    <version>1.9</version>
 </dependency>
 ```
