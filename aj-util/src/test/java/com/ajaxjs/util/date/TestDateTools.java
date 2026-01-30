@@ -36,4 +36,9 @@ class TestDateTools {
         date = DateTools.object2Date(dateTimeStr);
         assertEquals(dateTimeStr, DateTools.toLocalDateTime(date).format(Formatter.getDateTimeFormatter()));
     }
+
+    @Test
+    void testFormat(){
+        Date date = DateTools.object2Date("2026-01-23");
+    }
 }

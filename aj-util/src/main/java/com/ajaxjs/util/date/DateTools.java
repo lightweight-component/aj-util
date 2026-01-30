@@ -49,7 +49,7 @@ public class DateTools {
             if (RegExpUtils.match(DATE_TIME, str))
                 dateTime = LocalDateTime.parse(str, Formatter.getDateTimeFormatter());
             else if (RegExpUtils.match(DATE_YEAR, str))
-                dateTime = LocalDateTime.parse(str, Formatter.getDateFormatter());
+                dateTime = LocalDateTime.parse(str, Formatter.getDateFormatter()); // bug
             else
                 dateTime = LocalDateTime.parse(str, Formatter.getDateTimeShortFormatter());
 
