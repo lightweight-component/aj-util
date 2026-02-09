@@ -42,7 +42,7 @@ public class DoVerify {
     private byte[] signatureData;
 
     /**
-     * @param signatureBase64 The signature string, should be a Base64 string.
+     * @param signatureBase64 The signature string should be a Base64 string.
      * @return This
      */
     public DoVerify setSignatureBase64(String signatureBase64) {
