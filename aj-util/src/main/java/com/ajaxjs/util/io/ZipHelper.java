@@ -260,4 +260,27 @@ public class ZipHelper {
 
         return false;
     }
+
+    /**
+     * 压缩单个文件为ZIP
+     *
+     * @param sourceFile 源文件路径
+     * @param saveZip    目标ZIP文件路径
+     * @param useStore   true: 仅存储(STORED)，false: 标准压缩(DEFLATED)
+     */
+    public static void zipSingleFile(String sourceFile, String saveZip, boolean useStore) {
+        File file = new File(sourceFile);
+
+        if (!file.exists() || file.isDirectory())
+            throw new IllegalArgumentException("Source file does not exist or is a directory: " + sourceFile);
+
+        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(saveZip)));
+             ZipOutputStream zipOut = new ZipOutputStream(bos)) {
+            addFileToZip(file, file.getName(), zipOut, useStore);
+        } catch (IOException e) {
+            log.warn("单文件压缩为 ZIP 失败: " + sourceFile, e);
+            throw new UncheckedIOException(e);
+        }
+    }
+
 }
