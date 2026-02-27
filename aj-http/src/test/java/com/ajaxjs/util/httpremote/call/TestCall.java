@@ -1,5 +1,6 @@
 package com.ajaxjs.util.httpremote.call;
 
+import com.ajaxjs.util.httpremote.call.annotation.Url;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -8,6 +9,7 @@ class TestCall {
     @Test
     void testCall() {
         DoRequest request = CallHandler.create(DoRequest.class);
+        System.out.println(request);
         String result = request.get();
         System.out.println(result);
 
@@ -17,4 +19,5 @@ class TestCall {
 //        map = request.getJsonWithHeaders();
 //        System.out.println(map);
     }
+
 }
