@@ -1,8 +1,12 @@
 package com.ajaxjs.util.httpremote;
 
-import com.ajaxjs.util.*;
+import com.ajaxjs.util.JsonUtil;
+import com.ajaxjs.util.MapTool;
+import com.ajaxjs.util.UrlEncode;
 import com.ajaxjs.util.date.DateTools;
 import com.ajaxjs.util.io.DataReader;
+import com.ajaxjs.util.log.TextBox;
+import com.ajaxjs.util.log.Trace;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -254,7 +258,8 @@ public class Request implements HttpConstant {
             resp.setHttpCode(responseCode);
 
 
-            if (responseCode >= 400) {// If response code is 400+ it indicates an error
+            if (responseCode >= 400) {
+                // If response code is 400+ it indicates an error
                 /*
                  An error stream if any, null if there have been no errors, the connection is not connected or the server sent no useful data.
                  After connection is established, the server may not have sent data yet - stream is empty.
@@ -325,19 +330,21 @@ public class Request implements HttpConstant {
         returnText = (returnText.length() > MAX_LENGTH_TO_PRINT) ? returnText.substring(0, MAX_LENGTH_TO_PRINT) + " ..." : returnText;
 
         String title = isOk ? " HTTP ServerRequest " : " HTTP ServerRequest ErrResponse ";
-        String sb = "\n" +
-                (isOk ? BoxLogger.ANSI_YELLOW : BoxLogger.ANSI_RED) +
-                BoxLogger.boxLine('┌', '─', '┐', title) + '\n' +
-                BoxLogger.boxContent("Time:       ", DateTools.now()) + '\n' +
-                BoxLogger.boxContent("TraceId:    ", MDC.get(BoxLogger.TRACE_KEY)) + '\n' +
-                BoxLogger.boxContent("Request:    ", httpMethod + " " + url) + '\n' +
-                BoxLogger.boxContent("Parameters: ", data) + '\n' +
-                BoxLogger.boxContent("ReturnCode: ", "HTTP status " + httpCode) + '\n' +
-                BoxLogger.boxContent("ReturnText: ", returnText.trim()) + '\n' +
-                BoxLogger.boxContent("Execution:  ", (System.currentTimeMillis() - startTime) + "ms") + '\n' +
-                BoxLogger.boxLine('└', '─', '┘', CommonConstant.EMPTY_STRING) + BoxLogger.ANSI_RESET;
+        TextBox textBox = new TextBox();
+        textBox.setBoxColor(isOk ? TextBox.ANSI_YELLOW : TextBox.ANSI_RED);
 
-        log.info(sb);
+        textBox.boxStart(title)
+                .line("Time:       ", DateTools.now())
+                .line("TraceId:    ", MDC.get(Trace.TRACE_KEY))
+                .line("Request:    ", httpMethod + " " + url)
+                .line("Parameters: ", data)
+                .line("ReturnCode: ", "HTTP status " + httpCode)
+                .line("ReturnText: ", returnText.trim())
+                .line("Execution:  ", (System.currentTimeMillis() - startTime) + "ms");
+
+        String _log = textBox.boxEnd();
+        Trace.saveLogToMDC(_log);
+        log.info(_log);
     }
 
     /**
