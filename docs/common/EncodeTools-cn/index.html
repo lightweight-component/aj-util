@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -162,11 +159,11 @@ Map&lt;String, String&gt; paramMap = UrlEncode.parseStringToMap(queryString);
 // age -&gt; 25
 // city -&gt; 北京
 </code></pre>
+<p>解析器支持只有一个参数的查询串，例如 <code>a=b</code>。每个字段只在第一个 <code>=</code> 处分隔，因此包含额外 <code>=</code> 的 Base64、JWT 和签名值不会被截断。键和值默认按 UTF-8 做 URL 解码。</p>
 <h3>注意事项</h3>
 <ol>
-<li><code>encodeSafe</code> 方法在单元测试中有问题，需要修复</li>
-<li>如果 Tomcat 过滤器已设置 UTF-8，则 <code>urlChinese</code> 方法可能不需要重复转码</li>
-<li>所有编码和解码操作都支持自定义字符集</li>
+<li>如果 Tomcat 过滤器已经正确处理 UTF-8，不应再次调用 <code>urlChinese</code> 重复转码。</li>
+<li>编码和解码操作均支持自定义字符集。</li>
 </ol>
 
             </article>

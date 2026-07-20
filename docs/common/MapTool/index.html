@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -116,7 +114,7 @@
 <li>Join Map entries into strings with various delimiters</li>
 <li>Convert between different Map types and formats</li>
 <li>Convert between Maps and XML</li>
-<li>Deep copy Maps</li>
+<li>Copy the top-level entries of a Map</li>
 <li>Helper methods for Map value processing</li>
 </ul>
 <h2>Methods</h2>
@@ -142,8 +140,8 @@
 <li><code>as(Map&lt;String, K&gt; map, Function&lt;K, T&gt; fn)</code> - Convert Map values using a function</li>
 <li><code>as(Map&lt;String, String[]&gt; map)</code> - Convert Map with String[] values to Map&lt;String, Object&gt;</li>
 </ol>
-<h3>5. <code>deepCopy()</code></h3>
-<p><code>deepCopy(Map&lt;T, K&gt; map)</code> - Create a deep copy of a Map</p>
+<h3>5. <code>deepCopy()</code> (shallow copy)</h3>
+<p>Despite its historical name, <code>deepCopy(Map&lt;T, K&gt; map)</code> creates a new <code>HashMap</code> but does not clone nested mutable values.</p>
 <h3>6. XML Conversion Methods</h3>
 <ol>
 <li><code>beanToXml(Object bean)</code> - Convert Java bean to XML string</li>
@@ -162,10 +160,12 @@ String joined = MapTool.join(map); // &quot;name=John&amp;age=30&quot;
 <pre><code class="language-java">String[] pairs = {&quot;name=John&quot;, &quot;age=30&quot;};
 Map&lt;String, Object&gt; map = MapTool.toMap(pairs, Integer::parseInt);
 </code></pre>
+<p>Only the first <code>=</code> separates the key and value, so values such as JWTs and signatures are preserved. A pair ending in <code>=</code> produces an empty-string value.</p>
 <h3>XML Conversion</h3>
 <pre><code class="language-java">Map&lt;String, String&gt; data = new HashMap&lt;&gt;();
 data.put(&quot;name&quot;, &quot;John&quot;);
 data.put(&quot;age&quot;, &quot;30&quot;);
+data.put(&quot;note&quot;, null); // serialized as an empty element
 
 String xml = MapTool.mapToXml(data); 
 // &lt;xml&gt;&lt;name&gt;John&lt;/name&gt;&lt;age&gt;30&lt;/age&gt;&lt;/xml&gt;

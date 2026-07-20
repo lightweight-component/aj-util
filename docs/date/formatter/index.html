@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-SecurityTextType</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Enums for security-related text encoding and hashing types" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Encoding,Hashing,Cryptography" />
+        <title>AJ Utils-Date Formatting</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Date Formatting" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Date Formatting" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -107,39 +105,72 @@
                </ul>
             </menu>
             <article class="aj-text">
-                <h1>SecurityTextType Tutorial</h1>
-<p>This tutorial provides an overview of the <code>SecurityTextType</code> interface, which is part of the <code>lightweight-component/aj-util</code> library. The <code>SecurityTextType</code> interface defines enums for various security-related text encoding and hashing types.</p>
-<h2>Introduction</h2>
-<p>The <code>SecurityTextType</code> interface contains nested enums that categorize different types of:</p>
-<ul>
-<li>Text encoding formats</li>
-<li>Digest (hash) algorithms</li>
-<li>Cryptographic operations</li>
-</ul>
-<h2>Enums</h2>
-<h3>1. Encode</h3>
-<p>Defines various text encoding formats:</p>
-<ol>
-<li><code>BASE16</code> - Hexadecimal encoding</li>
-<li><code>BASE32</code> - Base32 encoding</li>
-<li><code>BASE58</code> - Base58 encoding (used in Bitcoin)</li>
-<li><code>BASE64</code> - Base64 encoding</li>
-<li><code>BASE91</code> - Base91 encoding</li>
-</ol>
-<h3>2. Digest</h3>
-<p>Defines message digest (hash) algorithms:</p>
-<ol>
-<li><code>Md5</code> - MD5 hash</li>
-<li><code>Md5WithSalt</code> - MD5 hash with salt</li>
-</ol>
-<h3>3. Cryptography</h3>
-<p>Currently empty, reserved for future cryptographic operation types.</p>
-<h2>Usage Examples</h2>
-<pre><code class="language-java">SecurityTextType.Encode encoding = SecurityTextType.Encode.BASE64;
-SecurityTextType.Digest digest = SecurityTextType.Digest.Md5WithSalt;
+                <h1>Date Formatting</h1>
+<p>The new version recommends using <code>DateTimeFormatter</code> instead of <code>SimpleDateFormat</code> to achieve thread safety and a clearer API. Since <code>DateTimeFormatter.ofPattern()</code> instantiation has certain overhead, especially for custom patterns (such as &quot;yyyy-MM-dd HH:mm:ss&quot;), we can optimize by caching <code>DateTimeFormatter</code> instances.</p>
+<p>Formatter usage is as follows:</p>
+<pre><code class="language-java">new Formatter(TemporalAccessor temporal).format();
+new Formatter(TemporalAccessor temporal).format(String format)
 </code></pre>
-<h2>Conclusion</h2>
-<p>The <code>SecurityTextType</code> interface provides a type-safe way to reference different security-related text encoding and hashing algorithms throughout the application.</p>
+<p>The <code>TemporalAccessor</code> interface is implemented by common date types, so we can pass them in the constructor and then specify the date format string.</p>
+<h1>Utility Functions</h1>
+<p>Mainly utility functions for <code>now()</code> that return the current time as a string.</p>
+<pre><code class="language-java">/**
+ * Obtain current time by specified format.
+ *
+ * @param formatter The formatter object
+ * @return The current time
+ */
+public static String now(DateTimeFormatter formatter) {
+    return LocalDateTime.now().format(formatter);
+}
+
+/**
+ * Obtain current time by specified format.
+ *
+ * @param format The format string
+ * @return The current time
+ */
+public static String now(String format) {
+    return now(Formatter.getDateFormatter(format));
+}
+
+/**
+ * Obtain current time, which is formatted by default like &quot;yyyy-MM-dd HH:mm:ss&quot;.
+ *
+ * @return The current time
+ */
+public static String now() {
+    return now(Formatter.getDateTimeFormatter());
+}
+
+/**
+ * Obtain current time, which is formatted like &quot;yyyy-MM-dd HH:mm&quot;.
+ *
+ * @return The current time
+ */
+public static String nowShort() {
+    return now(Formatter.getDateTimeShortFormatter());
+}
+
+/**
+ * Request timestamp, format must conform to RFC1123 date format
+ *
+ * @return The current time
+ */
+public static String nowGMTDate() {
+    return Formatter.GMT_FORMATTER.format(Instant.now());
+}
+
+/**
+ * Request timestamp. Following ISO8601 standard representation, using UTC time, format is yyyy-MM-ddTHH:mm:ssZ
+ *
+ * @return The current time
+ */
+public static String newISO8601Date() {
+    return Formatter.ISO8601_FORMATTER.format(Instant.now());
+}
+</code></pre>
+<p>Additionally, there is a function for converting strings to dates, which mainly uses regular expressions to match whether the string is a date string and then performs the conversion.</p>
 
             </article>
         </div>

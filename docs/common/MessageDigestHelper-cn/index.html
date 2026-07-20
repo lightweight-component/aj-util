@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -192,7 +189,7 @@ String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 </ul>
 <h3>注意事项</h3>
 <ol>
-<li>当使用 HMAC 操作且未设置密钥时，会自动生成随机密钥</li>
+<li>HMAC 应明确设置或持久化密钥。未设置密钥直接调用 <code>getMac()</code> 会生成一个不会返回的内部随机密钥，结果无法在之后复现和验证。</li>
 <li>所有哈希结果默认以小写十六进制字符串返回</li>
 <li>Base64 编码默认包含填充字符，可通过参数控制</li>
 <li>大文件处理采用分块读取方式，避免内存溢出</li>

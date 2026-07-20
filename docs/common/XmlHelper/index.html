@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -110,6 +108,7 @@
                 <h1>XmlHelper</h1>
 <p>The <code>XmlHelper</code> class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps.
 These methods can be used for processing and manipulating XML data.</p>
+<p>All builders created by <code>initBuilder()</code> disable DTD declarations, external entities, external schemas, and XInclude. Consequently, <code>getRoot</code>, <code>parseXML</code>, <code>xPath</code>, and <code>MapTool.xmlToMap</code> reject XXE payloads. Parse failures use sanitized messages and never append the complete XML input.</p>
 <h2>Methods</h2>
 <h3>1. <code>initBuilder()</code></h3>
 <p>Initializes a <code>DocumentBuilder</code> for XML parsing.</p>
@@ -189,6 +188,7 @@ Element root = XmlHelper.getRoot(xmlContent);
 <pre><code class="language-java">Map&lt;String, String&gt; attributes = XmlHelper.nodeAsMap(&quot;path/to/xml/file.xml&quot;, &quot;/root/element&quot;);
 // attributes will contain the attributes of the &lt;element&gt; node
 </code></pre>
+<p><code>getNodeAttribute(Node, String)</code> returns <code>null</code> when the node has no attribute map or when the requested attribute is absent.</p>
 
             </article>
         </div>

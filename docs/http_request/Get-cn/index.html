@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -136,14 +133,14 @@ String filePath = Get.download(&quot;https://example.com/file.pdf&quot;, &quot;/
 </ul>
 <h2>使用示例</h2>
 <pre><code class="language-java">// 带表单数据的简单POST请求
-ResponseEntity response = Post.post(&quot;https://api.example.com&quot;, Map.of(&quot;key&quot;, &quot;value&quot;));
+ResponseEntity response = Post.post(&quot;https://api.example.com&quot;, ObjectHelper.mapOf(&quot;key&quot;, &quot;value&quot;));
 
 // POST JSON API请求
-Map&lt;String, Object&gt; json = Post.api(&quot;https://api.example.com/data&quot;, Map.of(&quot;id&quot;, 123));
+Map&lt;String, Object&gt; json = Post.api(&quot;https://api.example.com/data&quot;, ObjectHelper.mapOf(&quot;id&quot;, 123));
 
 // 多部分文件上传
 ResponseEntity uploadResp = Post.multiPOST(&quot;https://api.example.com/upload&quot;, 
-    Map.of(&quot;file&quot;, new File(&quot;document.pdf&quot;)));
+    ObjectHelper.mapOf(&quot;file&quot;, new File(&quot;document.pdf&quot;)));
 </code></pre>
 <h1>DELETE请求工具</h1>
 <p>提供HTTP DELETE请求方法。</p>
@@ -177,7 +174,8 @@ boolean exists = !Head.is404(&quot;https://example.com/resource&quot;);
 long size = Head.getFileSize(&quot;https://example.com/file.pdf&quot;);
 
 // 获取重定向地址
-String redirectUrl = Head.get302redirect(&quot;https://example.com/old&quot;);</code></pre>
+String redirectUrl = Head.get302redirect(&quot;https://example.com/old&quot;);
+</code></pre>
 
             </article>
         </div>

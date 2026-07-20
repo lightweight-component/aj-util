@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -119,6 +117,7 @@
 <li>Type-safe JSON processing</li>
 <li>Java 8 date/time support</li>
 <li>Strict duplicate detection</li>
+<li>Lazily initialized, safely published shared <code>JsonEngine</code></li>
 </ul>
 <h2>Methods</h2>
 <h3>1. Serialization (to JSON)</h3>
@@ -129,7 +128,6 @@
 <h3>2. Deserialization (from JSON)</h3>
 <ol>
 <li><code>fromJson(String jsonStr, Class&lt;T&gt; valueType)</code> - Parse JSON to specified type</li>
-<li><code>fromJson(String jsonStr, JavaType valueType)</code> - Parse JSON with complex type</li>
 </ol>
 <h3>3. JSON ↔ Map Conversion</h3>
 <ol>

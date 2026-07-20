@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -147,10 +144,10 @@
 <li><strong>long/Long：</strong> 使用 <code>object2long()</code> 方法（如下所述）将对象转换为长整数。</li>
 <li><strong>float/Float：</strong> 使用 <code>object2float()</code> 方法将对象转换为浮点数。</li>
 <li><strong>double/Double：</strong> 使用 <code>object2double()</code> 方法将对象转换为双精度浮点数。</li>
-<li><strong>Date：</strong> 使用 <code>DateHelper.object2Date()</code> 方法将对象转换为 Date 对象。</li>
+<li><strong>日期时间：</strong> 通过 <code>DateTypeConvert</code> 转换受支持的传统日期类型和 Java 8 日期类型。</li>
 <li><strong>BigDecimal：</strong> 如果值为 String 或 Number，则将对象转换为 BigDecimal。</li>
 <li><strong>Array：</strong> 使用 <code>toArray()</code> 方法将对象转换为数组。</li>
-<li><strong>Enum：</strong> 将对象转换为枚举。</li>
+<li><strong>Enum：</strong> 可按名称或整数 ordinal 转换，并返回对应的枚举常量，而不是 ordinal 数字。</li>
 </ul>
 <h3>3. <code>toBoolean(Object value)</code></h3>
 <p>将对象转换为布尔值。 此方法处理各种输入类型，包括字符串、数字和布尔值。</p>
@@ -215,6 +212,7 @@ assertEquals(-456L, ConvertBasicValue.object2long(&quot;-456&quot;));
 <pre><code class="language-java">assertEquals(0.0, ConvertBasicValue.object2double(null), 0.0001);
 assertEquals(3.14, ConvertBasicValue.object2double(&quot;3.14&quot;), 0.0001);
 </code></pre>
+<p><code>toJavaValue(String)</code> 可识别布尔值、<code>null</code>、整数、长整数和小数，也支持 <code>-3.14</code> 这样的负小数。</p>
 <h2>单元测试示例</h2>
 <p>以下是单元测试中的一些示例：</p>
 <pre><code class="language-java">import org.junit.jupiter.api.Test;

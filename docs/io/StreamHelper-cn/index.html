@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-DataReader/ 教程</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  DataReader/ 类提供了流操作和转换的实用方法" />
+        <title>AJ Utils-DataReader 与 DataWriter 教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  输入流读取和输出流写入工具" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 流操作,I/O,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -134,6 +131,7 @@ reader.readStreamAsBytes(8192, (readSize, buffer) -&gt; {
     // 可以在这里处理 buffer 中的数据
 });
 </code></pre>
+<p><code>bufferSize</code> 必须大于零；传入零或负数会抛出 <code>IllegalArgumentException</code>。</p>
 <h3>3. 读取文本行</h3>
 <pre><code class="language-java">// 逐行读取文本数据
 InputStream inputStream = new FileInputStream(&quot;text-file.txt&quot;);
@@ -165,7 +163,7 @@ System.out.println(&quot;字节数组长度: &quot; + bytes.length);
 <li>readStreamAsBytes 方法会在读取完成后自动关闭输入流</li>
 <li>所有方法在发生 IO 错误时都会抛出 <code>UncheckedIOException</code></li>
 <li>对于大文件处理，推荐使用 readStreamAsBytes 方法进行分块处理</li>
-<li>readAsString 方法会在每行末尾添加换行符</li>
+<li><code>readAsString</code> 当前不会保留行分隔符；需要精确保留文本布局时，请使用 <code>readAsBytes</code> 后按明确字符集转换。</li>
 </ol>
 <h1>DataWriter 使用教程</h1>
 <p>DataWriter 是一个用于向输出流写入数据的写入器类。它支持向文件、套接字或缓冲区等目标写入原始字节数据，并提供了缓冲功能以提高写入效率。</p>
@@ -188,9 +186,8 @@ InputStream inputStream = new FileInputStream(&quot;input.txt&quot;);
 OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
 DataWriter writer = new DataWriter(outputStream);
 
-writer.write(inputStream); // 复制数据
-// 注意：需要手动关闭流
-inputStream.close();
+writer.write(inputStream); // 复制数据并关闭 inputStream
+// DataWriter 不会关闭输出流
 outputStream.close();
 </code></pre>
 <h3>3. 写入字节数组</h3>
@@ -220,7 +217,7 @@ writer.setBuffered(false);
 </code></pre>
 <h3>注意事项</h3>
 <ol>
-<li>DataWriter 不会自动关闭输出流，需要调用者手动管理流的关闭</li>
+<li>DataWriter 不会自动关闭输出流。<code>write(InputStream)</code> 当前会通过 <code>DataReader</code> 关闭输入流，因此调用后不要继续复用该输入流。</li>
 <li>默认启用缓冲功能，禁用缓冲会给出警告提示</li>
 <li>所有方法在发生IO错误时都会抛出 <code>UncheckedIOException</code></li>
 <li>当偏移量和长度都为0时，<code>write(byte[], int, int)</code> 方法会写入整个字节数组</li>

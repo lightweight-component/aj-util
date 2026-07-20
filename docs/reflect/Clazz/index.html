@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -227,6 +225,8 @@ public class TestClazz {
     }
 }
 </code></pre>
+<h2>Class-hierarchy traversal</h2>
+<p>Hierarchy inspection handles classes and interfaces separately. Superclasses are followed only while non-null, while parent interfaces are recursively visited through <code>getInterfaces()</code>. A <code>Set&lt;Class&lt;?&gt;&gt;</code> prevents duplicate visits in diamond-shaped interface graphs. Callers may safely inspect either a concrete class or an interface type.</p>
 <h2>Conclusion</h2>
 <p>The <code>Clazz</code> class provides a set of useful utilities for working with Java classes through reflection. By using these
 methods, you can simplify your code and handle class operations more efficiently. Remember to consult

@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -110,7 +107,7 @@
 <h3>主要功能特性</h3>
 <ol>
 <li><strong>线程安全的随机数生成</strong>：使用 <code>ThreadLocalRandom</code> 提供高性能</li>
-<li><strong>加密强度的随机数生成</strong>：使用 <code>SecureRandom</code> 提供加密级别的安全性</li>
+<li><strong>明确的随机源</strong>：同时暴露 <code>SecureRandom</code> 和普通 <code>Random</code>，应按场景选择</li>
 <li><strong>多种随机值生成</strong>：支持数字、字符串、UUIDv7 等</li>
 <li><strong>时间有序 UUID</strong>：UUIDv7 提供比随机 UUID 更好的局部性</li>
 </ol>
@@ -128,12 +125,14 @@ int fourDigit = RandomTools.generateNumber(4); // 1000-9999
 System.out.println(threeDigit); // 例如：567
 System.out.println(fourDigit);  // 例如：3456
 </code></pre>
+<p>位数只能是 1 到 9，其他值会抛出 <code>IllegalArgumentException</code>。</p>
 <h3>字符串随机数生成</h3>
 <h4>1. 生成六位随机字符串</h4>
 <pre><code class="language-java">// 生成六位字母数字随机字符串
 String randomStr = RandomTools.generateRandomString();
 System.out.println(randomStr); // 例如：aB3xY9
 </code></pre>
+<p>字符串长度必须大于零。这些字符串使用 <code>ThreadLocalRandom</code>，不应作为密码、令牌或其他加密秘密。</p>
 <h4>2. 生成指定长度的随机字符串</h4>
 <pre><code class="language-java">// 生成指定长度的随机字符串
 String shortStr = RandomTools.generateRandomString(3);
@@ -146,7 +145,7 @@ System.out.println(longStr);  // 例如：AbC3dE5fGh
 <h4>1. 生成 UUIDv7</h4>
 <pre><code class="language-java">// 生成 UUID 版本 7（时间有序）
 UUID uuid = RandomTools.uuid();
-System.out.println(uuid); // 例如：550e8400-e29b-41d4-a716-446655440000
+System.out.println(uuid); // 版本字段为 7
 </code></pre>
 <h4>2. 生成无连字符的 UUIDv7 字符串</h4>
 <pre><code class="language-java">// 生成无连字符的 UUID 字符串
@@ -171,6 +170,7 @@ System.out.println(timestamp); // 例如：Wed Oct 25 14:30:45 CST 2023
 <li>数字生成使用 <code>ThreadLocalRandom</code> 保证线程安全和性能</li>
 <li>UUIDv7 是时间有序的，具有更好的数据库索引性能</li>
 <li>字符串生成使用固定的字母数字字符池</li>
+<li>当前 UUIDv7 的随机部分使用 <code>java.util.Random</code>；它适合作为标识符，不适合作为安全令牌。</li>
 </ol>
 <hr>
 

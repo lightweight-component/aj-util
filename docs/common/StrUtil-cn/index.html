@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -108,71 +105,46 @@
                 <h1>StrUtil 教程</h1>
 <p>本教程提供了 <code>StrUtil</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>StrUtil</code> 类为 Java 应用程序中的字符串操作提供了实用工具方法。</p>
 <h2>简介</h2>
-<p><code>StrUtil</code> 类包含用于常见字符串操作的静态方法，包括验证、连接、填充、模板化和编码转换。</p>
+<p><code>StrUtil</code> 提供字符串计数、填充、模板替换、拼接和成员判断等静态方法。</p>
 <h2>主要特性</h2>
 <ul>
-<li>字符串验证和空检查</li>
-<li>URL 路径连接</li>
 <li>带占位符的字符串模板</li>
 <li>字符串填充和格式化</li>
 <li>使用自定义分隔符连接列表/数组</li>
-<li>UTF-8 编码/解码工具</li>
-<li>模式匹配和替换</li>
 </ul>
-<h2>常量</h2>
-<ol>
-<li><code>EMPTY_STRING</code> - 空字符串常量</li>
-<li><code>DELIM_STR</code> - 默认模板分隔符 &quot;{}&quot;</li>
-</ol>
 <h2>方法</h2>
-<h3>1. 验证</h3>
+<h3>1. 拼接</h3>
 <ol>
-<li><code>hasText(String str)</code> - 检查字符串是否包含实际文本</li>
-<li><code>isEmptyText(String str)</code> - hasText() 的反向操作</li>
-</ol>
-<h3>2. 连接</h3>
-<ol>
-<li><code>concatUrl(String a, String b)</code> - 智能 URL 路径连接</li>
 <li><code>join(T[] arr, String str)</code> - 使用分隔符连接数组</li>
-<li><code>join(List&lt;T&gt; list, String str)</code> - 使用分隔符连接列表</li>
-<li><code>join(List&lt;String&gt; list, String tpl, String str)</code> - 使用模板格式化连接</li>
+<li><code>join(List&lt;String&gt; list, String str)</code> - 使用分隔符连接字符串列表</li>
+<li><code>join(List&lt;String&gt; list, String tpl, String str)</code> - 格式化并连接字符串列表</li>
 </ol>
 <h3>3. 模板</h3>
 <ol>
-<li><code>print(String tpl, Object... args)</code> - 简单的 {} 占位符替换</li>
-<li><code>simpleTpl(String template, Map&lt;String, Object&gt; params)</code> - ${var} 替换</li>
-<li><code>simpleTpl2(String template, Map&lt;String, Object&gt; data)</code> - #{var} 替换</li>
+<li><code>simpleTpl(String template, Map&lt;String, Object&gt; params)</code> - <code>${var}</code> 替换</li>
+<li><code>simpleTpl2(String template, Map&lt;String, Object&gt; data)</code> - <code>#{var}</code> 替换</li>
 <li><code>simpleTpl(String template, Object data)</code> - JavaBean 属性替换</li>
 </ol>
+<p>替换值按字面量处理，值中包含 <code>$</code> 或 <code>\</code> 也不会被解释为分组引用。</p>
 <h3>4. 实用工具</h3>
 <ol>
-<li><code>charCount(String str, String _char)</code> - 计算字符出现次数</li>
-<li><code>leftPad(String str, int len, String _char)</code> - 左填充字符串</li>
+<li><code>charCount(String str, String _char)</code> - 统计出现次数，支持重叠匹配</li>
+<li><code>leftPad(String str, int len, String padding)</code> - 精确填充到 <code>len</code>，不会改动原字符串已有空白</li>
 <li><code>isWordOneOfThem(String word, String[] arr)</code> - 检查字符串是否在数组中</li>
-<li><code>getUTF8_Bytes(String str)</code> - 获取 UTF-8 字节</li>
-<li><code>byte2String(byte[] bytes)</code> - 将字节转换为 UTF-8 字符串</li>
-<li><code>byte2String(String str)</code> - 将字符串重新编码为 UTF-8</li>
 </ol>
 <h2>使用示例</h2>
-<h3>验证</h3>
-<pre><code class="language-java">boolean valid = StrUtil.hasText(&quot;  test  &quot;); // true
-boolean empty = StrUtil.isEmptyText(&quot;   &quot;); // true
-</code></pre>
-<h3>URL 连接</h3>
-<pre><code class="language-java">String url = StrUtil.concatUrl(&quot;http://example.com&quot;, &quot;api&quot;); 
-// &quot;http://example.com/api&quot;
-</code></pre>
 <h3>模板</h3>
-<pre><code class="language-java">String result = StrUtil.print(&quot;Hello {}!&quot;, &quot;World&quot;); // &quot;Hello World!&quot;
-String tpl = StrUtil.simpleTpl(&quot;Name: ${name}&quot;, Map.of(&quot;name&quot;, &quot;John&quot;)); 
+<pre><code class="language-java">Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();
+values.put(&quot;name&quot;, &quot;John&quot;);
+String tpl = StrUtil.simpleTpl(&quot;Name: ${name}&quot;, values);
 // &quot;Name: John&quot;
 </code></pre>
-<h3>连接</h3>
-<pre><code class="language-java">String joined = StrUtil.join(List.of(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;), &quot;,&quot;); // &quot;a,b,c&quot;
+<h3>计数与填充</h3>
+<pre><code class="language-java">int count = StrUtil.charCount(&quot;aaa&quot;, &quot;aa&quot;); // 2，重叠匹配也会计数
+String padded = StrUtil.leftPad(&quot;a b&quot;, 6, &quot;$&quot;); // &quot;$$$a b&quot;
 </code></pre>
-<h3>编码</h3>
-<pre><code class="language-java">byte[] bytes = StrUtil.getUTF8_Bytes(&quot;test&quot;);
-String str = StrUtil.byte2String(bytes); // &quot;test&quot;
+<h3>连接</h3>
+<pre><code class="language-java">String joined = StrUtil.join(Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;,&quot;); // &quot;a,b,c&quot;
 </code></pre>
 <h2>结论</h2>
 <p><code>StrUtil</code> 类提供了全面的实用方法，用于字符串操作，使 Java 应用程序中的常见字符串操作更加方便。</p>

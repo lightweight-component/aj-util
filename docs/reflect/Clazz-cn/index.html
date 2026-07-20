@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -169,6 +166,8 @@ String instance = Clazz.newInstance(constructor, &quot;Hello&quot;);
 <pre><code class="language-java">Object instance = Clazz.newInstance(&quot;java.lang.String&quot;, &quot;Hello&quot;);
 // instance 将会是 &quot;Hello&quot;
 </code></pre>
+<h2>类层次遍历</h2>
+<p>层次检查会分别处理类和接口：父类只在非 null 时继续向上遍历，父接口则通过 <code>getInterfaces()</code> 递归访问。内部使用 <code>Set&lt;Class&lt;?&gt;&gt;</code>，因此菱形接口继承不会产生重复结果或重复访问。查询时既可以传入具体类，也可以安全地传入接口类型。</p>
 
             </article>
         </div>
