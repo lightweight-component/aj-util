@@ -57,8 +57,12 @@ public class DataReader {
      *
      * @param bufferSize The template buffer size.
      * @param fn         What do you want to do with the data?
+     * @throws IllegalArgumentException if {@code bufferSize} is not positive
      */
     public void readStreamAsBytes(int bufferSize, BiConsumer<Integer, byte[]> fn) {
+        if (bufferSize <= 0)
+            throw new IllegalArgumentException("Buffer size must be greater than zero: " + bufferSize);
+
         int readSize; // 读取到的数据长度
         byte[] buffer = new byte[bufferSize]; // 通过 byte 作为数据中转，用于存放循环读取的临时数据
 

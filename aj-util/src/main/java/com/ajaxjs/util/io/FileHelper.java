@@ -8,11 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.channels.FileChannel;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -127,16 +130,24 @@ public class FileHelper {
      */
     public void delete() {
         try {
-            if (Files.isDirectory(path))
-                try (Stream<Path> walk = Files.walk(path)) {
-                    walk.sorted(Comparator.reverseOrder())
-                            .map(Path::toFile)
-                            .forEach(File::delete);
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
                 }
-            else
-                Files.delete(path);
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException error) throws IOException {
+                    if (error != null)
+                        throw error;
+
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
         } catch (IOException e) {
-            log.error("Delete failed on: " + path, e);
+            log.error("Delete failed on: {}", path, e);
             throw new UncheckedIOException("Delete failed on: " + path, e);
         }
     }
@@ -231,26 +242,72 @@ public class FileHelper {
      * @throws UncheckedIOException  if an IO error occurs during copying
      */
     public void copyTo() {
-        try {
-            if (Files.isDirectory(path)) {
-                try (Stream<Path> walk = Files.walk(path)) {
-                    walk.forEach(sourceFilePath -> {
-                        Path targetFilePath = target.resolve(path.relativize(sourceFilePath));
+        if (target == null)
+            throw new IllegalStateException("Target path not set");
 
-                        try {
-                            Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
-                        } catch (IOException e) {
-                            log.error("Copy failed for: " + sourceFilePath, e);
-                            throw new UncheckedIOException("Copy failed for: " + sourceFilePath, e);
-                        }
-                    });
-                }
+        try {
+            Path source = path.toAbsolutePath().normalize();
+            Path destination = target.toAbsolutePath().normalize();
+
+            if (Files.isSymbolicLink(source))
+                throw new IOException("Symbolic links are not supported as copy sources: " + path);
+
+            if (Files.isDirectory(source, LinkOption.NOFOLLOW_LINKS)) {
+                Path sourceReal = source.toRealPath();
+                Path resolvedDestination = resolveAgainstRealAncestor(destination);
+                if (destination.startsWith(source) || resolvedDestination.startsWith(sourceReal))
+                    throw new IllegalArgumentException("Copy target must not be inside the source directory: " + target);
+
+                copyDirectory(sourceReal, destination);
             } else
                 Files.copy(path, target, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("Copy failed, on: " + path, e);
             throw new UncheckedIOException("Copy failed, on: " + path, e);
         }
+    }
+
+    private static void copyDirectory(Path source, Path destination) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                if (Files.isSymbolicLink(dir))
+                    throw new IOException("Symbolic links are not supported while copying directories: " + dir);
+
+                Files.createDirectories(destination.resolve(source.relativize(dir)));
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (attrs.isSymbolicLink() || Files.isSymbolicLink(file))
+                    throw new IOException("Symbolic links are not supported while copying directories: " + file);
+                if (!attrs.isRegularFile())
+                    throw new IOException("Unsupported file type while copying directory: " + file);
+
+                Files.copy(file, destination.resolve(source.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private static Path resolveAgainstRealAncestor(Path path) throws IOException {
+        Deque<Path> missingParts = new ArrayDeque<>();
+        Path existing = path;
+
+        while (existing != null && !Files.exists(existing, LinkOption.NOFOLLOW_LINKS)) {
+            missingParts.addFirst(existing.getFileName());
+            existing = existing.getParent();
+        }
+
+        if (existing == null)
+            return path;
+
+        Path resolved = existing.toRealPath();
+        for (Path part : missingParts)
+            resolved = resolved.resolve(part);
+
+        return resolved.normalize();
     }
 
     /**
@@ -293,6 +350,7 @@ public class FileHelper {
         if (chunkSize < 1)
             throw new IllegalArgumentException("分片大小不能小于1个字节:" + chunkSize);
 
+        List<Path> createdChunks = new ArrayList<>();
         try {
             long fileSize = Files.size(path); // 原始文件大小
             long numberOfChunk = fileSize % chunkSize == 0 ? fileSize / chunkSize : (fileSize / chunkSize) + 1; // 分片数量
@@ -300,7 +358,7 @@ public class FileHelper {
 
             // 读取原始文件
             try (FileChannel fileChannel = FileChannel.open(path, EnumSet.of(StandardOpenOption.READ))) {
-                for (int i = 0; i < numberOfChunk; i++) {
+                for (long i = 0; i < numberOfChunk; i++) {
                     long start = i * chunkSize;
                     long end = start + chunkSize;
 
@@ -311,12 +369,21 @@ public class FileHelper {
 
                     try (FileChannel chunkFileChannel = FileChannel.open(path.resolveSibling(chunkFile),
                             EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE))) {
-
-                        fileChannel.transferTo(start, end - start, chunkFileChannel);// 返回写入的数据长度
+                        Path created = path.resolveSibling(chunkFile);
+                        createdChunks.add(created);
+                        transferFully(fileChannel, start, end - start, chunkFileChannel);
                     }
                 }
             }
         } catch (IOException e) {
+            for (Path chunk : createdChunks) {
+                try {
+                    Files.deleteIfExists(chunk);
+                } catch (IOException cleanupError) {
+                    e.addSuppressed(cleanupError);
+                }
+            }
+
             log.error("Chunk file failed, on: " + path, e);
             throw new UncheckedIOException(e);
         }
@@ -333,15 +400,65 @@ public class FileHelper {
         if (chunkFiles == null || chunkFiles.length == 0)
             throw new IllegalArgumentException("分片文件不能为空");
 
-        try (FileChannel fileChannel = FileChannel.open(path, EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE))) {
-            for (Path chunkFile : chunkFiles) {
-                try (FileChannel chunkChannel = FileChannel.open(chunkFile, EnumSet.of(StandardOpenOption.READ))) {
-                    chunkChannel.transferTo(0, chunkChannel.size(), fileChannel);
+        Path destination = path.toAbsolutePath().normalize();
+        Path parent = destination.getParent();
+        Path temporary = null;
+
+        try {
+            if (parent == null)
+                throw new IOException("Merge destination has no parent directory: " + path);
+            if (Files.exists(destination))
+                throw new FileAlreadyExistsException(destination.toString());
+
+            temporary = Files.createTempFile(parent, ".aj-merge-", ".tmp");
+            try (FileChannel fileChannel = FileChannel.open(temporary, EnumSet.of(StandardOpenOption.WRITE))) {
+                for (Path chunkFile : chunkFiles) {
+                    try (FileChannel chunkChannel = FileChannel.open(chunkFile, EnumSet.of(StandardOpenOption.READ))) {
+                        transferFully(chunkChannel, 0, chunkChannel.size(), fileChannel);
+                    }
                 }
             }
+
+            Files.move(temporary, destination);
         } catch (IOException e) {
             log.error("Merge file failed", e);
             throw new UncheckedIOException("Error merging files", e);
+        } finally {
+            if (temporary != null) {
+                try {
+                    Files.deleteIfExists(temporary);
+                } catch (IOException e) {
+                    log.warn("Unable to delete temporary merge file: " + temporary, e);
+                }
+            }
+        }
+    }
+
+    private static void transferFully(FileChannel source, long position, long length, FileChannel target) throws IOException {
+        long remaining = length;
+
+        while (remaining > 0) {
+            long transferred = source.transferTo(position, remaining, target);
+            if (transferred > 0) {
+                position += transferred;
+                remaining -= transferred;
+                continue;
+            }
+
+            ByteBuffer buffer = ByteBuffer.allocate((int) Math.min(8192, remaining));
+            source.position(position);
+            int read = source.read(buffer);
+            if (read < 0)
+                throw new IOException("Unexpected end of file while transferring data.");
+            if (read == 0)
+                continue;
+
+            buffer.flip();
+            while (buffer.hasRemaining())
+                target.write(buffer);
+
+            position += read;
+            remaining -= read;
         }
     }
 }

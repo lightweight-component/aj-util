@@ -73,19 +73,21 @@ public class ZipHelper {
         Path root = prepareExtractionRoot(save);
         ExtractionState state = new ExtractionState();
 
-        try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(zipFile)))) {
-            ZipEntry ze;
+        try (ZipFile archive = new ZipFile(zipFile)) {
+            Enumeration<? extends ZipEntry> entries = archive.entries();
 
-            while ((ze = zis.getNextEntry()) != null) {
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
                 checkEntryCount(state, limits);
-                Path target = resolveZipEntry(root, ze.getName());
+                Path target = resolveZipEntry(root, entry.getName());
 
-                if (ze.isDirectory())
+                if (entry.isDirectory())
                     createSecureDirectories(root, target);
-                else
-                    extractEntry(zis, root, target, ze, state, limits);
-
-                zis.closeEntry();
+                else {
+                    try (InputStream input = archive.getInputStream(entry)) {
+                        extractEntry(input, root, target, entry, state, limits);
+                    }
+                }
             }
         } catch (IOException e) {
             log.warn("unzip", e);
@@ -231,6 +233,10 @@ public class ZipHelper {
     private static void checkCompressionRatio(ZipEntry entry, long uncompressedSize,
                                               ExtractionLimits limits) throws IOException {
         long compressedSize = entry.getCompressedSize();
+        if (compressedSize < 0)
+            throw new IOException("ZIP entry has no compressed-size metadata: " + entry.getName());
+        if (compressedSize == 0 && uncompressedSize > 0)
+            throw new IOException("ZIP entry has an invalid zero compressed size: " + entry.getName());
         if (compressedSize > 0 && uncompressedSize > compressedSize * limits.maxCompressionRatio)
             throw new IOException("ZIP entry exceeds the maximum compression ratio: " + entry.getName());
     }

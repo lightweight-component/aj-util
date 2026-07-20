@@ -55,6 +55,21 @@ class TestZipHelper {
     }
 
     @Test
+    void testCompressionRatioLimitUsesCentralDirectorySizes() throws IOException {
+        StringBuilder repeated = new StringBuilder();
+        for (int i = 0; i < 10_000; i++)
+            repeated.append('a');
+
+        Path zip = createZip("high-ratio.zip", entries("repeated.txt", repeated.toString()));
+        Path target = tempDir.resolve("ratio-limited");
+        ZipHelper.ExtractionLimits limits = new ZipHelper.ExtractionLimits(10, 20_000, 20_000, 2);
+
+        assertThrows(UncheckedIOException.class,
+                () -> ZipHelper.unzip(target.toString(), zip.toString(), limits));
+        assertFalse(Files.exists(target.resolve("repeated.txt")));
+    }
+
+    @Test
     void testInitFolderCreatesOnlyParentDirectories() {
         Path targetFile = tempDir.resolve("a/b/file.txt");
 
