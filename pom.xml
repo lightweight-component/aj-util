@@ -9,8 +9,8 @@
 
     <modules>
         <module>aj-util</module>
-        <module>aj-http</module>
-        <module>aj-cryptography</module>
+<!--        <module>aj-http</module>-->
+<!--        <module>aj-cryptography</module>-->
         <module>aj-parent</module>
     </modules>
 </project>

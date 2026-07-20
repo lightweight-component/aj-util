@@ -1,40 +1,31 @@
-package com.ajaxjs.util;
+package com.ajaxjs.util.json.jackson2;
 
 import com.ajaxjs.util.json.JsonEngine;
-import com.ajaxjs.util.json.JsonEngineFactory;
 import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
-/**
- * Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List.
- */
 @Slf4j
-public final class JsonUtil {
-    private static JsonEngine engine;
+public class Jackson2Engine implements JsonEngine {
+    /**
+     * Cached ObjectMapper instance for JSON conversion. It can be used repeatedly without the need to re-initialize it.
+     */
+    public final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private JsonUtil() {
-    }
-
-    public static void setEngine(JsonEngine engine) {
-        if (engine == null)
-            throw new IllegalArgumentException("JsonEngine cannot be null.");
-
-        JsonUtil.engine = engine;
-    }
-
-    public static JsonEngine getEngine() {
-        if (engine != null)
-            return engine;
-
-        synchronized (JsonUtil.class) {
-            if (engine == null)
-                engine = JsonEngineFactory.create();
-        }
-
-        return engine;
+    {
+        OBJECT_MAPPER.registerModule(new JavaTimeModule()); // 用于处理 Java 8 时间日期类型（如 LocalDate、LocalDateTime 等）的序列化和反序列化。
+        OBJECT_MAPPER.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION); // 如果 JSON 中存在重复的键，将抛出异常
+        OBJECT_MAPPER.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
     }
 
     /**
@@ -43,8 +34,14 @@ public final class JsonUtil {
      * @param obj The Java object to be converted to a JSON string.
      * @return The JSON string representation of the Java object.
      */
-    public static String toJson(Object obj) {
-        return getEngine().toJson(obj);
+    @Override
+    public String toJson(Object obj) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            log.warn("Converts a Java object to a JSON string.", e);
+            throw new RuntimeException("Failed to convert object to JSON", e);
+        }
     }
 
     /**
@@ -53,8 +50,14 @@ public final class JsonUtil {
      * @param obj Java Bean, list, array
      * @return The JSON string representation of the Java object.
      */
-    public static String toJsonPretty(Object obj) {
-        return getEngine().toJsonPretty(obj);
+    @Override
+    public String toJsonPretty(Object obj) {
+        try {
+            return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            log.warn("Java Bean, list, array converts to pretty json string.", e);
+            throw new RuntimeException("序列化异常", e);
+        }
     }
 
     /**
@@ -66,11 +69,33 @@ public final class JsonUtil {
      * @return The converted object of type T.
      * @throws RuntimeException If the JSON string cannot be converted to the target type.
      */
-    public static <T> T fromJson(String jsonStr, Class<T> valueType) {
+    @Override
+    public <T> T fromJson(String jsonStr, Class<T> valueType) {
         try {
-            return getEngine().fromJson(jsonStr, valueType);
+            return OBJECT_MAPPER.readValue(jsonStr, valueType);
         } catch (Exception e) {
             log.warn("Failed to converts a JSON string: {} to an object of the specified type.", jsonStr);
+            throw new RuntimeException("Failed to convert JSON to object", e);
+        }
+    }
+
+    /**
+     * Converts a JSON string to a Java object.
+     *
+     * @param jsonStr   the JSON string representing the data to be converted
+     * @param valueType the target Java type of the object
+     * @param <T>       the generic type parameter for the return value
+     * @return the converted Java object
+     * <p>
+     * This method uses ObjectMapper to read the JSON string and convert it to the specified Java object type.
+     * If any error occurs during the conversion, a runtime exception is thrown.
+     */
+//    @Override
+    public <T> T fromJson(String jsonStr, JavaType valueType) {
+        try {
+            return OBJECT_MAPPER.readValue(jsonStr, valueType);
+        } catch (Exception e) {
+            log.warn("Failed when converting a JSON string: {} to a Java object.", jsonStr);
             throw new RuntimeException("Failed to convert JSON to object", e);
         }
     }
@@ -83,8 +108,11 @@ public final class JsonUtil {
      * @param clazz   The class of the JavaBean type in the Map value
      * @return Returns a Map containing keys of type String and values of the specified JavaBean type
      */
-    public static <T> Map<String, T> json2map(String jsonStr, Class<T> clazz) {
-        return getEngine().json2map(jsonStr, clazz);
+    @Override
+    public <T> Map<String, T> json2map(String jsonStr, Class<T> clazz) {
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(Map.class, String.class, clazz);
+
+        return fromJson(jsonStr, type);
     }
 
     /**
@@ -98,8 +126,11 @@ public final class JsonUtil {
      * @param <T>     Generic parameter, represents the type of JavaBean
      * @return Returns a LinkedHashMap containing String keys and JavaBean values of the specified type
      */
-    public static <T> LinkedHashMap<String, T> json2sortMap(String jsonStr, Class<T> clazz) {
-        return getEngine().json2sortMap(jsonStr, clazz);
+    @Override
+    public <T> LinkedHashMap<String, T> json2sortMap(String jsonStr, Class<T> clazz) {
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(LinkedHashMap.class, String.class, clazz);
+
+        return fromJson(jsonStr, type);
     }
 
     /**
@@ -111,9 +142,10 @@ public final class JsonUtil {
      * @param jsonStr The JSON string to be converted.
      * @return Returns a Map object containing the key-value pairs converted from the JSON string.
      */
-    public static Map<String, Object> json2map(String jsonStr) {
-        return json2map(jsonStr, Object.class);
-    }
+//    @Override
+//    public Map<String, Object> json2map(String jsonStr) {
+//        return json2map(jsonStr, Object.class);
+//    }
 
     /**
      * Converts a JSON string to a Map object.
@@ -123,9 +155,10 @@ public final class JsonUtil {
      * @param jsonStr The JSON string to be converted, which should be in a format that can be correctly parsed into a Map.
      * @return Returns a Map object with String keys and values, representing the converted JSON data.
      */
-    public static Map<String, String> json2StrMap(String jsonStr) {
-        return json2map(jsonStr, String.class);
-    }
+//    @Override
+//    public Map<String, String> json2StrMap(String jsonStr) {
+//        return json2map(jsonStr, String.class);
+//    }
 
     /**
      * JSON array string converts to list with Java Bean
@@ -135,8 +168,11 @@ public final class JsonUtil {
      * @param <T>          Generic type parameter, indicating the type of elements in the list
      * @return Returns a list of Java Bean objects converted from the JSON array string
      */
-    public static <T> List<T> json2list(String jsonArrayStr, Class<T> clazz) {
-        return getEngine().json2list(jsonArrayStr, clazz);
+    @Override
+    public <T> List<T> json2list(String jsonArrayStr, Class<T> clazz) {
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(List.class, clazz);
+
+        return fromJson(jsonArrayStr, type);
     }
 
     /**
@@ -145,8 +181,15 @@ public final class JsonUtil {
      * @param jsonArrayStr The JSON array string, representing a list of objects
      * @return Returns a list of Map objects converted from the JSON array string
      */
-    public static List<Map<String, Object>> json2mapList(String jsonArrayStr) {
-        return getEngine().json2mapList(jsonArrayStr);
+    @Override
+    public List<Map<String, Object>> json2mapList(String jsonArrayStr) {
+        try {
+            return OBJECT_MAPPER.readValue(jsonArrayStr, new TypeReference<List<Map<String, Object>>>() {
+            });
+        } catch (JsonProcessingException e) {
+            log.warn("Failed to JSON array string:{} converts to list with Java Bean.", jsonArrayStr);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -160,8 +203,9 @@ public final class JsonUtil {
      * @param <T>   Generic parameter, represents the target type to convert to
      * @return Returns an object of the converted target type
      */
-    public static <T> T convertValue(Object obj, Class<T> clazz) {
-        return getEngine().convertValue(obj, clazz);
+    @Override
+    public <T> T convertValue(Object obj, Class<T> clazz) {
+        return OBJECT_MAPPER.convertValue(obj, clazz);
     }
 
     /**
@@ -173,7 +217,8 @@ public final class JsonUtil {
      * @param obj The Java Bean object to be converted
      * @return Returns a Map object containing all the properties of the Java Bean
      */
-    public static Map<String, Object> pojo2map(Object obj) {
+    @Override
+    public Map<String, Object> pojo2map(Object obj) {
         return pojo2map(obj, Object.class);
     }
 
@@ -185,8 +230,11 @@ public final class JsonUtil {
      * @param <T>   The generic type of the map value
      * @return Returns a map converted from the Java Bean, with String as the key and the specified generic type as the value
      */
-    public static <T> Map<String, T> pojo2map(Object obj, Class<T> clazz) {
-        return getEngine().pojo2map(obj, clazz);
+    @Override
+    public <T> Map<String, T> pojo2map(Object obj, Class<T> clazz) {
+        JavaType type = OBJECT_MAPPER.getTypeFactory().constructParametricType(Map.class, String.class, clazz);
+
+        return OBJECT_MAPPER.convertValue(obj, type);
     }
 
     /**
@@ -197,8 +245,9 @@ public final class JsonUtil {
      * @param <T>   The generic type of the Java Bean
      * @return Returns a Java Bean object converted from the map
      */
-    public static <T> T map2pojo(Map<String, Object> map, Class<T> clazz) {
-        return getEngine().map2pojo(map, clazz);
+    @Override
+    public <T> T map2pojo(Map<String, Object> map, Class<T> clazz) {
+        return OBJECT_MAPPER.convertValue(map, clazz);
     }
 
     /**
@@ -207,7 +256,13 @@ public final class JsonUtil {
      * @param jsonStr The JSON string to be converted
      * @return JsonNode object converted from the JSON string
      */
-    public static Object json2Node(String jsonStr) {
-        return getEngine().json2Node(jsonStr);
+    @Override
+    public Object json2Node(String jsonStr) {
+        try {
+            return OBJECT_MAPPER.readTree(jsonStr);
+        } catch (IOException e) {
+            log.warn("Failed to converts a JSON string:{} to node.", jsonStr);
+            throw new RuntimeException(e);
+        }
     }
 }

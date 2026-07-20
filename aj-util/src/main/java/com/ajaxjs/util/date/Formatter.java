@@ -124,6 +124,5 @@ public class Formatter {
     /**
      * ISO8601 common used for S3 storage.
      */
-    @SuppressWarnings("SpellCheckingInspection")
     public final static DateTimeFormatter ISO8601_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
 }
