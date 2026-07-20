@@ -134,7 +134,7 @@ public class ZipHelper {
             throw new UncheckedIOException(e);
         }
 
-        log.info("解压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
+        log.info("解压缩 unzipWithChineseFilename 完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
     }
 
     private static Path prepareExtractionRoot(String save) {

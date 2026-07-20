@@ -8,5 +8,5 @@ public enum PayloadType {
 
     FORM,
 
-    FILE_UPLOAD;
+    FILE_UPLOAD
 }
