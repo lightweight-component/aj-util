@@ -6,8 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.zip.*;
 
 /**
@@ -20,6 +24,37 @@ import java.util.zip.*;
  */
 @Slf4j
 public class ZipHelper {
+    private static final int EXTRACT_BUFFER_SIZE = 8192;
+
+    public static final ExtractionLimits DEFAULT_EXTRACTION_LIMITS = new ExtractionLimits(
+            10_000, 1024L * 1024 * 1024, 10L * 1024 * 1024 * 1024, 100.0
+    );
+
+    /**
+     * Resource limits applied while extracting a ZIP archive.
+     */
+    public static final class ExtractionLimits {
+        private final int maxEntries;
+        private final long maxEntrySize;
+        private final long maxTotalSize;
+        private final double maxCompressionRatio;
+
+        public ExtractionLimits(int maxEntries, long maxEntrySize, long maxTotalSize, double maxCompressionRatio) {
+            if (maxEntries <= 0 || maxEntrySize <= 0 || maxTotalSize <= 0 || maxCompressionRatio <= 0)
+                throw new IllegalArgumentException("ZIP extraction limits must be greater than zero.");
+
+            this.maxEntries = maxEntries;
+            this.maxEntrySize = maxEntrySize;
+            this.maxTotalSize = maxTotalSize;
+            this.maxCompressionRatio = maxCompressionRatio;
+        }
+    }
+
+    private static final class ExtractionState {
+        private int entries;
+        private long totalSize;
+    }
+
     /**
      * 解压文件
      *
@@ -27,29 +62,29 @@ public class ZipHelper {
      * @param zipFile 输入的解压文件路径，例如 C:/temp/foo.zip 或 c:\\temp\\bar.zip
      */
     public static void unzip(String save, String zipFile) {
+        unzip(save, zipFile, DEFAULT_EXTRACTION_LIMITS);
+    }
+
+    public static void unzip(String save, String zipFile, ExtractionLimits limits) {
+        Objects.requireNonNull(limits, "limits");
         long start = System.currentTimeMillis();
-        new FileHelper(save).createDirectory();
+        Path root = prepareExtractionRoot(save);
+        ExtractionState state = new ExtractionState();
 
         try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(zipFile)))) {
             ZipEntry ze;
 
             while ((ze = zis.getNextEntry()) != null) {
-                File newFile = new File(save + File.separator + ze.getName());
+                checkEntryCount(state, limits);
+                Path target = resolveZipEntry(root, ze.getName());
 
-                if (ze.isDirectory()) // 大部分网络上的源码，这里没有判断子目录
-                    newFile.mkdirs();
-                else {
-//					new File(newFile.getParent()).mkdirs();
-                    initFolder(newFile);
-                    try (FileOutputStream fos = new FileOutputStream(newFile)) {
-                        new DataWriter(fos).write(zis);
-                    }
-                }
+                if (ze.isDirectory())
+                    createSecureDirectories(root, target);
+                else
+                    extractEntry(zis, root, target, ze, state, limits);
 
-//				ze = zis.getNextEntry();
+                zis.closeEntry();
             }
-
-            zis.closeEntry();
         } catch (IOException e) {
             log.warn("unzip", e);
             throw new UncheckedIOException(e);
@@ -65,23 +100,28 @@ public class ZipHelper {
      * @param zipFilePath 输入的解压文件路径，例如 C:/temp/foo.zip 或 c:\\temp\\bar.zip
      */
     public static void unzipWithChineseFilename(String save, String zipFilePath) {
+        unzipWithChineseFilename(save, zipFilePath, DEFAULT_EXTRACTION_LIMITS);
+    }
+
+    public static void unzipWithChineseFilename(String save, String zipFilePath, ExtractionLimits limits) {
+        Objects.requireNonNull(limits, "limits");
         long start = System.currentTimeMillis();
-        new FileHelper(save).createDirectory();
+        Path root = prepareExtractionRoot(save);
+        ExtractionState state = new ExtractionState();
 
         try (ZipFile zipFile = new ZipFile(zipFilePath, Charset.forName("GBK"))) {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                File newFile = new File(save, entry.getName());
+                checkEntryCount(state, limits);
+                Path target = resolveZipEntry(root, entry.getName());
 
                 if (entry.isDirectory())
-                    newFile.mkdirs();
+                    createSecureDirectories(root, target);
                 else {
-                    initFolder(newFile);
-                    try (InputStream is = zipFile.getInputStream(entry);
-                         FileOutputStream fos = new FileOutputStream(newFile)) {
-                        new DataWriter(fos).write(is);
+                    try (InputStream is = zipFile.getInputStream(entry)) {
+                        extractEntry(is, root, target, entry, state, limits);
                     }
                 }
             }
@@ -91,6 +131,106 @@ public class ZipHelper {
         }
 
         log.info("解压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
+    }
+
+    private static Path prepareExtractionRoot(String save) {
+        try {
+            Path root = Paths.get(save).toAbsolutePath().normalize();
+            Files.createDirectories(root);
+
+            return root.toRealPath();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Unable to create ZIP extraction directory: " + save, e);
+        }
+    }
+
+    private static Path resolveZipEntry(Path root, String entryName) throws IOException {
+        if (entryName == null)
+            throw new IOException("ZIP entry name is null.");
+
+        Path target = root.resolve(entryName.replace('\\', '/')).normalize();
+        if (!target.startsWith(root))
+            throw new IOException("ZIP entry escapes the extraction directory: " + entryName);
+
+        return target;
+    }
+
+    private static void createSecureDirectories(Path root, Path directory) throws IOException {
+        if (!directory.startsWith(root))
+            throw new IOException("Directory escapes the ZIP extraction root: " + directory);
+
+        Path current = root;
+        for (Path part : root.relativize(directory)) {
+            current = current.resolve(part);
+
+            if (Files.exists(current, LinkOption.NOFOLLOW_LINKS)) {
+                if (Files.isSymbolicLink(current) || !Files.isDirectory(current, LinkOption.NOFOLLOW_LINKS))
+                    throw new IOException("Unsafe ZIP extraction path: " + current);
+            } else
+                Files.createDirectory(current);
+
+            if (!current.toRealPath().startsWith(root))
+                throw new IOException("ZIP extraction path escapes through a symbolic link: " + current);
+        }
+    }
+
+    private static void checkEntryCount(ExtractionState state, ExtractionLimits limits) throws IOException {
+        state.entries++;
+        if (state.entries > limits.maxEntries)
+            throw new IOException("ZIP archive contains too many entries.");
+    }
+
+    private static void extractEntry(InputStream in, Path root, Path target, ZipEntry entry,
+                                     ExtractionState state, ExtractionLimits limits) throws IOException {
+        long declaredSize = entry.getSize();
+        if (declaredSize > limits.maxEntrySize)
+            throw new IOException("ZIP entry exceeds the maximum uncompressed size: " + entry.getName());
+
+        checkCompressionRatio(entry, declaredSize, limits);
+        Path parent = target.getParent();
+        if (parent == null)
+            throw new IOException("ZIP entry has no parent directory: " + entry.getName());
+
+        createSecureDirectories(root, parent);
+        if (Files.isSymbolicLink(target))
+            throw new IOException("ZIP entry target is a symbolic link: " + entry.getName());
+
+        Path temporary = Files.createTempFile(parent, ".aj-unzip-", ".tmp");
+
+        try {
+            long entrySize = 0;
+            byte[] buffer = new byte[EXTRACT_BUFFER_SIZE];
+
+            try (OutputStream out = Files.newOutputStream(temporary)) {
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    if (read == 0)
+                        continue;
+
+                    if (entrySize > limits.maxEntrySize - read)
+                        throw new IOException("ZIP entry exceeds the maximum uncompressed size: " + entry.getName());
+                    if (state.totalSize > limits.maxTotalSize - read)
+                        throw new IOException("ZIP archive exceeds the maximum total uncompressed size.");
+
+                    entrySize += read;
+                    state.totalSize += read;
+                    checkCompressionRatio(entry, entrySize, limits);
+                    out.write(buffer, 0, read);
+                }
+            }
+
+            checkCompressionRatio(entry, entrySize, limits);
+            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            Files.deleteIfExists(temporary);
+        }
+    }
+
+    private static void checkCompressionRatio(ZipEntry entry, long uncompressedSize,
+                                              ExtractionLimits limits) throws IOException {
+        long compressedSize = entry.getCompressedSize();
+        if (compressedSize > 0 && uncompressedSize > compressedSize * limits.maxCompressionRatio)
+            throw new IOException("ZIP entry exceeds the maximum compression ratio: " + entry.getName());
     }
 
     /**
@@ -214,7 +354,10 @@ public class ZipHelper {
         if (file.isDirectory())
             throw new IllegalArgumentException("参数必须是文件，不是目录");
 
-        new FileHelper(file).createDirectory();
+        Path parent = file.toPath().toAbsolutePath().getParent();
+
+        if (parent != null)
+            new FileHelper(parent).createDirectory();
     }
 
     /**

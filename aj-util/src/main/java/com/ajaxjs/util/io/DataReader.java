@@ -110,7 +110,7 @@ public class DataReader {
 
         readAsLineString(line -> {
             result.append(line);
-            result.append(CommonConstant.NEW_LINE);
+          //  result.append(CommonConstant.NEW_LINE);
         });
 
         return result.toString();
