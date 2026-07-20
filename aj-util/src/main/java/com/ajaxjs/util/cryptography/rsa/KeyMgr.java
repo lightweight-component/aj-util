@@ -294,7 +294,7 @@ public class KeyMgr implements Constant {
     public static PrivateKey loadPrivateKey(InputStream in, String charset) {
         String privateKey;
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream(2048);) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream(2048)) {
             new DataWriter(out).write(in);
             privateKey = out.toString(charset);
         } catch (IOException e) {

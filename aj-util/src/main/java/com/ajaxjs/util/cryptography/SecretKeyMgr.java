@@ -34,7 +34,7 @@ public class SecretKeyMgr {
                 kg.init(keySize, secure);
             else if (keySize == 0 && secure != null)
                 kg.init(secure);
-            else if (keySize != 0 && secure == null)
+            else if (keySize != 0)
                 kg.init(keySize);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);

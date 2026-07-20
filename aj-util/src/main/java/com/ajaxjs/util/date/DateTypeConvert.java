@@ -257,6 +257,7 @@ public class DateTypeConvert {
                 return (T) localDateTime.toLocalTime();
 
             List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(localDateTime);
+
             if (validOffsets.size() != 1)
                 throw new DateTimeException("LocalDateTime " + localDateTime + " is invalid or ambiguous in zone " + zone + ".");
 
