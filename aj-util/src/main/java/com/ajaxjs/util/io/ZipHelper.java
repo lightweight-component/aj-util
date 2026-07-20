@@ -1,15 +1,17 @@
 package com.ajaxjs.util.io;
 
-import com.ajaxjs.util.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.FileVisitResult;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.zip.*;
@@ -244,14 +246,10 @@ public class ZipHelper {
      * @param useStore    Compression mode: true for STORED (no compression), false for DEFLATED (standard compression)
      */
     public static void zipFile(File[] fileContent, String saveZip, boolean useStore) {
-        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(saveZip)));
-             ZipOutputStream zipOut = new ZipOutputStream(bos)) {
-
+        writeZip(Paths.get(saveZip), zipOut -> {
             for (File fc : fileContent)
                 addFileToZip(fc, fc.getName(), zipOut, useStore);
-        } catch (IOException e) {
-            log.warn("一维文件数组压缩为 ZIP", e);
-        }
+        });
     }
 
     /**
@@ -262,47 +260,67 @@ public class ZipHelper {
      * @param useStore  true: 仅存储(STORED)，false: 标准压缩(DEFLATED)
      */
     public static void zipDirectory(String sourceDir, String saveZip, boolean useStore) {
-        File dir = new File(sourceDir);
+        Path source = Paths.get(sourceDir).toAbsolutePath().normalize();
+        Path destination = Paths.get(saveZip).toAbsolutePath().normalize();
 
-        if (!dir.exists() || !dir.isDirectory())
+        if (!Files.isDirectory(source, LinkOption.NOFOLLOW_LINKS))
             throw new IllegalArgumentException("Source directory does not exist or is not a directory: " + sourceDir);
+        if (Files.isSymbolicLink(source))
+            throw new IllegalArgumentException("Symbolic links are not supported as ZIP source directories: " + sourceDir);
 
-        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(saveZip)));
-             ZipOutputStream zipOut = new ZipOutputStream(bos)) {
-            String basePath = dir.getCanonicalPath();
-            zipDirectoryRecursive(dir, basePath, zipOut, useStore);
+        try {
+            Path sourceReal = source.toRealPath();
+            if (destination.startsWith(source) || destination.startsWith(sourceReal))
+                throw new IllegalArgumentException("The destination ZIP must not be inside the source directory: " + saveZip);
+
+            writeZip(destination, zipOut -> addDirectoryToZip(sourceReal, zipOut, useStore));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UncheckedIOException("Unable to access ZIP source directory: " + sourceDir, e);
         }
     }
 
-    /**
-     * 目录压缩，用于递归
-     */
-    private static void zipDirectoryRecursive(File file, String basePath, ZipOutputStream zipOut, boolean useStore) throws IOException {
-        String relativePath = basePath.equals(file.getCanonicalPath())
-                ? CommonConstant.EMPTY_STRING
-                : file.getCanonicalPath().substring(basePath.length() + 1).replace(File.separatorChar, '/');
+    private static void addDirectoryToZip(Path source, ZipOutputStream zipOut, boolean useStore) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                if (Files.isSymbolicLink(dir))
+                    throw new IOException("Symbolic links are not supported in ZIP source directories: " + dir);
 
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
+                if (!source.equals(dir)) {
+                    ZipEntry entry = new ZipEntry(toZipEntryName(source.relativize(dir)) + "/");
+                    zipOut.putNextEntry(entry);
+                    zipOut.closeEntry();
+                }
 
-            if (files != null && files.length == 0 && !relativePath.isEmpty()) {
-                ZipEntry entry = new ZipEntry(relativePath + "/"); // 空目录也要加入Zip
-                zipOut.putNextEntry(entry);
-                zipOut.closeEntry();
-            } else if (files != null) {
-                for (File child : files)
-                    zipDirectoryRecursive(child, basePath, zipOut, useStore);
+                return FileVisitResult.CONTINUE;
             }
-        } else
-            addFileToZip(file, relativePath, zipOut, useStore);
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (attrs.isSymbolicLink() || Files.isSymbolicLink(file))
+                    throw new IOException("Symbolic links are not supported in ZIP source directories: " + file);
+                if (!attrs.isRegularFile())
+                    throw new IOException("Unsupported ZIP source file type: " + file);
+
+                addFileToZip(file.toFile(), toZipEntryName(source.relativize(file)), zipOut, useStore);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private static String toZipEntryName(Path relativePath) {
+        return relativePath.toString().replace(File.separatorChar, '/');
     }
 
     /**
      * 单文件添加到 zip
      */
     private static void addFileToZip(File file, String zipEntryName, ZipOutputStream zipOut, boolean useStore) throws IOException {
+        if (Files.isSymbolicLink(file.toPath()))
+            throw new IOException("Symbolic links are not supported as ZIP source files: " + file);
+        if (!Files.isRegularFile(file.toPath(), LinkOption.NOFOLLOW_LINKS))
+            throw new IOException("ZIP source is not a regular file: " + file);
+
         try (BufferedInputStream bin = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             ZipEntry entry = new ZipEntry(zipEntryName);
 
@@ -330,16 +348,15 @@ public class ZipHelper {
      *
      * @param file 必须是文件，不是目录
      */
-    private static long getFileCRCCode(File file) {
+    private static long getFileCRCCode(File file) throws IOException {
         CRC32 crc32 = new CRC32();
 
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
              CheckedInputStream checkedinputstream = new CheckedInputStream(bufferedInputStream, crc32)) {
-            while (checkedinputstream.read() != -1) {
-                // 只需遍历即可统计
+            byte[] buffer = new byte[8192];
+            while (checkedinputstream.read(buffer) != -1) {
+                // Reading updates the checksum.
             }
-        } catch (IOException e) {
-            log.warn("getFileCRCCode", e);
         }
 
         return crc32.getValue();
@@ -417,12 +434,42 @@ public class ZipHelper {
         if (!file.exists() || file.isDirectory())
             throw new IllegalArgumentException("Source file does not exist or is a directory: " + sourceFile);
 
-        try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(saveZip)));
-             ZipOutputStream zipOut = new ZipOutputStream(bos)) {
-            addFileToZip(file, file.getName(), zipOut, useStore);
+        writeZip(Paths.get(saveZip), zipOut -> addFileToZip(file, file.getName(), zipOut, useStore));
+    }
+
+    @FunctionalInterface
+    private interface ZipWriter {
+        void write(ZipOutputStream zipOut) throws IOException;
+    }
+
+    private static void writeZip(Path destination, ZipWriter writer) {
+        Path absolute = destination.toAbsolutePath().normalize();
+        Path parent = absolute.getParent();
+
+        if (parent == null)
+            throw new IllegalArgumentException("ZIP destination has no parent directory: " + destination);
+
+        Path temporary = null;
+        try {
+            Files.createDirectories(parent);
+            temporary = Files.createTempFile(parent, ".aj-zip-", ".tmp");
+
+            try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(temporary));
+                 ZipOutputStream zipOut = new ZipOutputStream(bos)) {
+                writer.write(zipOut);
+            }
+
+            Files.move(temporary, absolute, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            log.warn("单文件压缩为 ZIP 失败: " + sourceFile, e);
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("Unable to create ZIP archive: " + destination, e);
+        } finally {
+            if (temporary != null) {
+                try {
+                    Files.deleteIfExists(temporary);
+                } catch (IOException e) {
+                    log.warn("Unable to delete temporary ZIP file: " + temporary, e);
+                }
+            }
         }
     }
 

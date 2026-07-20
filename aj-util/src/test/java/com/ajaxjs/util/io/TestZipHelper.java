@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,6 +64,58 @@ class TestZipHelper {
         assertFalse(Files.exists(targetFile));
     }
 
+    @Test
+    void testZipSingleFileWithStoredMethod() throws IOException {
+        Path source = tempDir.resolve("source.txt");
+        Path zip = tempDir.resolve("source.zip");
+        Files.write(source, "content".getBytes(StandardCharsets.UTF_8));
+
+        ZipHelper.zipSingleFile(source.toString(), zip.toString(), true);
+
+        try (ZipFile zipFile = new ZipFile(zip.toFile())) {
+            ZipEntry entry = zipFile.getEntry("source.txt");
+            assertNotNull(entry);
+            assertEquals(ZipEntry.STORED, entry.getMethod());
+            assertEquals("content", new String(readAllBytes(zipFile, entry), StandardCharsets.UTF_8));
+        }
+    }
+
+    @Test
+    void testZipFailureIsPropagatedWithoutPublishingPartialArchive() {
+        Path missing = tempDir.resolve("missing.txt");
+        Path zip = tempDir.resolve("failed.zip");
+
+        assertThrows(UncheckedIOException.class,
+                () -> ZipHelper.zipFile(new java.io.File[]{missing.toFile()}, zip.toString(), true));
+        assertFalse(Files.exists(zip));
+    }
+
+    @Test
+    void testZipDirectoryRejectsSymbolicLinks() throws IOException {
+        Path source = Files.createDirectory(tempDir.resolve("source"));
+        Path target = tempDir.resolve("outside.txt");
+        Files.write(target, "outside".getBytes(StandardCharsets.UTF_8));
+
+        try {
+            Files.createSymbolicLink(source.resolve("link.txt"), target);
+        } catch (UnsupportedOperationException | SecurityException e) {
+            return; // Symbolic links are not available on this platform.
+        }
+
+        Path zip = tempDir.resolve("links.zip");
+        assertThrows(UncheckedIOException.class,
+                () -> ZipHelper.zipDirectory(source.toString(), zip.toString(), false));
+        assertFalse(Files.exists(zip));
+    }
+
+    @Test
+    void testZipDirectoryRejectsDestinationInsideSource() throws IOException {
+        Path source = Files.createDirectory(tempDir.resolve("self-containing"));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> ZipHelper.zipDirectory(source.toString(), source.resolve("archive.zip").toString(), false));
+    }
+
     private Path createZip(String filename, Map<String, String> content) throws IOException {
         Path zip = tempDir.resolve(filename);
 
@@ -88,5 +141,18 @@ class TestZipHelper {
 
     private static String readUtf8(Path path) throws IOException {
         return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+    }
+
+    private static byte[] readAllBytes(ZipFile zipFile, ZipEntry entry) throws IOException {
+        try (java.io.InputStream input = zipFile.getInputStream(entry);
+             java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream()) {
+            byte[] buffer = new byte[8192];
+            int read;
+
+            while ((read = input.read(buffer)) != -1)
+                output.write(buffer, 0, read);
+
+            return output.toByteArray();
+        }
     }
 }
