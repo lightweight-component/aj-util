@@ -76,6 +76,8 @@ public class DoVerify {
      * @throws IllegalArgumentException 当公钥无效时抛出
      */
     public boolean verify() {
+        validateState();
+
         try {
             Signature signature = Signature.getInstance(algorithmName);
             signature.initVerify(publicKey);
@@ -87,7 +89,21 @@ public class DoVerify {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
         } catch (InvalidKeyException e) {
-            throw new IllegalArgumentException("Invalid Private Key", e);
+            throw new IllegalArgumentException("Invalid Public Key", e);
         }
+    }
+
+    private void validateState() {
+        if (algorithmName == null || algorithmName.trim().isEmpty())
+            throw new IllegalStateException("Signature algorithm is required.");
+
+        if (data == null)
+            throw new IllegalStateException("Data to verify is required.");
+
+        if (signatureData == null)
+            throw new IllegalStateException("Signature data is required.");
+
+        if (publicKey == null)
+            throw new IllegalStateException("Public key is required.");
     }
 }

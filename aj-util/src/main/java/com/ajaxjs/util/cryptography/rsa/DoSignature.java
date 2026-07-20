@@ -63,6 +63,8 @@ public class DoSignature {
      * @return The signature in bytes.
      */
     public byte[] sign() {
+        validateState();
+
         try {
             Signature signature = Signature.getInstance(algorithmName);
             signature.initSign(privateKey);
@@ -76,6 +78,17 @@ public class DoSignature {
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid Private Key", e);
         }
+    }
+
+    private void validateState() {
+        if (algorithmName == null || algorithmName.trim().isEmpty())
+            throw new IllegalStateException("Signature algorithm is required.");
+
+        if (data == null)
+            throw new IllegalStateException("Data to sign is required.");
+
+        if (privateKey == null)
+            throw new IllegalStateException("Private key is required.");
     }
 
     /**

@@ -49,7 +49,7 @@ public class KeyMgr implements Constant {
      * @return Key pair object
      */
     public KeyPair generateKeyPair() {
-        if (keySize == 1024 || keySize == 2048 || keySize == 4096)
+        if (keySize == 2048 || keySize == 3072 || keySize == 4096)
             try {
                 KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithmName);
                 generator.initialize(keySize);
@@ -60,7 +60,7 @@ public class KeyMgr implements Constant {
                 throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
             }
         else
-            throw new IllegalArgumentException("Invalid key size: " + keySize);
+            throw new IllegalArgumentException("RSA key size must be 2048, 3072, or 4096 bits: " + keySize);
     }
 
     /**
@@ -132,7 +132,7 @@ public class KeyMgr implements Constant {
 
             return isPublic ? f.generatePublic(new X509EncodedKeySpec(bytes)) : f.generatePrivate(new PKCS8EncodedKeySpec(bytes));
         } catch (InvalidKeySpecException e) {
-            throw new RuntimeException("Invalid Key. " + key, e);
+            throw new IllegalArgumentException("Invalid RSA key encoding.", e);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + RSA, e);
         }
@@ -310,4 +310,3 @@ public class KeyMgr implements Constant {
         return restorePrivateKey(fileContent);
     }
 }
-

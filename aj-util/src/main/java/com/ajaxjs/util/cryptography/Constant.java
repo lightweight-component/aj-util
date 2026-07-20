@@ -12,18 +12,15 @@ public interface Constant {
     @SuppressWarnings("SpellCheckingInspection")
     String TRIPLE_DES = "DESede";
 
-    /**
-     * 定义加密方式 支持以下任意一种算法
-     *
-     * <pre>
-     * PBEWithMD5AndDES
-     * PBEWithMD5AndTripleDES
-     * PBEWithSHA1AndDESede
-     * PBEWithSHA1AndRC2_40
-     * </pre>
-     */
     @SuppressWarnings("SpellCheckingInspection")
-    String PBE = "PBEWITHMD5andDES";
+    String PBE = "PBKDF2WithHmacSHA256";
+
+    /**
+     * Legacy PBE algorithm retained only for decrypting existing data.
+     */
+    @Deprecated
+    @SuppressWarnings("SpellCheckingInspection")
+    String PBE_LEGACY = "PBEWITHMD5andDES";
 
     String RSA = "RSA";// "RSA/ECB/PKCS1Padding"
 

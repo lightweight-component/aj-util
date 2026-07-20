@@ -10,12 +10,14 @@ import lombok.RequiredArgsConstructor;
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Arrays;
 
 /**
  * AES/DES/3DES/PBE 对称加密/解密
@@ -23,6 +25,16 @@ import java.security.spec.AlgorithmParameterSpec;
 @Data
 @RequiredArgsConstructor
 public class Cryptography {
+    public static final int PBE_SALT_LENGTH = 16;
+
+    public static final int MIN_PBE_ITERATIONS = 100_000;
+
+    private static final int PBE_KEY_LENGTH = 128;
+
+    private static final int GCM_NONCE_LENGTH = 12;
+
+    private static final int GCM_TAG_LENGTH = 128;
+
     /**
      * The name of the algorithm
      */
@@ -75,8 +87,12 @@ public class Cryptography {
             return cipher.doFinal(data);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
-            throw new IllegalArgumentException("The input string can't over size of 214 bytes", e);
+        } catch (AEADBadTagException e) {
+            throw new IllegalArgumentException("Authentication failed: the key, parameters, associated data, or ciphertext is invalid.", e);
+        } catch (IllegalBlockSizeException e) {
+            throw new IllegalArgumentException("Invalid input length for transformation: " + algorithmName, e);
+        } catch (BadPaddingException e) {
+            throw new IllegalArgumentException("Cipher operation failed because the key, padding, or ciphertext is invalid.", e);
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid Key.", e);
         } catch (InvalidAlgorithmParameterException e) {
@@ -169,27 +185,87 @@ public class Cryptography {
      * @return 盐（salt）
      */
     public static byte[] initSalt() {
-        byte[] salt = new byte[8];
+        byte[] salt = new byte[PBE_SALT_LENGTH];
         RandomTools.RANDOM.nextBytes(salt);
 
         return salt;
     }
 
     public static byte[] PBE_encode(String data, String key, byte[] salt, int iterationCount) {
-        Cryptography cryptography = new Cryptography(Constant.PBE, Cipher.ENCRYPT_MODE);
-        cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE, new PBEKeySpec(key.toCharArray())));
-        cryptography.setSpec(new PBEParameterSpec(salt, iterationCount));// 100
+        validatePbeParameters(salt, iterationCount);
+        Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.ENCRYPT_MODE);
+        cryptography.setKey(derivePbeKey(key, salt, iterationCount));
+        byte[] nonce = new byte[GCM_NONCE_LENGTH];
+        RandomTools.RANDOM.nextBytes(nonce);
+        cryptography.setSpec(new GCMParameterSpec(GCM_TAG_LENGTH, nonce));
         cryptography.setDataStr(data);
 
-        return cryptography.doCipher();
+        byte[] encrypted = cryptography.doCipher();
+        byte[] result = Arrays.copyOf(nonce, nonce.length + encrypted.length);
+        System.arraycopy(encrypted, 0, result, nonce.length, encrypted.length);
+
+        return result;
     }
 
     public static String PBE_decode(byte[] data, String key, byte[] salt, int iterationCount) {
-        Cryptography cryptography = new Cryptography(Constant.PBE, Cipher.DECRYPT_MODE);
-        cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE, new PBEKeySpec(key.toCharArray())));
+        validatePbeParameters(salt, iterationCount);
+        if (data == null || data.length < GCM_NONCE_LENGTH + GCM_TAG_LENGTH / Byte.SIZE)
+            throw new IllegalArgumentException("PBE ciphertext is missing or too short.");
+
+        Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.DECRYPT_MODE);
+        cryptography.setKey(derivePbeKey(key, salt, iterationCount));
+        cryptography.setSpec(new GCMParameterSpec(GCM_TAG_LENGTH, Arrays.copyOf(data, GCM_NONCE_LENGTH)));
+        cryptography.setData(Arrays.copyOfRange(data, GCM_NONCE_LENGTH, data.length));
+
+        return cryptography.doCipherAsStr();
+    }
+
+    /**
+     * Decrypts data created by the former PBEWithMD5AndDES implementation.
+     * This method must not be used to encrypt new data.
+     */
+    @Deprecated
+    public static String PBE_legacy_decode(byte[] data, String key, byte[] salt, int iterationCount) {
+        if (salt == null || salt.length != 8)
+            throw new IllegalArgumentException("Legacy PBE salt must contain exactly 8 bytes.");
+
+        if (iterationCount <= 0)
+            throw new IllegalArgumentException("Legacy PBE iteration count must be greater than zero.");
+
+        Cryptography cryptography = new Cryptography(Constant.PBE_LEGACY, Cipher.DECRYPT_MODE);
+        PBEKeySpec keySpec = new PBEKeySpec(key.toCharArray());
+
+        try {
+            cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE_LEGACY, keySpec));
+        } finally {
+            keySpec.clearPassword();
+        }
+
         cryptography.setSpec(new PBEParameterSpec(salt, iterationCount));
         cryptography.setData(data);
 
         return cryptography.doCipherAsStr();
+    }
+
+    private static SecretKeySpec derivePbeKey(String password, byte[] salt, int iterationCount) {
+        if (password == null || password.isEmpty())
+            throw new IllegalArgumentException("PBE password must not be empty.");
+
+        PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, iterationCount, PBE_KEY_LENGTH);
+
+        try {
+            Key derivedKey = SecretKeyMgr.getSecretKey(Constant.PBE, keySpec);
+            return new SecretKeySpec(derivedKey.getEncoded(), Constant.AES);
+        } finally {
+            keySpec.clearPassword();
+        }
+    }
+
+    private static void validatePbeParameters(byte[] salt, int iterationCount) {
+        if (salt == null || salt.length < PBE_SALT_LENGTH)
+            throw new IllegalArgumentException("PBE salt must contain at least " + PBE_SALT_LENGTH + " bytes.");
+
+        if (iterationCount < MIN_PBE_ITERATIONS)
+            throw new IllegalArgumentException("PBE iteration count must be at least " + MIN_PBE_ITERATIONS + ".");
     }
 }
