@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -138,14 +136,14 @@ String filePath = Get.download(&quot;https://example.com/file.pdf&quot;, &quot;/
 </ul>
 <h2>Usage Examples</h2>
 <pre><code class="language-java">// Simple POST with form data
-ResponseEntity response = Post.post(&quot;https://api.example.com&quot;, Map.of(&quot;key&quot;, &quot;value&quot;));
+ResponseEntity response = Post.post(&quot;https://api.example.com&quot;, ObjectHelper.mapOf(&quot;key&quot;, &quot;value&quot;));
 
 // POST JSON API
-Map&lt;String, Object&gt; json = Post.api(&quot;https://api.example.com/data&quot;, Map.of(&quot;id&quot;, 123));
+Map&lt;String, Object&gt; json = Post.api(&quot;https://api.example.com/data&quot;, ObjectHelper.mapOf(&quot;id&quot;, 123));
 
 // Multipart file upload
 ResponseEntity uploadResp = Post.multiPOST(&quot;https://api.example.com/upload&quot;, 
-    Map.of(&quot;file&quot;, new File(&quot;document.pdf&quot;)));
+    ObjectHelper.mapOf(&quot;file&quot;, new File(&quot;document.pdf&quot;)));
 </code></pre>
 <h1>DELETE Request Utility</h1>
 <p>Provides methods for making HTTP DELETE requests.</p>

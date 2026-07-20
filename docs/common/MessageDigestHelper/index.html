@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -186,15 +184,15 @@ String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 </code></pre>
 <h3>Constants Definition</h3>
 <ul>
-<li>[MD5](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L177-L177): MD5 hash algorithm constant</li>
-<li>[SHA1](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L182-L182): SHA-1 hash algorithm constant</li>
-<li>[SHA256](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L187-L187): SHA-256 hash algorithm constant</li>
-<li>[HMAC_SHA1](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L234-L234): HMAC-SHA1 algorithm constant</li>
-<li>[HMAC_SHA256](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L239-L239): HMAC-SHA256 algorithm constant</li>
+<li><code>MD5</code>: MD5 hash algorithm constant</li>
+<li><code>SHA1</code>: SHA-1 hash algorithm constant</li>
+<li><code>SHA256</code>: SHA-256 hash algorithm constant</li>
+<li><code>HMAC_SHA1</code>: HMAC-SHA1 algorithm constant</li>
+<li><code>HMAC_SHA256</code>: HMAC-SHA256 algorithm constant</li>
 </ul>
 <h3>Notes</h3>
 <ol>
-<li>When using HMAC operations without setting a key, a random key will be automatically generated</li>
+<li>Always set or persist an HMAC key. Calling <code>getMac()</code> without a key generates an internal random key that is not returned, so the result cannot be reproduced for later verification.</li>
 <li>All hash results are returned as lowercase hexadecimal strings by default</li>
 <li>Base64 encoding includes padding characters by default, controllable via parameters</li>
 <li>Large file processing uses chunked reading to avoid memory overflow</li>

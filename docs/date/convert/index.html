@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Basic Process</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Basic Process for date handling" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, date" />
+        <title>AJ Utils-Date Type Conversion</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Converting legacy and Java 8 date/time types safely" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Date Conversion" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -107,61 +105,27 @@
                </ul>
             </menu>
             <article class="aj-text">
-                <h1>Basic Process</h1>
-<p>The most primitive expression of encryption is <code>ciphertext = encryption_function(plaintext)</code>. Here, let's also mention MD5, which conforms to the definition of <code>ciphertext = encryption_function(plaintext)</code>. It appears to encrypt the input, but actually it is a type of hash function, which is completely different from encryption. More accurately, it returns a &quot;characteristic&quot; result of the input parameter, and this characteristic is unique. Since the same result is returned each time it is executed, a dictionary table can be constructed for comparison. As long as the dictionary table is large enough, MD5 is very insecure.</p>
-<p>Therefore, we modify this encryption process by adding the key parameter, hoping that different keys will produce different ciphertexts each time, i.e., <code>ciphertext = encryption_function(plaintext, key)</code>.</p>
-<p>AES (Advanced Encryption Standard) symmetric encryption also conforms to this original process. A rough Java API implementation is as follows:</p>
-<pre><code class="language-java">/**
- * Is it decryption mode or encryption mode?
- */
-private final int mode;
+                <h1>Date Type Conversion</h1>
+<p><code>DateTypeConvert</code> converts legacy <code>Date</code>, <code>Calendar</code>, SQL date types, epoch milliseconds, and Java 8 <code>java.time</code> values. Supply a <code>ZoneId</code> whenever a conversion needs a civil time zone.</p>
+<pre><code class="language-java">Instant instant = Instant.now();
+ZoneId zone = ZoneId.of(&quot;Asia/Shanghai&quot;);
 
-/**
- * The name of the algorithm
- */
-private final String algorithmName;
-
-/**
- * Key
- */
-private Key key;
-
-private byte[] data;
-    
-public byte[] doCipher() {
-    try {
-        Cipher cipher = Cipher.getInstance(algorithmName);
-
-        if (spec != null)
-            cipher.init(mode, key, spec);
-        else
-            cipher.init(mode, key);
-
-        if (associatedData != null)
-            cipher.updateAAD(associatedData);
-
-        return cipher.doFinal(data);
-    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-        throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
-    } catch (IllegalBlockSizeException | BadPaddingException e) {
-        throw new RuntimeException(&quot;The length of the encrypted string cannot exceed 214 bytes&quot;, e);
-    } catch (InvalidKeyException e) {
-        throw new IllegalArgumentException(&quot;Invalid Key.&quot;, e);
-    } catch (InvalidAlgorithmParameterException e) {
-        throw new IllegalArgumentException(&quot;Invalid Algorithm Parameter.&quot;, e);
-    }
-}
+LocalDateTime local = new DateTypeConvert(instant).to(LocalDateTime.class, zone);
+Calendar calendar = new DateTypeConvert(instant).to(Calendar.class, zone);
 </code></pre>
-<p>Firstly, we can see that we didn't adopt a functional style to define [doCipher()](file://D:\code\ajaxjs\aj-util\aj-cryptography\src\main\java\com\ajaxjs\util\cryptography\Cryptography.java#L59-L81), but rather used getters/setters for parameters (with Lombok generating them beforehand). These parameters are all the basic primitive data types required for [doCipher()](file://D:\code\ajaxjs\aj-util\aj-cryptography\src\main\java\com\ajaxjs\util\cryptography\Cryptography.java#L59-L81) execution. Secondly, let's abstract the main process:</p>
-<ol>
-<li>Determine which algorithm: AES or DES or RSA?</li>
-<li>Determine decryption mode or encryption mode?</li>
-<li>Pass in the key (is it <code>byte[]</code>? Or Java <code>Key</code> object?), and additionally, is <code>AlgorithmParameterSpec spec</code> parameter needed?</li>
-<li>Input data (is it <code>byte[]</code>? Or String or Base64 String?), then execute encryption/decryption</li>
-<li>The raw return is <code>byte[]</code>, so does the caller want to return String directly, or Base64 String, or HexString?</li>
-</ol>
-<p>It seems that the core data type of the encryption/decryption process is <code>byte[]</code>. Regardless of which type of input parameter is used, it must ultimately be converted to <code>byte[]</code>. The more input parameter types we consider, the more convenient it becomes (no need for API callers to manually convert), and accordingly, we need to arrange more setters for conversion.</p>
-<p>The general coding style approach is determined, and then we can proceed with coding.</p>
+<h2>Important semantics</h2>
+<ul>
+<li>Epoch value <code>0</code> is valid and represents <code>1970-01-01T00:00:00Z</code>.</li>
+<li>Date-only strings are parsed as dates instead of being forced through a date-time formatter.</li>
+<li>A <code>Calendar</code> result uses the requested zone, not an unrelated system-default calendar.</li>
+<li><code>ZonedDateTime</code> and <code>OffsetDateTime</code> inputs are returned unchanged when the requested target is the same type, preserving their original zone or offset.</li>
+<li>Converting <code>LocalDateTime</code> to an instant is strict: a daylight-saving gap is rejected, and an overlap is rejected as ambiguous instead of silently choosing an offset.</li>
+<li><code>OffsetTime</code> has no date. It may be converted only to <code>OffsetTime</code> or <code>LocalTime</code>; instant-based conversions are rejected rather than attaching the system's current date.</li>
+</ul>
+<pre><code class="language-java">Instant epoch = new DateTypeConvert(0L).to(Instant.class, ZoneOffset.UTC);
+assertEquals(Instant.EPOCH, epoch);
+</code></pre>
+<p>If no input has been set or a conversion is inherently ambiguous, the API throws an exception instead of silently inventing missing context.</p>
 
             </article>
         </div>

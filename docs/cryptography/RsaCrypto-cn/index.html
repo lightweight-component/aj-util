@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -122,16 +119,16 @@
 <li>返回的签名数据，是<code>byte[]</code>，可以调用<code>signToString()</code>返回 base64 编码的字符串</li>
 </ul>
 <pre><code class="language-java">// 生成公钥私钥
-KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
 keyMgr.generateKeyPair();
 String privateKey = keyMgr.getPrivateKeyStr();
 
 byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData(&quot;hello world&quot;).setPrivateKeyStr(privateKey).sign();
 String result = new DoSignature(Constant.SHA256_RSA).setStrData(&quot;hello world&quot;).setPrivateKeyStr(privateKey).signToString();
 
-assertEquals(EncodeTools.base64EncodeToString(helloWorlds), result);
+assertEquals(new Base64Utils(helloWorlds).encodeAsString(), result);
 </code></pre>
-<p>值得一提的是，私钥哪里来？你可以通过如上的<code>KeyMgr</code>生成。</p>
+<p>私钥由 <code>KeyMgr</code> 生成。RSA 密钥长度仅允许 2048、3072 或 4096 位，最低为 2048 位。</p>
 <h2>校验签名</h2>
 <p>入参包括算法、输入数据、签名数据及公钥，执行<code>verify()</code>返回签名。涉及的类型如下：</p>
 <ul>
@@ -141,7 +138,7 @@ assertEquals(EncodeTools.base64EncodeToString(helloWorlds), result);
 <li>返的签名是否合法，是<code>boolean</code></li>
 </ul>
 <pre><code class="language-java">// 生成公钥私钥
-KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
 keyMgr.generateKeyPair();
 String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
 String result = new DoSignature(Constant.SHA256_RSA).setStrData(&quot;hello world&quot;).setPrivateKeyStr(privateKey).signToString();
@@ -149,16 +146,14 @@ boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData(&quot;hello worl
 
 assertTrue(verified);
 </code></pre>
-<p>值得一提的是，公钥、私钥哪里来？你可以通过如上的<code>KeyMgr</code>生成。</p>
+<p>公私钥对可通过 <code>KeyMgr</code> 生成。签名和验签会在调用 JCA 前检查输入、签名及密钥状态是否完整。</p>
 <h2>RSA 加密解密</h2>
 <p>没什么好说的了，直接上 API 例子。</p>
 <pre><code class="language-java">// 生成公钥私钥
-KeyMgr keyMgr = new KeyMgr(Constant.RSA, 1024);
+KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
 keyMgr.generateKeyPair();
 String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
 
-System.out.println(&quot;公钥: \n\r&quot; + publicKey);
-System.out.println(&quot;私钥： \n\r&quot; + privateKey);
 //		System.out.println(&quot;公钥加密--------私钥解密&quot;);
 
 String word = &quot;你好，世界！&quot;;
@@ -166,8 +161,8 @@ String word = &quot;你好，世界！&quot;;
 byte[] encWord = KeyMgr.publicKeyEncrypt(word.getBytes(), publicKey);
 String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
 
-String eBody = EncodeTools.base64EncodeToString(encWord);
-String decWord2 = new String(KeyMgr.privateKeyDecrypt(EncodeTools.base64Decode(eBody), privateKey));
+String eBody = new Base64Utils(encWord).encodeAsString();
+String decWord2 = new String(KeyMgr.privateKeyDecrypt(new Base64Utils(eBody).decode(), privateKey));
 System.out.println(&quot;加密前: &quot; + word + &quot;\n\r密文：&quot; + eBody + &quot;\n解密后: &quot; + decWord2);
 assertEquals(word, decWord);
 
@@ -182,13 +177,14 @@ assertEquals(english, decEnglish);
 //		System.out.println(&quot;私钥签名——公钥验证签名&quot;);
 
 // 产生签名
-String sign = new DoSignature(Constant.MD5_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
+String sign = new DoSignature(Constant.SHA256_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
 //		System.out.println(&quot;签名:\r&quot; + sign);
 // 验证签名
-assertTrue(new DoVerify(Constant.MD5_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
+assertTrue(new DoVerify(Constant.SHA256_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
 </code></pre>
 <h2>密钥管理</h2>
 <p>关于密钥的一些工具方法在<code>KeyMgr</code>，包括公钥和私钥的。一般开源的都喜欢把<code>KeyPair</code>封装为 Map，而笔者觉得直接使用<code>KeyPair</code>本身就可以了，如果不太满足，则增加某些方法。例如<code>getPublicKeyBytes()</code>、<code>getPublicKeyStr()</code>、<code>getPublicToPem()</code>，相比使用 Map 更加清晰。</p>
+<p>不要把私钥写入日志或异常消息。无效私钥异常只返回经过脱敏的说明。</p>
 <p>另外对于密钥本身还可以加密解密，安全性更高。</p>
 
             </article>

@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -175,11 +172,9 @@ new FileHelper(&quot;merged-file&quot;).mergeFile(chunks);
 </code></pre>
 <h2>链式调用示例</h2>
 <pre><code class="language-java">// 链式调用示例
-new FileHelper(&quot;input.txt&quot;)
-    .setTarget(&quot;backup.txt&quot;)
-    .copyTo()
-    .setTarget(&quot;moved.txt&quot;)
-    .moveTo();
+FileHelper helper = new FileHelper(&quot;input.txt&quot;);
+helper.setTarget(&quot;backup.txt&quot;).copyTo();
+helper.setTarget(&quot;moved.txt&quot;).moveTo();
 </code></pre>
 <h2>异常处理</h2>
 <p>所有 IO 操作都会在出错时抛出 UncheckedIOException，可以使用 try-catch 进行处理：</p>
@@ -191,9 +186,10 @@ new FileHelper(&quot;input.txt&quot;)
 </code></pre>
 <h2>注意事项</h2>
 <ol>
-<li>复制和移动操作前必须设置目标路径</li>
-<li>文件分片使用零拷贝技术，提高大文件处理效率</li>
-<li>目录删除采用反向遍历，确保正确删除所有子目录和文件</li>
+<li>复制和移动操作前必须设置目标路径，否则抛出 <code>IllegalStateException</code>。</li>
+<li>目录复制拒绝符号链接，也拒绝将目标放在源目录树内部。</li>
+<li>分片和合并会循环传输直到所有字节完成；分片失败会清理本次创建的块，合并成功前不会发布目标文件。</li>
+<li>递归删除失败会明确抛出异常，不会静默留下只删除了一部分的目录树。</li>
 </ol>
 
             </article>

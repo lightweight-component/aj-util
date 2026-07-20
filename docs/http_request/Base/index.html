@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -108,122 +106,137 @@
             </menu>
             <article class="aj-text">
                 <h1>HTTP Request Base Tutorial</h1>
-<p>This tutorial provides an overview of the <code>Base</code> class in the HTTP request package, which is part of the <code>lightweight-component/aj-util</code> library. The <code>Base</code> class serves as the foundation for making HTTP requests in Java applications.</p>
-<h2>Introduction</h2>
-<p>The <code>Base</code> class provides the core functionality for making HTTP requests using Java's built-in <code>HttpURLConnection</code>. It handles connection initialization, configuration, and execution of HTTP requests. This class serves as the foundation for other HTTP request classes in the package, such as <code>Get</code>, <code>Post</code>, <code>Delete</code>, etc.</p>
-<h2>Key Features</h2>
+<p>The HTTP Client System provides a comprehensive HTTP communication layer within the aj-http module. It offers two complementary programming paradigms for making HTTP requests: a declarative annotation-based API using dynamic proxies, and an imperative class-based API for direct programmatic control. Both approaches abstract Java's <code>HttpURLConnection</code> while providing features like automatic JSON/form encoding, configurable timeouts, custom headers, and structured response handling.</p>
+<p>This document provides an overview of the HTTP client architecture and the two API styles. For implementation details, see:</p>
 <ul>
-<li>Simple interface for making HTTP requests</li>
-<li>Connection timeout and read timeout handling</li>
-<li>Error handling and logging</li>
-<li>Support for custom HTTP headers</li>
-<li>Response processing</li>
+<li>Base request lifecycle: Base Request Framework</li>
+<li>Concrete HTTP method classes: HTTP Methods</li>
+<li>Dynamic proxy and annotations: Annotation-Driven API</li>
+<li>Connection initialization and headers: Request Configuration</li>
+<li>Response parsing and error handling: Response Processing</li>
+<li>File uploads and downloads: File Operations</li>
 </ul>
-<h2>Methods</h2>
-<h3>1. <code>initHttpConnection(String url, String method)</code></h3>
-<p>Initializes an <code>HttpURLConnection</code> for the specified URL and HTTP method.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>url</code>: The target URL for the HTTP request.</li>
-<li><code>method</code>: The HTTP method (GET, POST, PUT, DELETE, etc.).</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> An initialized <code>HttpURLConnection</code> object.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
-</code></pre>
-<h3>2. <code>connect(HttpURLConnection conn)</code></h3>
-<p>Executes the HTTP request using the provided connection and returns the response.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>conn</code>: The <code>HttpURLConnection</code> object to use for the request.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> A <code>ResponseEntity</code> object containing the response details.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
-ResponseEntity response = Base.connect(conn);
-</code></pre>
-<h3>3. <code>connect(String url, String method, Consumer&lt;HttpURLConnection&gt; fn)</code></h3>
-<p>A convenience method that combines initialization and connection in one call, with an optional function for customizing the connection.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>url</code>: The target URL for the HTTP request.</li>
-<li><code>method</code>: The HTTP method (GET, POST, PUT, DELETE, etc.).</li>
-<li><code>fn</code>: An optional function for customizing the connection (e.g., adding headers).</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> A <code>ResponseEntity</code> object containing the response details.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
-    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
-    conn.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer token123&quot;);
+<h1>Get Class Tutorial</h1>
+<p>The <code>Get</code> class is an HTTP GET request implementation used to retrieve resources from a server. It extends the base <code>Request</code> class and provides various convenient methods for API interaction and data retrieval in different formats.</p>
+<h3>Main Features</h3>
+<ol>
+<li><strong>Multiple Construction Methods</strong>: Supports basic URL construction and construction with connection initialization</li>
+<li><strong>Text Response Retrieval</strong>: Direct retrieval of plain text responses</li>
+<li><strong>JSON Response Processing</strong>: Automatic parsing of JSON responses to Map or Java objects</li>
+<li><strong>XML Response Processing</strong>: Parsing XML responses to Map</li>
+<li><strong>Authentication Support</strong>: Built-in Bearer Token authentication support</li>
+<li><strong>Custom Connection Configuration</strong>: Support for custom HTTP connection configuration</li>
+</ol>
+<h3>Basic Usage</h3>
+<h4>1. Creating Instances</h4>
+<pre><code class="language-java">// Basic construction method
+Get getRequest = new Get(&quot;https://api.example.com/data&quot;);
+
+// Construction with connection initialization
+Get getRequest = new Get(&quot;https://api.example.com/data&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;User-Agent&quot;, &quot;MyApp/1.0&quot;);
 });
 </code></pre>
-<h2>Connection Configuration</h2>
-<p>The <code>Base</code> class sets default connection parameters:</p>
-<ul>
-<li><strong>Connection Timeout</strong>: 10 seconds (10,000 ms)</li>
-<li><strong>Read Timeout</strong>: 15 seconds (15,000 ms)</li>
-</ul>
-<p>These timeouts ensure that requests don't hang indefinitely if there are network issues.</p>
-<h2>Error Handling</h2>
-<p>The <code>Base</code> class includes comprehensive error handling:</p>
-<ol>
-<li>
-<p>For HTTP response codes &gt;= 400, it:</p>
-<ul>
-<li>Sets the <code>ok</code> flag to <code>false</code> in the <code>ResponseEntity</code></li>
-<li>Retrieves the error stream</li>
-<li>Logs the error details</li>
-</ul>
-</li>
-<li>
-<p>For connection exceptions, it:</p>
-<ul>
-<li>Sets the <code>ok</code> flag to <code>false</code></li>
-<li>Stores the exception in the <code>ResponseEntity</code></li>
-<li>Logs the exception details</li>
-</ul>
-</li>
-</ol>
-<h2>ResponseEntity</h2>
-<p>The <code>connect</code> methods return a <code>ResponseEntity</code> object that contains:</p>
-<ul>
-<li>HTTP response code</li>
-<li>Response body (as text or input stream)</li>
-<li>URL and HTTP method used</li>
-<li>Request timing information</li>
-<li>Success/failure status</li>
-<li>Any exceptions that occurred</li>
-</ul>
-<h2>Usage Example</h2>
-<p>Here's a complete example of using the <code>Base</code> class to make a GET request:</p>
-<pre><code class="language-java">try {
-    ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
-        conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
-    });
-    
-    if (response.isOk()) {
-        // Process the successful response
-        String responseText = StreamHelper.copyToString(response.getIn());
-        System.out.println(&quot;Response: &quot; + responseText);
-    } else {
-        // Handle the error
-        System.err.println(&quot;Error: &quot; + response.getHttpCode() + &quot; - &quot; + response.getResponseText());
-    }
-} catch (Exception e) {
-    e.printStackTrace();
-}
+<h4>2. Retrieving Text Response</h4>
+<pre><code class="language-java">// Simple text retrieval
+String response = Get.text(&quot;https://api.example.com/data&quot;);
+
+// Text retrieval with custom connection configuration
+String response = Get.text(&quot;https://api.example.com/data&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;text/plain&quot;);
+});
 </code></pre>
-<h2>Conclusion</h2>
-<p>The <code>Base</code> class provides a solid foundation for making HTTP requests in Java applications. It handles the low-level details of connection management, error handling, and response processing, allowing you to focus on the business logic of your application. For specific HTTP methods, consider using the specialized classes built on top of <code>Base</code>, such as <code>Get</code>, <code>Post</code>, etc.</p>
+<h4>3. Retrieving JSON Response</h4>
+<pre><code class="language-java">// Retrieve JSON response as Map
+Map&lt;String, Object&gt; jsonResponse = Get.api(&quot;https://api.example.com/data&quot;);
+
+// JSON retrieval with authentication token
+Map&lt;String, Object&gt; jsonResponse = Get.api(&quot;https://api.example.com/data&quot;, &quot;your-token&quot;);
+
+// JSON retrieval with custom connection configuration
+Map&lt;String, Object&gt; jsonResponse = Get.api(&quot;https://api.example.com/data&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+});
+</code></pre>
+<h4>4. Mapping JSON Response to Java Object</h4>
+<pre><code class="language-java">// Map to specified class type
+MyDataClass data = Get.api(&quot;https://api.example.com/data&quot;, MyDataClass.class);
+
+// Mapping with authentication token
+MyDataClass data = Get.api(&quot;https://api.example.com/data&quot;, MyDataClass.class, &quot;your-token&quot;);
+
+// Mapping with custom connection configuration
+MyDataClass data = Get.api(&quot;https://api.example.com/data&quot;, MyDataClass.class, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+});
+</code></pre>
+<h4>5. Retrieving XML Response</h4>
+<pre><code class="language-java">// Retrieve XML response as Map
+Map&lt;String, String&gt; xmlResponse = Get.apiXml(&quot;https://api.example.com/data.xml&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/xml&quot;);
+});
+</code></pre>
+<h3>Parameter Descriptions</h3>
+<ul>
+<li><code>url</code>: The target URL address for the request</li>
+<li><code>initConnection</code>: Functional interface for configuring HTTP connection</li>
+<li><code>token</code>: Bearer authentication token</li>
+<li><code>clz</code>: Target Java class type for JSON response mapping</li>
+</ul>
+<h3>Notes</h3>
+<ol>
+<li>All static methods automatically execute the request and return the result</li>
+<li>Methods with <code>initConnection</code> parameter allow custom HTTP headers and other connection properties</li>
+<li>JSON responses can be automatically mapped to Java objects, object fields need to match JSON keys</li>
+<li>XML responses are parsed into simple key-value pair Map</li>
+</ol>
+<h1>Post Class Tutorial</h1>
+<p>The <code>Post</code> class is an HTTP POST request implementation that extends the <code>BasePost</code> class, used for sending HTTP POST requests with various content types and data formats.</p>
+<h3>Main Features</h3>
+<ol>
+<li><strong>Multiple Construction Methods</strong>: Supports different parameter combinations for constructing POST requests</li>
+<li><strong>JSON Data Sending</strong>: Built-in support for sending JSON format data</li>
+<li><strong>Custom Connection Configuration</strong>: Supports custom HTTP connection initialization configuration</li>
+<li><strong>Automatic Response Parsing</strong>: Automatically parses responses into Map objects</li>
+</ol>
+<h3>Basic Usage</h3>
+<h4>1. Creating Instances</h4>
+<pre><code class="language-java">// Basic construction method
+Post postRequest = new Post(&quot;https://api.example.com/data&quot;, 
+                           &quot;{\&quot;name\&quot;:\&quot;test\&quot;}&quot;, 
+                           &quot;application/json&quot;);
+
+// Construction with custom connection configuration
+Post postRequest = new Post(&quot;https://api.example.com/data&quot;,
+                           &quot;{\&quot;name\&quot;:\&quot;test\&quot;}&quot;,
+                           &quot;application/json&quot;,
+                           conn -&gt; {
+                               conn.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer token&quot;);
+                           });
+</code></pre>
+<h4>2. Sending JSON API Requests</h4>
+<pre><code class="language-java">// Send JSON data and get response
+Map&lt;String, Object&gt; data = ObjectHelper.mapOf(&quot;name&quot;, &quot;test&quot;, &quot;value&quot;, 123);
+Map&lt;String, Object&gt; response = Post.api(&quot;https://api.example.com/data&quot;, data);
+
+// JSON request with custom connection configuration
+Map&lt;String, Object&gt; response = Post.api(&quot;https://api.example.com/data&quot;, 
+                                       data,
+                                       conn -&gt; {
+                                           conn.setRequestProperty(&quot;Custom-Header&quot;, &quot;value&quot;);
+                                       });
+</code></pre>
+<h3>Constructor Descriptions</h3>
+<ul>
+<li><code>Post(HttpMethod method, String url)</code>: Creates a request with specified HTTP method and URL</li>
+<li><code>Post(String url, Object data, String contentType)</code>: Creates a request with URL, data, and content type</li>
+<li><code>Post(String url, Object data, String contentType, Consumer&lt;HttpURLConnection&gt; initConnection)</code>: Fully configured constructor</li>
+</ul>
+<h3>Static Methods</h3>
+<ul>
+<li><code>api(String url, Object data)</code>: Sends a JSON format POST request and returns parsed Map</li>
+<li><code>api(String url, Object data, Consumer&lt;HttpURLConnection&gt; initConnection)</code>: JSON POST request with custom connection configuration</li>
+</ul>
 
             </article>
         </div>

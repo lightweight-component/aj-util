@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Base64 Utils Tutorial</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for Base64 manipulation" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, byte arrays,Base64,Java" />
+        <title>AJ Utils-BytesHelper Tutorial</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Byte-array concatenation and hexadecimal conversion utilities" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, byte arrays,hexadecimal,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -107,82 +105,21 @@
                </ul>
             </menu>
             <article class="aj-text">
-                <h1>Base64 Utils Tutorial</h1>
-<p>The <code>Base64Utils</code> is a utility class for Base64 encoding and decoding operations, providing convenient methods for conversion between byte arrays and strings.</p>
-<h3>Main Features</h3>
-<ol>
-<li><strong>Supports standard and URL-safe Base64 encoding</strong></li>
-<li><strong>Configurable padding omission</strong></li>
-<li><strong>Multiple charset support</strong></li>
-<li><strong>Chainable API design</strong></li>
-</ol>
-<h3>Basic Usage</h3>
-<h4>1. Creating Instances</h4>
-<pre><code class="language-java">// Create from byte array
-byte[] data = &quot;Hello World&quot;.getBytes();
-Base64Utils utils = new Base64Utils(data);
-
-// Create from string (default UTF-8)
-Base64Utils utils = new Base64Utils(&quot;Hello World&quot;);
-
-// Create from string (specified charset)
-Base64Utils utils = new Base64Utils(&quot;Hello World&quot;, StandardCharsets.UTF_8);
+                <h1>BytesHelper Tutorial</h1>
+<p><code>BytesHelper</code> provides small, stateless helpers for byte arrays.</p>
+<h2>Concatenating arrays</h2>
+<pre><code class="language-java">byte[] result = BytesHelper.concat(new byte[]{1, 2}, new byte[]{3, 4});
+// [1, 2, 3, 4]
 </code></pre>
-<h4>2. Base64 Encoding</h4>
-<pre><code class="language-java">// Basic encoding
-String encoded = new Base64Utils(&quot;Hello World&quot;).encodeAsString();
-// Output: SGVsbG8gV29ybGQ=
-
-// URL-safe encoding
-String urlSafeEncoded = new Base64Utils(&quot;Hello World&quot;)
-    .setUrlSafe(true)
-    .encodeAsString();
-// Output: SGVsbG8gV29ybGQ=
-
-// Encoding without padding
-String noPadding = new Base64Utils(&quot;Hello World&quot;)
-    .setWithoutPadding(true)
-    .encodeAsString();
-// Output: SGVsbG8gV29ybGQ (without trailing =)
+<h2>Hexadecimal encoding</h2>
+<pre><code class="language-java">String hex = BytesHelper.bytesToHexStr(new byte[]{0x1A, 0x2B});
+// &quot;1A2B&quot;
 </code></pre>
-<h4>3. Base64 Decoding</h4>
-<pre><code class="language-java">// Basic decoding
-String decoded = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;).decodeAsString();
-// Output: Hello World
-
-// Decoding with specified charset
-String decodedWithCharset = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;)
-    .decodeAsString(StandardCharsets.UTF_8);
-
-// URL-safe decoding
-String urlDecoded = new Base64Utils(&quot;SGVsbG8gV29ybGQ=&quot;, true)
-    .setUrlSafe(true)
-    .decodeAsString();
+<p>The output uses uppercase hexadecimal characters.</p>
+<h2>Hexadecimal decoding</h2>
+<pre><code class="language-java">byte[] bytes = BytesHelper.parseHexStr2Byte(&quot;1A2B&quot;);
 </code></pre>
-<h4>4. Chainable Calls</h4>
-<p>Due to the <code>@Accessors(chain = true)</code> annotation, chainable calls are supported:</p>
-<pre><code class="language-java">String result = new Base64Utils(&quot;Hello World&quot;)
-    .setUrlSafe(true)
-    .setWithoutPadding(true)
-    .encodeAsString();
-</code></pre>
-<h4>5. Formatting Base64 Strings</h4>
-<pre><code class="language-java">// Format long Base64 string with line break every 64 characters
-String longBase64 = &quot;SGVsbG8gV29ybGQhIEkgYW0gYSBsb25nIHN0cmluZyBmb3IgdGVzdGluZyB0aGUgZm9ybWF0dGluZyBmdW5jdGlvbi4=&quot;;
-String formatted = Base64Utils.formatBase64String(longBase64);
-</code></pre>
-<h3>Parameter Description</h3>
-<ul>
-<li>[withoutPadding](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L57-L57): Whether to omit trailing <code>=</code> characters in the encoding result</li>
-<li>[urlSafe](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L63-L63): Whether to use URL-safe Base64 variant (using <code>-</code> instead of <code>+</code>, <code>_</code> instead of <code>/</code>)</li>
-</ul>
-<h3>Notes</h3>
-<ol>
-<li>Calling encoding or decoding methods without setting input data will throw <code>IllegalStateException</code></li>
-<li>Encoding results are converted to strings using <code>ISO_8859_1</code> charset by default</li>
-<li>Decoding uses <code>UTF-8</code> charset by default</li>
-</ol>
-<p>This utility class simplifies Base64 operations in Java, especially suitable for scenarios requiring frequent Base64 encoding and decoding.</p>
+<p>An empty string returns an empty byte array. Input must contain an even number of characters, and every character must be hexadecimal; otherwise <code>IllegalArgumentException</code> is thrown. Odd-length input is never silently truncated.</p>
 
             </article>
         </div>

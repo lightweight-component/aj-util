@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -117,6 +114,7 @@
 <li>类型安全的 JSON 处理</li>
 <li>Java 8 日期/时间支持</li>
 <li>严格的重复检测</li>
+<li>延迟初始化并安全发布共享 <code>JsonEngine</code></li>
 </ul>
 <h2>方法</h2>
 <h3>1. 序列化 (转 JSON)</h3>
@@ -127,7 +125,6 @@
 <h3>2. 反序列化 (从 JSON)</h3>
 <ol>
 <li><code>fromJson(String jsonStr, Class&lt;T&gt; valueType)</code> - 将 JSON 解析为指定类型</li>
-<li><code>fromJson(String jsonStr, JavaType valueType)</code> - 将 JSON 解析为复杂类型</li>
 </ol>
 <h3>3. JSON ↔ Map 转换</h3>
 <ol>

@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -154,10 +152,10 @@ handles:</p>
 <li><strong>long/Long:</strong> Converts the object to a long using the <code>object2long()</code> method (explained below).</li>
 <li><strong>float/Float:</strong> Converts the object to a float using the <code>object2float()</code> method.</li>
 <li><strong>double/Double:</strong> Converts the object to a double using the <code>object2double()</code> method.</li>
-<li><strong>Date:</strong> Converts the object to a Date using the <code>DateHelper.object2Date()</code> method.</li>
+<li><strong>Date/time:</strong> Converts supported legacy and Java 8 date types through <code>DateTypeConvert</code>.</li>
 <li><strong>BigDecimal:</strong> Converts the object to a BigDecimal if the value is a String or Number.</li>
 <li><strong>Array:</strong> Converts the object to an array using the <code>toArray()</code> method.</li>
-<li><strong>Enum:</strong> Converts the object to an enum.</li>
+<li><strong>Enum:</strong> Converts a name or integer ordinal to the corresponding enum constant. Ordinal conversion returns the enum value, not its numeric ordinal.</li>
 </ul>
 <h3>3. <code>toBoolean(Object value)</code></h3>
 <p>Converts an object to a boolean. This method handles various input types, including strings, numbers, and booleans.</p>
@@ -222,6 +220,7 @@ assertEquals(-456L, ConvertBasicValue.object2long(&quot;-456&quot;));
 <pre><code class="language-java">assertEquals(0.0, ConvertBasicValue.object2double(null), 0.0001);
 assertEquals(3.14, ConvertBasicValue.object2double(&quot;3.14&quot;), 0.0001);
 </code></pre>
+<p><code>toJavaValue(String)</code> recognizes booleans, <code>null</code>, integers, longs, and decimal values, including negative decimals such as <code>-3.14</code>.</p>
 <h2>Unit Test Examples</h2>
 <p>Here are some examples from the unit tests:</p>
 <pre><code class="language-java">import org.junit.jupiter.api.Test;

@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -107,6 +104,7 @@
             <article class="aj-text chinese">
                 <h1>Resources</h1>
 <p><code>Resources</code> 类提供静态方法来定位和检索类路径中或相对于特定类的资源。 这对于访问与应用程序捆绑在一起的配置文件、模板或其他数据文件特别有用。</p>
+<p>需要兼容打包后的 JAR 时应优先使用 <code>getResource(String)</code> 获取流。返回文件系统路径的方法只适用于 <code>file:</code> 协议资源；<code>jar:</code> 资源不是普通 <code>File</code> 路径。</p>
 <h2>方法</h2>
 <h3>1. <code>getResourcesFromClasspath(String resource)</code></h3>
 <p>检索位于类路径中的资源的路径。</p>

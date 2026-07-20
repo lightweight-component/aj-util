@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -105,138 +102,138 @@
                 </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>HTTP 请求 Base 教程</h1>
-<p>本教程提供了 HTTP 请求包中 <code>Base</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>Base</code> 类为 Java 应用程序中的 HTTP 请求提供了基础功能。</p>
-<h2>简介</h2>
-<p><code>Base</code> 类使用 Java 内置的 <code>HttpURLConnection</code> 提供了 HTTP 请求的核心功能。它处理连接初始化、配置和 HTTP 请求的执行。该类作为包中其他 HTTP 请求类（如 <code>Get</code>、<code>Post</code>、<code>Delete</code> 等）的基础。</p>
-<h2>主要特性</h2>
+                <p>HTTP客户端系统在aj-http模块内提供了一个全面的HTTP通信层。它提供了两种互补的编程范式来发起HTTP请求：一种是使用动态代理的声明式基于注解的API，另一种是用于直接编程控制的命令式基于类的API。这两种方法都抽象了Java的<code>HttpURLConnection</code>，同时提供了自动JSON/表单编码、可配置超时、自定义头部和结构化响应处理等功能。</p>
+<p>本文档提供了HTTP客户端架构和两种API风格的概述。有关实现细节，请参见：</p>
 <ul>
-<li>简单的 HTTP 请求接口</li>
-<li>连接超时和读取超时处理</li>
-<li>错误处理和日志记录</li>
-<li>支持自定义 HTTP 头</li>
-<li>响应处理</li>
+<li>基础请求生命周期：基础请求框架</li>
+<li>具体的HTTP方法类：HTTP方法</li>
+<li>动态代理和注解：注解驱动API</li>
+<li>连接初始化和头部：请求配置</li>
+<li>响应解析和错误处理：响应处理</li>
+<li>文件上传和下载：文件操作</li>
+<li></li>
 </ul>
-<h2>方法</h2>
-<h3>1. <code>printErrorLog(String httpMethod, String url, String httpCode, String returnText)</code></h3>
-<p>打印格式化的错误日志，包含请求方法、URL、HTTP状态码和返回文本。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>httpMethod</code>: HTTP方法</li>
-<li><code>url</code>: 请求URL</li>
-<li><code>httpCode</code>: HTTP状态码</li>
-<li><code>returnText</code>: 返回的错误文本</li>
-</ul>
-</li>
-</ul>
-<h3>2. <code>initHttpConnection(String url, String method)</code></h3>
-<p>为指定的 URL 和 HTTP 方法初始化 <code>HttpURLConnection</code>。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>url</code>：HTTP 请求的目标 URL。</li>
-<li><code>method</code>：HTTP 方法（GET、POST、PUT、DELETE 等）。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 初始化的 <code>HttpURLConnection</code> 对象。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
-</code></pre>
-<h3>2. <code>connect(HttpURLConnection conn)</code></h3>
-<p>使用提供的连接执行 HTTP 请求并返回响应。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>conn</code>：用于请求的 <code>HttpURLConnection</code> 对象。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 包含响应详情的 <code>ResponseEntity</code> 对象。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">HttpURLConnection conn = Base.initHttpConnection(&quot;https://api.example.com/data&quot;, &quot;GET&quot;);
-ResponseEntity response = Base.connect(conn);
-</code></pre>
-<h3>3. <code>connect(String url, String method, Consumer&lt;HttpURLConnection&gt; fn)</code></h3>
-<p>一个便捷方法，将初始化和连接合并为一个调用，并可选择自定义连接的函数。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>url</code>：HTTP 请求的目标 URL。</li>
-<li><code>method</code>：HTTP 方法（GET、POST、PUT、DELETE 等）。</li>
-<li><code>fn</code>：用于自定义连接的可选函数（例如，添加头信息）。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 包含响应详情的 <code>ResponseEntity</code> 对象。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
-    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
-    conn.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer token123&quot;);
+<h1>Get 类使用教程</h1>
+<p>Get 类是 HTTP GET 请求的实现类，用于从服务器获取资源。它扩展了基础的 Request 类，提供了多种便捷的方法来与 API 交互并以不同格式获取数据。</p>
+<h3>主要功能特性</h3>
+<ol>
+<li><strong>多种构造方式</strong>：支持基本 URL 构造和带连接初始化的构造</li>
+<li><strong>文本响应获取</strong>：直接获取纯文本响应</li>
+<li><strong>JSON 响应处理</strong>：自动解析 JSON 响应为 Map 或 Java 对象</li>
+<li><strong>XML 响应处理</strong>：解析 XML 响应为 Map</li>
+<li><strong>认证支持</strong>：内置 Bearer Token 认证支持</li>
+<li><strong>自定义连接配置</strong>：支持自定义 HTTP 连接配置</li>
+</ol>
+<h3>基本使用方法</h3>
+<h4>1. 创建实例</h4>
+<pre><code class="language-java">// 基本构造方式
+Get getRequest = new Get(&quot;https://api.example.com/data&quot;);
+
+// 带连接初始化的构造方式
+Get getRequest = new Get(&quot;https://api.example.com/data&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;User-Agent&quot;, &quot;MyApp/1.0&quot;);
 });
 </code></pre>
-<h2>连接配置</h2>
-<p><code>Base</code> 类设置了默认的连接参数：</p>
-<ul>
-<li><strong>连接超时</strong>：10 秒（10,000 毫秒）</li>
-<li><strong>读取超时</strong>：15 秒（15,000 毫秒）</li>
-</ul>
-<p>这些超时确保在网络问题时请求不会无限期挂起。</p>
-<h2>错误处理</h2>
-<p><code>Base</code> 类包含全面的错误处理：</p>
-<ol>
-<li>
-<p>对于 HTTP 响应代码 &gt;= 400，它：</p>
-<ul>
-<li>在 <code>ResponseEntity</code> 中将 <code>ok</code> 标志设置为 <code>false</code></li>
-<li>检索错误流</li>
-<li>记录错误详情</li>
-</ul>
-</li>
-<li>
-<p>对于连接异常，它：</p>
-<ul>
-<li>将 <code>ok</code> 标志设置为 <code>false</code></li>
-<li>在 <code>ResponseEntity</code> 中存储异常</li>
-<li>记录异常详情</li>
-</ul>
-</li>
-</ol>
-<h2>ResponseEntity</h2>
-<p><code>connect</code> 方法返回包含以下内容的 <code>ResponseEntity</code> 对象：</p>
-<ul>
-<li>HTTP 响应代码</li>
-<li>响应体（作为文本或输入流）</li>
-<li>使用的 URL 和 HTTP 方法</li>
-<li>请求时间信息</li>
-<li>成功/失败状态</li>
-<li>发生的任何异常</li>
-</ul>
-<h2>使用示例</h2>
-<p>以下是使用 <code>Base</code> 类进行 GET 请求的完整示例：</p>
-<pre><code class="language-java">try {
-    ResponseEntity response = Base.connect(&quot;https://api.example.com/data&quot;, &quot;GET&quot;, conn -&gt; {
-        conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
-    });
-    
-    if (response.isOk()) {
-        // 处理成功的响应
-        String responseText = StreamHelper.copyToString(response.getIn());
-        System.out.println(&quot;响应: &quot; + responseText);
-    } else {
-        // 处理错误
-        System.err.println(&quot;错误: &quot; + response.getHttpCode() + &quot; - &quot; + response.getResponseText());
-    }
-} catch (Exception e) {
-    e.printStackTrace();
-}
+<h4>2. 获取文本响应</h4>
+<pre><code class="language-java">// 简单的文本获取
+String response = Get.text(&quot;https://api.example.com/data&quot;);
+
+// 带自定义连接配置的文本获取
+String response = Get.text(&quot;https://api.example.com/data&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;text/plain&quot;);
+});
 </code></pre>
-<h2>常量</h2>
-<h3><code>ERR_MSG</code></h3>
-<p>错误消息的键名，值为&quot;errMsg&quot;。</p>
-<h2>结论</h2>
-<p><code>Base</code> 类为 Java 应用程序中的 HTTP 请求提供了坚实的基础。它处理连接管理、错误处理和响应处理的底层细节，使您能够专注于应用程序的业务逻辑。对于特定的 HTTP 方法，请考虑使用基于 <code>Base</code> 构建的专用类，如 <code>Get</code>、<code>Post</code> 等。</p>
+<h4>3. 获取 JSON 响应</h4>
+<pre><code class="language-java">// 获取 JSON 响应为 Map
+Map&lt;String, Object&gt; jsonResponse = Get.api(&quot;https://api.example.com/data&quot;);
+
+// 带认证令牌的 JSON 获取
+Map&lt;String, Object&gt; jsonResponse = Get.api(&quot;https://api.example.com/data&quot;, &quot;your-token&quot;);
+
+// 带自定义连接配置的 JSON 获取
+Map&lt;String, Object&gt; jsonResponse = Get.api(&quot;https://api.example.com/data&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+});
+</code></pre>
+<h4>4. 映射 JSON 响应到 Java 对象</h4>
+<pre><code class="language-java">// 映射到指定类类型
+MyDataClass data = Get.api(&quot;https://api.example.com/data&quot;, MyDataClass.class);
+
+// 带认证令牌的映射
+MyDataClass data = Get.api(&quot;https://api.example.com/data&quot;, MyDataClass.class, &quot;your-token&quot;);
+
+// 带自定义连接配置的映射
+MyDataClass data = Get.api(&quot;https://api.example.com/data&quot;, MyDataClass.class, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+});
+</code></pre>
+<h4>5. 获取 XML 响应</h4>
+<pre><code class="language-java">// 获取 XML 响应为 Map
+Map&lt;String, String&gt; xmlResponse = Get.apiXml(&quot;https://api.example.com/data.xml&quot;, conn -&gt; {
+    conn.setRequestProperty(&quot;Accept&quot;, &quot;application/xml&quot;);
+});
+</code></pre>
+<h3>参数说明</h3>
+<ul>
+<li><code>url</code>: 请求的目标 URL 地址</li>
+<li><code>initConnection</code>: 用于配置 HTTP 连接的函数式接口</li>
+<li><code>token</code>: Bearer 认证令牌</li>
+<li><code>clz</code>: 目标 Java 类类型，用于 JSON 响应映射</li>
+</ul>
+<h3>注意事项</h3>
+<ol>
+<li>所有静态方法都会自动执行请求并返回结果</li>
+<li>带 <code>initConnection</code> 参数的方法允许自定义 HTTP 请求头和其他连接属性</li>
+<li>JSON 响应可以自动映射到 Java 对象，对象字段需要与 JSON 键匹配</li>
+<li>XML 响应解析为简单的键值对 Map</li>
+</ol>
+<h1>Post 类使用教程</h1>
+<p>Post 类是 HTTP POST 请求的实现类，继承自 BasePost 类，用于发送带有各种内容类型和数据格式的 HTTP POST 请求。</p>
+<h3>主要功能特性</h3>
+<ol>
+<li><strong>多种构造方式</strong>：支持不同的参数组合构造 POST 请求</li>
+<li><strong>JSON 数据发送</strong>：内置 JSON 格式数据发送支持</li>
+<li><strong>自定义连接配置</strong>：支持自定义 HTTP 连接初始化配置</li>
+<li><strong>响应自动解析</strong>：自动将响应解析为 Map 对象</li>
+</ol>
+<h3>基本使用方法</h3>
+<h4>1. 创建实例</h4>
+<pre><code class="language-java">// 基本构造方式
+Post postRequest = new Post(&quot;https://api.example.com/data&quot;, 
+                           &quot;{\&quot;name\&quot;:\&quot;test\&quot;}&quot;, 
+                           &quot;application/json&quot;);
+
+// 带自定义连接配置的构造方式
+Post postRequest = new Post(&quot;https://api.example.com/data&quot;,
+                           &quot;{\&quot;name\&quot;:\&quot;test\&quot;}&quot;,
+                           &quot;application/json&quot;,
+                           conn -&gt; {
+                               conn.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer token&quot;);
+                           });
+</code></pre>
+<h4>2. 发送 JSON API 请求</h4>
+<pre><code class="language-java">// 发送 JSON 数据并获取响应
+Map&lt;String, Object&gt; data = ObjectHelper.mapOf(&quot;name&quot;, &quot;test&quot;, &quot;value&quot;, 123);
+Map&lt;String, Object&gt; response = Post.api(&quot;https://api.example.com/data&quot;, data);
+
+// 带自定义连接配置的 JSON 请求
+Map&lt;String, Object&gt; response = Post.api(&quot;https://api.example.com/data&quot;, 
+                                       data,
+                                       conn -&gt; {
+                                           conn.setRequestProperty(&quot;Custom-Header&quot;, &quot;value&quot;);
+                                       });
+</code></pre>
+<h3>构造函数说明</h3>
+<ul>
+<li><code>Post(HttpMethod method, String url)</code>: 使用指定的 HTTP 方法和 URL 创建请求</li>
+<li><code>Post(String url, Object data, String contentType)</code>: 使用 URL、数据和内容类型创建请求</li>
+<li><code>Post(String url, Object data, String contentType, Consumer&lt;HttpURLConnection&gt; initConnection)</code>: 完整配置的构造函数</li>
+</ul>
+<h3>静态方法</h3>
+<ul>
+<li><code>api(String url, Object data)</code>: 发送 JSON 格式的 POST 请求并返回解析后的 Map</li>
+<li><code>api(String url, Object data, Consumer&lt;HttpURLConnection&gt; initConnection)</code>: 带自定义连接配置的 JSON POST 请求</li>
+</ul>
 
             </article>
         </div>

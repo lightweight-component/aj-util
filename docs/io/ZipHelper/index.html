@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -113,34 +111,37 @@
 <p>The <code>ZipHelper</code> class contains static methods for working with ZIP files, including compression, decompression, and file type detection.</p>
 <h2>Main Features</h2>
 <ul>
-<li>ZIP file decompression with directory handling</li>
+<li>ZIP extraction with Zip Slip, symbolic-link, entry-count, size, and compression-ratio protection</li>
 <li>File and directory compression (with STORED or DEFLATED options)</li>
 <li>Recursive directory compression</li>
 <li>ZIP file detection (magic number check)</li>
-<li>CRC32 checksum calculation</li>
+<li>Buffered CRC32 calculation for STORED entries</li>
 <li>Automatic directory creation</li>
 </ul>
 <h2>Methods</h2>
 <h3>1. Decompression</h3>
 <ol>
 <li><code>unzip(String save, String zipFile)</code> - Decompress ZIP file to target directory</li>
+<li><code>unzip(String save, String zipFile, ExtractionLimits limits)</code> - Decompress with custom resource limits</li>
+<li><code>unzipWithChineseFilename(...)</code> - Read legacy GBK entry names</li>
 </ol>
 <h3>2. Compression</h3>
 <ol>
 <li><code>zipFile(File[] fileContent, String saveZip, boolean useStore)</code> - Compress files to ZIP</li>
 <li><code>zipDirectory(String sourceDir, String saveZip, boolean useStore)</code> - Compress directory to ZIP</li>
+<li><code>zipSingleFile(String sourceFile, String saveZip, boolean useStore)</code> - Compress one file</li>
 </ol>
 <h3>3. Utility Methods</h3>
 <ol>
 <li><code>initFolder(File file)</code> - Ensure parent directories exist for a file</li>
 <li><code>initFolder(String file)</code> - String version of initFolder</li>
 <li><code>isZipFile(String filePath)</code> - Check if file is a valid ZIP file</li>
-<li><code>getFileCRCCode(File file)</code> - Calculate CRC32 checksum for a file</li>
 </ol>
 <h2>Usage Examples</h2>
 <h3>Decompression</h3>
 <pre><code class="language-java">ZipHelper.unzip(&quot;C:/extracted&quot;, &quot;C:/archive.zip&quot;);
 </code></pre>
+<p>Extraction uses conservative default limits. Use the overload with <code>ExtractionLimits</code> when trusted archives require different limits.</p>
 <h3>File Compression</h3>
 <pre><code class="language-java">File[] files = {new File(&quot;file1.txt&quot;), new File(&quot;file2.txt&quot;)};
 ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // Use DEFLATED compression
@@ -148,6 +149,7 @@ ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // Use DEFLATED compre
 <h3>Directory Compression</h3>
 <pre><code class="language-java">ZipHelper.zipDirectory(&quot;C:/data&quot;, &quot;backup.zip&quot;, true); // Use STORED (no compression)
 </code></pre>
+<p>Directory compression does not follow symbolic links. The destination ZIP must be outside the source directory.</p>
 <h3>ZIP File Detection</h3>
 <pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
 </code></pre>
@@ -161,7 +163,7 @@ ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // Use DEFLATED compre
 <li><code>STORED</code> - No compression, files are stored as-is</li>
 </ol>
 <h2>Error Handling</h2>
-<p>The methods handle common IO errors and log warnings when issues occur during compression/decompression.</p>
+<p>I/O failures are reported as <code>UncheckedIOException</code>; invalid arguments use <code>IllegalArgumentException</code>. Compression is written to a temporary file and published only after the archive is complete.</p>
 <h2>Conclusion</h2>
 <p>The <code>ZipHelper</code> class provides comprehensive utility methods for working with ZIP files, making compression and decompression operations more convenient in Java applications.</p>
 

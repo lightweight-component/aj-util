@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -111,34 +108,37 @@
 <p><code>ZipHelper</code> 类包含用于处理 ZIP 文件的静态方法，包括压缩、解压缩和文件类型检测。</p>
 <h2>主要特性</h2>
 <ul>
-<li>带目录处理的 ZIP 文件解压缩</li>
+<li>防护 Zip Slip、符号链接、条目数量、解压大小和压缩比的安全解压</li>
 <li>文件和目录压缩（支持 STORED 或 DEFLATED 选项）</li>
 <li>递归目录压缩</li>
 <li>ZIP 文件检测（魔数检查）</li>
-<li>CRC32 校验和计算</li>
+<li>STORED 条目的缓冲 CRC32 计算</li>
 <li>自动目录创建</li>
 </ul>
 <h2>方法</h2>
 <h3>1. 解压缩</h3>
 <ol>
 <li><code>unzip(String save, String zipFile)</code> - 将 ZIP 文件解压缩到目标目录</li>
+<li><code>unzip(String save, String zipFile, ExtractionLimits limits)</code> - 使用自定义资源限制解压</li>
+<li><code>unzipWithChineseFilename(...)</code> - 读取旧式 GBK 条目名称</li>
 </ol>
 <h3>2. 压缩</h3>
 <ol>
 <li><code>zipFile(File[] fileContent, String saveZip, boolean useStore)</code> - 将文件压缩为 ZIP</li>
 <li><code>zipDirectory(String sourceDir, String saveZip, boolean useStore)</code> - 将目录压缩为 ZIP</li>
+<li><code>zipSingleFile(String sourceFile, String saveZip, boolean useStore)</code> - 压缩单个文件</li>
 </ol>
 <h3>3. 实用方法</h3>
 <ol>
 <li><code>initFolder(File file)</code> - 确保文件的父目录存在</li>
 <li><code>initFolder(String file)</code> - initFolder 的字符串版本</li>
 <li><code>isZipFile(String filePath)</code> - 检查文件是否为有效的 ZIP 文件</li>
-<li><code>getFileCRCCode(File file)</code> - 计算文件的 CRC32 校验和</li>
 </ol>
 <h2>使用示例</h2>
 <h3>解压缩</h3>
 <pre><code class="language-java">ZipHelper.unzip(&quot;C:/extracted&quot;, &quot;C:/archive.zip&quot;);
 </code></pre>
+<p>默认解压使用保守的安全限制。可信 ZIP 确实需要更大配额时，可使用带 <code>ExtractionLimits</code> 的重载。</p>
 <h3>文件压缩</h3>
 <pre><code class="language-java">File[] files = {new File(&quot;file1.txt&quot;), new File(&quot;file2.txt&quot;)};
 ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // 使用 DEFLATED 压缩
@@ -146,6 +146,7 @@ ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // 使用 DEFLATED 压
 <h3>目录压缩</h3>
 <pre><code class="language-java">ZipHelper.zipDirectory(&quot;C:/data&quot;, &quot;backup.zip&quot;, true); // 使用 STORED（无压缩）
 </code></pre>
+<p>目录压缩不会跟随符号链接，目标 ZIP 也不能位于源目录内部。</p>
 <h3>ZIP 文件检测</h3>
 <pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
 </code></pre>
@@ -159,7 +160,7 @@ ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // 使用 DEFLATED 压
 <li><code>STORED</code> - 无压缩，文件按原样存储</li>
 </ol>
 <h2>错误处理</h2>
-<p>这些方法处理常见的 IO 错误，并在压缩/解压缩过程中出现问题时记录警告。</p>
+<p>IO 失败会抛出 <code>UncheckedIOException</code>，参数错误会抛出 <code>IllegalArgumentException</code>。压缩先写入临时文件，完整成功后才发布目标。</p>
 <h2>结论</h2>
 <p><code>ZipHelper</code> 类提供了全面的实用方法，用于处理 ZIP 文件，使 Java 应用程序中的压缩和解压缩操作更加方便。</p>
 

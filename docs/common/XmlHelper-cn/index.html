@@ -54,7 +54,7 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Helper</a></li>
+                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
@@ -66,7 +66,6 @@
                     <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils-cn/">WebUtils</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
                 <ul>
@@ -91,9 +90,7 @@
 
                 <h3>HTTP 请求</h3>
                 <ul>
-                    <li><a href="/http_request/Get-cn">HTTP 请求</a></li>
-                     <li><a href="/http_request/advanced-usage-cn/">高级用法</a></li>
-                    <li><a href="/http_request/Base-cn/">Base</a></li>
+                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
                 </ul>
 
                 <h3>加密/解密</h3>
@@ -107,6 +104,7 @@
             <article class="aj-text chinese">
                 <h1>XmlHelper</h1>
 <p><code>XmlHelper</code> 类提供了用于解析 XML 文档、检索元素以及将节点转换为映射的方法。这些方法可用于处理和操作 XML 数据。</p>
+<p><code>initBuilder()</code> 创建的解析器会禁用 DTD、外部实体、外部 Schema 和 XInclude。因此 <code>getRoot</code>、<code>parseXML</code>、<code>xPath</code> 以及 <code>MapTool.xmlToMap</code> 都会拒绝 XXE 输入。解析失败使用脱敏消息，不会把完整 XML 拼入日志或异常。</p>
 <h2>方法</h2>
 <h3>1. <code>initBuilder()</code></h3>
 <p>初始化一个用于 XML 解析的 <code>DocumentBuilder</code>。</p>
@@ -186,6 +184,7 @@ Element root = XmlHelper.getRoot(xmlContent);
 <pre><code class="language-java">Map&lt;String, String&gt; attributes = XmlHelper.nodeAsMap(&quot;path/to/xml/file.xml&quot;, &quot;/root/element&quot;);
 // attributes 将包含 &lt;element&gt; 节点的属性
 </code></pre>
+<p>节点没有属性集合或指定属性不存在时，<code>getNodeAttribute(Node, String)</code> 返回 <code>null</code>。</p>
 
             </article>
         </div>

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-StreamHelper Tutorial</title>
+        <title>AJ Utils-DataReader and DataWriter Tutorial</title>
         <meta name="description" content="Small Java utilities with many useful functions. Utility methods for stream operations and conversions" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, stream operations,I/O,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -108,7 +106,7 @@
             </menu>
             <article class="aj-text">
                 <h1>DataReader Tutorial</h1>
-<p>DataReader  is a reader class for reading data from an input stream. It supports reading raw byte data from sources such as files, network sockets, or memory buffers, while providing functionality for handling both text and binary data.</p>
+<p><code>DataReader</code> reads text or binary data from input streams such as files, network sockets, and in-memory buffers.</p>
 <h2>Main Features</h2>
 <ol>
 <li><strong>Multiple Data Reading Methods</strong>: Supports various reading methods including byte streams, text lines, and complete strings</li>
@@ -136,6 +134,7 @@ reader.readStreamAsBytes(8192, (readSize, buffer) -&gt; {
     // Can process data in buffer here
 });
 </code></pre>
+<p><code>bufferSize</code> must be greater than zero. Zero and negative values throw <code>IllegalArgumentException</code>.</p>
 <h3>3. Reading Text Lines</h3>
 <pre><code class="language-java">// Read text data line by line
 InputStream inputStream = new FileInputStream(&quot;text-file.txt&quot;);
@@ -167,7 +166,7 @@ System.out.println(&quot;Byte array length: &quot; + bytes.length);
 <li>The <code>readStreamAsBytes</code> method automatically closes the input stream when reading is complete</li>
 <li>All methods throw <code>UncheckedIOException</code> when IO errors occur</li>
 <li>For large file processing, it's recommended to use the <code>readStreamAsBytes</code> method for chunked processing</li>
-<li>The <code>readAsString</code> method appends a newline character at the end of each line</li>
+<li><code>readAsString</code> currently does not preserve line separators. Use <code>readAsBytes</code> with an explicit charset when exact text layout matters.</li>
 </ol>
 <h1>DataWriter Tutorial</h1>
 <p>DataWriter is a writer class for writing data to an output stream. It supports writing raw byte data to destinations such as files, sockets, or buffers, and provides buffering functionality to improve write efficiency.</p>
@@ -190,9 +189,8 @@ InputStream inputStream = new FileInputStream(&quot;input.txt&quot;);
 OutputStream outputStream = new FileOutputStream(&quot;output.txt&quot;);
 DataWriter writer = new DataWriter(outputStream);
 
-writer.write(inputStream); // Copy data
-// Note: Need to manually close streams
-inputStream.close();
+writer.write(inputStream); // Copies data and closes inputStream
+// DataWriter does not close its output stream.
 outputStream.close();
 </code></pre>
 <h3>3. Writing Byte Arrays</h3>
@@ -222,7 +220,7 @@ writer.setBuffered(false);
 </code></pre>
 <h2>Notes</h2>
 <ol>
-<li>DataWriter does not automatically close output streams, the caller needs to manually manage stream closing</li>
+<li>DataWriter does not automatically close output streams. <code>write(InputStream)</code> currently closes the input stream through <code>DataReader</code>, so do not reuse it afterward.</li>
 <li>Buffering is enabled by default, disabling buffering will give a warning prompt</li>
 <li>All methods throw <code>UncheckedIOException</code> when IO errors occur</li>
 <li>When both offset and length are 0, the <code>write(byte[], int, int)</code> method writes the entire byte array</li>

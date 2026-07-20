@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -112,7 +110,7 @@
 <h3>Main Features</h3>
 <ol>
 <li><strong>Thread-safe random generation</strong>: Uses <code>ThreadLocalRandom</code> for high performance</li>
-<li><strong>Cryptographic-strength randomness</strong>: Uses <code>SecureRandom</code> for security-level randomness</li>
+<li><strong>Explicit random sources</strong>: Exposes both <code>SecureRandom</code> and ordinary <code>Random</code>; choose according to the use case</li>
 <li><strong>Multiple random value generation</strong>: Supports numbers, strings, UUIDv7, etc.</li>
 <li><strong>Time-ordered UUIDs</strong>: UUIDv7 provides better locality than random UUIDs</li>
 </ol>
@@ -130,12 +128,14 @@ int fourDigit = RandomTools.generateNumber(4); // 1000-9999
 System.out.println(threeDigit); // e.g.: 567
 System.out.println(fourDigit);  // e.g.: 3456
 </code></pre>
+<p>The digit count must be between 1 and 9; other values throw <code>IllegalArgumentException</code>.</p>
 <h3>String Random Generation</h3>
 <h4>1. Generate Six-Character Random String</h4>
 <pre><code class="language-java">// Generate a six-character alphanumeric random string
 String randomStr = RandomTools.generateRandomString();
 System.out.println(randomStr); // e.g.: aB3xY9
 </code></pre>
+<p>The requested string length must be positive. These strings use <code>ThreadLocalRandom</code> and are not intended as passwords, tokens, or cryptographic secrets.</p>
 <h4>2. Generate Random String with Specified Length</h4>
 <pre><code class="language-java">// Generate random strings with specified length
 String shortStr = RandomTools.generateRandomString(3);
@@ -148,7 +148,7 @@ System.out.println(longStr);  // e.g.: AbC3dE5fGh
 <h4>1. Generate UUIDv7</h4>
 <pre><code class="language-java">// Generate UUID version 7 (time-ordered)
 UUID uuid = RandomTools.uuid();
-System.out.println(uuid); // e.g.: 550e8400-e29b-41d4-a716-446655440000
+System.out.println(uuid); // version field is 7
 </code></pre>
 <h4>2. Generate UUIDv7 String Without Hyphens</h4>
 <pre><code class="language-java">// Generate UUID string without hyphens
@@ -167,6 +167,7 @@ System.out.println(timestamp); // e.g.: Wed Oct 25 14:30:45 CST 2023
 <li>Number generation uses <code>ThreadLocalRandom</code> to ensure thread safety and performance</li>
 <li>UUIDv7 is time-ordered and has better database indexing performance</li>
 <li>String generation uses a fixed alphanumeric character pool</li>
+<li>The current UUIDv7 random portion uses <code>java.util.Random</code>; UUIDs are suitable as identifiers, not as security tokens.</li>
 </ol>
 
             </article>

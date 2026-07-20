@@ -56,6 +56,7 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
                     <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
                     <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
@@ -65,10 +66,8 @@
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
                     <li><a href="/common/EncodeTools/">UrlEncode</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                    <li><a href="/common/WebUtils/">WebUtils</a></li>
                 </ul>
                 <h3>Date Handing</h3>
                 <ul>
@@ -93,9 +92,8 @@
 
                 <h3>HTTP Request</h3>
                 <ul>
-                    <li><a href="/http_request/Get">HTTP Request</a></li>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
                     <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                    <li><a href="/http_request/Base/">Base</a></li>
                 </ul>
     
                <h3>Cryptography</h3>
@@ -177,11 +175,9 @@ new FileHelper(&quot;merged-file&quot;).mergeFile(chunks);
 </code></pre>
 <h2>Chainable Call Example</h2>
 <pre><code class="language-java">// Chainable call example
-new FileHelper(&quot;input.txt&quot;)
-    .setTarget(&quot;backup.txt&quot;)
-    .copyTo()
-    .setTarget(&quot;moved.txt&quot;)
-    .moveTo();
+FileHelper helper = new FileHelper(&quot;input.txt&quot;);
+helper.setTarget(&quot;backup.txt&quot;).copyTo();
+helper.setTarget(&quot;moved.txt&quot;).moveTo();
 </code></pre>
 <h2>Exception Handling</h2>
 <p>All IO operations throw <code>UncheckedIOException</code> when errors occur, which can be handled with try-catch:</p>
@@ -193,9 +189,10 @@ new FileHelper(&quot;input.txt&quot;)
 </code></pre>
 <h3>Notes</h3>
 <ol>
-<li>Target path must be set before copy and move operations</li>
-<li>File chunking uses zero-copy technology for improved large file processing efficiency</li>
-<li>Directory deletion uses reverse traversal to ensure proper deletion of all subdirectories and files</li>
+<li>A target path must be set before copy and move operations; otherwise <code>IllegalStateException</code> is thrown.</li>
+<li>Directory copies reject symbolic links and targets located inside the source tree.</li>
+<li>Chunking and merging loop until every byte is transferred. Failed chunking cleans files created by that attempt, and merging publishes its destination only after success.</li>
+<li>Recursive deletion reports failures instead of silently leaving a partially deleted tree.</li>
 </ol>
 
             </article>
