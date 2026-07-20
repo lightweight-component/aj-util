@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 
-
 /**
  * 签名
  * Inputs algorithm, data(string/bytes[]) and private key to generate signature.
