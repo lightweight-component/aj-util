@@ -1,0 +1,4 @@
+interface:
+  display_name: "AJ Util"
+  short_description: "Develop and review Java 8 code with the aj-util library"
+  default_prompt: "Use $aj-util to implement or review Java 8 utility code with the correct aj-util APIs."
