@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestRandomTools {
     @Test
@@ -16,6 +17,14 @@ class TestRandomTools {
         randomString = RandomTools.generateRandomString();
         System.out.println(randomString);
         assertNotNull(randomString);
+    }
+
+    @Test
+    void testInvalidLengths() {
+        assertThrows(IllegalArgumentException.class, () -> RandomTools.generateNumber(0));
+        assertThrows(IllegalArgumentException.class, () -> RandomTools.generateNumber(10));
+        assertThrows(IllegalArgumentException.class, () -> RandomTools.generateRandomString(-1));
+        assertThrows(IllegalArgumentException.class, () -> RandomTools.generateRandomString(0));
     }
 
     @Test

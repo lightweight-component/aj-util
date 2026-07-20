@@ -29,13 +29,13 @@ public class RandomTools {
      * Generate a specified-digit random integer.
      * For example, if numDigits is 3, the result will be between 100 and 999.
      *
-     * @param numDigits The number of digits (must be greater than 0)
+     * @param numDigits The number of digits (must be between 1 and 9)
      * @return Random integer with exactly the specified number of digits
-     * @throws IllegalArgumentException if numDigits is less than or equal to 0
+     * @throws IllegalArgumentException if numDigits is outside the supported range
      */
     public static int generateNumber(int numDigits) {
-        if (numDigits <= 0)
-            throw new IllegalArgumentException("The number of digits must be greater than zero.");
+        if (numDigits <= 0 || numDigits > 9)
+            throw new IllegalArgumentException("The number of digits must be between 1 and 9.");
 
         int min = (int) Math.pow(10, numDigits - 1);
         int max = (int) Math.pow(10, numDigits) - 1;
@@ -66,8 +66,12 @@ public class RandomTools {
      *
      * @param length The length of the string to be generated (must be greater than 0)
      * @return Random string containing characters from the alphanumeric character pool
+     * @throws IllegalArgumentException if length is less than or equal to 0
      */
     public static String generateRandomString(int length) {
+        if (length <= 0)
+            throw new IllegalArgumentException("The string length must be greater than zero.");
+
         ThreadLocalRandom random = ThreadLocalRandom.current();
         StringBuilder sb = new StringBuilder();
 

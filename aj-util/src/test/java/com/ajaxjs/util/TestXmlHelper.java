@@ -59,6 +59,15 @@ class TestXmlHelper {
         assertNull(result);
     }
 
+    @Test
+    void testRejectsExternalEntities() {
+        String xml = "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]>"
+                + "<root><value>&xxe;</value></root>";
+
+        assertThrows(RuntimeException.class, () -> XmlHelper.getRoot(xml));
+        assertNull(MapTool.xmlToMap(xml));
+    }
+
 //    private final Consumer<Node> mockConsumer = mock(Consumer.class);
 
 //    @Test

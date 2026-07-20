@@ -16,6 +16,7 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,9 +52,24 @@ public class XmlHelper {
      * @return A DocumentBuilder instance for XML transformation and parsing
      */
     public static DocumentBuilder initBuilder() {
+        return initBuilder(false);
+    }
+
+    private static DocumentBuilder initBuilder(boolean namespaceAware) {
         try {
-            return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(namespaceAware);
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            factory.setXIncludeAware(false);
+            factory.setExpandEntityReferences(false);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, CommonConstant.EMPTY_STRING);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, CommonConstant.EMPTY_STRING);
+
+            return factory.newDocumentBuilder();
+        } catch (ParserConfigurationException | IllegalArgumentException e) {
             log.warn("Parser Configuration Exception", e);
             throw new RuntimeException("Parser Configuration Exception", e);
         }
@@ -67,16 +83,13 @@ public class XmlHelper {
      * @param fn    The consumer function to process each matched Node
      */
     public static void xPath(String xml, String xpath, Consumer<Node> fn) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-
         try {
             XPathExpression expr = XPathFactory.newInstance().newXPath().compile(xpath);
-            NodeList nodes = (NodeList) expr.evaluate(factory.newDocumentBuilder().parse(xml), XPathConstants.NODESET);
+            NodeList nodes = (NodeList) expr.evaluate(initBuilder(true).parse(xml), XPathConstants.NODESET);
 
             for (int i = 0; i < nodes.getLength(); i++)
                 fn.accept(nodes.item(i));
-        } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e) {
+        } catch (SAXException | IOException | XPathExpressionException e) {
             log.warn("Get a node from XML err. XPath: {}", xpath, e);
             throw new RuntimeException("Get a node from XML err. XPath: " + xpath, e);
         }
