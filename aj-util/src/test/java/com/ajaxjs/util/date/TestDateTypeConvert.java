@@ -3,9 +3,11 @@ package com.ajaxjs.util.date;
 import org.junit.jupiter.api.Test;
 
 import java.time.*;
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestDateTypeConvert {
     private final ZoneId zone = ZoneId.systemDefault();
@@ -38,6 +40,11 @@ public class TestDateTypeConvert {
     }
 
     @Test
+    void testEpochZeroToInstant() {
+        assertEquals(Instant.EPOCH, new DateTypeConvert(0L).to(Instant.class, ZoneOffset.UTC));
+    }
+
+    @Test
     void testInstantToLocalDateTime() {
         Instant instant = Instant.now();
         LocalDateTime expected = instant.atZone(zone).toLocalDateTime();
@@ -56,5 +63,43 @@ public class TestDateTypeConvert {
 
         OffsetDateTime result = new DateTypeConvert(sqlDate).to(OffsetDateTime.class, null);
         assertEquals(expected.toLocalDate(), result.toLocalDate()); // compare date only
+    }
+
+    @Test
+    void testOffsetTimeDoesNotInventDate() {
+        OffsetTime input = OffsetTime.of(10, 30, 0, 0, ZoneOffset.ofHours(8));
+
+        assertEquals(input, new DateTypeConvert(input).to(OffsetTime.class, null));
+        assertEquals(input.toLocalTime(), new DateTypeConvert(input).to(LocalTime.class, null));
+        assertThrows(UnsupportedOperationException.class,
+                () -> new DateTypeConvert(input).to(Instant.class, null));
+    }
+
+    @Test
+    void testLocalDateTimeRejectsDstGapAndOverlap() {
+        ZoneId newYork = ZoneId.of("America/New_York");
+
+        assertThrows(DateTimeException.class,
+                () -> new DateTypeConvert(LocalDateTime.of(2024, 3, 10, 2, 30)).to(Instant.class, newYork));
+        assertThrows(DateTimeException.class,
+                () -> new DateTypeConvert(LocalDateTime.of(2024, 11, 3, 1, 30)).to(Instant.class, newYork));
+    }
+
+    @Test
+    void testPreservesOriginalZoneAndOffsetByDefault() {
+        ZonedDateTime zoned = ZonedDateTime.of(2025, 1, 2, 3, 4, 5, 0, ZoneId.of("Europe/Paris"));
+        OffsetDateTime offset = OffsetDateTime.of(2025, 1, 2, 3, 4, 5, 0, ZoneOffset.ofHoursMinutes(5, 30));
+
+        assertEquals(zoned, new DateTypeConvert(zoned).to(ZonedDateTime.class, null));
+        assertEquals(offset, new DateTypeConvert(offset).to(OffsetDateTime.class, null));
+    }
+
+    @Test
+    void testCalendarUsesRequestedZone() {
+        ZoneId tokyo = ZoneId.of("Asia/Tokyo");
+        Calendar calendar = new DateTypeConvert(Instant.EPOCH).to(Calendar.class, tokyo);
+
+        assertEquals(tokyo, calendar.getTimeZone().toZoneId());
+        assertEquals(0L, calendar.getTimeInMillis());
     }
 }

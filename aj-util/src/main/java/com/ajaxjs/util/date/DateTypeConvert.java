@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Utility class for converting between different date and time types in Java.
@@ -21,6 +23,8 @@ import java.util.Date;
 public class DateTypeConvert {
     private long timestamp;
 
+    private boolean timestampSet;
+
     /**
      * Creates a DateTypeConvert instance with a timestamp in milliseconds.
      *
@@ -28,6 +32,7 @@ public class DateTypeConvert {
      */
     public DateTypeConvert(long timestamp) {
         this.timestamp = timestamp;
+        timestampSet = true;
     }
 
     /**
@@ -37,6 +42,7 @@ public class DateTypeConvert {
      */
     public DateTypeConvert(int timestamp) {
         this.timestamp = Long.parseLong(timestamp + "000");
+        timestampSet = true;
     }
 
     /**
@@ -79,7 +85,6 @@ public class DateTypeConvert {
      * @param sqlTimestamp the Timestamp object to convert
      */
     public DateTypeConvert(Timestamp sqlTimestamp) {
-        Calendar cal = Calendar.getInstance();
         this.sqlTimestamp = sqlTimestamp;
     }
 
@@ -214,7 +219,25 @@ public class DateTypeConvert {
      */
     @SuppressWarnings("unchecked")
     public <T> T to(Class<T> clz, ZoneId zoneId) {
-        ZoneId zone = zoneId != null ? zoneId : ZoneId.systemDefault();
+        if (offsetTime != null) {
+            if (clz == OffsetTime.class)
+                return (T) offsetTime;
+            else if (clz == LocalTime.class)
+                return (T) offsetTime.toLocalTime();
+
+            throw new UnsupportedOperationException("OffsetTime cannot be converted to " + clz.getName() + " without an anchor date.");
+        }
+
+        ZoneId zone;
+        if (zoneId != null)
+            zone = zoneId;
+        else if (zonedDateTime != null)
+            zone = zonedDateTime.getZone();
+        else if (offsetDateTime != null)
+            zone = offsetDateTime.getOffset();
+        else
+            zone = ZoneId.systemDefault();
+
         Instant baseInstant;
 
         if (input != null) {/* SB way, actually u can set any value to Instant by constructor or setter method */
@@ -226,16 +249,25 @@ public class DateTypeConvert {
         } else if (localDate != null) {
             baseInstant = localDate.atStartOfDay(zone).toInstant();
         } else if (localDateTime != null) {
-            baseInstant = localDateTime.atZone(zone).toInstant();
+            if (clz == LocalDateTime.class)
+                return (T) localDateTime;
+            else if (clz == LocalDate.class)
+                return (T) localDateTime.toLocalDate();
+            else if (clz == LocalTime.class)
+                return (T) localDateTime.toLocalTime();
+
+            List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(localDateTime);
+            if (validOffsets.size() != 1)
+                throw new DateTimeException("LocalDateTime " + localDateTime + " is invalid or ambiguous in zone " + zone + ".");
+
+            baseInstant = localDateTime.toInstant(validOffsets.get(0));
         } else if (zonedDateTime != null) {
             baseInstant = zonedDateTime.toInstant();
         } else if (offsetDateTime != null) {
             baseInstant = offsetDateTime.toInstant();
-        } else if (offsetTime != null) {
-            baseInstant = offsetTime.atDate(LocalDate.now()).toInstant();
         } else if (instant != null) {
             baseInstant = instant;
-        } else if (timestamp != 0L) {
+        } else if (timestampSet) {
             baseInstant = Instant.ofEpochMilli(timestamp);
         } else
             throw new UnsupportedOperationException("No input date/time set.");
@@ -262,8 +294,7 @@ public class DateTypeConvert {
         } else if (clz == OffsetTime.class) {
             return (T) baseInstant.atZone(zone).toOffsetDateTime().toOffsetTime();
         } else if (clz == Calendar.class) {
-            Calendar calendar = Calendar.getInstance();
-            baseInstant.atZone(zone);
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(zone));
             calendar.setTimeInMillis(baseInstant.toEpochMilli());
 
             return (T) calendar;
