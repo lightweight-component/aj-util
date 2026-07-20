@@ -17,6 +17,15 @@ class TestStrUtil {
     }
 
     @Test
+    void testCharCount() {
+        assertEquals(3, charCount("aaa", "a"));
+        assertEquals(2, charCount("aaa", "aa"));
+        assertEquals(2, charCount("abcabc", "abc"));
+        assertEquals(0, charCount("abc", "x"));
+        assertEquals(0, charCount("abc", ""));
+    }
+
+    @Test
     void testLeftPad() {
         assertEquals("@@@@@12345", leftPad("12345", 10, "@"));
     }

@@ -34,20 +34,22 @@ public class StrUtil {
     /**
      * 统计文本中某个字符串出现的次数
      *
+     * 支持重叠匹配，例如 {@code charCount("aaa", "aa")} 返回 2。
+     * 空匹配串返回 0。
+     *
      * @param str   输入的字符串
-     * @param _char 某个字符
+     * @param _char 待统计的字符串
      * @return 出现次数
      */
     public static int charCount(String str, String _char) {
+        if (_char.isEmpty())
+            return 0;
+
         int count = 0, index = 0;
 
-        while (true) {
-            index = str.indexOf(_char, index + 1);
-
-            if (index > 0)
-                count++;
-            else
-                break;
+        while ((index = str.indexOf(_char, index)) >= 0) {
+            count++;
+            index++;
         }
 
         return count;
