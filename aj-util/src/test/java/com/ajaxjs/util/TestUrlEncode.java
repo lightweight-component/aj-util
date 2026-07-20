@@ -45,4 +45,20 @@ class TestUrlEncode {
         expected.put("bar", "baz");
         assertEquals(expected, UrlEncode.parseStringToMap("foo&bar=baz"));
     }
+
+    @Test
+    void testParseStringToMapSingleParameter() {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("a", "b");
+
+        assertEquals(expected, UrlEncode.parseStringToMap("a=b"));
+    }
+
+    @Test
+    void testParseStringToMapValueContainingEquals() {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("token", "header.payload=signature==");
+
+        assertEquals(expected, UrlEncode.parseStringToMap("token=header.payload=signature=="));
+    }
 }

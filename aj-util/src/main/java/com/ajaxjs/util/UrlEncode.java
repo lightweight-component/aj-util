@@ -122,23 +122,19 @@ public class UrlEncode {
      * @return map
      */
     public static Map<String, String> parseStringToMap(String accessTokenStr) {
-        Map<String, String> res;
+        String[] fields = accessTokenStr.split("&");
+        Map<String, String> res = new HashMap<>(ObjectHelper.getInitialCapacity(fields.length));
 
-        if (accessTokenStr.contains("&")) {
-            String[] fields = accessTokenStr.split("&");
-            res = new HashMap<>(ObjectHelper.getInitialCapacity(fields.length));
+        for (String field : fields) {
+            String[] keyValue = field.split("=", 2);
 
-            for (String field : fields) {
-                if (field.contains("=")) {
-                    String[] keyValue = field.split("=");
-                    String key = new UrlEncode(keyValue[0]).decode();
-                    String value = keyValue.length == 2 ? new UrlEncode(keyValue[1]).decode() : null;
+            if (keyValue.length == 2) {
+                String key = new UrlEncode(keyValue[0]).decode();
+                String value = new UrlEncode(keyValue[1]).decode();
 
-                    res.put(key, value);
-                }
+                res.put(key, value);
             }
-        } else
-            res = new HashMap<>(0);
+        }
 
         return res;
     }

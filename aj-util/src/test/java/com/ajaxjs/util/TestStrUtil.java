@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.ajaxjs.util.StrUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +30,14 @@ class TestStrUtil {
     @Test
     void testLeftPad() {
         assertEquals("@@@@@12345", leftPad("12345", 10, "@"));
+    }
+
+    @Test
+    void testSimpleTplWithReplacementSpecialCharacters() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("value", "$1\\path");
+
+        assertEquals("value=$1\\path", simpleTpl("value=${value}", params));
     }
 
     @Test
