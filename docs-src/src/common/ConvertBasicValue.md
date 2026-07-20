@@ -59,10 +59,10 @@ handles:
 * **long/Long:** Converts the object to a long using the `object2long()` method (explained below).
 * **float/Float:** Converts the object to a float using the `object2float()` method.
 * **double/Double:** Converts the object to a double using the `object2double()` method.
-* **Date:** Converts the object to a Date using the `DateHelper.object2Date()` method.
+* **Date/time:** Converts supported legacy and Java 8 date types through `DateTypeConvert`.
 * **BigDecimal:** Converts the object to a BigDecimal if the value is a String or Number.
 * **Array:** Converts the object to an array using the `toArray()` method.
-* **Enum:** Converts the object to an enum.
+* **Enum:** Converts a name or integer ordinal to the corresponding enum constant. Ordinal conversion returns the enum value, not its numeric ordinal.
 
 ### 3. `toBoolean(Object value)`
 
@@ -130,6 +130,8 @@ Converts an object to a double. This method handles `null` values and attempts t
 assertEquals(0.0, ConvertBasicValue.object2double(null), 0.0001);
 assertEquals(3.14, ConvertBasicValue.object2double("3.14"), 0.0001);
 ```
+
+`toJavaValue(String)` recognizes booleans, `null`, integers, longs, and decimal values, including negative decimals such as `-3.14`.
 
 ## Unit Test Examples
 

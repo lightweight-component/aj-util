@@ -113,7 +113,7 @@ public class ConvertBasicValue {
                     Enum<?> e = ((Enum<?>) obj);
 
                     if (e.ordinal() == ((Integer) value))
-                        return e.ordinal();
+                        return e;
                 } else if (obj.toString().equals(value))
                     return obj;
             }
@@ -306,7 +306,7 @@ public class ConvertBasicValue {
                     if ((String.valueOf(long_value)).equals(value)) // 判断为整形
                         return long_value;
                 } catch (NumberFormatException e1) {
-                    if (value.matches("[0-9]{1,13}(\\.[0-9]*)?"))
+                    if (value.matches("-?[0-9]{1,13}(\\.[0-9]*)?"))
                         return Double.parseDouble(value);
                 }
             }

@@ -116,18 +116,17 @@ String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 
 ### Constants Definition
 
-- [MD5](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L177-L177): MD5 hash algorithm constant
-- [SHA1](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L182-L182): SHA-1 hash algorithm constant
-- [SHA256](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L187-L187): SHA-256 hash algorithm constant
-- [HMAC_SHA1](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L234-L234): HMAC-SHA1 algorithm constant
-- [HMAC_SHA256](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\HashHelper.java#L239-L239): HMAC-SHA256 algorithm constant
+- `MD5`: MD5 hash algorithm constant
+- `SHA1`: SHA-1 hash algorithm constant
+- `SHA256`: SHA-256 hash algorithm constant
+- `HMAC_SHA1`: HMAC-SHA1 algorithm constant
+- `HMAC_SHA256`: HMAC-SHA256 algorithm constant
 
 ### Notes
 
-1. When using HMAC operations without setting a key, a random key will be automatically generated
+1. Always set or persist an HMAC key. Calling `getMac()` without a key generates an internal random key that is not returned, so the result cannot be reproduced for later verification.
 2. All hash results are returned as lowercase hexadecimal strings by default
 3. Base64 encoding includes padding characters by default, controllable via parameters
 4. Large file processing uses chunked reading to avoid memory overflow
-
 
 

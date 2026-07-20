@@ -9,7 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.ajaxjs.util.BytesHelper.bytesToHexStr;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestBytesHelper {
@@ -86,6 +88,13 @@ class TestBytesHelper {
         byte[] bs = BytesHelper.parseHexStr2Byte("1A2B3C");
         assert bs != null;
         assertEquals(0x1A, bs[0]);
+    }
+
+    @Test
+    void parseHexRejectsOddLengthAndReturnsEmptyArrayForEmptyInput() {
+        assertArrayEquals(new byte[0], BytesHelper.parseHexStr2Byte(""));
+        assertThrows(IllegalArgumentException.class, () -> BytesHelper.parseHexStr2Byte("ABC"));
+        assertThrows(IllegalArgumentException.class, () -> BytesHelper.parseHexStr2Byte("0G"));
     }
 
     /**

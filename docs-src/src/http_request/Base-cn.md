@@ -151,7 +151,7 @@ Post postRequest = new Post("https://api.example.com/data",
 
 ```java
 // 发送 JSON 数据并获取响应
-Map<String, Object> data = Map.of("name", "test", "value", 123);
+Map<String, Object> data = ObjectHelper.mapOf("name", "test", "value", 123);
 Map<String, Object> response = Post.api("https://api.example.com/data", data);
 
 // 带自定义连接配置的 JSON 请求

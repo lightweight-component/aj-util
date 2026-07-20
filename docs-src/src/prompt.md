@@ -3,10 +3,10 @@ is: https://github.com/lightweight-component/aj-util
 
 What is the purpose of this repository?
 
-Can u write the tutorials for `EncodeTools` and `MessageDigestHelper`? u can take the unit test code as some examples.
+Write tutorials for `UrlEncode` and `HashHelper`, using unit tests as examples where appropriate.
 Also give these tutorials in Chinese.
 
-Can u write a tutorial for `XmlHelper`? u can take the unit test code as some examples. Also give this tutorial in
+Write a tutorial for `XmlHelper`, using unit tests as examples where appropriate. Also provide the tutorial in
 Chinese.
 
 Here is a Tutorial for `ConvertBasicValue`. Please write tutorial again for 'BytesHelper' like  `ConvertBasicValue` did.
@@ -64,7 +64,7 @@ handles:
 * **long/Long:** Converts the object to a long using the `object2long()` method (explained below).
 * **float/Float:** Converts the object to a float using the `object2float()` method.
 * **double/Double:** Converts the object to a double using the `object2double()` method.
-* **Date:** Converts the object to a Date using the `DateHelper.object2Date()` method.
+* **Date/time:** Converts supported values through `DateTypeConvert`.
 * **BigDecimal:** Converts the object to a BigDecimal if the value is a String or Number.
 * **Array:** Converts the object to an array using the `toArray()` method.
 * **Enum:** Converts the object to an enum.
@@ -141,5 +141,3 @@ assertEquals(0.0,ConvertBasicValue.object2double(null),0.0001);
 The `ConvertBasicValue` class provides a useful set of utilities for safely converting objects to basic Java types. By
 using these methods, you can simplify your code and handle potential `null` values and parsing errors
 more gracefully. Remember to consult the library's Javadoc for the most up-to-date information and additional methods.
-
-```

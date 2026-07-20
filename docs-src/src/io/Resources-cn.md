@@ -12,6 +12,8 @@ layout: layouts/aj-util-cn.njk
 
 `Resources` 类提供静态方法来定位和检索类路径中或相对于特定类的资源。 这对于访问与应用程序捆绑在一起的配置文件、模板或其他数据文件特别有用。
 
+需要兼容打包后的 JAR 时应优先使用 `getResource(String)` 获取流。返回文件系统路径的方法只适用于 `file:` 协议资源；`jar:` 资源不是普通 `File` 路径。
+
 ## 方法
 
 ### 1. `getResourcesFromClasspath(String resource)`

@@ -65,7 +65,20 @@ public class StrUtil {
      * @return 左填充后的字符串
      */
     public static String leftPad(String str, int len, String _char) {
-        return String.format("%" + len + "s", str).replaceAll("\\s", _char);
+        if (str.length() >= len)
+            return str;
+        if (_char == null || _char.isEmpty())
+            throw new IllegalArgumentException("Padding string must not be null or empty.");
+
+        int paddingLength = len - str.length();
+        StringBuilder result = new StringBuilder(len);
+        while (result.length() < paddingLength)
+            result.append(_char);
+
+        if (result.length() > paddingLength)
+            result.setLength(paddingLength);
+
+        return result.append(str).toString();
     }
 
     private static final Pattern TPL_PATTERN = Pattern.compile("\\$\\{\\w+}");

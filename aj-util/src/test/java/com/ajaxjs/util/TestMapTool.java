@@ -28,6 +28,8 @@ class TestMapTool {
     void testToMap() {
         assertEquals(1, Objects.requireNonNull(MapTool.toMap(new String[]{"a", "b", "d"}, new String[]{"1", "c", "2"}, ConvertBasicValue::toJavaValue)).get("a"));
         assertEquals(1, Objects.requireNonNull(MapTool.toMap(new String[]{"a=1", "b=2", "d=c"}, ConvertBasicValue::toJavaValue)).get("a"));
+        assertEquals("header.payload=signature", Objects.requireNonNull(
+                MapTool.toMap(new String[]{"token=header.payload=signature"}, null)).get("token"));
 //        assertEquals("你好", Objects.requireNonNull(MapTool.toMap(new String[]{"a=%e4%bd%a0%e5%a5%bd", "b=2", "d=c"}, EncodeTools::urlEncode)).get("a"));
     }
 
@@ -122,6 +124,16 @@ class TestMapTool {
     }
 
     @Test
+    void mapToXmlSupportsNullValues() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("empty", null);
+
+        Map<String, String> parsed = MapTool.xmlToMap(MapTool.mapToXml(values));
+        assertNotNull(parsed);
+        assertEquals("", parsed.get("empty"));
+    }
+
+    @Test
     void testDeepCopy() {
         // Create a sample map
         Map<Integer, String> originalMap = new HashMap<>();
@@ -184,4 +196,3 @@ class TestMapTool {
 
     }
 }
-

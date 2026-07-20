@@ -5,6 +5,7 @@ import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -332,6 +333,11 @@ class TestJsonUtil {
 
         assertNotNull(engine1);
         assertSame(engine1, engine2);
+    }
+
+    @Test
+    void engineIsSafelyPublished() throws NoSuchFieldException {
+        assertTrue(Modifier.isVolatile(JsonUtil.class.getDeclaredField("engine").getModifiers()));
     }
 
     // ==================== 日期测试 ====================

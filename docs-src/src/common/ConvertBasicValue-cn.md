@@ -54,10 +54,10 @@ Integer intValue = ConvertBasicValue.basicCast("123", Integer.class);
 * **long/Long：** 使用 `object2long()` 方法（如下所述）将对象转换为长整数。
 * **float/Float：** 使用 `object2float()` 方法将对象转换为浮点数。
 * **double/Double：** 使用 `object2double()` 方法将对象转换为双精度浮点数。
-* **Date：** 使用 `DateHelper.object2Date()` 方法将对象转换为 Date 对象。
+* **日期时间：** 通过 `DateTypeConvert` 转换受支持的传统日期类型和 Java 8 日期类型。
 * **BigDecimal：** 如果值为 String 或 Number，则将对象转换为 BigDecimal。
 * **Array：** 使用 `toArray()` 方法将对象转换为数组。
-* **Enum：** 将对象转换为枚举。
+* **Enum：** 可按名称或整数 ordinal 转换，并返回对应的枚举常量，而不是 ordinal 数字。
 
 ### 3. `toBoolean(Object value)`
 
@@ -125,6 +125,8 @@ assertEquals(-456L, ConvertBasicValue.object2long("-456"));
 assertEquals(0.0, ConvertBasicValue.object2double(null), 0.0001);
 assertEquals(3.14, ConvertBasicValue.object2double("3.14"), 0.0001);
 ```
+
+`toJavaValue(String)` 可识别布尔值、`null`、整数、长整数和小数，也支持 `-3.14` 这样的负小数。
 
 ## 单元测试示例
 

@@ -50,14 +50,14 @@ Provides methods for making HTTP POST and PUT requests with different payload ty
 
 ```java
 // Simple POST with form data
-ResponseEntity response = Post.post("https://api.example.com", Map.of("key", "value"));
+ResponseEntity response = Post.post("https://api.example.com", ObjectHelper.mapOf("key", "value"));
 
 // POST JSON API
-Map<String, Object> json = Post.api("https://api.example.com/data", Map.of("id", 123));
+Map<String, Object> json = Post.api("https://api.example.com/data", ObjectHelper.mapOf("id", 123));
 
 // Multipart file upload
 ResponseEntity uploadResp = Post.multiPOST("https://api.example.com/upload", 
-    Map.of("file", new File("document.pdf")));
+    ObjectHelper.mapOf("file", new File("document.pdf")));
 ```
 # DELETE Request Utility
 

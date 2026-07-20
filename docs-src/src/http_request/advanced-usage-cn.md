@@ -55,7 +55,7 @@ String filePath = ResponseHandler.download(response, "/downloads", "file.pdf");
 connectionConsumer = SetConnection.SET_USER_AGENT.andThen(conn -> conn.setRequestProperty("User-Agent", "MyApp/1.0"));
 
 // 设置Cookies
-Map<String, String> cookies = Map.of("session", "12345");
+Map<String, String> cookies = ObjectHelper.mapOf("session", "12345");
 SetConnection.SET_COOKIES.accept(connection, cookies);
 ```
 

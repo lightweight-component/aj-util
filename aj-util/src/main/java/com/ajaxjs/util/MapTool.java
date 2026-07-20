@@ -113,7 +113,7 @@ public class MapTool {
             if (!pair.contains("="))
                 throw new IllegalArgumentException("没有 = 不能转化为 map");
 
-            String[] column = pair.split("=");
+            String[] column = pair.split("=", 2);
 
             if (column.length >= 2)
                 map.put(column[0], fn == null ? column[1] : fn.apply(column[1]));
@@ -230,9 +230,7 @@ public class MapTool {
         doc.appendChild(root);
 
         data.forEach((k, v) -> {
-            String value = data.get(k).toString();
-            if (value == null)
-                value = "";
+            String value = v == null ? CommonConstant.EMPTY_STRING : v.toString();
 
             Element filed = doc.createElement(k);
             filed.appendChild(doc.createTextNode(value.trim()));

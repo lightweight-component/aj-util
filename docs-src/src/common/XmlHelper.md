@@ -13,6 +13,8 @@ layout: layouts/aj-util.njk
 The `XmlHelper` class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps.
 These methods can be used for processing and manipulating XML data.
 
+All builders created by `initBuilder()` disable DTD declarations, external entities, external schemas, and XInclude. Consequently, `getRoot`, `parseXML`, `xPath`, and `MapTool.xmlToMap` reject XXE payloads. Parse failures use sanitized messages and never append the complete XML input.
+
 ## Methods
 
 ### 1. `initBuilder()`
@@ -100,3 +102,5 @@ Converts the attributes of a node to a map.
 Map<String, String> attributes = XmlHelper.nodeAsMap("path/to/xml/file.xml", "/root/element");
 // attributes will contain the attributes of the <element> node
 ```
+
+`getNodeAttribute(Node, String)` returns `null` when the node has no attribute map or when the requested attribute is absent.

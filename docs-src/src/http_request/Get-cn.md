@@ -50,14 +50,14 @@ String filePath = Get.download("https://example.com/file.pdf", "/downloads");
 
 ```java
 // 带表单数据的简单POST请求
-ResponseEntity response = Post.post("https://api.example.com", Map.of("key", "value"));
+ResponseEntity response = Post.post("https://api.example.com", ObjectHelper.mapOf("key", "value"));
 
 // POST JSON API请求
-Map<String, Object> json = Post.api("https://api.example.com/data", Map.of("id", 123));
+Map<String, Object> json = Post.api("https://api.example.com/data", ObjectHelper.mapOf("id", 123));
 
 // 多部分文件上传
 ResponseEntity uploadResp = Post.multiPOST("https://api.example.com/upload", 
-    Map.of("file", new File("document.pdf")));
+    ObjectHelper.mapOf("file", new File("document.pdf")));
 ```
 
 # DELETE请求工具
@@ -102,3 +102,4 @@ long size = Head.getFileSize("https://example.com/file.pdf");
 
 // 获取重定向地址
 String redirectUrl = Head.get302redirect("https://example.com/old");
+```

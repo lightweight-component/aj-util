@@ -78,3 +78,7 @@ String instance = Clazz.newInstance("java.lang.String", String.class);
 Object instance = Clazz.newInstance("java.lang.String", "Hello");
 // instance 将会是 "Hello"
 ```
+
+## 类层次遍历
+
+层次检查会分别处理类和接口：父类只在非 null 时继续向上遍历，父接口则通过 `getInterfaces()` 递归访问。内部使用 `Set<Class<?>>`，因此菱形接口继承不会产生重复结果或重复访问。查询时既可以传入具体类，也可以安全地传入接口类型。

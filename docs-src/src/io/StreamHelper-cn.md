@@ -1,6 +1,6 @@
 ---
-title: DataReader/ 教程
-description: DataReader/ 类提供了流操作和转换的实用方法
+title: DataReader 与 DataWriter 教程
+description: 输入流读取和输出流写入工具
 tags:
   - 流操作
   - I/O
@@ -47,6 +47,8 @@ reader.readStreamAsBytes(8192, (readSize, buffer) -> {
 });
 ```
 
+`bufferSize` 必须大于零；传入零或负数会抛出 `IllegalArgumentException`。
+
 
 ### 3. 读取文本行
 
@@ -90,7 +92,7 @@ System.out.println("字节数组长度: " + bytes.length);
 1. readStreamAsBytes 方法会在读取完成后自动关闭输入流
 2. 所有方法在发生 IO 错误时都会抛出 `UncheckedIOException`
 3. 对于大文件处理，推荐使用 readStreamAsBytes 方法进行分块处理
-4. readAsString 方法会在每行末尾添加换行符
+4. `readAsString` 当前不会保留行分隔符；需要精确保留文本布局时，请使用 `readAsBytes` 后按明确字符集转换。
 
 
 # DataWriter 使用教程
@@ -123,9 +125,8 @@ InputStream inputStream = new FileInputStream("input.txt");
 OutputStream outputStream = new FileOutputStream("output.txt");
 DataWriter writer = new DataWriter(outputStream);
 
-writer.write(inputStream); // 复制数据
-// 注意：需要手动关闭流
-inputStream.close();
+writer.write(inputStream); // 复制数据并关闭 inputStream
+// DataWriter 不会关闭输出流
 outputStream.close();
 ```
 
@@ -170,7 +171,7 @@ writer.setBuffered(false);
 
 ### 注意事项
 
-1. DataWriter 不会自动关闭输出流，需要调用者手动管理流的关闭
+1. DataWriter 不会自动关闭输出流。`write(InputStream)` 当前会通过 `DataReader` 关闭输入流，因此调用后不要继续复用该输入流。
 2. 默认启用缓冲功能，禁用缓冲会给出警告提示
 3. 所有方法在发生IO错误时都会抛出 `UncheckedIOException`
 4. 当偏移量和长度都为0时，`write(byte[], int, int)` 方法会写入整个字节数组

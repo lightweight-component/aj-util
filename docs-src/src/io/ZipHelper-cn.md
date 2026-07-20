@@ -18,11 +18,11 @@ layout: layouts/aj-util-cn.njk
 
 ## 主要特性
 
-- 带目录处理的 ZIP 文件解压缩
+- 防护 Zip Slip、符号链接、条目数量、解压大小和压缩比的安全解压
 - 文件和目录压缩（支持 STORED 或 DEFLATED 选项）
 - 递归目录压缩
 - ZIP 文件检测（魔数检查）
-- CRC32 校验和计算
+- STORED 条目的缓冲 CRC32 计算
 - 自动目录创建
 
 ## 方法
@@ -30,18 +30,20 @@ layout: layouts/aj-util-cn.njk
 ### 1. 解压缩
 
 1. `unzip(String save, String zipFile)` - 将 ZIP 文件解压缩到目标目录
+2. `unzip(String save, String zipFile, ExtractionLimits limits)` - 使用自定义资源限制解压
+3. `unzipWithChineseFilename(...)` - 读取旧式 GBK 条目名称
 
 ### 2. 压缩
 
 1. `zipFile(File[] fileContent, String saveZip, boolean useStore)` - 将文件压缩为 ZIP
 2. `zipDirectory(String sourceDir, String saveZip, boolean useStore)` - 将目录压缩为 ZIP
+3. `zipSingleFile(String sourceFile, String saveZip, boolean useStore)` - 压缩单个文件
 
 ### 3. 实用方法
 
 1. `initFolder(File file)` - 确保文件的父目录存在
 2. `initFolder(String file)` - initFolder 的字符串版本
 3. `isZipFile(String filePath)` - 检查文件是否为有效的 ZIP 文件
-4. `getFileCRCCode(File file)` - 计算文件的 CRC32 校验和
 
 ## 使用示例
 
@@ -49,6 +51,8 @@ layout: layouts/aj-util-cn.njk
 ```java
 ZipHelper.unzip("C:/extracted", "C:/archive.zip");
 ```
+
+默认解压使用保守的安全限制。可信 ZIP 确实需要更大配额时，可使用带 `ExtractionLimits` 的重载。
 
 ### 文件压缩
 ```java
@@ -60,6 +64,8 @@ ZipHelper.zipFile(files, "archive.zip", false); // 使用 DEFLATED 压缩
 ```java
 ZipHelper.zipDirectory("C:/data", "backup.zip", true); // 使用 STORED（无压缩）
 ```
+
+目录压缩不会跟随符号链接，目标 ZIP 也不能位于源目录内部。
 
 ### ZIP 文件检测
 ```java
@@ -79,7 +85,7 @@ ZipHelper.initFolder("C:/new/path/file.txt"); // 如果需要则创建 C:/new/pa
 
 ## 错误处理
 
-这些方法处理常见的 IO 错误，并在压缩/解压缩过程中出现问题时记录警告。
+IO 失败会抛出 `UncheckedIOException`，参数错误会抛出 `IllegalArgumentException`。压缩先写入临时文件，完整成功后才发布目标。
 
 ## 结论
 

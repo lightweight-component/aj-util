@@ -1,134 +1,35 @@
 ---
-title: 万能日期类型转换
-subTitle: 2025-02-23 by Frank Cheung
-description: 万能日期类型转换
-date: 2025-02-23
+title: 日期类型转换
+description: 安全转换传统日期类型与 Java 8 日期时间类型
 tags:
-  - 基本流程
+  - 日期转换
 layout: layouts/aj-util-cn.njk
 ---
 
-# 万能日期类型转换
-起初想到的转换方式是这样的，一个类型对应着一个类型逐个转换。
+# 日期类型转换
+
+`DateTypeConvert` 可转换传统 `Date`、`Calendar`、SQL 日期类型、毫秒时间戳以及 Java 8 的 `java.time` 类型。凡是涉及本地日期时间的转换，都应明确传入 `ZoneId`。
 
 ```java
-@SuppressWarnings("unchecked")
-public <T> T to(Class<T> clz, ZoneId zoneId) {
-    if (input != null) {
-        if (clz == LocalDate.class) {
-            LocalDate localDate = input.toInstant()
-                    .atZone(zoneId == null ? ZoneId.systemDefault() : zoneId)
-                    .toLocalDate();
-
-            return (T) localDate;
-        }
-    }
-
-    if (localDate != null) {
-        if (clz == Date.class) {
-            Date date = Date.from(localDate.atStartOfDay(zoneId == null ? ZoneId.systemDefault() : zoneId).toInstant());
-
-            return (T) date;
-        }
-    }
-
-    throw new UnsupportedOperationException("Can not transform this date type to another date type");
-}
-```
-可是这样的方式太累了，代码也啰嗦。于是咨询了一下 AI 的意见，改为下面清爽的代码。
-
-```java
-/**
- * Convert the input to the specified date type
- *
- * @param clz    The target date type
- * @param zoneId The time zone. Optional, defaults to system default if passed null
- * @param <T>    The target date type
- * @return The converted date
- */
-@SuppressWarnings("unchecked")
-public <T> T to(Class<T> clz, ZoneId zoneId) {
-    ZoneId zone = zoneId != null ? zoneId : ZoneId.systemDefault();
-    Instant baseInstant;
-
-    if (input != null) {/* SB way, actually u can set any values to Instant by constructor or setter method */
-        baseInstant = input.toInstant();
-    } else if (sqlDate != null) {
-        baseInstant = sqlDate.toLocalDate().atStartOfDay(zone).toInstant();
-    } else if (sqlTimestamp != null) {
-        baseInstant = sqlTimestamp.toInstant();
-    } else if (localDate != null) {
-        baseInstant = localDate.atStartOfDay(zone).toInstant();
-    } else if (localDateTime != null) {
-        baseInstant = localDateTime.atZone(zone).toInstant();
-    } else if (zonedDateTime != null) {
-        baseInstant = zonedDateTime.toInstant();
-    } else if (offsetDateTime != null) {
-        baseInstant = offsetDateTime.toInstant();
-    } else if (offsetTime != null) {
-        baseInstant = offsetTime.atDate(LocalDate.now()).toInstant();
-    } else if (instant != null) {
-        baseInstant = instant;
-    } else if (timestamp != 0L) {
-        baseInstant = Instant.ofEpochMilli(timestamp);
-    } else
-        throw new UnsupportedOperationException("No input date/time set.");
-
-    // Convert baseInstant to target
-    if (clz == Instant.class) {
-        return (T) baseInstant;
-    } else if (clz == Date.class) {
-        return (T) Date.from(baseInstant);
-    } else if (clz == java.sql.Date.class) {
-        return (T) java.sql.Date.valueOf(baseInstant.atZone(zone).toLocalDate());
-    } else if (clz == Timestamp.class) {
-        return (T) Timestamp.from(baseInstant);
-    } else if (clz == LocalDate.class) {
-        return (T) baseInstant.atZone(zone).toLocalDate();
-    } else if (clz == LocalTime.class) {
-        return (T) baseInstant.atZone(zone).toLocalTime();
-    } else if (clz == LocalDateTime.class) {
-        return (T) baseInstant.atZone(zone).toLocalDateTime();
-    } else if (clz == ZonedDateTime.class) {
-        return (T) baseInstant.atZone(zone);
-    } else if (clz == OffsetDateTime.class) {
-        return (T) baseInstant.atOffset(zone.getRules().getOffset(baseInstant));
-    } else if (clz == OffsetTime.class) {
-        return (T) baseInstant.atZone(zone).toOffsetDateTime().toOffsetTime();
-    } else if (clz == Calendar.class) {
-        Calendar calendar = Calendar.getInstance();
-        baseInstant.atZone(zone);
-        calendar.setTimeInMillis(baseInstant.toEpochMilli());
-
-        return (T) calendar;
-    }
-
-    throw new UnsupportedOperationException("Unsupported target type: " + clz.getName());
-}
-```
-
-主要就是不管什么输入类型，先统一转换到`Instant`类再转为目标类型。
-
-
-下面是一些用法例子：
-
-```java
-long timestamp = System.currentTimeMillis();
-Instant expected = Instant.ofEpochMilli(timestamp);
-
-Instant result = new DateTypeConvert(timestamp).to(Instant.class, null);
-assertEquals(expected, result);
-
-
 Instant instant = Instant.now();
-LocalDateTime expected = instant.atZone(zone).toLocalDateTime();
+ZoneId zone = ZoneId.of("Asia/Shanghai");
 
-LocalDateTime result = new DateTypeConvert(instant).to(LocalDateTime.class, null);
-assertEquals(expected, result);
-
-LocalDate localDate = LocalDate.of(2025, 10, 23);
-Date expected = Date.from(localDate.atStartOfDay(zone).toInstant());
-
-Date result = new DateTypeConvert(localDate).to(Date.class, null);
-assertEquals(expected, result);
+LocalDateTime local = new DateTypeConvert(instant).to(LocalDateTime.class, zone);
+Calendar calendar = new DateTypeConvert(instant).to(Calendar.class, zone);
 ```
+
+## 重要语义
+
+- 时间戳 `0` 是合法输入，表示 `1970-01-01T00:00:00Z`。
+- 纯日期字符串按日期格式解析，不再强制套用日期时间格式。
+- 转换得到的 `Calendar` 会使用调用方指定的时区。
+- 输入与目标同为 `ZonedDateTime` 或 `OffsetDateTime` 时会原样返回，保留原始时区或 offset。
+- `LocalDateTime` 转换为瞬时时采用严格规则：夏令时缺口会被拒绝，重叠时间也会因歧义被拒绝，不会静默选择某个 offset。
+- `OffsetTime` 本身不含日期，只能转换为 `OffsetTime` 或 `LocalTime`；需要日期的瞬时转换会被拒绝，不再隐式补系统“今天”。
+
+```java
+Instant epoch = new DateTypeConvert(0L).to(Instant.class, ZoneOffset.UTC);
+assertEquals(Instant.EPOCH, epoch);
+```
+
+没有输入或转换缺少必要上下文时，API 会抛出异常，而不是静默猜测。

@@ -18,11 +18,11 @@ The `ZipHelper` class contains static methods for working with ZIP files, includ
 
 ## Main Features
 
-- ZIP file decompression with directory handling
+- ZIP extraction with Zip Slip, symbolic-link, entry-count, size, and compression-ratio protection
 - File and directory compression (with STORED or DEFLATED options)
 - Recursive directory compression
 - ZIP file detection (magic number check)
-- CRC32 checksum calculation
+- Buffered CRC32 calculation for STORED entries
 - Automatic directory creation
 
 ## Methods
@@ -30,18 +30,20 @@ The `ZipHelper` class contains static methods for working with ZIP files, includ
 ### 1. Decompression
 
 1. `unzip(String save, String zipFile)` - Decompress ZIP file to target directory
+2. `unzip(String save, String zipFile, ExtractionLimits limits)` - Decompress with custom resource limits
+3. `unzipWithChineseFilename(...)` - Read legacy GBK entry names
 
 ### 2. Compression
 
 1. `zipFile(File[] fileContent, String saveZip, boolean useStore)` - Compress files to ZIP
 2. `zipDirectory(String sourceDir, String saveZip, boolean useStore)` - Compress directory to ZIP
+3. `zipSingleFile(String sourceFile, String saveZip, boolean useStore)` - Compress one file
 
 ### 3. Utility Methods
 
 1. `initFolder(File file)` - Ensure parent directories exist for a file
 2. `initFolder(String file)` - String version of initFolder
 3. `isZipFile(String filePath)` - Check if file is a valid ZIP file
-4. `getFileCRCCode(File file)` - Calculate CRC32 checksum for a file
 
 ## Usage Examples
 
@@ -49,6 +51,8 @@ The `ZipHelper` class contains static methods for working with ZIP files, includ
 ```java
 ZipHelper.unzip("C:/extracted", "C:/archive.zip");
 ```
+
+Extraction uses conservative default limits. Use the overload with `ExtractionLimits` when trusted archives require different limits.
 
 ### File Compression
 ```java
@@ -60,6 +64,8 @@ ZipHelper.zipFile(files, "archive.zip", false); // Use DEFLATED compression
 ```java
 ZipHelper.zipDirectory("C:/data", "backup.zip", true); // Use STORED (no compression)
 ```
+
+Directory compression does not follow symbolic links. The destination ZIP must be outside the source directory.
 
 ### ZIP File Detection
 ```java
@@ -79,7 +85,7 @@ The class supports two compression methods:
 
 ## Error Handling
 
-The methods handle common IO errors and log warnings when issues occur during compression/decompression.
+I/O failures are reported as `UncheckedIOException`; invalid arguments use `IllegalArgumentException`. Compression is written to a temporary file and published only after the archive is complete.
 
 ## Conclusion
 

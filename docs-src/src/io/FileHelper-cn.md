@@ -111,11 +111,9 @@ new FileHelper("merged-file").mergeFile(chunks);
 
 ```java
 // 链式调用示例
-new FileHelper("input.txt")
-    .setTarget("backup.txt")
-    .copyTo()
-    .setTarget("moved.txt")
-    .moveTo();
+FileHelper helper = new FileHelper("input.txt");
+helper.setTarget("backup.txt").copyTo();
+helper.setTarget("moved.txt").moveTo();
 ```
 
 
@@ -134,7 +132,7 @@ try {
 
 ## 注意事项
 
-1. 复制和移动操作前必须设置目标路径
-2. 文件分片使用零拷贝技术，提高大文件处理效率
-3. 目录删除采用反向遍历，确保正确删除所有子目录和文件
-
+1. 复制和移动操作前必须设置目标路径，否则抛出 `IllegalStateException`。
+2. 目录复制拒绝符号链接，也拒绝将目标放在源目录树内部。
+3. 分片和合并会循环传输直到所有字节完成；分片失败会清理本次创建的块，合并成功前不会发布目标文件。
+4. 递归删除失败会明确抛出异常，不会静默留下只删除了一部分的目录树。

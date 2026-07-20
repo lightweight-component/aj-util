@@ -14,6 +14,8 @@ The `Resources` class provides static methods to locate and retrieve resources f
 specific class. This is particularly useful for accessing configuration files, templates, or other data
 files bundled with your application.
 
+Prefer `getResource(String)` when code must also run from a packaged JAR. Methods that return a file-system path are meaningful only for resources backed by the `file:` protocol; a `jar:` resource is not a normal `File` path.
+
 ## Methods
 
 ### 1. `getResourcesFromClasspath(String resource)`

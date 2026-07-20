@@ -21,7 +21,7 @@ The `MapTool` class contains static methods for common Map operations such as co
 - Join Map entries into strings with various delimiters
 - Convert between different Map types and formats
 - Convert between Maps and XML
-- Deep copy Maps
+- Copy the top-level entries of a Map
 - Helper methods for Map value processing
 
 ## Methods
@@ -53,9 +53,9 @@ Two methods for Map conversion:
 1. `as(Map<String, K> map, Function<K, T> fn)` - Convert Map values using a function
 2. `as(Map<String, String[]> map)` - Convert Map with String[] values to Map<String, Object>
 
-### 5. `deepCopy()`
+### 5. `deepCopy()` (shallow copy)
 
-`deepCopy(Map<T, K> map)` - Create a deep copy of a Map
+Despite its historical name, `deepCopy(Map<T, K> map)` creates a new `HashMap` but does not clone nested mutable values.
 
 ### 6. XML Conversion Methods
 
@@ -80,11 +80,14 @@ String[] pairs = {"name=John", "age=30"};
 Map<String, Object> map = MapTool.toMap(pairs, Integer::parseInt);
 ```
 
+Only the first `=` separates the key and value, so values such as JWTs and signatures are preserved. A pair ending in `=` produces an empty-string value.
+
 ### XML Conversion
 ```java
 Map<String, String> data = new HashMap<>();
 data.put("name", "John");
 data.put("age", "30");
+data.put("note", null); // serialized as an empty element
 
 String xml = MapTool.mapToXml(data); 
 // <xml><name>John</name><age>30</age></xml>

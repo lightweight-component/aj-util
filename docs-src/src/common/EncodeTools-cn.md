@@ -92,10 +92,11 @@ Map<String, String> paramMap = UrlEncode.parseStringToMap(queryString);
 // city -> 北京
 ```
 
+解析器支持只有一个参数的查询串，例如 `a=b`。每个字段只在第一个 `=` 处分隔，因此包含额外 `=` 的 Base64、JWT 和签名值不会被截断。键和值默认按 UTF-8 做 URL 解码。
+
 
 
 ### 注意事项
 
-1. `encodeSafe` 方法在单元测试中有问题，需要修复
-2. 如果 Tomcat 过滤器已设置 UTF-8，则 `urlChinese` 方法可能不需要重复转码
-3. 所有编码和解码操作都支持自定义字符集
+1. 如果 Tomcat 过滤器已经正确处理 UTF-8，不应再次调用 `urlChinese` 重复转码。
+2. 编码和解码操作均支持自定义字符集。

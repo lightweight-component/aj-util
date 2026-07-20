@@ -1,108 +1,37 @@
 ---
-title: Base64Utils 教程
-description: Base64Utils 是一个用于 Base64 编码和解码操作的工具类
+title: BytesHelper 教程
+description: 字节数组拼接和十六进制转换工具
 tags:
-  - Base64
+  - 字节数组
+  - 十六进制
   - Java
 layout: layouts/aj-util-cn.njk
 ---
-# Base64Utils 使用教程
 
-Base64Utils 是一个用于 Base64 编码和解码操作的工具类，提供了便捷的方法在字节数组和字符串之间进行转换。
+# BytesHelper 教程
 
-### 主要功能特性
+`BytesHelper` 提供无状态的字节数组辅助方法。
 
-1. **支持标准和URL安全的Base64编码**
-2. **可配置是否省略填充字符**
-3. **支持多种字符集**
-4. **链式调用API设计**
-
-### 基本使用方法
-
-#### 1. 创建实例
+## 拼接数组
 
 ```java
-// 从字节数组创建
-byte[] data = "Hello World".getBytes();
-Base64Utils utils = new Base64Utils(data);
-
-// 从字符串创建（默认UTF-8）
-Base64Utils utils = new Base64Utils("Hello World");
-
-// 从字符串创建（指定字符集）
-Base64Utils utils = new Base64Utils("Hello World", StandardCharsets.UTF_8);
+byte[] result = BytesHelper.concat(new byte[]{1, 2}, new byte[]{3, 4});
+// [1, 2, 3, 4]
 ```
 
-
-#### 2. Base64编码
+## 编码为十六进制
 
 ```java
-// 基本编码
-String encoded = new Base64Utils("Hello World").encodeAsString();
-// 输出: SGVsbG8gV29ybGQ=
-
-// URL安全编码
-String urlSafeEncoded = new Base64Utils("Hello World")
-    .setUrlSafe(true)
-    .encodeAsString();
-// 输出: SGVsbG8gV29ybGQ=
-
-// 不带填充的编码
-String noPadding = new Base64Utils("Hello World")
-    .setWithoutPadding(true)
-    .encodeAsString();
-// 输出: SGVsbG8gV29ybGQ (没有末尾的=)
+String hex = BytesHelper.bytesToHexStr(new byte[]{0x1A, 0x2B});
+// "1A2B"
 ```
 
+输出统一使用大写十六进制字符。
 
-#### 3. Base64解码
+## 解码十六进制
 
 ```java
-// 基本解码
-String decoded = new Base64Utils("SGVsbG8gV29ybGQ=").decodeAsString();
-// 输出: Hello World
-
-// 指定字符集解码
-String decodedWithCharset = new Base64Utils("SGVsbG8gV29ybGQ=")
-    .decodeAsString(StandardCharsets.UTF_8);
-
-// URL安全解码
-String urlDecoded = new Base64Utils("SGVsbG8gV29ybGQ=", true)
-    .setUrlSafe(true)
-    .decodeAsString();
+byte[] bytes = BytesHelper.parseHexStr2Byte("1A2B");
 ```
 
-
-#### 4. 链式调用
-
-由于使用了 `@Accessors(chain = true)` 注解，可以进行链式调用：
-
-```java
-String result = new Base64Utils("Hello World")
-    .setUrlSafe(true)
-    .setWithoutPadding(true)
-    .encodeAsString();
-```
-
-
-#### 5. 格式化Base64字符串
-
-```java
-// 将长Base64字符串格式化为每64个字符一行
-String longBase64 = "SGVsbG8gV29ybGQhIEkgYW0gYSBsb25nIHN0cmluZyBmb3IgdGVzdGluZyB0aGUgZm9ybWF0dGluZyBmdW5jdGlvbi4=";
-String formatted = Base64Utils.formatBase64String(longBase64);
-```
-
-
-### 参数说明
-
-- [withoutPadding](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L57-L57): 是否省略编码结果末尾的 `=` 字符
-- [urlSafe](file://D:\code\ajaxjs\aj-util\aj-util\src\main\java\com\ajaxjs\util\Base64Utils.java#L63-L63): 是否使用URL安全的Base64变体（使用 `-` 替代 `+`，`_` 替代 `/`）
-
-### 注意事项
-
-1. 如果未设置输入数据就调用编码或解码方法，会抛出 `IllegalStateException`
-2. 编码结果默认使用 `ISO_8859_1` 字符集转换为字符串
-3. 解码默认使用 `UTF-8` 字符集转换为字符串
-
-这个工具类简化了Java中的Base64操作，特别适合需要频繁进行Base64编解码的场景。
+空字符串返回空字节数组。输入长度必须为偶数，且所有字符都必须是合法的十六进制字符，否则抛出 `IllegalArgumentException`；奇数长度输入不会再被静默截断。

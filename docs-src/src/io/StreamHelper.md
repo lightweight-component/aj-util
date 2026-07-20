@@ -1,5 +1,5 @@
 ---
-title: StreamHelper Tutorial
+title: DataReader and DataWriter Tutorial
 description: Utility methods for stream operations and conversions
 tags:
   - stream operations
@@ -11,7 +11,7 @@ layout: layouts/aj-util.njk
 
 # DataReader Tutorial
 
-DataReader  is a reader class for reading data from an input stream. It supports reading raw byte data from sources such as files, network sockets, or memory buffers, while providing functionality for handling both text and binary data.
+`DataReader` reads text or binary data from input streams such as files, network sockets, and in-memory buffers.
 
 ## Main Features
 
@@ -47,6 +47,8 @@ reader.readStreamAsBytes(8192, (readSize, buffer) -> {
     // Can process data in buffer here
 });
 ```
+
+`bufferSize` must be greater than zero. Zero and negative values throw `IllegalArgumentException`.
 
 
 ### 3. Reading Text Lines
@@ -93,7 +95,7 @@ System.out.println("Byte array length: " + bytes.length);
 1. The `readStreamAsBytes` method automatically closes the input stream when reading is complete
 2. All methods throw `UncheckedIOException` when IO errors occur
 3. For large file processing, it's recommended to use the `readStreamAsBytes` method for chunked processing
-4. The `readAsString` method appends a newline character at the end of each line
+4. `readAsString` currently does not preserve line separators. Use `readAsBytes` with an explicit charset when exact text layout matters.
 
 # DataWriter Tutorial
 
@@ -125,9 +127,8 @@ InputStream inputStream = new FileInputStream("input.txt");
 OutputStream outputStream = new FileOutputStream("output.txt");
 DataWriter writer = new DataWriter(outputStream);
 
-writer.write(inputStream); // Copy data
-// Note: Need to manually close streams
-inputStream.close();
+writer.write(inputStream); // Copies data and closes inputStream
+// DataWriter does not close its output stream.
 outputStream.close();
 ```
 
@@ -173,7 +174,7 @@ writer.setBuffered(false);
 
 ## Notes
 
-1. DataWriter does not automatically close output streams, the caller needs to manually manage stream closing
+1. DataWriter does not automatically close output streams. `write(InputStream)` currently closes the input stream through `DataReader`, so do not reuse it afterward.
 2. Buffering is enabled by default, disabling buffering will give a warning prompt
 3. All methods throw `UncheckedIOException` when IO errors occur
 4. When both offset and length are 0, the `write(byte[], int, int)` method writes the entire byte array

@@ -2,6 +2,7 @@ package com.ajaxjs.util;
 
 import com.ajaxjs.util.io.Resources;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 //import org.mockito.Mockito;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
@@ -66,6 +67,26 @@ class TestXmlHelper {
 
         assertThrows(RuntimeException.class, () -> XmlHelper.getRoot(xml));
         assertNull(MapTool.xmlToMap(xml));
+    }
+
+    @Test
+    void parseErrorsDoNotExposeXmlContent() {
+        String secret = "secret-token-123";
+        String invalidXml = "<root><password>" + secret + "</root>";
+
+        RuntimeException rootError = assertThrows(RuntimeException.class, () -> XmlHelper.getRoot(invalidXml));
+        RuntimeException parseError = assertThrows(RuntimeException.class,
+                () -> XmlHelper.parseXML(invalidXml, (node, nodes) -> {
+                }));
+
+        assertFalse(rootError.getMessage().contains(secret));
+        assertFalse(parseError.getMessage().contains(secret));
+    }
+
+    @Test
+    void getNodeAttributeReturnsNullForNodesWithoutAttributes() {
+        Element root = XmlHelper.getRoot("<root>text</root>");
+        assertNull(XmlHelper.getNodeAttribute(root.getFirstChild(), "missing"));
     }
 
 //    private final Consumer<Node> mockConsumer = mock(Consumer.class);

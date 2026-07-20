@@ -21,7 +21,7 @@ layout: layouts/aj-util-cn.njk
 - 将 Map 条目连接成具有各种分隔符的字符串
 - 在不同 Map 类型和格式之间转换
 - 在 Map 和 XML 之间转换
-- Map 的深拷贝
+- 复制 Map 的顶层条目
 - Map 值处理的辅助方法
 
 ## 方法
@@ -53,9 +53,9 @@ layout: layouts/aj-util-cn.njk
 1. `as(Map<String, K> map, Function<K, T> fn)` - 使用函数转换 Map 值
 2. `as(Map<String, String[]> map)` - 将 String[] 值的 Map 转换为 Map<String, Object>
 
-### 5. `deepCopy()`
+### 5. `deepCopy()`（浅复制）
 
-`deepCopy(Map<T, K> map)` - 创建 Map 的深拷贝
+尽管沿用了历史方法名，`deepCopy(Map<T, K> map)` 只创建新的 `HashMap`，不会克隆嵌套的可变对象。
 
 ### 6. XML 转换方法
 
@@ -80,11 +80,14 @@ String[] pairs = {"name=John", "age=30"};
 Map<String, Object> map = MapTool.toMap(pairs, Integer::parseInt);
 ```
 
+只有第一个 `=` 用于分隔键和值，因此 JWT、Base64 和签名等包含 `=` 的值会被完整保留；以 `=` 结尾的键值对会得到空字符串值。
+
 ### XML 转换
 ```java
 Map<String, String> data = new HashMap<>();
 data.put("name", "John");
 data.put("age", "30");
+data.put("note", null); // 序列化为空元素
 
 String xml = MapTool.mapToXml(data); 
 // <xml><name>John</name><age>30</age></xml>

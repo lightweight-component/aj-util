@@ -19,8 +19,8 @@ modules:
 | CollUtils            | Collection utility class                                                               |                                           |
 | ConvertBasicValue    | Attempts to convert target type, note that not all types can be converted              |                                           |
 | DateHelper           | Date utility class                                                                     |                                           |
-| EncodeTools          | String URL/Base64 encoder                                                              |                                           |
-| MessageDigestHelper  | MD5/SHA1/SHA256/384/512 encryption utility class                                       |                                           |
+| UrlEncode          | String URL/Base64 encoder                                                              |                                           |
+| HashHelper  | MD5/SHA1/SHA256/384/512 encryption utility class                                       |                                           |
 | ObjectHelper         | A helper for Java Object                                                               |                                           |
 | HTTP Request         | A Small HTTP Request Component                                                         |                                           |
 | RandomTools          | Random Numbers and Strings                                                             |                                           |

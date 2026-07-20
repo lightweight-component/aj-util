@@ -112,11 +112,9 @@ new FileHelper("merged-file").mergeFile(chunks);
 
 ```java
 // Chainable call example
-new FileHelper("input.txt")
-    .setTarget("backup.txt")
-    .copyTo()
-    .setTarget("moved.txt")
-    .moveTo();
+FileHelper helper = new FileHelper("input.txt");
+helper.setTarget("backup.txt").copyTo();
+helper.setTarget("moved.txt").moveTo();
 ```
 
 
@@ -135,6 +133,7 @@ try {
 
 ### Notes
 
-1. Target path must be set before copy and move operations
-2. File chunking uses zero-copy technology for improved large file processing efficiency
-3. Directory deletion uses reverse traversal to ensure proper deletion of all subdirectories and files
+1. A target path must be set before copy and move operations; otherwise `IllegalStateException` is thrown.
+2. Directory copies reject symbolic links and targets located inside the source tree.
+3. Chunking and merging loop until every byte is transferred. Failed chunking cleans files created by that attempt, and merging publishes its destination only after success.
+4. Recursive deletion reports failures instead of silently leaving a partially deleted tree.

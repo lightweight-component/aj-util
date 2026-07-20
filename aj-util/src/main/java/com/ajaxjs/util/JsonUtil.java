@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Slf4j
 public final class JsonUtil {
-    private static JsonEngine engine;
+    private static volatile JsonEngine engine;
 
     private JsonUtil() {
     }

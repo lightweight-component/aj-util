@@ -11,6 +11,10 @@ import static com.ajaxjs.util.ConvertBasicValue.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestConvertBasicValue {
+    private enum Status {
+        NEW, DONE
+    }
+
     @Test
     @SuppressWarnings("SpellCheckingInspection")
     void testToBoolean() {
@@ -216,6 +220,11 @@ class TestConvertBasicValue {
     }
 
     @Test
+    void ordinalConversionReturnsEnumConstant() {
+        assertSame(Status.DONE, ConvertBasicValue.basicConvert(1, Status.class));
+    }
+
+    @Test
     void testToJavaValue() {
         String input = "null";
         Object expected = null;
@@ -251,5 +260,6 @@ class TestConvertBasicValue {
         assertEquals(true, ConvertBasicValue.toJavaValue("true"));
         assertEquals(false, ConvertBasicValue.toJavaValue("false"));
         assertNull(ConvertBasicValue.toJavaValue("null"));
+        assertEquals(-3.14d, ConvertBasicValue.toJavaValue("-3.14"));
     }
 }

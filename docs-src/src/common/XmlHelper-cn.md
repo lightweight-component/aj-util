@@ -12,6 +12,8 @@ layout: layouts/aj-util-cn.njk
 
 `XmlHelper` 类提供了用于解析 XML 文档、检索元素以及将节点转换为映射的方法。这些方法可用于处理和操作 XML 数据。
 
+`initBuilder()` 创建的解析器会禁用 DTD、外部实体、外部 Schema 和 XInclude。因此 `getRoot`、`parseXML`、`xPath` 以及 `MapTool.xmlToMap` 都会拒绝 XXE 输入。解析失败使用脱敏消息，不会把完整 XML 拼入日志或异常。
+
 ## 方法
 
 ### 1. `initBuilder()`
@@ -99,3 +101,5 @@ Element root = XmlHelper.getRoot(xmlContent);
 Map<String, String> attributes = XmlHelper.nodeAsMap("path/to/xml/file.xml", "/root/element");
 // attributes 将包含 <element> 节点的属性
 ```
+
+节点没有属性集合或指定属性不存在时，`getNodeAttribute(Node, String)` 返回 `null`。

@@ -15,6 +15,8 @@ import org.w3c.dom.*;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -68,7 +70,25 @@ public class XmlHelper {
             factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, CommonConstant.EMPTY_STRING);
             factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, CommonConstant.EMPTY_STRING);
 
-            return factory.newDocumentBuilder();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setErrorHandler(new ErrorHandler() {
+                @Override
+                public void warning(SAXParseException exception) {
+                    // Parser warnings are intentionally not written to stderr.
+                }
+
+                @Override
+                public void error(SAXParseException exception) throws SAXException {
+                    throw exception;
+                }
+
+                @Override
+                public void fatalError(SAXParseException exception) throws SAXException {
+                    throw exception;
+                }
+            });
+
+            return builder;
         } catch (ParserConfigurationException | IllegalArgumentException e) {
             log.warn("Parser Configuration Exception", e);
             throw new RuntimeException("Parser Configuration Exception", e);
@@ -111,8 +131,8 @@ public class XmlHelper {
                 fn.accept(node, nodeList);
             }
         } catch (SAXException | IOException e) {
-            log.warn("Parsed this XML err. {}", xml, e);
-            throw new RuntimeException("Parsed this XML err." + xml, e);
+            log.warn("Unable to parse XML content.", e);
+            throw new RuntimeException("Unable to parse XML content.", e);
         }
     }
 
@@ -126,8 +146,8 @@ public class XmlHelper {
         try (InputStream in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
             return Objects.requireNonNull(initBuilder()).parse(in).getDocumentElement();
         } catch (SAXException | IOException e) {
-            log.warn("Get the root of this XML err. {}", xml, e);
-            throw new RuntimeException("Get the root of this XML err." + xml, e);
+            log.warn("Unable to get the root of XML content.", e);
+            throw new RuntimeException("Unable to get the root of XML content.", e);
         }
     }
 
@@ -187,6 +207,8 @@ public class XmlHelper {
      */
     public static String getNodeAttribute(Node node, String attrName) {
         NamedNodeMap attrs = node.getAttributes();
+        if (attrs == null)
+            return null;
 
         for (int i = 0; i < attrs.getLength(); i++) {
             Attr attr = (Attr) attrs.item(i);

@@ -93,8 +93,9 @@ Map<String, String> paramMap = UrlEncode.parseStringToMap(queryString);
 // city -> 北京
 ```
 
+The parser accepts a single pair such as `a=b`. It splits each field at the first `=` only, preserving Base64, JWT, and signature values that contain additional `=` characters. Keys and values are URL-decoded with UTF-8 by default.
+
 ### Notes
 
-1. `encodeSafe` method has issues in unit tests and needs fixing
-2. If Tomcat filter already sets UTF-8, the `urlChinese`method may not need repeated transcoding
-3. All encoding and decoding operations support custom charsets
+1. If a Tomcat filter already handles UTF-8 correctly, `urlChinese` should not be applied again.
+2. Encoding and decoding operations support custom charsets.

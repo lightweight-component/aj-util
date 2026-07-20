@@ -22,7 +22,7 @@ void testAES() {
     assertEquals(word, Cryptography.AES_decode(encWord, key));
 }
 ```
-咦~怎么还是静态方法？噢——对了，我们通过静态方法`Cryptography.AES_encode()`封装了一层，其实质是：
+`Cryptography.AES_encode()` 等静态方法是对已配置 `Cryptography` 实例的便捷封装，其底层流程等价于：
 ```java
 public static String AES_encode(String data, String key) {
     Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
@@ -32,10 +32,10 @@ public static String AES_encode(String data, String key) {
     return cryptography.doCipherAsHexStr();
 }
 ```
-要说每次实例化对象，当然比静态方法耗资源，不过在 Java 编译器优化的今天，这多出了一点的消耗可以忽略不计。
+静态方法只是调用上的便利，不会改变算法本身及其密钥要求。
 
 ## DES/TripleDES
-其余 DES/TripleDES 如此类推，只是算法不同~
+DES 和 Triple DES 的 API 形式类似，但它们属于旧算法。新应用应优先使用带认证的 AES-GCM。
 ```java
 @Test
 void testDES() {
@@ -46,8 +46,7 @@ void testDES() {
 @SuppressWarnings("restriction")
 @Test
 void test3DES() {
-    // 添加新安全算法,如果用 JCE 就要把它添加进去
-    // 这里 addProvider 方法是增加一个新的加密算法提供者(个人理解没有找到好的答案,求补充)
+    // JDK 已提供所需算法时通常不需要额外注册 Provider
 //		Security.addProvider(new com.sun.crypto.provider.SunJCE());
     // byte 数组(用来生成密钥的)
     final byte[] keyBytes = {0x11, 0x22, 0x4F, 0x58, (byte) 0x88, 0x10, 0x40, 0x38, 0x28, 0x25, 0x79, 0x51, (byte) 0xCB, (byte) 0xDD, 0x55, 0x66, 0x77, 0x29, 0x74,
@@ -60,10 +59,13 @@ void test3DES() {
 }
 ```
 ## PBE
-这里说说 PBE 算法。PBE 是 DES 的加强，增加一个 Salt 盐值使其更安全。
+当前口令加密 API 使用 `PBKDF2WithHmacSHA256` 派生 AES 密钥，并通过 AES-GCM 加密。盐值至少需要 16 字节，迭代次数至少为 100,000。
 ```java
 byte[] salt = Cryptography.initSalt();
-byte[] encData = Cryptography.PBE_encode(word, key, salt);
+int iterations = Cryptography.MIN_PBE_ITERATIONS;
+byte[] encData = Cryptography.PBE_encode(word, key, salt, iterations);
 
-assertEquals(word, Cryptography.PBE_decode(encData, key, salt));
+assertEquals(word, Cryptography.PBE_decode(encData, key, salt, iterations));
 ```
+
+`PBE_legacy_decode` 仅用于解密旧版 `PBEWithMD5AndDES` 数据，新数据不得继续使用旧算法。

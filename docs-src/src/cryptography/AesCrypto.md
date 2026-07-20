@@ -24,7 +24,7 @@ void testAES() {
 ```
 
 
-Hey~ Why are these still static methods? Oh—right, we encapsulated them with static methods like [Cryptography.AES_encode()](file://D:\code\ajaxjs\aj-util\aj-cryptography\src\main\java\com\ajaxjs\util\cryptography\Cryptography.java#L107-L113), but the essence is:
+The convenience methods such as `Cryptography.AES_encode()` delegate to a configured `Cryptography` instance. The underlying flow is equivalent to:
 
 ```java
 public static String AES_encode(String data, String key) {
@@ -37,10 +37,10 @@ public static String AES_encode(String data, String key) {
 ```
 
 
-Speaking of instantiating objects each time, it certainly consumes more resources than static methods. However, with today's Java compiler optimizations, this additional consumption can be negligible.
+The static methods are convenience wrappers; they do not change the cryptographic operation or key requirements.
 
 ## DES/TripleDES
-The rest DES/TripleDES follow the same pattern, just with different algorithms~
+DES and Triple DES follow a similar API shape, but they are legacy algorithms. Prefer authenticated AES-GCM for new applications.
 
 ```java
 @Test
@@ -53,7 +53,7 @@ void testDES() {
 @Test
 void test3DES() {
     // Add new security algorithms, if using JCE it needs to be added
-    // The addProvider method here adds a new encryption algorithm provider (personal understanding, no good answer found, need补充)
+    // A provider is normally unnecessary when the JDK already supplies the algorithm.
 //		Security.addProvider(new com.sun.crypto.provider.SunJCE());
     // byte array (used to generate the key)
     final byte[] keyBytes = {0x11, 0x22, 0x4F, 0x58, (byte) 0x88, 0x10, 0x40, 0x38, 0x28, 0x25, 0x79, 0x51, (byte) 0xCB, (byte) 0xDD, 0x55, 0x66, 0x77, 0x29, 0x74,
@@ -67,11 +67,14 @@ void test3DES() {
 ```
 
 ## PBE
-Here let's talk about the PBE algorithm. PBE is an enhancement of DES, adding a Salt value to make it more secure.
+The current password-based encryption API derives an AES key with `PBKDF2WithHmacSHA256` and encrypts with AES-GCM. It requires a salt of at least 16 bytes and at least 100,000 iterations.
 
 ```java
 byte[] salt = Cryptography.initSalt();
-byte[] encData = Cryptography.PBE_encode(word, key, salt);
+int iterations = Cryptography.MIN_PBE_ITERATIONS;
+byte[] encData = Cryptography.PBE_encode(word, key, salt, iterations);
 
-assertEquals(word, Cryptography.PBE_decode(encData, key, salt));
+assertEquals(word, Cryptography.PBE_decode(encData, key, salt, iterations));
 ```
+
+`PBE_legacy_decode` exists only for decrypting data produced by the former `PBEWithMD5AndDES` implementation; do not use the legacy algorithm for new ciphertext.

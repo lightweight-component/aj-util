@@ -24,6 +24,7 @@ layout: layouts/aj-util-cn.njk
 - 类型安全的 JSON 处理
 - Java 8 日期/时间支持
 - 严格的重复检测
+- 延迟初始化并安全发布共享 `JsonEngine`
 
 ## 方法
 
@@ -35,7 +36,6 @@ layout: layouts/aj-util-cn.njk
 ### 2. 反序列化 (从 JSON)
 
 1. `fromJson(String jsonStr, Class<T> valueType)` - 将 JSON 解析为指定类型
-2. `fromJson(String jsonStr, JavaType valueType)` - 将 JSON 解析为复杂类型
 
 ### 3. JSON ↔ Map 转换
 

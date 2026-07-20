@@ -15,7 +15,7 @@ layout: layouts/aj-util.njk
 ### Main Features
 
 1. **Thread-safe random generation**: Uses `ThreadLocalRandom` for high performance
-2. **Cryptographic-strength randomness**: Uses `SecureRandom` for security-level randomness
+2. **Explicit random sources**: Exposes both `SecureRandom` and ordinary `Random`; choose according to the use case
 3. **Multiple random value generation**: Supports numbers, strings, UUIDv7, etc.
 4. **Time-ordered UUIDs**: UUIDv7 provides better locality than random UUIDs
 
@@ -39,6 +39,8 @@ System.out.println(threeDigit); // e.g.: 567
 System.out.println(fourDigit);  // e.g.: 3456
 ```
 
+The digit count must be between 1 and 9; other values throw `IllegalArgumentException`.
+
 
 ### String Random Generation
 
@@ -48,6 +50,8 @@ System.out.println(fourDigit);  // e.g.: 3456
 String randomStr = RandomTools.generateRandomString();
 System.out.println(randomStr); // e.g.: aB3xY9
 ```
+
+The requested string length must be positive. These strings use `ThreadLocalRandom` and are not intended as passwords, tokens, or cryptographic secrets.
 
 
 #### 2. Generate Random String with Specified Length
@@ -67,7 +71,7 @@ System.out.println(longStr);  // e.g.: AbC3dE5fGh
 ```java
 // Generate UUID version 7 (time-ordered)
 UUID uuid = RandomTools.uuid();
-System.out.println(uuid); // e.g.: 550e8400-e29b-41d4-a716-446655440000
+System.out.println(uuid); // version field is 7
 ```
 
 
@@ -94,3 +98,4 @@ System.out.println(timestamp); // e.g.: Wed Oct 25 14:30:45 CST 2023
 2. Number generation uses `ThreadLocalRandom` to ensure thread safety and performance
 3. UUIDv7 is time-ordered and has better database indexing performance
 4. String generation uses a fixed alphanumeric character pool
+5. The current UUIDv7 random portion uses `java.util.Random`; UUIDs are suitable as identifiers, not as security tokens.

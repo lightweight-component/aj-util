@@ -18,8 +18,8 @@ layout: layouts/aj-util-cn.njk
 | CollUtils           | 集合工具类                                             |                |
 | ConvertBasicValue   | 尝试转换目标类型，注意并不是所有的类型都可以进行转换                        |                |
 | DateHelper          | 日期工具类                                             |                |
-| EncodeTools         | 字符串 URL/Base64 编码、解码                              |                |
-| MessageDigestHelper | MD5/SHA1/SHA256/384/512 加密工具类                     |                |
+| UrlEncode         | 字符串 URL/Base64 编码、解码                              |                |
+| HashHelper | MD5/SHA1/SHA256/384/512 加密工具类                     |                |
 | ObjectHelper        | Java Object 工具类                                   |                |
 | HTTP Request        | 小型的 HTTP 请求工具 Component                           |                |
 | RandomTools         | 随机数或随机字符串工具类                                      |                |

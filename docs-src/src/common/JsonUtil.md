@@ -24,6 +24,7 @@ The `JsonUtil` class contains static methods for common JSON operations using Ja
 - Type-safe JSON processing
 - Java 8 date/time support
 - Strict duplicate detection
+- Lazily initialized, safely published shared `JsonEngine`
 
 ## Methods
 
@@ -35,7 +36,6 @@ The `JsonUtil` class contains static methods for common JSON operations using Ja
 ### 2. Deserialization (from JSON)
 
 1. `fromJson(String jsonStr, Class<T> valueType)` - Parse JSON to specified type
-2. `fromJson(String jsonStr, JavaType valueType)` - Parse JSON with complex type
 
 ### 3. JSON ↔ Map Conversion
 

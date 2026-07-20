@@ -51,13 +51,20 @@ public class BytesHelper {
      */
     public static byte[] parseHexStr2Byte(String hexStr) {
         if (hexStr.isEmpty())
-            return null;
+            return new byte[0];
+
+        if ((hexStr.length() & 1) != 0)
+            throw new IllegalArgumentException("Hex string must contain an even number of characters.");
 
         byte[] result = new byte[hexStr.length() / 2];
 
-        for (int i = 0; i < hexStr.length() / 2; i++) {
-            int high = Integer.parseInt(hexStr.substring(i * 2, i * 2 + 1), 16);// 获取高位和低位的16进制数
-            int low = Integer.parseInt(hexStr.substring(i * 2 + 1, i * 2 + 2), 16);
+        for (int i = 0; i < result.length; i++) {
+            int high = Character.digit(hexStr.charAt(i * 2), 16);
+            int low = Character.digit(hexStr.charAt(i * 2 + 1), 16);
+
+            if (high < 0 || low < 0)
+                throw new IllegalArgumentException("Invalid hexadecimal character at index " + (high < 0 ? i * 2 : i * 2 + 1));
+
             result[i] = (byte) (high * 16 + low); // 计算二进制数
         }
 

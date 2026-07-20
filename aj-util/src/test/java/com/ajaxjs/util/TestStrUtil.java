@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static com.ajaxjs.util.StrUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestStrUtil {
     final static String str = "中国";
@@ -30,6 +31,10 @@ class TestStrUtil {
     @Test
     void testLeftPad() {
         assertEquals("@@@@@12345", leftPad("12345", 10, "@"));
+        assertEquals("$$$a b", leftPad("a b", 6, "$"));
+        assertEquals("\\\\a b", leftPad("a b", 5, "\\"));
+        assertEquals("abaX", leftPad("X", 4, "ab"));
+        assertThrows(IllegalArgumentException.class, () -> leftPad("x", 2, ""));
     }
 
     @Test

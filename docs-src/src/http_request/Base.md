@@ -156,7 +156,7 @@ Post postRequest = new Post("https://api.example.com/data",
 
 ```java
 // Send JSON data and get response
-Map<String, Object> data = Map.of("name", "test", "value", 123);
+Map<String, Object> data = ObjectHelper.mapOf("name", "test", "value", 123);
 Map<String, Object> response = Post.api("https://api.example.com/data", data);
 
 // JSON request with custom connection configuration

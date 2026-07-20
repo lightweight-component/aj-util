@@ -139,6 +139,10 @@ public class TestClazz {
 }
 ```
 
+## Class-hierarchy traversal
+
+Hierarchy inspection handles classes and interfaces separately. Superclasses are followed only while non-null, while parent interfaces are recursively visited through `getInterfaces()`. A `Set<Class<?>>` prevents duplicate visits in diamond-shaped interface graphs. Callers may safely inspect either a concrete class or an interface type.
+
 ## Conclusion
 
 The `Clazz` class provides a set of useful utilities for working with Java classes through reflection. By using these
