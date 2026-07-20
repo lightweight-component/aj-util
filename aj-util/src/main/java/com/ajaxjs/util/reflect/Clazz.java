@@ -6,9 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Class Reflection Utility - Provides comprehensive methods for class reflection operations
@@ -86,14 +85,21 @@ public class Clazz {
      * @return All interfaces implemented by the class
      */
     public static Class<?>[] getDeclaredInterface(Class<?> clz) {
-        List<Class<?>> fields = new ArrayList<>();
+        Set<Class<?>> interfaces = new LinkedHashSet<>();
 
-        for (; clz != Object.class; clz = clz.getSuperclass()) {
-            Class<?>[] currentInterfaces = clz.getInterfaces();
-            fields.addAll(Arrays.asList(currentInterfaces));
-        }
+        for (Class<?> current = clz; current != null && current != Object.class; current = current.getSuperclass())
+            for (Class<?> currentInterface : current.getInterfaces())
+                addInterfaceHierarchy(currentInterface, interfaces);
 
-        return fields.toArray(new Class[0]);
+        return interfaces.toArray(new Class[0]);
+    }
+
+    private static void addInterfaceHierarchy(Class<?> current, Set<Class<?>> interfaces) {
+        if (!interfaces.add(current))
+            return;
+
+        for (Class<?> parent : current.getInterfaces())
+            addInterfaceHierarchy(parent, interfaces);
     }
 
     /**

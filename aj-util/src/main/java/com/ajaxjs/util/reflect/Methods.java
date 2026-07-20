@@ -152,7 +152,7 @@ public class Methods {
      * @return 匹配的方法对象，null 表示找不到
      */
     public static Method getSuperClassDeclaredMethod(Class<?> clz, String method, Class<?> argClz) {
-        for (; clz != Object.class; clz = clz.getSuperclass()) {
+        for (; clz != null && clz != Object.class; clz = clz.getSuperclass()) {
             try {
                 return clz.getDeclaredMethod(method, argClz);
             } catch (NoSuchMethodException | SecurityException ignored) {
@@ -170,7 +170,7 @@ public class Methods {
      * @return 匹配的方法对象，null 表示找不到
      */
     public static Method getSuperClassDeclaredMethod(Class<?> clz, String method) {
-        for (; clz != Object.class; clz = clz.getSuperclass()) {
+        for (; clz != null && clz != Object.class; clz = clz.getSuperclass()) {
             for (Method m : clz.getDeclaredMethods()) {
                 if (m.toString().contains(method))
                     return m;

@@ -93,6 +93,8 @@ public class TestReflectUtil {
     public void testDeclaredMethod() {
         assertNull(Methods.getMethodByUpCastingSearch(A.class, "bar", new D())); // 找不到
         assertNotNull(Methods.getDeclaredMethodByInterface(A.class, "bar", new D()));// 找到了
+        assertNull(Methods.getSuperClassDeclaredMethod(C.class, "missing", Object.class));
+        assertNull(Methods.getSuperClassDeclaredMethod(C.class, "missing"));
     }
 
     public static class Foo3 {

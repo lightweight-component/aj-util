@@ -3,9 +3,7 @@ package com.ajaxjs.util.reflect;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +12,18 @@ import static com.ajaxjs.util.reflect.Clazz.newInstance;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestClazz {
+    interface RootInterface {
+    }
+
+    interface LeftInterface extends RootInterface {
+    }
+
+    interface RightInterface extends RootInterface {
+    }
+
+    static class InterfaceImplementation implements LeftInterface, RightInterface {
+    }
+
     @Test
     void testGetClassByName() {
         Class<?> actual = Clazz.getClassByName("java.lang.String");
@@ -40,19 +50,15 @@ class TestClazz {
 
     @Test
     void testGetDeclaredInterface() {
-        // Given
-        Class<?> clz = TestClass.class;
-        Type[] interfaces = {List.class, Comparable.class};
-        List<Class<?>> expected = Arrays.asList(Comparable.class, List.class);
+        assertArrayEquals(
+                new Class<?>[]{LeftInterface.class, RootInterface.class, RightInterface.class},
+                Clazz.getDeclaredInterface(InterfaceImplementation.class)
+        );
 
-        // When
-        Class<?>[] actual = Clazz.getDeclaredInterface(clz);
-
-        // Then
-//        List<Class<?>> actualInterfaces = Arrays.stream(actual)
-//                .map(Class::cast)
-//                .collect(Collectors.toList());
-//        Assert.assertEquals(expected, actualInterfaces);
+        assertArrayEquals(
+                new Class<?>[]{RootInterface.class},
+                Clazz.getDeclaredInterface(LeftInterface.class)
+        );
     }
 
 
