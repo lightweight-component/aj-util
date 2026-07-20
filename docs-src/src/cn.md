@@ -47,7 +47,7 @@ layout: layouts/aj-util-cn.njk
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.2.7</version>
+    <version>1.3.4</version>
 </dependency>
 ```
 
