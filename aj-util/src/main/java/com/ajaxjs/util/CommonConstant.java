@@ -25,6 +25,9 @@ public interface CommonConstant {
 
     /**
      * Represents a new line character '\n' (line feed)
+     * DO NOT USE IT
+     *
+     * @deprecated 请使用 System.lineSeparator() 替代
      */
     char NEW_LINE = '\n';
 

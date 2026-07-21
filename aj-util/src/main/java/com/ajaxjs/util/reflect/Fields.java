@@ -3,6 +3,7 @@ package com.ajaxjs.util.reflect;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,15 +19,14 @@ public class Fields {
     public static Field[] getSuperClassDeclaredFields(Class<?> clz) {
         List<Field> fieldList = new ArrayList<>();
 
-        while (clz != null) {
-            fieldList.addAll(new ArrayList<>(Arrays.asList(clz.getDeclaredFields())));
+        while (clz != null && clz != Object.class) {  // 排除 Object 类
+            Collections.addAll(fieldList, clz.getDeclaredFields());// 避免创建中间 ArrayList
+//            fieldList.addAll(new ArrayList<>(Arrays.asList(clz.getDeclaredFields())));
             clz = clz.getSuperclass();
         }
 
         return fieldList.toArray(new Field[0]);
     }
-
-    // TODO 待优化 不用 try...catch
 
     /**
      * 在指定类及其父类中查找指定名称的字段
@@ -36,14 +36,24 @@ public class Fields {
      * @return 找到的字段对象，如果未找到则返回 null
      */
     public static Field findField(Class<?> clazz, String fieldName) {
-        try {
-            return clazz.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            // 如果当前类没有该字段，则尝试在父类中查找
-            Class<?> superClass = clazz.getSuperclass();
+//        try {
+//            return clazz.getDeclaredField(fieldName);
+//        } catch (NoSuchFieldException e) {
+//            // 如果当前类没有该字段，则尝试在父类中查找
+//            Class<?> superClass = clazz.getSuperclass();
+//
+//            if (superClass != null)
+//                return findField(superClass, fieldName);
+//        }
 
-            if (superClass != null)
-                return findField(superClass, fieldName);
+        Class<?> current = clazz;
+
+        while (current != null) {
+            try {
+                return current.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                current = current.getSuperclass();
+            }
         }
 
         return null;
