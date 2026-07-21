@@ -25,7 +25,7 @@ public class FileUpload {
     /**
      * 定义数据分隔线
      */
-    public static String BOUNDARY = "------------7d4a6d158c9";
+    public static final String BOUNDARY = "------------7d4a6d158c9";
 
     private static final String FIELD = BOUNDARY_PREFIX + BOUNDARY + NEWLINE + "Content-Disposition: form-data;name=\"%s\";filename=\"%s\"" + NEWLINE
             + "Content-Type:%s" + NEWLINE + NEWLINE;

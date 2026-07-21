@@ -1,6 +1,5 @@
 package com.ajaxjs.util.io;
 
-import com.ajaxjs.util.CommonConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -110,12 +109,9 @@ public class DataReader {
      * @return String
      */
     public String readAsString() {
-        StringBuffer result = new StringBuffer();
-
-        readAsLineString(line -> {
-            result.append(line);
-          //  result.append(CommonConstant.NEW_LINE);
-        });
+        StringBuilder result = new StringBuilder();
+        String sep = System.lineSeparator();
+        readAsLineString(line -> result.append(line).append(sep));
 
         return result.toString();
     }

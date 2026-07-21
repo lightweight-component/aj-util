@@ -134,7 +134,7 @@ public class ZipHelper {
             throw new UncheckedIOException(e);
         }
 
-        log.info("解压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
+        log.info("解压缩 unzipWithChineseFilename 完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
     }
 
     private static Path prepareExtractionRoot(String save) {
@@ -402,7 +402,8 @@ public class ZipHelper {
      */
     private static boolean isZipFile(byte[] magicNumber) {
         // 比较字节数组的前四个字
-        return magicNumber[0] == 0x50 && magicNumber[1] == 0x4b && magicNumber[2] == 0x03 && magicNumber[3] == 0x04;
+        return magicNumber != null && magicNumber.length >= 4  &&
+                magicNumber[0] == 0x50 && magicNumber[1] == 0x4b && magicNumber[2] == 0x03 && magicNumber[3] == 0x04;
     }
 
 //    private static final String ZIP_MAGIC_NUMBER = "504B0304";

@@ -181,29 +181,29 @@ public class Methods {
     }
 
     /**
-     * 获取所有父类
+     * 获取所有父类，排除自己
      *
      * @param clz 类对象
      * @return 所有父类
      */
     public static Class<?>[] getAllSuperClazz(Class<?> clz) {
         List<Class<?>> clzList = new ArrayList<>();
+        Class<?> current = clz.getSuperclass();  // 从父类开始
 
-        //		while (clz != null) {
-        //			clz = clazz.getSuperclass();
-        //
-        //			if (clz != null && clz != Object.class)
-        //				clzList.add(clz);
-        //		}
-        for (; clz != Object.class; clz = clz.getSuperclass()) {
-            if (clz == null)
-                break;
-            else
-                clzList.add(clz);
+        while (current != null && current != Object.class) {
+            clzList.add(current);
+            current = current.getSuperclass();
         }
 
-        if (!clzList.isEmpty())
-            clzList.remove(0); // 排除自己
+//        for (; clz != Object.class; clz = clz.getSuperclass()) {
+//            if (clz == null)
+//                break;
+//            else
+//                clzList.add(clz);
+//        }
+//
+//        if (!clzList.isEmpty())
+//            clzList.remove(0); // 排除自己
 
         return clzList.toArray(new Class[0]);
     }

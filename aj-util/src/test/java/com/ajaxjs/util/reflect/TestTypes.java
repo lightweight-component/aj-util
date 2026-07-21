@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TestTypes {
-    Type type = new ParameterizedType() {
+    final Type type = new ParameterizedType() {
         @Override
         public Type[] getActualTypeArguments() {
             return new Type[]{String.class};

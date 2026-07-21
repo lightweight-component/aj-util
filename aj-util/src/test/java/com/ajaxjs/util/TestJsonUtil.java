@@ -1,6 +1,7 @@
 package com.ajaxjs.util;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -303,7 +304,7 @@ class TestJsonUtil {
 
         assertNotNull(node);
         // Jackson 返回的是 JsonNode 类型
-        assertTrue(node instanceof com.fasterxml.jackson.databind.JsonNode);
+        assertInstanceOf(JsonNode.class, node);
     }
 
     @Test
@@ -311,7 +312,7 @@ class TestJsonUtil {
         Object node = JsonUtil.json2Node(jsonArrayStr);
 
         assertNotNull(node);
-        assertTrue(node instanceof com.fasterxml.jackson.databind.JsonNode);
+        assertInstanceOf(JsonNode.class, node);
     }
 
     // ==================== setEngine/getEngine 测试 ====================

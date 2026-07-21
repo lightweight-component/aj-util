@@ -76,17 +76,21 @@ public class FileHelper {
             if (Files.isDirectory(path))
                 throw new IOException("Argument：" + path + " is not a file, it's a folder.");
         } catch (IOException e) {
-            log.error("Read file content error: " + path, e);
+            log.error("Read file content error: {}", path, e);
             throw new UncheckedIOException("Read file content error: " + path, e);
         }
 
         StringBuilder sb = new StringBuilder();
         try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) { // 要关闭文件，否则文件被锁定
-            lines.forEach(sb::append);
+            String sep = System.lineSeparator();
+            lines.forEach(line -> sb.append(line).append(sep));
+
+            if (sb.length() > 0)  // 移除最后一个多余的换行符（如果文件非空）
+                sb.setLength(sb.length() - sep.length());
 
             return sb.toString();
         } catch (IOException e) {
-            log.error("Error reading file " + path, e);
+            log.error("Error reading file {}", path, e);
             throw new UncheckedIOException("Error reading file " + path, e);
         }
     }
@@ -100,7 +104,7 @@ public class FileHelper {
         try {
             return Files.readAllBytes(path);
         } catch (IOException e) {
-            log.error("Error reading file " + path + "(bytes)", e);
+            log.error("Error reading file {}(bytes)", path, e);
             throw new UncheckedIOException("Error reading file " + path + "(bytes)", e);
         }
     }
