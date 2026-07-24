@@ -1,6 +1,6 @@
 ---
-title: JsonUtil 教程
-description: 为 Java 应用程序中的 JSON 数据处理提供实用方法
+title: JsonUtil
+description: JSON、Map、Bean、List 之间转换的实用方法
 tags:
   - JSON
   - 序列化

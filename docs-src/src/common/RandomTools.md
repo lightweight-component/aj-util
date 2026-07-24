@@ -1,6 +1,6 @@
 ---
-title: RandomTools Tutorial
-description: Utility methods for generating random numbers and strings
+title: RandomTools
+description: Methods for generating random numbers, strings, and UUID v7
 tags:
   - random
   - utilities

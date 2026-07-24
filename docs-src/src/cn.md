@@ -1,10 +1,11 @@
 ---
 title: AJ Utilities 简介
-subTitle: 2024-12-05 by Frank Cheung
-description: AJ Utilities 简介
+description: 小型、干净、简单的 Java 工具库，包含多种强大的组件
 date: 2025-01-05
 tags:
-  - AJ Utilities 简介
+  - AJ Utilities
+  - Java 工具库
+  - 中文文档
 layout: layouts/aj-util-cn.njk
 ---
 

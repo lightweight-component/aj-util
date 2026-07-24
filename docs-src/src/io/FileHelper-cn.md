@@ -1,6 +1,6 @@
 ---
-title: FileHelper 教程
-description: FileHelper 类提供了简化文件系统操作的实用方法
+title: FileHelper
+description: 文件读写、复制、移动、删除和目录操作方法
 tags:
   - 文件操作
   - I/O

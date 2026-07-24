@@ -1,6 +1,6 @@
 ---
-title: ZipHelper 教程
-description: 为 ZIP 压缩和解压缩操作提供实用方法
+title: ZipHelper
+description: ZIP 压缩和解压缩实用方法，包含安全防护功能
 tags:
   - 压缩
   - 解压缩

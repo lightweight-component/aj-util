@@ -1,6 +1,6 @@
 ---
-title: DataReader and DataWriter Tutorial
-description: Utility methods for stream operations and conversions
+title: DataReader and DataWriter
+description: Utility classes for reading from and writing to streams with buffering support
 tags:
   - stream operations
   - I/O

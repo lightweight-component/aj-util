@@ -1,6 +1,6 @@
 ---
-title: StrUtil Tutorial
-description: Provides utility methods for string manipulation in Java applications
+title: StrUtil
+description: Utility methods for string templating, padding, joining, and manipulation
 date: 2025-09-11
 tags:
   - string

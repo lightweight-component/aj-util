@@ -1,6 +1,6 @@
 ---
-title: Resources Tutorial
-description: Utility methods for accessing classpath resources
+title: Resources
+description: Methods for locating and retrieving classpath resources
 tags:
   - resource loading
   - classpath

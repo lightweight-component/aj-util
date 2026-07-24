@@ -1,6 +1,6 @@
 ---
-title: HashHelper Tutorial
-description: Utility methods for message digest algorithms
+title: HashHelper
+description: Methods for MD5, SHA-1, SHA-256 hashing and HMAC operations
 tags:
   - cryptography
   - hash

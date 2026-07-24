@@ -1,6 +1,6 @@
 ---
-title: BytesHelper Tutorial
-description: Byte-array concatenation and hexadecimal conversion utilities
+title: BytesHelper
+description: Methods for byte array concatenation and hexadecimal conversion
 tags:
   - byte arrays
   - hexadecimal

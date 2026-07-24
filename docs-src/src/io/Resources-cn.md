@@ -1,6 +1,6 @@
 ---
-title: Resources 教程
-description: Resources 类提供了访问类路径资源的实用方法
+title: Resources
+description: 用于定位和检索类路径资源的方法
 tags:
   - 资源加载
   - 类路径

@@ -1,6 +1,6 @@
 ---
-title: RandomTools 教程
-description: RandomTools 类提供了生成随机数和随机字符串的实用方法
+title: RandomTools
+description: 生成随机数、随机字符串和 UUID v7 的方法
 tags:
   - 随机数
   - 工具类

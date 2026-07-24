@@ -1,6 +1,6 @@
 ---
-title: StrUtil 教程
-description: 为 Java 应用程序中的字符串操作提供了实用工具方法
+title: StrUtil
+description: 字符串模板、填充、连接和操作的实用方法
 date: 2025-09-11
 tags:
   - 字符串

@@ -1,6 +1,6 @@
 ---
-title: XmlHelper Tutorial
-description: Utility methods for parsing and manipulating XML documents
+title: XmlHelper
+description: Utility methods for XML parsing, creation, and node manipulation
 tags:
   - XML
   - parsing

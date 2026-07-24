@@ -1,6 +1,6 @@
 ---
-title: ZipHelper Tutorial
-description: Utility methods for ZIP compression and decompression operations
+title: ZipHelper
+description: Utility methods for ZIP compression and decompression with security protections
 tags:
   - compression
   - decompression

@@ -1,6 +1,6 @@
 ---
-title: FileHelper Tutorial
-description: Utility methods for simplifying file system operations
+title: FileHelper
+description: Methods for file read, write, copy, move, delete, and directory operations
 tags:
   - file operations
   - I/O

@@ -1,6 +1,6 @@
 ---
-title: Base64Utils 教程
-description: 为 Base64 编码和解码操作提供了流畅的接口
+title: Base64Utils
+description: Base64 编码和解码操作的流畅接口
 date: 2025-09-11
 tags:
   - 编码

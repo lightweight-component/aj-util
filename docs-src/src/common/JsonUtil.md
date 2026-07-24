@@ -1,6 +1,6 @@
 ---
-title: JsonUtil Tutorial
-description: Utility methods for working with JSON data in Java applications
+title: JsonUtil
+description: Utility methods for JSON conversion between JSON, Map, Bean, and List
 tags:
   - JSON
   - serialization

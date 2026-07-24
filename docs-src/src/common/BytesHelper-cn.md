@@ -1,6 +1,6 @@
 ---
-title: BytesHelper 教程
-description: 字节数组拼接和十六进制转换工具
+title: BytesHelper
+description: 字节数组拼接和十六进制转换方法
 tags:
   - 字节数组
   - 十六进制

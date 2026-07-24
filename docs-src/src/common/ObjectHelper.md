@@ -1,6 +1,6 @@
 ---
-title: ObjectHelper Tutorial
-description: Provides utility methods for working with Java objects
+title: ObjectHelper
+description: Methods for object checking, collection creation, and emptiness validation
 date: 2025-09-11
 tags:
   - object

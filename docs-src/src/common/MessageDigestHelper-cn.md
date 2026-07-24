@@ -1,6 +1,6 @@
 ---
-title: HashHelper 使用教程
-description: HashHelper 类提供了消息摘要算法的实用工具方法
+title: HashHelper
+description: MD5、SHA-1、SHA-256 哈希和 HMAC 操作的方法
 tags:
   - 加密
   - 哈希

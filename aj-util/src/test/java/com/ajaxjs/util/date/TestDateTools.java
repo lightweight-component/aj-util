@@ -39,9 +39,17 @@ class TestDateTools {
     }
 
     @Test
-    void testFormat(){
+    void testFormat() {
         Date date = DateTools.object2Date("2026-01-23");
         assertNotNull(date);
         assertEquals(LocalDate.of(2026, 1, 23), DateTools.toLocalDateTime(date).toLocalDate());
+    }
+
+    @Test
+    void testNewISO8601Date() {
+        String s = DateTools.newISO8601Date();
+        System.out.println(s);
+        s = DateTools.newISO8601Date2();
+        System.out.println(s);
     }
 }

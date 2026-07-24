@@ -1,6 +1,6 @@
 ---
-title: ConvertBasicValue 教程
-description: ConvertBasicValue 类提供了基本类型转换的实用方法
+title: ConvertBasicValue
+description: 安全地将对象转换为基本 Java 类型的方法
 tags:
   - 类型转换
   - 基本类型

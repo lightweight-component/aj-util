@@ -1,6 +1,6 @@
 ---
-title: Clazz 教程
-description: Clazz 类提供了动态创建类实例和检查构造函数的实用方法
+title: Clazz
+description: 用于动态创建类实例和检查构造函数的实用方法
 tags:
   - 反射
   - 实例化

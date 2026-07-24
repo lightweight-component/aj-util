@@ -1,6 +1,6 @@
 ---
-title: MapTool 教程
-description: 提供Map数据结构实用工具方法的工具类
+title: MapTool
+description: Map 操作、过滤和转换的实用方法
 tags:
   - Map工具
   - XML转换

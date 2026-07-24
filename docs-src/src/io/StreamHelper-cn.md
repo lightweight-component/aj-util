@@ -1,6 +1,6 @@
 ---
-title: DataReader 与 DataWriter 教程
-description: 输入流读取和输出流写入工具
+title: DataReader 与 DataWriter
+description: 用于流读写操作的实用类，支持缓冲功能
 tags:
   - 流操作
   - I/O

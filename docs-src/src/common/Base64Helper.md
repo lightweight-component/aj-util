@@ -1,6 +1,6 @@
 ---
-title: Base64Utils Tutorial
-description: Provides a fluent interface for Base64 encoding and decoding operations
+title: Base64Utils
+description: Fluent interface for Base64 encoding and decoding operations
 date: 2025-09-11
 tags:
   - encoding

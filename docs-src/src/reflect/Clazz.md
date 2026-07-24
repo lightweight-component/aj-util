@@ -1,6 +1,6 @@
 ---
-title: Clazz Tutorial
-description: Utility methods for dynamically creating class instances and inspecting constructors
+title: Clazz
+description: Methods for dynamically creating class instances and inspecting constructors
 tags:
   - reflection
   - instantiation

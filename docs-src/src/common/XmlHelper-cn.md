@@ -1,6 +1,6 @@
 ---
-title: XmlHelper 教程
-description: XmlHelper 类提供了 XML 文档解析和操作的实用方法
+title: XmlHelper
+description: XML 解析、创建和节点操作的实用方法
 tags:
   - XML
   - 解析

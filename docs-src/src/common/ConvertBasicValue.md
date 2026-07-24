@@ -1,6 +1,6 @@
 ---
-title: ConvertBasicValue Tutorial
-description: Utility methods for converting objects to basic Java types
+title: ConvertBasicValue
+description: Methods for converting objects to basic Java types safely
 tags:
   - type conversion
   - primitive types

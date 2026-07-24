@@ -1,6 +1,6 @@
 ---
-title: MapTool Tutorial
-description: Utility methods for working with Map data structures
+title: MapTool
+description: Utility methods for Map operations, filtering, and transformations
 tags:
   - Map utilities
   - XML conversion

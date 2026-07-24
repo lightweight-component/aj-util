@@ -1,10 +1,11 @@
 ---
-title: Docs Home
-subTitle: 2024-12-05 by Frank Cheung
-description: AJ Utilities Home
+title: AJ Utilities
+description: Small Java Utils Library with many powerful components
 date: 2025-01-05
 tags:
-  - AJ Utilities Home
+  - AJ Utilities
+  - Java Utils
+  - Documentation
 layout: layouts/aj-util.njk
 ---
 

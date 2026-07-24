@@ -3,10 +3,7 @@ package com.ajaxjs.util.date;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.RegExpUtils;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -129,5 +126,9 @@ public class DateTools {
      */
     public static String newISO8601Date() {
         return Formatter.ISO8601_FORMATTER.format(Instant.now());
+    }
+
+    public static String newISO8601Date2() {
+        return DateTimeFormatter.ISO_INSTANT.format(Instant.now());
     }
 }
