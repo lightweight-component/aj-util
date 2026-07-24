@@ -1,5 +1,10 @@
+<h1 align="center">AJ-Utils</h1>
+<h3 align="center">小型的 Java 工具包</h3>
+
+<div style="text-align: center;">
+
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.3.4-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
+[![Javadoc](https://img.shields.io/badge/javadoc-1.3.5-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
 ![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lightweight-component/aj-util)
@@ -8,7 +13,9 @@
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
 [![QQ群](https://framework.ajaxjs.com/static/qq.svg)](https://shang.qq.com/wpa/qunwpa?idkey=3877893a4ed3a5f0be01e809e7ac120e346102bd550deb6692239bb42de38e22)
 
-# AJ Utilities
+</div>
+
+<hr />
 
 
 轻量级的 Java 工具库，包含多个强大的组件。该库的 JAR 文件大小约为 90KB，并包含了以下模块：
@@ -51,6 +58,6 @@
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.4</version>
+    <version>1.3.5</version>
 </dependency>
 ```
