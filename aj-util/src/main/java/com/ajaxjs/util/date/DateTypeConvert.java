@@ -178,6 +178,11 @@ public class DateTypeConvert {
     private Instant instant;
 
     /**
+     * The time zone carried by a Calendar input.
+     */
+    private ZoneId calendarZone;
+
+    /**
      * Creates a DateTypeConvert instance with an Instant object.
      *
      * @param instant the Instant object to convert (represents a timestamp in UTC with nanosecond precision)
@@ -193,6 +198,7 @@ public class DateTypeConvert {
      */
     public DateTypeConvert(Calendar calendar) {
         instant = calendar.toInstant();
+        calendarZone = calendar.getTimeZone().toZoneId();
     }
 
     /**
@@ -212,7 +218,8 @@ public class DateTypeConvert {
      * supported target date type, using the provided or default time zone.
      *
      * @param clz    The target date type class (e.g., LocalDate.class, ZonedDateTime.class)
-     * @param zoneId The time zone to use for conversion. If null, the system default time zone is used.
+     * @param zoneId The time zone to use for conversion. If null, the input's zone is preserved when
+     *               available; otherwise, the system default time zone is used.
      * @param <T>    The generic type parameter representing the target date type
      * @return The converted date/time object of the specified type
      * @throws UnsupportedOperationException if no input date/time is set or if the target type is unsupported
@@ -235,6 +242,8 @@ public class DateTypeConvert {
             zone = zonedDateTime.getZone();
         else if (offsetDateTime != null)
             zone = offsetDateTime.getOffset();
+        else if (calendarZone != null)
+            zone = calendarZone;
         else
             zone = ZoneId.systemDefault();
 

@@ -23,6 +23,7 @@ Calendar calendar = new DateTypeConvert(instant).to(Calendar.class, zone);
 - Epoch value `0` is valid and represents `1970-01-01T00:00:00Z`.
 - Date-only strings are parsed as dates instead of being forced through a date-time formatter.
 - A `Calendar` result uses the requested zone, not an unrelated system-default calendar.
+- A `Calendar` input retains its own time zone when no `ZoneId` is supplied; an explicitly supplied `ZoneId` takes precedence.
 - `ZonedDateTime` and `OffsetDateTime` inputs are returned unchanged when the requested target is the same type, preserving their original zone or offset.
 - Converting `LocalDateTime` to an instant is strict: a daylight-saving gap is rejected, and an overlap is rejected as ambiguous instead of silently choosing an offset.
 - `OffsetTime` has no date. It may be converted only to `OffsetTime` or `LocalTime`; instant-based conversions are rejected rather than attaching the system's current date.

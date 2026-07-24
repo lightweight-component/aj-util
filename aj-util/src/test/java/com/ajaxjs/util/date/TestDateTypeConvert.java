@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -101,5 +102,30 @@ public class TestDateTypeConvert {
 
         assertEquals(tokyo, calendar.getTimeZone().toZoneId());
         assertEquals(0L, calendar.getTimeInMillis());
+    }
+
+    @Test
+    void testCalendarInputPreservesItsZoneByDefault() {
+        ZoneId tokyo = ZoneId.of("Asia/Tokyo");
+        Calendar input = Calendar.getInstance(TimeZone.getTimeZone(tokyo));
+        input.setTimeInMillis(Instant.EPOCH.toEpochMilli());
+
+        ZonedDateTime result = new DateTypeConvert(input).to(ZonedDateTime.class, null);
+
+        assertEquals(tokyo, result.getZone());
+        assertEquals(Instant.EPOCH, result.toInstant());
+    }
+
+    @Test
+    void testExplicitZoneOverridesCalendarInputZone() {
+        ZoneId tokyo = ZoneId.of("Asia/Tokyo");
+        ZoneId paris = ZoneId.of("Europe/Paris");
+        Calendar input = Calendar.getInstance(TimeZone.getTimeZone(tokyo));
+        input.setTimeInMillis(Instant.EPOCH.toEpochMilli());
+
+        ZonedDateTime result = new DateTypeConvert(input).to(ZonedDateTime.class, paris);
+
+        assertEquals(paris, result.getZone());
+        assertEquals(Instant.EPOCH, result.toInstant());
     }
 }
