@@ -22,11 +22,14 @@ Calendar calendar = new DateTypeConvert(instant).to(Calendar.class, zone);
 
 - Epoch value `0` is valid and represents `1970-01-01T00:00:00Z`.
 - Date-only strings are parsed as dates instead of being forced through a date-time formatter.
+- Parsing and output formatting use separate formatters. Parsing is strict, so invalid values such as `2023-02-29` raise a parsing exception instead of being silently adjusted.
+- Converting `LocalDate` to `LocalDate` returns the original value without applying zone rules, so a skipped civil date in the supplied zone cannot change the date.
 - A `Calendar` result uses the requested zone, not an unrelated system-default calendar.
 - A `Calendar` input retains its own time zone when no `ZoneId` is supplied; an explicitly supplied `ZoneId` takes precedence.
 - `ZonedDateTime` and `OffsetDateTime` inputs are returned unchanged when the requested target is the same type, preserving their original zone or offset.
 - Converting `LocalDateTime` to an instant is strict: a daylight-saving gap is rejected, and an overlap is rejected as ambiguous instead of silently choosing an offset.
 - `OffsetTime` has no date. It may be converted only to `OffsetTime` or `LocalTime`; instant-based conversions are rejected rather than attaching the system's current date.
+- `LocalTime` is returned unchanged when requested as `LocalTime`. It can become an `OffsetTime` only with an explicit fixed offset; other date-dependent conversions are rejected.
 
 ```java
 Instant epoch = new DateTypeConvert(0L).to(Instant.class, ZoneOffset.UTC);

@@ -226,6 +226,19 @@ public class DateTypeConvert {
      */
     @SuppressWarnings("unchecked")
     public <T> T to(Class<T> clz, ZoneId zoneId) {
+        if (localTime != null) {
+            if (clz == LocalTime.class)
+                return (T) localTime;
+            else if (clz == OffsetTime.class) {
+                if (zoneId == null || !zoneId.getRules().isFixedOffset())
+                    throw new UnsupportedOperationException("LocalTime requires an explicit fixed offset to be converted to OffsetTime.");
+
+                return (T) localTime.atOffset(zoneId.getRules().getOffset(Instant.EPOCH));
+            }
+
+            throw new UnsupportedOperationException("LocalTime cannot be converted to " + clz.getName() + " without an anchor date.");
+        }
+
         if (offsetTime != null) {
             if (clz == OffsetTime.class)
                 return (T) offsetTime;
@@ -256,6 +269,9 @@ public class DateTypeConvert {
         } else if (sqlTimestamp != null) {
             baseInstant = sqlTimestamp.toInstant();
         } else if (localDate != null) {
+            if (clz == LocalDate.class)
+                return (T) localDate;
+
             baseInstant = localDate.atStartOfDay(zone).toInstant();
         } else if (localDateTime != null) {
             if (clz == LocalDateTime.class)

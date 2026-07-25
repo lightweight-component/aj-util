@@ -3,20 +3,14 @@ package com.ajaxjs.util;
 import com.ajaxjs.util.io.Resources;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
-//import org.mockito.Mockito;
-//import org.w3c.dom.Node;
-//import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.lang.reflect.Method;
 import java.util.Map;
-//import java.util.function.BiConsumer;
-//import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
 
 class TestXmlHelper {
     @Test

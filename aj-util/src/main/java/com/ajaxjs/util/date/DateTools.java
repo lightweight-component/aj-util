@@ -44,11 +44,11 @@ public class DateTools {
 
             LocalDateTime dateTime;
             if (RegExpUtils.match(DATE_TIME, str))
-                dateTime = LocalDateTime.parse(str, Formatter.getDateTimeFormatter());
+                dateTime = LocalDateTime.parse(str, Formatter.getDateTimeParser());
             else if (RegExpUtils.match(DATE_YEAR, str))
-                return new DateTypeConvert(LocalDate.parse(str, Formatter.getDateFormatter())).to(Date.class, null);
+                return new DateTypeConvert(LocalDate.parse(str, Formatter.getDateParser())).to(Date.class, null);
             else
-                dateTime = LocalDateTime.parse(str, Formatter.getDateTimeShortFormatter());
+                dateTime = LocalDateTime.parse(str, Formatter.getDateTimeShortParser());
 
             return new DateTypeConvert(dateTime).to(Date.class, null);
 
@@ -128,7 +128,12 @@ public class DateTools {
         return Formatter.ISO8601_FORMATTER.format(Instant.now());
     }
 
-    public static String newISO8601Date2() {
+    /**
+     * 也是 ISO8601 时间，精读更高，提供微秒级别的
+     *
+     * @return The current time
+     */
+    public static String newISO8601DateWithHigherPrecision() {
         return DateTimeFormatter.ISO_INSTANT.format(Instant.now());
     }
 }

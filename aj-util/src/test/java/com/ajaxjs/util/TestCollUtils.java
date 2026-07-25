@@ -1,7 +1,5 @@
 package com.ajaxjs.util;
 
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
@@ -15,9 +13,6 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCollUtils {
-    private List<String> nonEmptyList;
-    private List<String> emptyList;
-    private List<String> nullList;
 
     /**
      * 合并两个数组
@@ -118,19 +113,8 @@ public class TestCollUtils {
         return list.stream().filter(filter).collect(Collectors.toList());
     }
 
-    @BeforeEach
-    public void setUp() {
-        nonEmptyList = new ArrayList<>();
-        nonEmptyList.add("A");
-        nonEmptyList.add("B");
-
-        emptyList = new ArrayList<>();
-
-        nullList = null;
-    }
-
     @Test
-    public void concat_TwoArrays_ReturnsConcatenatedArray() {
+    void concat_TwoArrays_ReturnsConcatenatedArray() {
         String[] first = {"A", "B"};
         String[] second = {"C", "D"};
         String[] expected = {"A", "B", "C", "D"};
@@ -140,7 +124,7 @@ public class TestCollUtils {
     }
 
     @Test
-    public void addAll_MultipleArrays_ReturnsConcatenatedArray() {
+    void addAll_MultipleArrays_ReturnsConcatenatedArray() {
         Integer[] first = {1, 2};
         Integer[] second = {3, 4};
         Integer[] third = {5, 6};
@@ -151,14 +135,14 @@ public class TestCollUtils {
     }
 
     @Test
-    public void newArray_CreatesNewArray() {
+    void newArray_CreatesNewArray() {
         Integer[] array = newArray(Integer.class, 5);
         assertNotNull(array, "Expected a new array");
         assertEquals(5, array.length, "Expected array of length 5");
     }
 
     @Test
-    public void arrayList_FromArray_ReturnsArrayList() {
+    void arrayList_FromArray_ReturnsArrayList() {
         String[] elements = {"A", "B", "C"};
         List<String> expected = new ArrayList<>();
         expected.add("A");
@@ -170,7 +154,7 @@ public class TestCollUtils {
     }
 
     @Test
-    public void findOne_FirstMatchingElement_ReturnsElement() {
+    void findOne_FirstMatchingElement_ReturnsElement() {
         List<String> list = new ArrayList<>();
         list.add("Apple");
         list.add("Banana");
@@ -181,7 +165,7 @@ public class TestCollUtils {
     }
 
     @Test
-    public void findOne_NoMatchingElement_ReturnsNull() {
+    void findOne_NoMatchingElement_ReturnsNull() {
         List<String> list = new ArrayList<>();
         list.add("Apple");
         list.add("Banana");
@@ -192,7 +176,7 @@ public class TestCollUtils {
     }
 
     @Test
-    public void findSome_MatchingElements_ReturnsList() {
+    void findSome_MatchingElements_ReturnsList() {
         List<String> list = new ArrayList<>();
         list.add("Apple");
         list.add("Banana");

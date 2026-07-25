@@ -22,11 +22,14 @@ Calendar calendar = new DateTypeConvert(instant).to(Calendar.class, zone);
 
 - 时间戳 `0` 是合法输入，表示 `1970-01-01T00:00:00Z`。
 - 纯日期字符串按日期格式解析，不再强制套用日期时间格式。
+- 日期解析与格式化输出使用不同的 formatter；解析采用严格模式，`2023-02-29` 等非法日期会抛出解析异常，不会被静默调整。
+- `LocalDate` 转换为 `LocalDate` 时原样返回，不应用时区规则，因此不会因目标时区的跳日规则而改变日期。
 - 转换得到的 `Calendar` 会使用调用方指定的时区。
 - `Calendar` 作为输入且未指定 `ZoneId` 时，会保留输入对象自身的时区；显式传入的 `ZoneId` 优先。
 - 输入与目标同为 `ZonedDateTime` 或 `OffsetDateTime` 时会原样返回，保留原始时区或 offset。
 - `LocalDateTime` 转换为瞬时时采用严格规则：夏令时缺口会被拒绝，重叠时间也会因歧义被拒绝，不会静默选择某个 offset。
 - `OffsetTime` 本身不含日期，只能转换为 `OffsetTime` 或 `LocalTime`；需要日期的瞬时转换会被拒绝，不再隐式补系统“今天”。
+- `LocalTime` 会原样转换为 `LocalTime`；只有显式提供固定 offset 时才能转换为 `OffsetTime`，需要日期的其他转换会被拒绝。
 
 ```java
 Instant epoch = new DateTypeConvert(0L).to(Instant.class, ZoneOffset.UTC);
