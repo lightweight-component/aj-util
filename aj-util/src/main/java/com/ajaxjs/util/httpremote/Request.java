@@ -75,7 +75,7 @@ public class Request implements HttpConstant {
      * Sets request data from a string in query parameter format.
      * Automatically converts to the appropriate format based on a content type.
      *
-     * @param data The request data in string format, like `a=foo&b=bar`
+     * @param data The request data in string format, like `a=foo&amp;b=bar`
      * @throws IllegalArgumentException if a content type is not set or data is invalid
      */
     public void setDataStr(String data) {

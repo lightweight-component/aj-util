@@ -7,7 +7,12 @@ layout: layouts/aj-util.njk
 ---
 # A Clean and Clear Java Date API
 
-When it comes to date types, they are relatively more tricky to handle compared to other primitive data types (int/long/boolean/string), and there are multiple reasons for this. Firstly, date is a broad concept - year-month-day can be called a date, year-month-day-hour-minute-second can also be called a date, or even just hour-minute-second alone can be considered a date. So which date are you actually referring to? The traditional Java date type `java.util.Date` does exactly this - one type encompasses all the above date concepts, which is the root cause of the混乱 in date APIs. Secondly, the way dates are expressed, also known as "format", can be `2025-12-22 11:05`, or `2025-12-22 11-05` or even `3 Jun 2025 11:05`, with many varieties. Finally, dates also have the concept of time zones, such as `2024-12-03T10:15:30+01:00[Europe/Paris]`, `Tue, 3 Jun 2025 11:05:30 GMT`, etc.
+Date and time values are trickier to handle than primitive values such as numbers, booleans, and strings.
+The word “date” may mean a calendar date, a date and time, or even a time of day. The legacy
+`java.util.Date` type does not distinguish these concepts, which contributes to confusion in older date APIs.
+Date/time values also have many textual formats, such as `2025-12-22 11:05`, `2025-12-22 11-05`, and
+`3 Jun 2025 11:05`. Time zones add another dimension, as shown by
+`2024-12-03T10:15:30+01:00[Europe/Paris]` and `Tue, 3 Jun 2025 11:05:30 GMT`.
 
 ## About the `Date` Type
 
@@ -38,5 +43,17 @@ This date API encapsulated by the author mainly has three functions:
 1. Date type conversion. Facing such a variety of date types: Date, Instant, Int/Long/String, LocalDate/LocalDateTime/LocalTime, ZonedDateTime, etc., providing methods that can convert between each other, i.e., input `T returned date = input(Object anyType).to(Class<T> expected type)`.
 2. Universal date formatting.
 3. `now()` function that returns the current date and other utility functions.
+
+### `DateTools.object2Date`
+
+`DateTools.object2Date(Object)` accepts `Date`, epoch milliseconds as `Long`, epoch seconds as `Integer`,
+`LocalDate`, `LocalDateTime`, and strings in `yyyy-MM-dd`, `yyyy-MM-dd HH:mm`, or
+`yyyy-MM-dd HH:mm:ss` form. It returns `null` for `null`, blank, or unsupported inputs. A non-blank string
+with an invalid value or unsupported format throws `DateTimeParseException`; parse failures are not converted
+to `null`.
+
+`DateTools.newISO8601DateWithHigherPrecision()` uses `DateTimeFormatter.ISO_INSTANT`. It preserves the
+fractional-second precision supplied by the system clock, up to nanoseconds, but does not guarantee a particular
+clock resolution such as microseconds.
 
 Source code at: [https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date](https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date).

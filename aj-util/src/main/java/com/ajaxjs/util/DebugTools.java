@@ -38,6 +38,11 @@ public class DebugTools {
      */
     public static boolean isDebug;
 
+    /**
+     * Checks whether the JVM default time zone is set to China Standard Time.
+     *
+     * @return {@code true} if the default time zone is China Standard Time
+     */
     public static boolean isChinaTimeZone() {
         // 获取默认时区
         ZoneId currentZone = ZoneId.systemDefault();

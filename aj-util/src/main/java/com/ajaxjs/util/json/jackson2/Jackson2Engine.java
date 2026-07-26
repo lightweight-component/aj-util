@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+/**
+ * JSON engine implementation based on Jackson 2.
+ */
 @Slf4j
 public class Jackson2Engine implements JsonEngine {
     /**

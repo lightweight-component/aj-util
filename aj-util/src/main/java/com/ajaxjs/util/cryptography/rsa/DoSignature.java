@@ -32,6 +32,12 @@ public class DoSignature {
      */
     private String strData;
 
+    /**
+     * Sets the data to be signed from a string and updates the byte representation.
+     *
+     * @param strData the data to be signed
+     * @return this builder instance
+     */
     public DoSignature setStrData(String strData) {
         this.strData = strData;
         this.data = strData.getBytes(StandardCharsets.UTF_8);
@@ -49,6 +55,12 @@ public class DoSignature {
      */
     private String privateKeyStr;
 
+    /**
+     * Sets the private key from a Base64/PEM-encoded string.
+     *
+     * @param privateKeyStr the private key string
+     * @return this builder instance
+     */
     public DoSignature setPrivateKeyStr(String privateKeyStr) {
         this.privateKeyStr = privateKeyStr;
         privateKey = (PrivateKey) KeyMgr.restoreKey(false, privateKeyStr);
@@ -79,6 +91,11 @@ public class DoSignature {
         }
     }
 
+    /**
+     * Validates that all required fields for signing are set.
+     *
+     * @throws IllegalStateException if any required field is missing
+     */
     private void validateState() {
         if (algorithmName == null || algorithmName.trim().isEmpty())
             throw new IllegalStateException("Signature algorithm is required.");

@@ -8,6 +8,9 @@ import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Utilities for uploading files via multipart/form-data POST requests.
+ */
 @Slf4j
 public class FileUpload {
     /**
@@ -20,6 +23,9 @@ public class FileUpload {
      */
     private static final String NEWLINE = "\r\n";
 
+    /**
+     * Prefix used before the multipart boundary.
+     */
     private static final String BOUNDARY_PREFIX = "--";
 
     /**
@@ -27,12 +33,20 @@ public class FileUpload {
      */
     public static final String BOUNDARY = "------------7d4a6d158c9";
 
+    /**
+     * Template for a single file field in a multipart request.
+     */
     private static final String FIELD = BOUNDARY_PREFIX + BOUNDARY + NEWLINE + "Content-Disposition: form-data;name=\"%s\";filename=\"%s\"" + NEWLINE
             + "Content-Type:%s" + NEWLINE + NEWLINE;
 
-    // 定义最后数据分隔线，即--加上BOUNDARY再加上--。
+    /**
+     * Final boundary marker indicating the end of multipart data.
+     */
     private static final byte[] END_DATA = (NEWLINE + BOUNDARY_PREFIX + BOUNDARY + BOUNDARY_PREFIX + NEWLINE).getBytes();
 
+    /**
+     * Template for building a complete multipart request body.
+     */
     private static final String TPL =
             "--%s\r\n" +
                     "Content-Disposition: form-data;name=\"%s\";filename=\"%s\"\r\n" +
@@ -47,8 +61,8 @@ public class FileUpload {
      * @param fieldName 文件字段名
      * @param fileName  文件名
      * @param file      文件内容
-     * @param fn        用于设置HTTP连接的回调函数
-     * @return 上传成功返回文件上传结果的Map，否则返回null
+     * @param fn        保留参数；当前实现不会应用该连接回调
+     * @return 服务端响应解析得到的 Map
      */
     public static Map<String, Object> uploadFile(String url, String fieldName, String fileName, byte[] file, Consumer<HttpURLConnection> fn) {
         String field = String.format(FIELD, fieldName, fileName, HttpConstant.FILE_TYPE);// 构造文件字段

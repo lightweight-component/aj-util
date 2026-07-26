@@ -18,8 +18,14 @@ public class TextBox {
      */
     private int boxWidth = 137;
 
+    /**
+     * String buffer that accumulates the formatted box content.
+     */
     private StringBuffer sb = new StringBuffer();
 
+    /**
+     * ANSI color used for the box border and title.
+     */
     private String boxColor = ANSI_YELLOW;
 
     /**
@@ -27,6 +33,12 @@ public class TextBox {
      */
     private boolean wrapLongLines = true;
 
+    /**
+     * Starts the text box with a top border and the given title.
+     *
+     * @param title the title to display in the top border
+     * @return this builder instance for chaining
+     */
     public TextBox boxStart(String title) {
         sb.append("\n").append(boxColor);
         sb.append(boxLine('┌', '─', '┐', title)).append('\n');
@@ -34,8 +46,18 @@ public class TextBox {
         return this;
     }
 
+    /**
+     * Maximum length allowed for a single value before truncation.
+     */
     private static final int VALUE_MAX_LENGTH = 1500;
 
+    /**
+     * Adds a key-value line to the text box.
+     *
+     * @param key   the key text
+     * @param value the value object, converted to string and truncated if too long
+     * @return this builder instance for chaining
+     */
     public TextBox line(String key, Object value) {
         String _value;
 
@@ -61,6 +83,11 @@ public class TextBox {
         return this;
     }
 
+    /**
+     * Closes the text box with a bottom border and returns the complete text.
+     *
+     * @return the formatted box string
+     */
     public String boxEnd() {
         sb.append(boxLine('└', '─', '┘', CommonConstant.EMPTY_STRING)).append(ANSI_RESET);
 

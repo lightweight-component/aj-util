@@ -50,6 +50,11 @@ When public behavior changes, update both language variants in the same change:
 
 Keep examples compilable against the current source. Document validation rules, exception behavior, charset/time-zone semantics, overlap behavior, and security limitations where relevant. Do not translate class names, method names, Maven coordinates, or code identifiers.
 
+When reviewing source comments, verify each statement against the method body and its callers. Distinguish
+`null` returns from thrown exceptions, configured precision from actual clock resolution, security controls
+that are enabled from dangerous XML features that are disabled, and key reconstruction from password-based
+key derivation. Change comments and documentation only when the task does not authorize implementation edits.
+
 ## Review code
 
 Prioritize correctness and security over style. Trace callers before reporting a defect. For each confirmed issue, provide the triggering input, observed behavior, intended behavior, impact, and a minimal repair plan. Pay special attention to parser boundaries, resource ownership, integer overflow, class/interface traversal, time-zone transitions, archive traversal/bombs, cryptographic defaults, and sensitive-data leakage.

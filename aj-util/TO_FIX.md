@@ -340,202 +340,63 @@ public final class Methods {
 
 # Date
 
-日期工具包在本轮修复后，主要还剩这些问题。
 
-## 优先建议继续修复
+## 中优先级
 
-1. `LocalTime` 输入完全无法转换
+3. 日期正则与 formatter 接受的格式不一致
 
-虽然存在：
+正则允许单数字段：
 
-```java
-new DateTypeConvert(LocalTime)
-```
+- `2023-2-3`
+- `2023-02-03 1:02:03`
 
-但 `to()` 没有处理 `localTime` 字段，最终会抛出“没有输入”。
+但 `yyyy-MM-dd` 和 `HH` formatter 不接受这些输入，最终抛异常。
 
-建议：
+位置：[DateTools.java:17](/Users/zhangxin/code/ajaxjs/aj-util/aj-util/src/main/java/com/ajaxjs/util/date/DateTools.java:17)
 
-- `LocalTime -> LocalTime` 直接返回。
-- 转换为 `Instant/Date/LocalDateTime` 时要求调用方提供锚点日期。
-- 不要自动使用“今天”。
+方案：取消正则预判，按明确的严格 formatter 列表依次解析；或者让正则和 formatter 使用完全相同的格式要求。
 
-2. 日期解析仍不够严格
 
-默认 `DateTimeFormatter.ofPattern("yyyy-MM-dd")` 使用 SMART 解析，可能把非法日期静默修正：
+6. `DateTools.now(formatter)` 不支持带时区的 formatter
 
-```text
-2023-02-29 -> 2023-02-28
-2023-04-31 -> 2023-04-30
-```
-
-建议使用：
+方法始终格式化 `LocalDateTime.now()`：
 
 ```java
-ResolverStyle.STRICT
+DateTools.now(Formatter.GMT_FORMATTER);
 ```
 
-并将年份格式从 `yyyy` 改成 `uuuu`。
+会抛出 `UnsupportedTemporalTypeException: OffsetSeconds`。
 
-3. 正则允许的格式与 formatter 不一致
+位置：[DateTools.java:81](/Users/zhangxin/code/ajaxjs/aj-util/aj-util/src/main/java/com/ajaxjs/util/date/DateTools.java:81)
 
-日期正则允许：
+方案：formatter 带 zone 时格式化 `Instant.now()` 或 `ZonedDateTime.now(zone)`；无 zone 时继续使用 `LocalDateTime`。
 
-```text
-2023-4-5
-```
+7. `Formatter` 宣称接受任意 `TemporalAccessor`，实际不成立
 
-但 `yyyy-MM-dd` formatter 通常要求：
-
-```text
-2023-04-05
-```
-
-正则还只支持 1900–2099 年。
-
-建议取消正则预判，按明确的 formatter 列表依次严格解析。
-
-4. `object2Date()` 的错误语义与文档不一致
-
-Javadoc 表示转换失败返回 `null`，但非法字符串实际上会抛 `DateTimeParseException`。
-
-建议拆成：
+以下调用都会失败：
 
 ```java
-parseDate(...)       // 失败抛异常
-tryParseDate(...)    // 失败返回 null 或 Optional<Date>
+new Formatter(LocalDate.now()).format();
+new Formatter(Instant.EPOCH).format("yyyy-MM-dd");
 ```
 
-5. Integer 时间戳被隐式认定为秒
+因为默认格式要求日期和时间，而 `Instant` 格式化日历字段还需要时区。
 
-```java
-new DateTypeConvert(int)
-```
+位置：[Formatter.java:17](/Users/zhangxin/code/ajaxjs/aj-util/aj-util/src/main/java/com/ajaxjs/util/date/Formatter.java:17)  
+[Formatter.java:39](/Users/zhangxin/code/ajaxjs/aj-util/aj-util/src/main/java/com/ajaxjs/util/date/Formatter.java:39)
 
-通过字符串补三个零转换为毫秒：
+方案：限制构造器支持的类型，或者针对 `LocalDate`、`LocalTime`、`Instant` 分别选择格式及 zone 策略。
 
-```java
-Long.parseLong(timestamp + "000")
-```
 
-这不仅语义隐蔽，还受 2038 年 `int` 秒时间戳范围限制。
 
-建议改成明确工厂方法：
+此外还有测试/文档问题，没有计入上述 8 个实现问题：
 
-```java
-fromEpochSeconds(long)
-fromEpochMillis(long)
-```
+- 部分测试依赖系统默认时区，换机器可能失败。
+- `testSqlDateToOffsetDateTime()` 只比较日期，无法验证 offset 和具体瞬时。
+- “高精度 ISO8601”实际为可变纳秒精度，不保证固定微秒精度。
+- `intro.md` 宣称日期类型可以互相转换，与当前对纯时间类型的合理限制不符。
 
-并逐步废弃 `int` 构造器。
-
-## 时区语义仍需完善
-
-6. `Calendar` 输入仍会丢失原始时区
-
-`DateTypeConvert(Calendar)` 目前只保存 `Instant`，没有保存 Calendar 的时区。如果转换时不传 `ZoneId`，会使用系统默认时区。
-
-建议同时保存：
-
-```java
-calendar.getTimeZone().toZoneId()
-```
-
-未指定目标时区时优先保留输入 Calendar 的时区。
-
-7. `LocalDate.atStartOfDay(zone)` 仍可能静默处理日期边界
-
-某些地区会在午夜发生时区切换，甚至跳过整个日期。`atStartOfDay(zone)` 会自动选择该日期最早的合法时间，而不一定是 `00:00`。
-
-建议明确语义：
-
-- 如果需要“该日期最早合法瞬间”，保留当前行为并写入文档。
-- 如果要求严格午夜，则检查返回时间是否为 `00:00`，否则抛异常。
-
-8. `OffsetTime` 尚未提供锚点日期转换 API
-
-现在已经不会偷偷使用今天，但调用方也没有办法通过现有 `to()` 正确转换为 `Instant`。
-
-建议新增：
-
-```java
-to(Class<T> target, LocalDate anchorDate, ZoneId zone)
-```
-
-或者更明确：
-
-```java
-toInstant(LocalDate anchorDate)
-```
-
-## Formatter 问题
-
-9. formatter 缓存无限增长
-
-任意格式字符串都会永久存入静态 `ConcurrentHashMap`。如果 pattern 来自外部输入，可能持续占用内存。
-
-建议只缓存内置格式，或改为有限容量缓存。
-
-10. 默认 Locale 隐式且缓存不区分 Locale
-
-```java
-DateTimeFormatter.ofPattern(format)
-```
-
-使用创建时的默认 Locale，但缓存 key 只有 format。运行期间 Locale 改变后，缓存行为会不一致。
-
-建议：
-
-- 默认使用 `Locale.ROOT`。
-- 需要本地化时显式传入 Locale。
-- 缓存 key 同时包含 pattern 和 Locale。
-
-11. `Formatter(Date)` 隐式使用系统默认时区
-
-它先把 `Date` 转为系统时区下的 `LocalDateTime`。同一个 `Date` 在不同服务器上格式化结果不同。
-
-建议增加：
-
-```java
-Formatter(Date date, ZoneId zone)
-```
-
-或直接使用带时区的 formatter 格式化 `date.toInstant()`。
-
-12. ISO 8601 formatter 是手工格式
-
-当前：
-
-```java
-yyyy-MM-dd'T'HH:mm:ss'Z'
-```
-
-存在 `yyyy` 纪年语义问题，也不支持小数秒。
-
-建议根据协议改用：
-
-```java
-DateTimeFormatter.ISO_INSTANT
-```
-
-如果必须固定到秒，则先截断 `Instant`，再使用 `uuuu` 格式。
-
-## 测试仍需补充
-
-还缺少这些关键测试：
-
-- `LocalTime` 各目标类型。
-- 2 月 29 日、4 月 31 日等严格解析。
-- 单数字月日是否支持。
-- 1900 年以前、2100 年以后的日期。
-- Calendar 输入时区保留。
-- 跨午夜和跳过整日的极端时区。
-- `object2Date()` 非法输入的统一行为。
-- 固定 Locale 下的格式化。
-- epoch seconds 的 2038 年边界。
-
-建议下一轮优先修复：`LocalTime`、严格日期解析、解析异常语义和 Calendar 输入时区。这四项对正确性的影响最大。
-
+日期源码已按 Java 8 目标独立编译，并对上述关键输入进行了实际复现。完整 Maven 测试仍受项目现有的 Lombok 生成代码缺失等全模块编译错误影响。
 
 # 加密
 

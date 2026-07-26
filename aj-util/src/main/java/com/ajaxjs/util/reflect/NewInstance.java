@@ -11,8 +11,14 @@ import java.lang.reflect.InvocationTargetException;
  */
 @Slf4j
 public class NewInstance<T> {
+    /**
+     * 要创建实例的类对象
+     */
     private final Class<T> clz;
 
+    /**
+     * 构造函数参数列表
+     */
     private Object[] args;
 
     /**

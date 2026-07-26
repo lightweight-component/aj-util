@@ -25,14 +25,29 @@ import java.util.Arrays;
 @Data
 @RequiredArgsConstructor
 public class Cryptography {
+    /**
+     * The recommended salt length in bytes for PBE operations.
+     */
     public static final int PBE_SALT_LENGTH = 16;
 
+    /**
+     * The minimum recommended iteration count for PBE key derivation.
+     */
     public static final int MIN_PBE_ITERATIONS = 100_000;
 
+    /**
+     * The derived PBE key length in bits.
+     */
     private static final int PBE_KEY_LENGTH = 128;
 
+    /**
+     * The nonce length in bytes for GCM mode.
+     */
     private static final int GCM_NONCE_LENGTH = 12;
 
+    /**
+     * The authentication tag length in bits for GCM mode.
+     */
     private static final int GCM_TAG_LENGTH = 128;
 
     /**
@@ -45,33 +60,74 @@ public class Cryptography {
      */
     private final int mode;
 
+    /**
+     * The cryptographic key used for cipher operations.
+     */
     private Key key;
 
+    /**
+     * Sets the cryptographic key from raw key bytes.
+     *
+     * @param keyData the raw key bytes
+     */
     public void setKeyData(byte[] keyData) {
         key = new SecretKeySpec(keyData, algorithmName);
     }
 
+    /**
+     * The source secret key whose encoded bytes are used to rebuild the cipher key.
+     */
     private SecretKey secretKey;
 
+    /**
+     * Sets the secret key and rebuilds the cipher key from its encoded bytes using
+     * the configured cipher algorithm name.
+     *
+     * @param secretKey the secret key
+     */
     public void setSecretKey(SecretKey secretKey) {
         this.secretKey = secretKey;
         key = new SecretKeySpec(secretKey.getEncoded(), algorithmName);
     }
 
+    /**
+     * The input data for the cipher operation.
+     */
     private byte[] data;
 
+    /**
+     * Sets the cipher data from a plain string (UTF-8 encoded).
+     *
+     * @param dataStr the input string
+     */
     public void setDataStr(String dataStr) {
         data = new StringBytes(dataStr).getUTF8_Bytes();
     }
 
+    /**
+     * Sets the cipher data from a Base64-encoded string.
+     *
+     * @param dataStrBase64 the Base64-encoded input string
+     */
     public void setDataStrBase64(String dataStrBase64) {
         data = new Base64Utils(dataStrBase64).decode();
     }
 
+    /**
+     * The algorithm parameter specification, such as an initialization vector or GCM parameters.
+     */
     private AlgorithmParameterSpec spec;
 
+    /**
+     * Additional authenticated data used with AEAD ciphers such as GCM.
+     */
     private byte[] associatedData;
 
+    /**
+     * Performs the configured cipher operation and returns the result as bytes.
+     *
+     * @return the encrypted or decrypted bytes
+     */
     public byte[] doCipher() {
         try {
             Cipher cipher = Cipher.getInstance(algorithmName);
@@ -100,10 +156,20 @@ public class Cryptography {
         }
     }
 
+    /**
+     * Performs the configured cipher operation and returns the result as a UTF-8 string.
+     *
+     * @return the encrypted or decrypted string
+     */
     public String doCipherAsStr() {
         return new StringBytes(doCipher()).getUTF8_String();
     }
 
+    /**
+     * Performs the configured cipher operation and returns the result as a Base64-encoded string.
+     *
+     * @return the Base64-encoded result
+     */
     public String doCipherAsBase64Str() {
         return new Base64Utils(doCipher()).encodeAsString();
     }
@@ -147,6 +213,13 @@ public class Cryptography {
         return cryptography.doCipherAsStr();
     }
 
+    /**
+     * Encrypts the given data using DES and returns the result as a hex string.
+     *
+     * @param data the plaintext to encrypt
+     * @param key  the encryption key
+     * @return the encrypted hex string
+     */
     public static String DES_encode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.DES, Cipher.ENCRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
@@ -155,6 +228,13 @@ public class Cryptography {
         return cryptography.doCipherAsHexStr();
     }
 
+    /**
+     * Decrypts the given DES-encrypted hex string.
+     *
+     * @param data the encrypted hex string
+     * @param key  the decryption key
+     * @return the decrypted plaintext
+     */
     public static String DES_decode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.DES, Cipher.DECRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
@@ -163,6 +243,13 @@ public class Cryptography {
         return cryptography.doCipherAsStr();
     }
 
+    /**
+     * Encrypts the given data using Triple DES and returns the raw bytes.
+     *
+     * @param data the plaintext to encrypt
+     * @param key  the encryption key bytes
+     * @return the encrypted bytes
+     */
     public static byte[] tripleDES_encode(String data, byte[] key) {
         Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.ENCRYPT_MODE);
         cryptography.setKey(new SecretKeySpec(key, Constant.TRIPLE_DES));
@@ -171,6 +258,13 @@ public class Cryptography {
         return cryptography.doCipher();
     }
 
+    /**
+     * Decrypts the given Triple DES-encrypted bytes.
+     *
+     * @param data the encrypted bytes
+     * @param key  the decryption key bytes
+     * @return the decrypted plaintext
+     */
     public static String tripleDES_decode(byte[] data, byte[] key) {
         Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.DECRYPT_MODE);
         cryptography.setKey(new SecretKeySpec(key, Constant.TRIPLE_DES));
@@ -191,6 +285,15 @@ public class Cryptography {
         return salt;
     }
 
+    /**
+     * Encrypts the given data using password-based encryption (PBE) with AES/GCM.
+     *
+     * @param data           the plaintext to encrypt
+     * @param key            the password used to derive the encryption key
+     * @param salt           the salt for key derivation
+     * @param iterationCount the iteration count for key derivation
+     * @return the encrypted bytes, with the GCM nonce prepended
+     */
     public static byte[] PBE_encode(String data, String key, byte[] salt, int iterationCount) {
         validatePbeParameters(salt, iterationCount);
         Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.ENCRYPT_MODE);
@@ -207,6 +310,15 @@ public class Cryptography {
         return result;
     }
 
+    /**
+     * Decrypts data produced by {@link #PBE_encode(String, String, byte[], int)}.
+     *
+     * @param data           the encrypted bytes, with the GCM nonce prepended
+     * @param key            the password used to derive the decryption key
+     * @param salt           the salt for key derivation
+     * @param iterationCount the iteration count for key derivation
+     * @return the decrypted plaintext
+     */
     public static String PBE_decode(byte[] data, String key, byte[] salt, int iterationCount) {
         validatePbeParameters(salt, iterationCount);
         if (data == null || data.length < GCM_NONCE_LENGTH + GCM_TAG_LENGTH / Byte.SIZE)
@@ -223,6 +335,12 @@ public class Cryptography {
     /**
      * Decrypts data created by the former PBEWithMD5AndDES implementation.
      * This method must not be used to encrypt new data.
+     *
+     * @param data           the data to be decoded
+     * @param key            the password used to derive the decryption key
+     * @param salt           the legacy 8-byte PBE salt
+     * @param iterationCount the positive legacy key-derivation iteration count
+     * @return the decrypted plaintext
      */
     @Deprecated
     public static String PBE_legacy_decode(byte[] data, String key, byte[] salt, int iterationCount) {
@@ -247,6 +365,14 @@ public class Cryptography {
         return cryptography.doCipherAsStr();
     }
 
+    /**
+     * Derives an AES secret key from the given password, salt and iteration count.
+     *
+     * @param password       the PBE password
+     * @param salt           the salt
+     * @param iterationCount the iteration count
+     * @return the derived AES secret key
+     */
     private static SecretKeySpec derivePbeKey(String password, byte[] salt, int iterationCount) {
         if (password == null || password.isEmpty())
             throw new IllegalArgumentException("PBE password must not be empty.");
@@ -261,6 +387,12 @@ public class Cryptography {
         }
     }
 
+    /**
+     * Validates the PBE salt and iteration count parameters.
+     *
+     * @param salt           the salt to validate
+     * @param iterationCount the iteration count to validate
+     */
     private static void validatePbeParameters(byte[] salt, int iterationCount) {
         if (salt == null || salt.length < PBE_SALT_LENGTH)
             throw new IllegalArgumentException("PBE salt must contain at least " + PBE_SALT_LENGTH + " bytes.");

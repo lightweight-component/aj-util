@@ -99,12 +99,19 @@ Type[] actualType = Types.getActualType(ArrayList.class);
 * **参数说明：**
     * `clz`: 要从中检索实际类型参数的类。
 * **返回值:** 超类的第一个实际类型参数作为 `Class`。
+* **异常:** 如果 `clz` 没有参数化父类，或第一个类型参数无法解析为 `Class`，抛出 `IllegalArgumentException`。
 
 **示例:**
 
 ```java
-Class<?> actualClass = Types.getActualClass(ArrayList.class);
-// actualClass 将是 ArrayList 超类的第一个泛型类型参数，作为 Class
+class StringList extends ArrayList<String> {
+}
+
+Class<?> actualClass = Types.getActualClass(StringList.class);
+// String.class
+
+Types.getActualClass(String.class);
+// 抛出 IllegalArgumentException，不再发生 NullPointerException
 ```
 
 ### 6. `type2class(Type type)`

@@ -9,6 +9,11 @@ import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.util.function.Consumer;
 
+/**
+ * GET method annotation.
+ * <p>
+ * Indicates that the annotated method is a GET request.
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GET {

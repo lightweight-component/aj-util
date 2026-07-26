@@ -112,6 +112,7 @@ public class Get extends Request {
      * @param url   The URL to send the GET request to
      * @param clz   The class to map the response to
      * @param token The authorization token to include in the request header
+     * @param <T>   The type of the response object
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz, String token) {
@@ -125,6 +126,7 @@ public class Get extends Request {
      * @param url            The URL to send the GET request to
      * @param clz            The class to map the response to
      * @param initConnection Consumer that configures the HTTP connection
+     * @param <T>            The type of the response object
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz, Consumer<HttpURLConnection> initConnection) {
@@ -137,6 +139,7 @@ public class Get extends Request {
      *
      * @param url The URL to send the GET request to
      * @param clz The class to map the response to
+     * @param <T> The type of the response object
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz) {

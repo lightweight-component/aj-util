@@ -13,11 +13,23 @@ import java.util.Map;
  */
 @Slf4j
 public final class JsonUtil {
+    /**
+     * The underlying JSON engine used for all conversions.
+     */
     private static volatile JsonEngine engine;
 
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
     private JsonUtil() {
     }
 
+    /**
+     * Sets the JSON engine used by this utility.
+     *
+     * @param engine the JSON engine to use
+     * @throws IllegalArgumentException if the engine is {@code null}
+     */
     public static void setEngine(JsonEngine engine) {
         if (engine == null)
             throw new IllegalArgumentException("JsonEngine cannot be null.");
@@ -25,6 +37,11 @@ public final class JsonUtil {
         JsonUtil.engine = engine;
     }
 
+    /**
+     * Gets the current JSON engine, creating one lazily if not set.
+     *
+     * @return the JSON engine
+     */
     public static JsonEngine getEngine() {
         if (engine != null)
             return engine;

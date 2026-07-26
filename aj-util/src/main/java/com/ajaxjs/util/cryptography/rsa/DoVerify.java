@@ -32,6 +32,12 @@ public class DoVerify {
      */
     private String strData;
 
+    /**
+     * Sets the data to be verified from a string and updates the byte representation.
+     *
+     * @param strData the data to be verified
+     * @return this builder instance
+     */
     public DoVerify setStrData(String strData) {
         this.strData = strData;
         this.data = strData.getBytes(StandardCharsets.UTF_8);
@@ -39,6 +45,9 @@ public class DoVerify {
         return this;
     }
 
+    /**
+     * The signature bytes to be verified.
+     */
     private byte[] signatureData;
 
     /**
@@ -61,6 +70,12 @@ public class DoVerify {
      */
     private String publicKeyStr;
 
+    /**
+     * Sets the public key from a Base64/PEM-encoded string.
+     *
+     * @param publicKeyStr the public key string
+     * @return this builder instance
+     */
     public DoVerify setPublicKeyStr(String publicKeyStr) {
         this.publicKeyStr = publicKeyStr;
         publicKey = (PublicKey) KeyMgr.restoreKey(true, publicKeyStr);
@@ -93,6 +108,11 @@ public class DoVerify {
         }
     }
 
+    /**
+     * Validates that all required fields for verification are set.
+     *
+     * @throws IllegalStateException if any required field is missing
+     */
     private void validateState() {
         if (algorithmName == null || algorithmName.trim().isEmpty())
             throw new IllegalStateException("Signature algorithm is required.");

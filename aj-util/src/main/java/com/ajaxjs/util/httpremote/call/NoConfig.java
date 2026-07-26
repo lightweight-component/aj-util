@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Default no-op implementation of {@link HttpApiConfig}.
+ */
 public class NoConfig implements HttpApiConfig {
     @Override
     public Consumer<HttpURLConnection> initConn() {

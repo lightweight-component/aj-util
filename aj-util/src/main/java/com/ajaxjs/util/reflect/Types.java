@@ -70,11 +70,25 @@ public class Types {
      *
      * @param clz The class to analyze
      * @return The actual class
+     * @throws IllegalArgumentException if the class does not declare a parameterized superclass,
+     *                                  or its first type argument cannot be resolved to a Class
      */
     public static Class<?> getActualClass(Class<?> clz) {
+        if (clz == null)
+            throw new IllegalArgumentException("Class must not be null.");
+
         Type[] actualType = getActualType(clz);
 
-        return type2class(actualType[0]);
+        if (actualType == null || actualType.length == 0)
+            throw new IllegalArgumentException("Class " + clz.getName() + " does not declare a parameterized superclass.");
+
+        Class<?> actualClass = type2class(actualType[0]);
+
+        if (actualClass == null)
+            throw new IllegalArgumentException("The first generic type argument of " + clz.getName()
+                    + " cannot be resolved to a Class.");
+
+        return actualClass;
     }
 
     /**

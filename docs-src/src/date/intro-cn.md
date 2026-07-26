@@ -7,7 +7,11 @@ layout: layouts/aj-util-cn.njk
 ---
 
 # 一个简洁、清晰的 Java 日期 API
-说起日期类型，相对其他原始数据类型（int/long/boolean/string）处理起来是比较棘手的，原因也是多方面的，首先日期是个笼统的概念，年月日可以说成是日期，年月日时分秒也可以说成日期，或者说单独的时分秒也是日期，——那你到底说着哪个日期呢，是不是？Java 传统日期类型`java.util.Date`就是这么干的，一个类型囊括上述所有的日期概念，也是造成日期 API 混乱的根源；其次日期的表达方式，也称之为“格式 Format”，可以`2025-12-22 11:05`，也可以`2025-12-22 11-05`甚至`3 Jun 2025 11:05`，种类繁多；最后日期还有时区的概念，比如`2024-12-03T10:15:30+01:00[Europe/Paris]`，`Tue, 3 Jun 2025 11:05:30 GMT`等等。
+日期时间类型比数字、布尔值和字符串等基础值更难处理。“日期”可能指纯日期、日期时间，
+也可能只指一天中的某个时间。传统的 `java.util.Date` 没有区分这些概念，这是旧日期 API
+容易产生混乱的原因之一。日期时间还有多种文本格式，例如 `2025-12-22 11:05`、
+`2025-12-22 11-05` 和 `3 Jun 2025 11:05`；时区则进一步增加了复杂度，例如
+`2024-12-03T10:15:30+01:00[Europe/Paris]` 和 `Tue, 3 Jun 2025 11:05:30 GMT`。
 
 ## 关于`Date`类型
 早期 Java 版本中就是基于`java.util.Date`类型一统天下，很多日期处理方法都是围绕它进行的（Java 1.1 之前）。后来版本重构中废弃了很多的这些方法，改由`java.util.Calendar`与`java.text.DateFormat`完成。Calendar 解决了日期的棘手问题了吗？并没有，虽然 Calendar 处理日期起来更灵活但是使用仍然过于复杂，设置、比较、格式化仍旧比较麻烦、冗长，所以社区又有了代替品 Joda-Time，被许多项目所采用。于是这个优秀的开源项目渐渐地成为 Java 标准的一部分，便是 JSR310，最后集成到 Java 8 中变成`java.time`！
@@ -39,6 +43,14 @@ layout: layouts/aj-util-cn.njk
 3. 返回当前日期的`now()`函数及其他工具函数。
 
 
+### `DateTools.object2Date`
+
+`DateTools.object2Date(Object)` 支持 `Date`、以毫秒为单位的 `Long` 时间戳、以秒为单位的 `Integer`
+时间戳、`LocalDate`、`LocalDateTime`，以及 `yyyy-MM-dd`、`yyyy-MM-dd HH:mm`、
+`yyyy-MM-dd HH:mm:ss` 三种字符串。输入为 `null`、空白字符串或不支持的类型时返回 `null`；
+非空字符串的日期值非法或格式不受支持时抛出 `DateTimeParseException`，不会把解析失败转换成 `null`。
+
+`DateTools.newISO8601DateWithHigherPrecision()` 使用 `DateTimeFormatter.ISO_INSTANT`，会保留系统时钟
+提供的小数秒精度，最高可到纳秒，但不保证系统时钟一定具有微秒或纳秒分辨率。
+
 源码在：[https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date](https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date)。
-
-

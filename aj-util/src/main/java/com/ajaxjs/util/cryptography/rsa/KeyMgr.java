@@ -90,6 +90,11 @@ public class KeyMgr implements Constant {
         return new Base64Utils(getPublicKeyBytes()).encodeAsString();
     }
 
+    /**
+     * Returns the public key in PEM format.
+     *
+     * @return the PEM-encoded public key
+     */
     public String getPublicToPem() {
         return publicKeyToPem(getPublicKeyStr());
     }
@@ -103,6 +108,11 @@ public class KeyMgr implements Constant {
         return new Base64Utils(getPrivateKeyBytes()).encodeAsString();
     }
 
+    /**
+     * Returns the private key in PEM format.
+     *
+     * @return the PEM-encoded private key
+     */
     public String getPrivateToPem() {
         return privateKeyToPem(getPrivateKeyStr());
     }
@@ -138,6 +148,12 @@ public class KeyMgr implements Constant {
         }
     }
 
+    /**
+     * Restores a private key from its Base64/PEM-encoded string representation.
+     *
+     * @param key the Base64 or PEM-encoded private key string
+     * @return the restored private key
+     */
     public static PrivateKey restorePrivateKey(String key) {
         Key _key = restoreKey(false, key);
 
@@ -227,6 +243,13 @@ public class KeyMgr implements Constant {
         return action(true, true, data, key);
     }
 
+    /**
+     * Encrypts data with the given public key and returns the result as a Base64 string.
+     *
+     * @param data the plaintext bytes
+     * @param key  the public key string
+     * @return the Base64-encoded encrypted data
+     */
     public static String publicKeyEncryptAsBase64Str(byte[] data, String key) {
         return new Base64Utils(publicKeyEncrypt(data, key)).encodeAsString();
     }
@@ -264,6 +287,13 @@ public class KeyMgr implements Constant {
         return action(false, false, data, key);
     }
 
+    /**
+     * Decrypts data with the given private key and returns the result as a UTF-8 string.
+     *
+     * @param data the encrypted bytes
+     * @param key  the private key string
+     * @return the decrypted UTF-8 string
+     */
     public static String privateKeyDecryptAsStr(byte[] data, String key) {
         return new StringBytes(privateKeyDecrypt(data, key)).getUTF8_String(); // needs to Base64?
     }
@@ -304,6 +334,12 @@ public class KeyMgr implements Constant {
         return restorePrivateKey(privateKey);
     }
 
+    /**
+     * Loads a private key from the given file path.
+     *
+     * @param filePath the path to the file containing the private key
+     * @return the loaded private key
+     */
     public static PrivateKey loadPrivateKey(String filePath) {
         String fileContent = new FileHelper(filePath).getFileContent();
 

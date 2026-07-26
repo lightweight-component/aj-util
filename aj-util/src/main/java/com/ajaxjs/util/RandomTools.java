@@ -89,6 +89,9 @@ public class RandomTools {
      */
     public static final SecureRandom RANDOM = new SecureRandom();
 
+    /**
+     * Plain Random instance for non-cryptographic random number generation.
+     */
     public static final Random SIMPLE_RANDOM = new Random();
 
     /**

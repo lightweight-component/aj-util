@@ -51,7 +51,7 @@ public class Post extends BasePost {
      *
      * @param url  the API endpoint URL
      * @param data the request payload data to be converted to JSON
-     * @return the response as a Map<String, Object> containing parsed JSON data
+     * @return the response as a {@code Map<String, Object>} containing parsed JSON data
      */
     public static Map<String, Object> api(String url, Object data) {
         return new Post(url, data, CONTENT_TYPE_JSON).getResp().responseAsJson();
@@ -65,12 +65,21 @@ public class Post extends BasePost {
      * @param url            the API endpoint URL
      * @param data           the request payload data to be converted to JSON
      * @param initConnection consumer for customizing the HTTP connection before sending
-     * @return the response as a Map<String, Object> containing parsed JSON data
+     * @return the response as a {@code Map<String, Object>} containing parsed JSON data
      */
     public static Map<String, Object> api(String url, Object data, Consumer<HttpURLConnection> initConnection) {
         return new Post(url, data, CONTENT_TYPE_JSON, initConnection).getResp().responseAsJson();
     }
 
+    /**
+     * Sends a POST request to the specified API endpoint using form data.
+     * Automatically converts the response to a Map using JSON parsing.
+     *
+     * @param url            the API endpoint URL
+     * @param data           the request payload data to be encoded as form fields
+     * @param initConnection consumer for customizing the HTTP connection before sending
+     * @return the response as a Map containing parsed JSON data
+     */
     public static Map<String, Object> form(String url, Object data, Consumer<HttpURLConnection> initConnection) {
         return new Post(url, data, CONTENT_TYPE_FORM, initConnection).getResp().responseAsJson();
     }

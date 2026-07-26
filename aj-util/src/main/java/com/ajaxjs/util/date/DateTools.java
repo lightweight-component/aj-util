@@ -8,7 +8,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
- * Date Utils
+ * Utility class providing common date and time operations.
+ *
+ * <p>Includes conversions between various date representations (legacy {@link Date},
+ * {@link LocalDateTime}, {@link LocalDate}, strings, timestamps), as well as methods
+ * for obtaining the current date/time in several standard formats.
  */
 public class DateTools {
     /**
@@ -22,10 +26,22 @@ public class DateTools {
     private final static String DATE_TIME = DATE_YEAR + " ([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]";
 
     /**
-     * The date in basic data value (long/int/string), transform to Date type.
+     * Converts a basic data value (long/int/string) or a Java 8 date/time object to a {@link Date}.
      *
-     * @param obj Any object that trying to transform
-     * @return The date, or `null` if the object is null or the transforming failed.
+     * <p>Supported input types:
+     * <ul>
+     *   <li>{@code null} - returns {@code null}</li>
+     *   <li>{@link Date} - returned as-is</li>
+     *   <li>{@link Long} - treated as milliseconds since epoch</li>
+     *   <li>{@link Integer} - treated as seconds since epoch and converted to milliseconds</li>
+     *   <li>{@link String} - parsed as {@code yyyy-MM-dd HH:mm:ss}, {@code yyyy-MM-dd},
+     *       or {@code yyyy-MM-dd HH:mm}</li>
+     *   <li>{@link LocalDateTime} / {@link LocalDate} - converted using the system default timezone</li>
+     * </ul>
+     *
+     * @param obj any object to be converted to a date
+     * @return the converted {@link Date}, or {@code null} if the input is null, blank, or unsupported
+     * @throws java.time.format.DateTimeParseException if a non-blank string is not in a supported format
      */
     public static Date object2Date(Object obj) {
         if (obj == null)
@@ -35,7 +51,7 @@ public class DateTools {
         else if (obj instanceof Long)
             return new Date((Long) obj);
         else if (obj instanceof Integer)
-            return object2Date(Long.parseLong(obj + "000")); /* 10 位长 int，后面补充三个零为13位 long 时间戳 */
+            return object2Date(Long.parseLong(obj + "000")); /* 10-digit int timestamp padded to 13-digit milliseconds */
         else if (obj instanceof String) {
             String str = obj.toString();
 
@@ -52,7 +68,7 @@ public class DateTools {
 
             return new DateTypeConvert(dateTime).to(Date.class, null);
 
-            // 输入日期不合法，不能转为日期类型。请重新输入日期字符串格式类型，或考虑其他方法。
+            // The input date is invalid and cannot be converted to a date type. Please re-enter a valid date string format or consider another approach.
         } else if (obj instanceof LocalDateTime)
             return new DateTypeConvert((LocalDateTime) obj).to(Date.class, null);
         else if (obj instanceof LocalDate)
@@ -111,27 +127,30 @@ public class DateTools {
     }
 
     /**
-     * 请求的时间戳，格式必须符合 RFC1123 的日期格式
+     * Returns the current timestamp formatted according to RFC1123 date format.
+     * This format is commonly used for HTTP headers and request signatures.
      *
-     * @return The current time
+     * @return The current time in RFC1123 format
      */
     public static String nowGMTDate() {
         return Formatter.GMT_FORMATTER.format(Instant.now());
     }
 
     /**
-     * 请求的时间戳。按照 ISO8601 标准表示，并需要使用 UTC 时间，格式为 yyyy-MM-ddTHH:mm:ssZ
+     * Returns the current timestamp formatted according to ISO8601 standard using UTC time.
+     * The format is {@code yyyy-MM-dd'T'HH:mm:ss'Z'} and is commonly used for S3 storage signatures.
      *
-     * @return The current time
+     * @return The current time in ISO8601 format
      */
     public static String newISO8601Date() {
         return Formatter.ISO8601_FORMATTER.format(Instant.now());
     }
 
     /**
-     * 也是 ISO8601 时间，精读更高，提供微秒级别的
+     * Returns the current instant in ISO-8601 format, preserving the fractional-second
+     * precision supplied by the system clock (up to nanoseconds).
      *
-     * @return The current time
+     * @return The current time in high-precision ISO8601 format
      */
     public static String newISO8601DateWithHigherPrecision() {
         return DateTimeFormatter.ISO_INSTANT.format(Instant.now());

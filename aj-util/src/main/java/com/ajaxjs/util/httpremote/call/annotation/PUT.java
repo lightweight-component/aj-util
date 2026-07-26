@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.util.function.Consumer;
 
+/**
+ * PUT reqeust
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PUT {
@@ -20,6 +23,12 @@ public @interface PUT {
      */
     String value() default "";
 
+    /**
+     * The type of request body
+     * Might be FORM, UPLOAD FORM or JSON
+     *
+     * @return The type of request body
+     */
     PayloadType type() default PayloadType.JSON_BODY;
 
     /**

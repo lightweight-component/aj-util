@@ -94,6 +94,12 @@ public class Clazz {
         return interfaces.toArray(new Class[0]);
     }
 
+    /**
+     * Recursively adds an interface and all of its parent interfaces to the given set.
+     *
+     * @param current    the interface to add
+     * @param interfaces the set collecting all interfaces
+     */
     private static void addInterfaceHierarchy(Class<?> current, Set<Class<?>> interfaces) {
         if (!interfaces.add(current))
             return;

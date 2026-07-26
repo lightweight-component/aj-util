@@ -271,6 +271,13 @@ public class FileHelper {
         }
     }
 
+    /**
+     * Recursively copies the source directory to the destination, preserving relative structure.
+     *
+     * @param source      the source directory
+     * @param destination the destination directory
+     * @throws IOException if an IO error occurs during copying
+     */
     private static void copyDirectory(Path source, Path destination) throws IOException {
         Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
             @Override
@@ -295,6 +302,13 @@ public class FileHelper {
         });
     }
 
+    /**
+     * Resolves the real path of an existing ancestor and appends any missing trailing parts.
+     *
+     * @param path the path to resolve
+     * @return the resolved normalized path
+     * @throws IOException if an IO error occurs while resolving the real path
+     */
     private static Path resolveAgainstRealAncestor(Path path) throws IOException {
         Deque<Path> missingParts = new ArrayDeque<>();
         Path existing = path;
@@ -438,6 +452,15 @@ public class FileHelper {
         }
     }
 
+    /**
+     * Transfers {@code length} bytes from {@code source} to {@code target}, starting at {@code position}.
+     *
+     * @param source   the source file channel
+     * @param position the start position in the source channel
+     * @param length   the number of bytes to transfer
+     * @param target   the target file channel
+     * @throws IOException if an IO error occurs during transfer
+     */
     private static void transferFully(FileChannel source, long position, long length, FileChannel target) throws IOException {
         long remaining = length;
 

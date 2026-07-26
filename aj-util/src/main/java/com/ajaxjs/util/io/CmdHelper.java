@@ -62,6 +62,12 @@ public class CmdHelper {
         }
     }
 
+    /**
+     * Reads either the stdout or stderr of the given process line by line.
+     *
+     * @param process  the running process
+     * @param callback the callback to invoke for each stdout line; when {@code null}, stderr is read instead
+     */
     private static void readOutput(Process process, Function<String, Boolean> callback) {
         boolean invokeCallback = callback != null;
         RuntimeException callbackFailure = null;

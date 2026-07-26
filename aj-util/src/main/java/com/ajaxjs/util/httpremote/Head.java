@@ -134,10 +134,19 @@ public class Head extends Request {
         };
     }
 
+    /**
+     * Connection initializer that sets the {@code Content-Type} header to JSON.
+     */
     public static final Consumer<HttpURLConnection> json = conn -> {
         conn.setRequestProperty(CONTENT_TYPE, CONTENT_TYPE_JSON);
     };
 
+    /**
+     * Returns a connection initializer that adds a Bearer authorization token.
+     *
+     * @param token the Bearer token
+     * @return a connection initializer setting the {@code Authorization} header
+     */
     public static Consumer<HttpURLConnection> setBearerToken(String token) {
         return conn -> {
             conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);

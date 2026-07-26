@@ -12,7 +12,9 @@ layout: layouts/aj-util-cn.njk
 
 `XmlHelper` 类提供了用于解析 XML 文档、检索元素以及将节点转换为映射的方法。这些方法可用于处理和操作 XML 数据。
 
-`initBuilder()` 创建的解析器会禁用 DTD、外部实体、外部 Schema 和 XInclude。因此 `getRoot`、`parseXML`、`xPath` 以及 `MapTool.xmlToMap` 都会拒绝 XXE 输入。解析失败使用脱敏消息，不会把完整 XML 拼入日志或异常。
+`initBuilder()` 创建解析器时会应用安全限制，禁用 DTD 声明、外部实体、外部 DTD/Schema 访问、
+XInclude 和实体引用展开。因此 `getRoot`、`parseXML`、`xPath` 以及 `MapTool.xmlToMap` 都会拒绝
+XXE 输入。解析失败使用脱敏消息，不会把完整 XML 拼入日志或异常。
 
 ## 方法
 

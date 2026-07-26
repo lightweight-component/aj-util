@@ -218,12 +218,17 @@ public class TestReflectUtil {
     public void testExecuteMethod() {
         assertNull(Methods.executeMethod(new Foo3(), "m1"));
         assertEquals(Methods.executeMethod(new Foo3(), "m1", "foo"), "foo");
-        assertNull(Methods.executeMethod(new Bar2(), "m1"));
+        assertThrows(IllegalArgumentException.class,
+                () -> Methods.executeMethod(new Bar2(), "m1"));
         assertEquals(Methods.executeMethod(new Bar3(), "m1", "bar"), "bar");
         assertEquals(Methods.executeMethod(new Bar3(), "m1", String.class, "foo"), "foo");
     }
 }
 ```
+
+`executeMethod()` preserves a target method's legitimate `null` return value. A missing method now throws
+`IllegalArgumentException`, while invocation failures are propagated as runtime exceptions with the original cause
+preserved. `getUnderLayerErr()` returns a wrapper exception unchanged when it has no cause.
 
 ## Conclusion
 

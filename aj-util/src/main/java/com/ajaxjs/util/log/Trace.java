@@ -2,6 +2,9 @@ package com.ajaxjs.util.log;
 
 import org.slf4j.MDC;
 
+/**
+ * Utilities for tracing and logging context using MDC.
+ */
 public class Trace {
     /**
      * Key for trace ID in logs
@@ -19,8 +22,16 @@ public class Trace {
      */
     public final static String ENABLE_LOG_THROTTLING = "ENABLE_LOG_THROTTLING";
 
+    /**
+     * MDC key used to accumulate operation log content.
+     */
     public static final String ENABLE_OPERATION_LOG = "ENABLE_OPERATION_LOG";
 
+    /**
+     * Appends the given log content to the existing value stored in MDC under {@link #ENABLE_OPERATION_LOG}.
+     *
+     * @param log the log content to append
+     */
     public static void saveLogToMDC(String log) {
         if (MDC.get(ENABLE_OPERATION_LOG) != null) {
             String _log = MDC.get(ENABLE_OPERATION_LOG);

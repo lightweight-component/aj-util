@@ -21,6 +21,9 @@ public class BytesHelper {
         return c;
     }
 
+    /**
+     * Lookup table used to convert a nibble to its uppercase hex character.
+     */
     @SuppressWarnings("SpellCheckingInspection")
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
 

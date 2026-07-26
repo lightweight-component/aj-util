@@ -26,8 +26,14 @@ import java.util.zip.*;
  */
 @Slf4j
 public class ZipHelper {
+    /**
+     * Buffer size used when reading ZIP entries during extraction.
+     */
     private static final int EXTRACT_BUFFER_SIZE = 8192;
 
+    /**
+     * Default safety limits applied when extracting ZIP archives.
+     */
     public static final ExtractionLimits DEFAULT_EXTRACTION_LIMITS = new ExtractionLimits(
             10_000, 1024L * 1024 * 1024, 10L * 1024 * 1024 * 1024, 100.0
     );
@@ -36,11 +42,34 @@ public class ZipHelper {
      * Resource limits applied while extracting a ZIP archive.
      */
     public static final class ExtractionLimits {
+        /**
+         * Maximum number of entries allowed in a ZIP archive.
+         */
         private final int maxEntries;
+
+        /**
+         * Maximum uncompressed size allowed for a single entry, in bytes.
+         */
         private final long maxEntrySize;
+
+        /**
+         * Maximum total uncompressed size allowed for the whole archive, in bytes.
+         */
         private final long maxTotalSize;
+
+        /**
+         * Maximum allowed compression ratio for a single entry.
+         */
         private final double maxCompressionRatio;
 
+        /**
+         * Creates a new set of extraction limits.
+         *
+         * @param maxEntries         the maximum number of entries
+         * @param maxEntrySize       the maximum size of a single entry in bytes
+         * @param maxTotalSize       the maximum total uncompressed size in bytes
+         * @param maxCompressionRatio the maximum compression ratio
+         */
         public ExtractionLimits(int maxEntries, long maxEntrySize, long maxTotalSize, double maxCompressionRatio) {
             if (maxEntries <= 0 || maxEntrySize <= 0 || maxTotalSize <= 0 || maxCompressionRatio <= 0)
                 throw new IllegalArgumentException("ZIP extraction limits must be greater than zero.");
@@ -52,8 +81,18 @@ public class ZipHelper {
         }
     }
 
+    /**
+     * Mutable state tracked while extracting a ZIP archive.
+     */
     private static final class ExtractionState {
+        /**
+         * Number of entries extracted so far.
+         */
         private int entries;
+
+        /**
+         * Total uncompressed bytes extracted so far.
+         */
         private long totalSize;
     }
 
@@ -67,6 +106,13 @@ public class ZipHelper {
         unzip(save, zipFile, DEFAULT_EXTRACTION_LIMITS);
     }
 
+    /**
+     * Extracts a ZIP archive to the specified directory using the given extraction limits.
+     *
+     * @param save    the extraction destination, must be a directory
+     * @param zipFile the path to the ZIP file
+     * @param limits  the safety limits to apply during extraction
+     */
     public static void unzip(String save, String zipFile, ExtractionLimits limits) {
         Objects.requireNonNull(limits, "limits");
         long start = System.currentTimeMillis();
@@ -107,6 +153,13 @@ public class ZipHelper {
         unzipWithChineseFilename(save, zipFilePath, DEFAULT_EXTRACTION_LIMITS);
     }
 
+    /**
+     * Extracts a ZIP archive that uses GBK-encoded Chinese filenames, applying the given extraction limits.
+     *
+     * @param save        the extraction destination, must be a directory
+     * @param zipFilePath the path to the ZIP file
+     * @param limits      the safety limits to apply during extraction
+     */
     public static void unzipWithChineseFilename(String save, String zipFilePath, ExtractionLimits limits) {
         Objects.requireNonNull(limits, "limits");
         long start = System.currentTimeMillis();
@@ -137,6 +190,12 @@ public class ZipHelper {
         log.info("解压缩 unzipWithChineseFilename 完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
     }
 
+    /**
+     * Creates and returns the real, normalized extraction root directory.
+     *
+     * @param save the extraction destination path
+     * @return the real extraction root
+     */
     private static Path prepareExtractionRoot(String save) {
         try {
             Path root = Paths.get(save).toAbsolutePath().normalize();
@@ -148,6 +207,14 @@ public class ZipHelper {
         }
     }
 
+    /**
+     * Resolves a ZIP entry name against the extraction root and checks for directory traversal.
+     *
+     * @param root      the extraction root
+     * @param entryName the ZIP entry name
+     * @return the resolved target path
+     * @throws IOException if the entry escapes the extraction directory
+     */
     private static Path resolveZipEntry(Path root, String entryName) throws IOException {
         if (entryName == null)
             throw new IOException("ZIP entry name is null.");
@@ -159,6 +226,13 @@ public class ZipHelper {
         return target;
     }
 
+    /**
+     * Creates directories inside the extraction root, guarding against symbolic-link escapes.
+     *
+     * @param root      the extraction root
+     * @param directory the directory to create
+     * @throws IOException if the directory escapes the root or an unsafe path is encountered
+     */
     private static void createSecureDirectories(Path root, Path directory) throws IOException {
         if (!directory.startsWith(root))
             throw new IOException("Directory escapes the ZIP extraction root: " + directory);
@@ -178,12 +252,30 @@ public class ZipHelper {
         }
     }
 
+    /**
+     * Checks whether the number of extracted entries exceeds the configured limit.
+     *
+     * @param state  the current extraction state
+     * @param limits the configured extraction limits
+     * @throws IOException if the entry count exceeds the limit
+     */
     private static void checkEntryCount(ExtractionState state, ExtractionLimits limits) throws IOException {
         state.entries++;
         if (state.entries > limits.maxEntries)
             throw new IOException("ZIP archive contains too many entries.");
     }
 
+    /**
+     * Extracts a single ZIP entry to the target path while enforcing safety limits.
+     *
+     * @param in      the input stream of the ZIP entry
+     * @param root    the extraction root
+     * @param target  the target file path
+     * @param entry   the ZIP entry being extracted
+     * @param state   the current extraction state
+     * @param limits  the configured extraction limits
+     * @throws IOException if any safety limit is violated or an IO error occurs
+     */
     private static void extractEntry(InputStream in, Path root, Path target, ZipEntry entry,
                                      ExtractionState state, ExtractionLimits limits) throws IOException {
         long declaredSize = entry.getSize();
@@ -230,6 +322,14 @@ public class ZipHelper {
         }
     }
 
+    /**
+     * Checks whether the compression ratio of a ZIP entry exceeds the configured limit.
+     *
+     * @param entry            the ZIP entry
+     * @param uncompressedSize the uncompressed size to compare
+     * @param limits           the configured extraction limits
+     * @throws IOException if the compression ratio is invalid or exceeds the limit
+     */
     private static void checkCompressionRatio(ZipEntry entry, long uncompressedSize,
                                               ExtractionLimits limits) throws IOException {
         long compressedSize = entry.getCompressedSize();
@@ -285,6 +385,14 @@ public class ZipHelper {
         }
     }
 
+    /**
+     * Recursively adds the contents of a directory to a ZIP output stream.
+     *
+     * @param source   the source directory
+     * @param zipOut   the ZIP output stream
+     * @param useStore {@code true} to store entries uncompressed, {@code false} to deflate
+     * @throws IOException if an IO error occurs while walking the directory or writing entries
+     */
     private static void addDirectoryToZip(Path source, ZipOutputStream zipOut, boolean useStore) throws IOException {
         Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
             @Override
@@ -314,6 +422,12 @@ public class ZipHelper {
         });
     }
 
+    /**
+     * Converts a relative path to a ZIP entry name using forward slashes.
+     *
+     * @param relativePath the relative path
+     * @return the ZIP entry name
+     */
     private static String toZipEntryName(Path relativePath) {
         return relativePath.toString().replace(File.separatorChar, '/');
     }
@@ -444,11 +558,26 @@ public class ZipHelper {
         writeZip(Paths.get(saveZip), zipOut -> addFileToZip(file, file.getName(), zipOut, useStore));
     }
 
+    /**
+     * Functional interface for writing contents to a ZIP output stream.
+     */
     @FunctionalInterface
     private interface ZipWriter {
+        /**
+         * Writes entries to the given ZIP output stream.
+         *
+         * @param zipOut the ZIP output stream
+         * @throws IOException if an IO error occurs while writing
+         */
         void write(ZipOutputStream zipOut) throws IOException;
     }
 
+    /**
+     * Creates a ZIP archive at the given destination using the provided writer.
+     *
+     * @param destination the destination ZIP file path
+     * @param writer      the writer that populates the ZIP entries
+     */
     private static void writeZip(Path destination, ZipWriter writer) {
         Path absolute = destination.toAbsolutePath().normalize();
         Path parent = absolute.getParent();

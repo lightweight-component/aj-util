@@ -217,11 +217,14 @@ public class TestReflectUtil {
     public void testExecuteMethod() {
         assertNull(Methods.executeMethod(new Foo3(), "m1"));
         assertEquals(Methods.executeMethod(new Foo3(), "m1", "foo"), "foo");
-        assertNull(Methods.executeMethod(new Bar2(), "m1"));
+        assertThrows(IllegalArgumentException.class,
+                () -> Methods.executeMethod(new Bar2(), "m1"));
         assertEquals(Methods.executeMethod(new Bar3(), "m1", "bar"), "bar");
         assertEquals(Methods.executeMethod(new Bar3(), "m1", String.class, "foo"), "foo");
     }
 }
 ```
 
- 
+`executeMethod()` 会保留目标方法正常返回的 `null`。找不到方法时现在抛出 `IllegalArgumentException`；
+调用失败时抛出运行时异常，并保留原始 cause。`getUnderLayerErr()` 遇到没有 cause 的包装异常时，
+会原样返回该包装异常。

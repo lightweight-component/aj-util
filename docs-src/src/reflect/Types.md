@@ -101,12 +101,19 @@ Retrieves the first actual type argument of a class's superclass and converts it
 * **Parameters:**
     * `clz`: The class to retrieve the actual type argument from.
 * **Returns:** The first actual type argument as a `Class`.
+* **Throws:** `IllegalArgumentException` if `clz` has no parameterized superclass or its first type argument cannot be resolved to a `Class`.
 
 **Example:**
 
 ```java
-Class<?> actualClass = Types.getActualClass(ArrayList.class);
-// actualClass will be the first generic type argument of ArrayList's superclass as a Class
+class StringList extends ArrayList<String> {
+}
+
+Class<?> actualClass = Types.getActualClass(StringList.class);
+// String.class
+
+Types.getActualClass(String.class);
+// throws IllegalArgumentException instead of failing with NullPointerException
 ```
 
 ### 6. `type2class(Type type)`

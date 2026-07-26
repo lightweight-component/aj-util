@@ -68,6 +68,7 @@ public class Delete extends Request {
      * @param url   The URL to send the DELETE request to
      * @param clz   The class to map the response to
      * @param token The authorization token to include in the request header
+     * @param <T>   The type of the response to map to
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz, String token) {
@@ -81,6 +82,7 @@ public class Delete extends Request {
      * @param url            The URL to send the DELETE request to
      * @param clz            The class to map the response to
      * @param initConnection Consumer that configures the HTTP connection
+     * @param <T>            The type of the response to map to
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz, Consumer<HttpURLConnection> initConnection) {

@@ -218,8 +218,11 @@ public class Methods {
      * @throws Throwable 任何异常
      */
     public static Object executeMethod_Throwable(Object instance, Method method, Object... args) throws Throwable {
-        if (instance == null || method == null)
-            return null;
+        if (instance == null)
+            throw new IllegalArgumentException("Instance must not be null.");
+
+        if (method == null)
+            throw new IllegalArgumentException("Method must not be null.");
 
         try {
             return args == null || args.length == 0 ? method.invoke(instance) : method.invoke(instance, args);
@@ -238,15 +241,26 @@ public class Methods {
     }
 
     /**
-     * 获取实际抛出的那个异常对象。 InvocationTargetException 太过于宽泛，在 trouble
-     * shouting的时候，不能给人非常直观的信息 AOP 的缘故，不能直接捕获原来的异常，要不断 e.getCause()....
+     * 获取包装异常中的底层异常。对于 InvocationTargetException 或
+     * UndeclaredThrowableException，会沿 cause 链向下查找；如果包装异常没有 cause，
+     * 则原样返回该包装异常。
      *
      * @param e 异常对象
      * @return 实际异常对象
+     * @throws IllegalArgumentException 如果异常对象为 null
      */
     public static Throwable getUnderLayerErr(Throwable e) {
-        while (e.getClass().equals(InvocationTargetException.class) || e.getClass().equals(UndeclaredThrowableException.class))
-            e = e.getCause();
+        if (e == null)
+            throw new IllegalArgumentException("Throwable must not be null.");
+
+        while (e instanceof InvocationTargetException || e instanceof UndeclaredThrowableException) {
+            Throwable cause = e.getCause();
+
+            if (cause == null || cause == e)
+                break;
+
+            e = cause;
+        }
 
         return e;
     }
@@ -264,19 +278,25 @@ public class Methods {
     }
 
     /**
-     * 调用方法，该方法不会抛出异常
+     * 调用方法。目标方法正常返回 null 时仍返回 null；反射调用失败时抛出异常。
      *
      * @param instance 对象实例，bean
      * @param method   方法对象
      * @param args     参数列表
      * @return 执行结果
+     * @throws IllegalArgumentException 实例或方法为 null，或者调用参数不匹配
+     * @throws RuntimeException         目标方法抛出受检异常或发生其他反射调用错误
      */
     public static Object executeMethod(Object instance, Method method, Object... args) {
         try {
             return executeMethod_Throwable(instance, method, args);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Error e) {
+            throw e;
         } catch (Throwable e) {
             log.warn("Error occurred when executing method: " + method, e);
-            return null;
+            throw new RuntimeException("Error occurred when executing method: " + method, e);
         }
     }
 
@@ -287,13 +307,21 @@ public class Methods {
      * @param method   方法对象名称
      * @param args     参数列表
      * @return 执行结果
+     * @throws IllegalArgumentException 实例为 null 或找不到匹配的方法
+     * @throws RuntimeException         方法执行失败
      */
     public static Object executeMethod(Object instance, String method, Object... args) {
+        if (instance == null)
+            throw new IllegalArgumentException("Instance must not be null.");
+
         // 没有方法对象，先找到方法对象。可以支持方法重载，按照参数列表
-        Class<?>[] clazz = Clazz.args2class(args);
+        Class<?>[] clazz = args == null ? new Class<?>[0] : Clazz.args2class(args);
         Method methodObj = getMethod(instance.getClass(), method, clazz);
 
-        return methodObj != null ? executeMethod(instance, methodObj, args) : null;
+        if (methodObj == null)
+            throw new IllegalArgumentException("Method " + method + " was not found on " + instance.getClass().getName() + ".");
+
+        return executeMethod(instance, methodObj, args);
     }
 
     /**
@@ -305,14 +333,19 @@ public class Methods {
      * @param argType  参数类型
      * @param argValue 参数值
      * @return 执行结果
+     * @throws IllegalArgumentException 实例为 null 或找不到匹配的方法
+     * @throws RuntimeException         方法执行失败
      */
     public static Object executeMethod(Object instance, String method, Class<?> argType, Object argValue) {
+        if (instance == null)
+            throw new IllegalArgumentException("Instance must not be null.");
+
         Method m = getMethod(instance, method, argType);
 
         if (m != null)
             return executeMethod(instance, m, argValue);
 
-        return null;
+        throw new IllegalArgumentException("Method " + method + " was not found on " + instance.getClass().getName() + ".");
     }
 
     /**

@@ -14,6 +14,7 @@ Use these as review checkpoints. Verify current source before relying on exact e
 ## XML and JSON
 
 - All XML entry points must use the hardened `XmlHelper` builder with DTDs and external entities disabled. This includes `MapTool.xmlToMap`.
+- Describe the XML builder as applying security restrictions; do not say that its security features are disabled.
 - Never log or embed the complete XML input in parsing exceptions.
 - Nodes may lack an attribute map; attribute lookup must remain null-safe.
 - XML serialization must define behavior for null map values rather than dereferencing them.
@@ -22,6 +23,8 @@ Use these as review checkpoints. Verify current source before relying on exact e
 ## Date and time
 
 - A pure date string must parse without requiring a time component.
+- `DateTools.object2Date` returns `null` for null, blank, or unsupported inputs, but malformed non-blank date strings throw a parsing exception.
+- ISO instant formatting preserves available fractional seconds but does not guarantee the system clock's microsecond or nanosecond resolution.
 - Epoch timestamp `0` is a valid value.
 - Conversions requiring a missing date, time zone, or offset must use an explicit documented policy; do not silently substitute system "today".
 - Detect DST gaps and overlaps instead of silently normalizing ambiguous or nonexistent local times.
@@ -32,6 +35,9 @@ Use these as review checkpoints. Verify current source before relying on exact e
 
 - Class-hierarchy traversal must terminate safely for interfaces.
 - Traverse inherited interfaces recursively and use `Set<Class<?>>` to avoid duplicate visits and cycles.
+- `Types.getActualClass` throws `IllegalArgumentException` when no parameterized superclass or resolvable first class argument exists.
+- `Methods.executeMethod` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing method, and propagates invocation failures without converting them to `null`.
+- `Methods.getUnderLayerErr` returns a cause-less wrapper unchanged and rejects a null input explicitly.
 - Account for primitive/wrapper compatibility, null arguments, overload ambiguity, bridge methods, and accessibility when resolving members.
 
 ## I/O and ZIP

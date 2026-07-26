@@ -3,6 +3,8 @@ package com.ajaxjs.util.reflect;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestReflectUtil {
@@ -104,6 +106,14 @@ public class TestReflectUtil {
         public String m1(String arg) {
             return arg;
         }
+
+        public String nullable() {
+            return null;
+        }
+
+        public void fail() {
+            throw new IllegalStateException("boom");
+        }
     }
 
     static class Bar3 extends Foo3 {
@@ -115,8 +125,20 @@ public class TestReflectUtil {
     public void testExecuteMethod() {
         assertNull(Methods.executeMethod(new Foo3(), "m1"));
         assertEquals(Methods.executeMethod(new Foo3(), "m1", "foo"), "foo");
-        assertNull(Methods.executeMethod(new Bar2(), "m1"));
+        assertNull(Methods.executeMethod(new Foo3(), "nullable"));
+        assertThrows(IllegalArgumentException.class, () -> Methods.executeMethod(new Bar2(), "m1"));
+        IllegalStateException error = assertThrows(IllegalStateException.class,
+                () -> Methods.executeMethod(new Foo3(), "fail"));
+        assertEquals("boom", error.getMessage());
         assertEquals(Methods.executeMethod(new Bar3(), "m1", "bar"), "bar");
         assertEquals(Methods.executeMethod(new Bar3(), "m1", String.class, "foo"), "foo");
+    }
+
+    @Test
+    public void testGetUnderLayerErrWithoutCause() {
+        InvocationTargetException wrapper = new InvocationTargetException(null);
+
+        assertSame(wrapper, Methods.getUnderLayerErr(wrapper));
+        assertThrows(IllegalArgumentException.class, () -> Methods.getUnderLayerErr(null));
     }
 }

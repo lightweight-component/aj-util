@@ -7,11 +7,16 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestTypes {
+    static class StringList extends ArrayList<String> {
+    }
+
     final Type type = new ParameterizedType() {
         @Override
         public Type[] getActualTypeArguments() {
@@ -70,14 +75,8 @@ class TestTypes {
 
     @Test
     public void testGetActualClass() throws NoSuchMethodException {
-        Class<?> clz = TestTypes.class;
-        Method method = clz.getMethod("getList");
-        Class<?> returnType = method.getReturnType();
-
-        System.out.println(returnType);
-        Class<?> actualClass = Types.getActualClass(returnType);
-
-        assertEquals(String.class, actualClass);
+        assertEquals(String.class, Types.getActualClass(StringList.class));
+        assertThrows(IllegalArgumentException.class, () -> Types.getActualClass(String.class));
     }
 
     @Test

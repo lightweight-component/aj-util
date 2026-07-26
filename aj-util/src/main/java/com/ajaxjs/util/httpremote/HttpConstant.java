@@ -54,7 +54,22 @@ public interface HttpConstant {
      * Includes all standard HTTP methods.
      */
     enum HttpMethod {
-        GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, CONNECT
+        /** GET method. */
+        GET,
+        /** POST method. */
+        POST,
+        /** PUT method. */
+        PUT,
+        /** DELETE method. */
+        DELETE,
+        /** HEAD method. */
+        HEAD,
+        /** OPTIONS method. */
+        OPTIONS,
+        /** TRACE method. */
+        TRACE,
+        /** CONNECT method. */
+        CONNECT
     }
 
     /**

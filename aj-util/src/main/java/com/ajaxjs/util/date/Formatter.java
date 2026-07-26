@@ -12,8 +12,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Format date value, finally to String
- * A build-in cache system for date formatters.
+ * Utility class for formatting date/time values into strings.
+ *
+ * <p>Provides a built-in cache for {@link DateTimeFormatter} instances to avoid
+ * repeatedly creating formatters for the same pattern, as well as common default
+ * patterns for date and date-time formatting.
  */
 @RequiredArgsConstructor
 public class Formatter {
@@ -54,20 +57,17 @@ public class Formatter {
     /* Some common formats */
 
     /**
-     * Format the date value by specified format.
-     * The result's like "yyyy-MM-dd"
+     * The standard date-only format pattern: {@code yyyy-MM-dd}.
      */
     public static final String DATE = "yyyy-MM-dd";
 
     /**
-     * Format the date value by specified format.
-     * The result's like "yyyy-MM-dd HH:mm:ss"
+     * The standard date-time format pattern including seconds: {@code yyyy-MM-dd HH:mm:ss}.
      */
     public static final String DATETIME = "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * Format the date value by specified format.
-     * The result's like "yyyy-MM-dd HH:mm"
+     * The short date-time format pattern without seconds: {@code yyyy-MM-dd HH:mm}.
      */
     public static final String DATETIME_SHORT = "yyyy-MM-dd HH:mm";
 

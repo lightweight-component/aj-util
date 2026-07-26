@@ -13,7 +13,10 @@ layout: layouts/aj-util.njk
 The `XmlHelper` class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps.
 These methods can be used for processing and manipulating XML data.
 
-All builders created by `initBuilder()` disable DTD declarations, external entities, external schemas, and XInclude. Consequently, `getRoot`, `parseXML`, `xPath`, and `MapTool.xmlToMap` reject XXE payloads. Parse failures use sanitized messages and never append the complete XML input.
+All builders created by `initBuilder()` apply security restrictions that disable DTD declarations, external
+entities, external DTD/schema access, XInclude, and entity-reference expansion. Consequently, `getRoot`,
+`parseXML`, `xPath`, and `MapTool.xmlToMap` reject XXE payloads. Parse failures use sanitized messages and
+never append the complete XML input.
 
 ## Methods
 

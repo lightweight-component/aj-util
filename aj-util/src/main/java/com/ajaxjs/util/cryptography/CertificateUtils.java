@@ -88,6 +88,12 @@ public class CertificateUtils {
         return newCertList;
     }
 
+    /**
+     * Removes surrounding double-quote characters from the given value.
+     *
+     * @param v the object whose string representation will be unquoted
+     * @return the unquoted string
+     */
     private static String remove(Object v) {
         return v.toString().replace("\"", "");
     }
@@ -109,10 +115,28 @@ public class CertificateUtils {
 //
 //        return doCipher("AES/GCM/NoPadding", Cipher.DECRYPT_MODE, aesKey, spec, cipherText, associatedData);
 //    }
+    /**
+     * Decrypts the given ciphertext using AEAD_AES_256_GCM with string associated data and nonce.
+     *
+     * @param aesKey         the AES key, must be 32 bytes long
+     * @param associatedData the associated data as a string
+     * @param nonce          the nonce as a string
+     * @param cipherText     the Base64-encoded ciphertext
+     * @return the decrypted plaintext
+     */
     public static String aesDecryptToString(byte[] aesKey, String associatedData, String nonce, String cipherText) {
         return aesDecryptToString(aesKey, new StringBytes(associatedData).getUTF8_Bytes(), new StringBytes(nonce).getUTF8_Bytes(), cipherText);
     }
 
+    /**
+     * Decrypts the given ciphertext using AEAD_AES_256_GCM.
+     *
+     * @param aesKey         the AES key, must be 32 bytes long
+     * @param associatedData the associated data
+     * @param nonce          the nonce
+     * @param cipherText     the Base64-encoded ciphertext
+     * @return the decrypted plaintext
+     */
     public static String aesDecryptToString(byte[] aesKey, byte[] associatedData, byte[] nonce, String cipherText) {
         if (aesKey.length != 32)
             throw new IllegalArgumentException("无效的 ApiV3Key，长度必须为32个字节");

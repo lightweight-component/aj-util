@@ -57,6 +57,14 @@ public class XmlHelper {
         return initBuilder(false);
     }
 
+    /**
+     * Initializes and returns a DocumentBuilder with the requested namespace awareness
+     * and secure-processing restrictions applied. DTD declarations, external entities,
+     * external DTD/schema access, XInclude, and entity-reference expansion are disabled.
+     *
+     * @param namespaceAware whether the builder should be namespace aware
+     * @return a configured DocumentBuilder
+     */
     private static DocumentBuilder initBuilder(boolean namespaceAware) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -203,7 +211,7 @@ public class XmlHelper {
      *
      * @param node     The node object
      * @param attrName The name of the attribute to retrieve
-     * @return The attribute value, or null if empty
+     * @return The attribute value, or {@code null} if the node has no attributes or the named attribute is absent
      */
     public static String getNodeAttribute(Node node, String attrName) {
         NamedNodeMap attrs = node.getAttributes();

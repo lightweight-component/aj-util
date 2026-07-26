@@ -16,13 +16,18 @@ import java.util.TimeZone;
  * <p>Provides a flexible conversion mechanism that handles various input date types
  * and can convert them to any supported target date type, with optional timezone support.
  *
- * <p>The class uses a builder pattern approach where you instantiate the converter
- * with an input date type and then call the {@link #to(Class, ZoneId)} method to
- * convert to the desired output type.
+ * <p>Create a converter with one input date/time value, then call
+ * {@link #to(Class, ZoneId)} to obtain the desired output type.
  */
 public class DateTypeConvert {
+    /**
+     * The timestamp in milliseconds since the epoch.
+     */
     private long timestamp;
 
+    /**
+     * Indicates whether the timestamp field has been explicitly set.
+     */
     private boolean timestampSet;
 
     /**
