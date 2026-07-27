@@ -3,15 +3,15 @@ package com.ajaxjs.util.reflect;
 import com.ajaxjs.util.ObjectHelper;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 
 /**
- * Can be either a class object or an instance object
+ * ReflectMethod 类用于反射执行方法
+ * 输入参数 Can be either a class object or an instance object
  */
 @Slf4j
 public class ReflectMethod {
@@ -224,6 +224,7 @@ public class ReflectMethod {
             if (superclass != null) {
                 if (superclass == target)
                     return distance + 1;
+
                 if (visited.add(superclass)) {
                     queue.add(superclass);
                     distances.add(distance + 1);
@@ -233,6 +234,7 @@ public class ReflectMethod {
             for (Class<?> currentInterface : current.getInterfaces()) {
                 if (currentInterface == target)
                     return distance + 1;
+
                 if (visited.add(currentInterface)) {
                     queue.add(currentInterface);
                     distances.add(distance + 1);
@@ -267,110 +269,8 @@ public class ReflectMethod {
      * @deprecated Use {@link #findCompatibleMethod(String, Object...)}.
      */
     @Deprecated
-    public Method getDMethodByArgumentInterface(String method, Object arg) {
+    public Method getMethodByArgumentInterface(String method, Object arg) {
         return findCompatibleMethod(method, arg);
     }
 
-    /*--------------------------METHOD EXECUTION--------------------------------------*/
-
-    public Object execute(Object instance, Method method, Object[] args) throws Throwable {
-        if (instance == null)
-            throw new IllegalArgumentException("Instance must not be null.");
-
-        if (method == null)
-            throw new IllegalArgumentException("Method must not be null.");
-
-        try {
-            return ObjectHelper.isEmpty(args) ? method.invoke(instance) : method.invoke(instance, args);
-        } catch (IllegalAccessException e) {
-            log.warn("IllegalAccessException when executing method of {}", method.getName());
-            throw e;
-        } catch (IllegalArgumentException e) {
-            log.warn("IllegalArgumentException when executing method of {}", method.getName());
-            throw e;
-        } catch (InvocationTargetException e) {
-            Throwable e1 = e.getTargetException();
-            log.error("反射执行方法异常！所在类[{}] 方法：[{}]", instance.getClass().getName(), method.getName());
-
-            throw e1;
-        }
-    }
-
-    public Object execute(Object instance, Method method) throws Throwable {
-        return execute(instance, method, null);
-    }
-
-    public Object execute(Object instance, String methodName) throws Throwable {
-        return execute(instance, methodName, null);
-    }
-
-    public Object execute(Object instance, String methodName, Object[] args) throws Throwable {
-        inputObject = instance;
-        inputClass = instance == null ? null : instance.getClass();
-        Method method = findCompatibleMethod(methodName, args);
-
-        return execute(instance, method, args);
-    }
-
-    /**
-     * 调用方法。 注意获取方法对象，原始类型和包装类型不能混用，否则得不到正确的方法， 例如 Integer 不能与 int 混用。 这里提供一个
-     * argType 的参数，指明参数类型为何。
-     *
-     * @param instance   对象实例
-     * @param methodName 方法名称
-     * @param argType    参数类型
-     * @param argValue   参数值
-     * @return 执行结果
-     * @throws IllegalArgumentException 实例为 null 或找不到匹配的方法
-     * @throws Throwable                方法执行失败
-     */
-    public Object execute(Object instance, String methodName, Class<?>[] argType, Object[] argValue) throws Throwable {
-        inputObject = instance;
-        Method method = getMethod(methodName, argType);
-
-        return execute(instance, method, argValue);
-    }
-
-    public Object executeStatic(Method method, Object[] args) throws Throwable {
-        if (!Modifier.isStatic(method.getModifiers())) {
-            log.warn("This is not a static method: {}", method);
-            throw new UnsupportedOperationException("This is not a static method.");
-        }
-
-        return execute(new Object(), method, args);
-    }
-
-    /**
-     * 通过反射调用接口的默认方法。
-     * <p>
-     * 此方法旨在提供一种通过反射机制调用Java 8及以上版本接口中默认方法的手段。
-     * 它绕过了直接调用默认方法需要实例化一个类的限制，通过MethodHandles和反射机制实现。
-     * <p>
-     * 调用 Interface 的 default 方法
-     * <a href="https://www.jianshu.com/p/63691220f81f">...</a>
-     * <a href="https://link.jianshu.com/?t=http://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-refletively">...</a>
-     *
-     * @param proxy  接口的代理实例，用于调用默认方法。
-     * @param method 要调用的默认方法的Method对象。
-     * @param args   调用方法时所需的参数数组。
-     * @return 调用默认方法后的返回值。
-     * @throws RuntimeException 如果在调用过程中发生任何异常，将会抛出运行时异常。
-     */
-    public static Object executeDefault(Object proxy, Method method, Object[] args) {
-        try {
-            Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
-            constructor.setAccessible(true);
-
-            Class<?> declaringClass = method.getDeclaringClass();
-            int allModes = MethodHandles.Lookup.PUBLIC | MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED | MethodHandles.Lookup.PACKAGE;
-
-            return constructor.newInstance(declaringClass, allModes)
-                    .unreflectSpecial(method, declaringClass)
-                    .bindTo(proxy)
-                    .invokeWithArguments(args);
-        } catch (Throwable e) {
-            log.warn("Error when executing default method: {}", method, e);
-            throw new RuntimeException(e);
-        }
-    }
 }
