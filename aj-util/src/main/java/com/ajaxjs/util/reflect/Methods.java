@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.*;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * Can be either a class object or an instance object
@@ -73,66 +77,129 @@ public class Methods {
     }
 
     /**
-     * Find a method by name with automatic parameter type upcasting support.
-     * This method searches through the class hierarchy for compatible parameter types.
-     * Supports only single parameter methods currently.
+     * Finds a public method whose parameter types are compatible with the supplied arguments.
+     * Besides exact matches, this method supports superclass and interface assignment, including
+     * interfaces inherited through other interfaces.
      *
-     * @param method Method name to find
-     * @param arg    Argument object (must be an object, not a Class) for parameter type matching
-     * @return Matching method object, or null if not found
+     * @param methodName method name
+     * @param args       invocation arguments; {@code null} is compatible with non-primitive parameters
+     * @return the best compatible method, or {@code null} if no compatible method exists
      */
-    public Method getMethodByArgumentUpCastingSearch(String method, Object arg) {
-        getInputClass();
+    public Method findCompatibleMethod(String methodName, Object... args) {
+        Class<?> targetClass = getInputClass();
+        Object[] actualArgs = args == null ? new Object[0] : args;
+        Method bestMethod = null;
+        int bestScore = Integer.MAX_VALUE;
 
-        for (Class<?> clazz = arg.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
-            try {
-                return inputClass.getMethod(method, clazz); // 用 getMethod 代替更好？
-            } catch (NoSuchMethodException | SecurityException e) {
-                // 这里的异常不能抛出去。 如果这里的异常打印或者往外抛，则就不会执行clazz = clazz.getSuperclass(), 最后就不会进入到父类中了
+        for (Method candidate : targetClass.getMethods()) {
+            if (!candidate.getName().equals(methodName))
+                continue;
+
+            Class<?>[] parameterTypes = candidate.getParameterTypes();
+            if (parameterTypes.length != actualArgs.length)
+                continue;
+
+            int score = getCompatibilityScore(parameterTypes, actualArgs);
+            if (score < bestScore) {
+                bestMethod = candidate;
+                bestScore = score;
             }
         }
 
-        return null;
+        return bestMethod;
     }
 
-    /**
-     * 循环 object 向上转型（接口）
-     *
-     * @param method 方法名称
-     * @param arg    参数对象，可能是子类或接口，所以要在这里找到对应的方法，当前只支持单个参数
-     * @return 方法对象
-     */
-    public Method getMethodByArgumentInterface(String method, Object arg) {
-        getInputClass();
-        Method methodObj;
+    private static int getCompatibilityScore(Class<?>[] parameterTypes, Object[] args) {
+        int score = 0;
 
-        for (Class<?> clazz = arg.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
-            Type[] interfaces = clazz.getGenericInterfaces();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            Class<?> parameterType = wrapPrimitive(parameterTypes[i]);
+            Object arg = args[i];
 
-            if (interfaces.length != 0) { // 有接口！
-                try {
-                    for (Type _interface : interfaces) {
-                        // 旧方法，现在不行，不知道之前怎么可以的 methodObj = hostClazz.getDeclaredMethod(method, (Class<?>)_interface);
-                        // methodObj = cls.getMethod(methodName,
-                        // ReflectNewInstance.getClassByInterface(_interface));
-                        methodObj = findDeclaredMethod(method, Clazz.getClassByInterface(_interface));
+            if (arg == null) {
+                if (parameterTypes[i].isPrimitive())
+                    return Integer.MAX_VALUE;
 
-                        if (methodObj != null)
-                            return methodObj;
-                    }
-                } catch (Exception e) {
-                    log.warn("循环 object 向上转型（接口）异常 ", e);
-                    throw new RuntimeException("循环 object 向上转型（接口）异常 ", e);
+                score += 100;
+                continue;
+            }
+
+            Class<?> argumentType = arg.getClass();
+            if (!parameterType.isAssignableFrom(argumentType))
+                return Integer.MAX_VALUE;
+
+            score += getTypeDistance(argumentType, parameterType);
+        }
+
+        return score;
+    }
+
+    private static Class<?> wrapPrimitive(Class<?> type) {
+        if (!type.isPrimitive())
+            return type;
+        if (type == boolean.class)
+            return Boolean.class;
+        if (type == byte.class)
+            return Byte.class;
+        if (type == char.class)
+            return Character.class;
+        if (type == short.class)
+            return Short.class;
+        if (type == int.class)
+            return Integer.class;
+        if (type == long.class)
+            return Long.class;
+        if (type == float.class)
+            return Float.class;
+        if (type == double.class)
+            return Double.class;
+
+        return Void.class;
+    }
+
+    private static int getTypeDistance(Class<?> source, Class<?> target) {
+        if (source == target)
+            return 0;
+
+        Queue<Class<?>> queue = new ArrayDeque<>();
+        Queue<Integer> distances = new ArrayDeque<>();
+        Set<Class<?>> visited = new HashSet<>();
+        queue.add(source);
+        distances.add(0);
+        visited.add(source);
+
+        while (!queue.isEmpty()) {
+            Class<?> current = queue.remove();
+            int distance = distances.remove();
+
+            Class<?> superclass = current.getSuperclass();
+            if (superclass != null) {
+                if (superclass == target)
+                    return distance + 1;
+
+                if (visited.add(superclass)) {
+                    queue.add(superclass);
+                    distances.add(distance + 1);
+                }
+            }
+
+            for (Class<?> currentInterface : current.getInterfaces()) {
+                if (currentInterface == target)
+                    return distance + 1;
+
+                if (visited.add(currentInterface)) {
+                    queue.add(currentInterface);
+                    distances.add(distance + 1);
                 }
             }
         }
 
-        return null;
+        return Integer.MAX_VALUE;
     }
 
     /*--------------------------METHOD EXECUTION--------------------------------------*/
 
-    public static Object execute(Object instance, Method method, Object[] args) throws Throwable {
+    public static Object execute(Object instance, Method method, Object[] parameters) throws Throwable {
         if (instance == null)
             throw new IllegalArgumentException("Instance must not be null.");
 
@@ -140,7 +207,7 @@ public class Methods {
             throw new IllegalArgumentException("Method must not be null.");
 
         try {
-            return ObjectHelper.isEmpty(args) ? method.invoke(instance) : method.invoke(instance, args);
+            return ObjectHelper.isEmpty(parameters) ? method.invoke(instance) : method.invoke(instance, parameters);
         } catch (IllegalAccessException e) {
             log.warn("IllegalAccessException when executing method of {}", method.getName());
             throw e;
@@ -163,28 +230,28 @@ public class Methods {
         return execute(instance, methodName, null);
     }
 
-    public static Object execute(Object instance, String methodName, Object[] args) throws Throwable {
-        Method method = new Methods(instance).findDeclaredMethod(methodName, Clazz.args2class(args));
+    public static Object execute(Object instance, String methodName, Object[] parameters) throws Throwable {
+        Method method = new Methods(instance).findCompatibleMethod(methodName, parameters);
 
-        return execute(instance, method, args);
+        return execute(instance, method, parameters);
     }
 
     /**
      * 调用方法。 注意获取方法对象，原始类型和包装类型不能混用，否则得不到正确的方法， 例如 Integer 不能与 int 混用。 这里提供一个
      * argType 的参数，指明参数类型为何。
      *
-     * @param instance   对象实例
-     * @param methodName 方法名称
-     * @param argType    参数类型
-     * @param argValue   参数值
+     * @param instance        对象实例
+     * @param methodName      方法名称
+     * @param parametersTypes 参数类型
+     * @param parameters      参数值
      * @return 执行结果
      * @throws IllegalArgumentException 实例为 null 或找不到匹配的方法
      * @throws Throwable                方法执行失败
      */
-    public static Object execute(Object instance, String methodName, Class<?>[] argType, Object[] argValue) throws Throwable {
-        Method method = new Methods(instance).findDeclaredMethod(methodName, argType);
+    public static Object execute(Object instance, String methodName, Class<?>[] parametersTypes, Object[] parameters) throws Throwable {
+        Method method = new Methods(instance).findDeclaredMethod(methodName, parametersTypes);
 
-        return execute(instance, method, argValue);
+        return execute(instance, method, parameters);
     }
 
     public static Object executeStatic(Method method, Object[] args) throws Throwable {

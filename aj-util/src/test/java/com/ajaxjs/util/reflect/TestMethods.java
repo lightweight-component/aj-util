@@ -3,6 +3,7 @@ package com.ajaxjs.util.reflect;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -70,7 +71,7 @@ public class TestMethods {
     @Test
     public void testGetMethodByUpCastingSearch() {
         assertNull(new Methods(Foo1.class).findDeclaredMethod("foo", new Bar2())); // 找不到
-        assertNotNull(new Methods(Foo1.class).getMethodByArgumentUpCastingSearch("foo", new Bar2())); // 找到了
+        assertNotNull(new Methods(Foo1.class).findCompatibleMethod("foo", new Bar2())); // 找到了
     }
 
     public static class A {
@@ -109,10 +110,21 @@ public class TestMethods {
 
     @Test
     public void testDeclaredMethod() {
-        assertNotNull(new Methods(A.class).getMethodByArgumentUpCastingSearch("bar", new D()));
-        assertNotNull(new Methods(A.class).getMethodByArgumentInterface("bar", new D()));// 找到了
+        assertNotNull(new Methods(A.class).findCompatibleMethod("bar", new D()));
+        assertNotNull(new Methods(A.class).findCompatibleMethod("bar", new D()));// 找到了
         assertNull(new Methods(C.class).findDeclaredMethod("missing", Object.class));
         assertNull(new Methods(C.class).findDeclaredMethod("missing"));
+    }
+
+    @Test
+    public void testFindCompatibleMethodTraversesParentInterfaces() throws Throwable {
+        Methods reflectMethod = new Methods(InterfaceTarget.class);
+        Method method = reflectMethod.findCompatibleMethod("inheritedInterface", new ChildImpl());
+
+        assertNotNull(method);
+        assertEquals(Parent.class, method.getParameterTypes()[0]);
+        assertEquals("parent", Methods.execute(new InterfaceTarget(), "inheritedInterface", new Object[]{new ChildImpl()}));
+        assertEquals(method, reflectMethod.findCompatibleMethod("inheritedInterface", new ChildImpl()));
     }
 
     public static class Foo3 {
@@ -139,7 +151,6 @@ public class TestMethods {
 
     @Test
     public void testExecuteMethod() throws Throwable {
-        Methods rm = new Methods();
         assertNull(Methods.execute(new Foo3(), "m1"));
         assertNotNull(Methods.execute(new Foo3(), "m1", new Object[]{"foo"}));
         assertNull(Methods.execute(new Foo3(), "nullable"));
