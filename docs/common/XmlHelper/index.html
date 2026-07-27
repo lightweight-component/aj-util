@@ -80,6 +80,8 @@
                     <li><a href="/reflect/Methods/">Methods</a></li>
                     <li><a href="/reflect/Types/">Types</a></li>
                     <li><a href="/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields/">Fields</a></li>
                 </ul>
 
                 <h3>IO</h3>
@@ -108,7 +110,10 @@
                 <h1>XmlHelper</h1>
 <p>The <code>XmlHelper</code> class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps.
 These methods can be used for processing and manipulating XML data.</p>
-<p>All builders created by <code>initBuilder()</code> disable DTD declarations, external entities, external schemas, and XInclude. Consequently, <code>getRoot</code>, <code>parseXML</code>, <code>xPath</code>, and <code>MapTool.xmlToMap</code> reject XXE payloads. Parse failures use sanitized messages and never append the complete XML input.</p>
+<p>All builders created by <code>initBuilder()</code> apply security restrictions that disable DTD declarations, external
+entities, external DTD/schema access, XInclude, and entity-reference expansion. Consequently, <code>getRoot</code>,
+<code>parseXML</code>, <code>xPath</code>, and <code>MapTool.xmlToMap</code> reject XXE payloads. Parse failures use sanitized messages and
+never append the complete XML input.</p>
 <h2>Methods</h2>
 <h3>1. <code>initBuilder()</code></h3>
 <p>Initializes a <code>DocumentBuilder</code> for XML parsing.</p>

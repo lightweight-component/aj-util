@@ -78,6 +78,8 @@
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
                     <li><a href="/reflect/Types-cn/">Types</a></li>
                     <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
                 </ul>
 
                 <h3>Input/Output 输入/输出</h3>
@@ -114,10 +116,14 @@ Calendar calendar = new DateTypeConvert(instant).to(Calendar.class, zone);
 <ul>
 <li>时间戳 <code>0</code> 是合法输入，表示 <code>1970-01-01T00:00:00Z</code>。</li>
 <li>纯日期字符串按日期格式解析，不再强制套用日期时间格式。</li>
+<li>日期解析与格式化输出使用不同的 formatter；解析采用严格模式，<code>2023-02-29</code> 等非法日期会抛出解析异常，不会被静默调整。</li>
+<li><code>LocalDate</code> 转换为 <code>LocalDate</code> 时原样返回，不应用时区规则，因此不会因目标时区的跳日规则而改变日期。</li>
 <li>转换得到的 <code>Calendar</code> 会使用调用方指定的时区。</li>
+<li><code>Calendar</code> 作为输入且未指定 <code>ZoneId</code> 时，会保留输入对象自身的时区；显式传入的 <code>ZoneId</code> 优先。</li>
 <li>输入与目标同为 <code>ZonedDateTime</code> 或 <code>OffsetDateTime</code> 时会原样返回，保留原始时区或 offset。</li>
 <li><code>LocalDateTime</code> 转换为瞬时时采用严格规则：夏令时缺口会被拒绝，重叠时间也会因歧义被拒绝，不会静默选择某个 offset。</li>
 <li><code>OffsetTime</code> 本身不含日期，只能转换为 <code>OffsetTime</code> 或 <code>LocalTime</code>；需要日期的瞬时转换会被拒绝，不再隐式补系统“今天”。</li>
+<li><code>LocalTime</code> 会原样转换为 <code>LocalTime</code>；只有显式提供固定 offset 时才能转换为 <code>OffsetTime</code>，需要日期的其他转换会被拒绝。</li>
 </ul>
 <pre><code class="language-java">Instant epoch = new DateTypeConvert(0L).to(Instant.class, ZoneOffset.UTC);
 assertEquals(Instant.EPOCH, epoch);

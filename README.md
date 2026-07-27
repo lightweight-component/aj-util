@@ -1,5 +1,5 @@
 <h1 align="center">AJ Utilities</h1>
-<h3 align="center">Small Java Utils Library with many powerful components</h3>
+<h3 align="center">A Lightweight Java OOP Utils Library.</h3>
 
 <div style="text-align: center;">
 
@@ -17,7 +17,11 @@
 
 <hr />
 
-The size of the jar file is around 170kb. It contains the following modules:
+This is a Java toolkit that truly embraces Object-Oriented Programming (OOP). Unlike other libraries that rely heavily on static methods, this toolkit requires you to instantiate objects before invoking utility methods.
+
+By utilizing overloaded constructors, it automatically adapts to and converts various input parameters. This approach not only handles complex scenarios with ease but also results in a cleaner API design and more concise, DRY (Don't Repeat Yourself) code.
+
+Furthermore, this library is designed to be lightweight with minimal dependencies. The JAR file is only about 170KB in size and includes the following modules:
 
 | Class/Package Module | Detail Description                                                                     | Memo                                      |
 |----------------------|----------------------------------------------------------------------------------------|-------------------------------------------|

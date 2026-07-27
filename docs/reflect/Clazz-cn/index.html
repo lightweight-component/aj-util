@@ -4,8 +4,8 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>AJ Utils-Clazz</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  用于动态创建类实例和检查构造函数的实用方法" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 反射,实例化,Java" />
+        <meta name="description" content="Small Java utilities with many useful functions.  类加载和类型层次检查工具" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 反射,类加载,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -78,6 +78,8 @@
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
                     <li><a href="/reflect/Types-cn/">Types</a></li>
                     <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
                 </ul>
 
                 <h3>Input/Output 输入/输出</h3>
@@ -103,71 +105,34 @@
             </menu>
             <article class="aj-text chinese">
                 <h1>Clazz</h1>
-<p><code>Clazz</code> 类提供了动态创建类实例、获取构造函数以及检查类是否具有带参数的构造函数的方法。这些方法有助于在运行时高效、方便地处理
-Java 类。</p>
-<h2>方法</h2>
-<h3>1. <code>newInstance(Constructor&lt;T&gt; constructor, Object... args)</code></h3>
-<p>使用指定的构造函数和参数创建类的实例。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>constructor</code>: 用于创建实例的构造函数。</li>
-<li><code>args</code>: 传递给构造函数的参数。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 类型为 <code>T</code> 的创建的实例。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">Constructor&lt;String&gt; constructor = String.class.getConstructor(String.class);
-String instance = Clazz.newInstance(constructor, &quot;Hello&quot;);
-// instance 将会是 &quot;Hello&quot;
+<p><code>Clazz</code> 提供类加载和类型层次检查功能。对象实例化已经独立到 <code>NewInstance</code>。</p>
+<h2>加载类</h2>
+<p><code>getClassByName(String)</code> 根据完整类名加载类；找不到类时抛出 <code>RuntimeException</code>，当前包装异常不会
+保留 <code>ClassNotFoundException</code> 作为 cause。泛型重载还会验证类型是否兼容：</p>
+<pre><code class="language-java">Class&lt;CharSequence&gt; type =
+        Clazz.getClassByName(&quot;java.lang.String&quot;, CharSequence.class);
+
+// String 不是 Number，抛出 ClassCastException。
+Clazz.getClassByName(&quot;java.lang.String&quot;, Number.class);
 </code></pre>
-<h3>2. <code>hasArgsCon(Class&lt;?&gt; clz)</code></h3>
-<p>确定一个类是否具有带参数的构造函数。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>clz</code>: 要检查的类。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 如果类具有带参数的构造函数，则返回 <code>true</code>，否则返回 <code>false</code>。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">boolean hasArgsCon = Clazz.hasArgsCon(String.class);
-// hasArgsCon 将会是 true
+<p>目标类型为 <code>null</code> 时抛出 <code>IllegalArgumentException</code>。</p>
+<h2>将参数转换为类</h2>
+<p><code>args2class(Object[])</code> 返回每个参数的运行时类型。参数数组为 <code>null</code> 或空数组时返回 <code>null</code>。
+数组内的单个 <code>null</code> 元素不受支持；参数值为 <code>null</code> 时应显式传入 <code>Class&lt;?&gt;[]</code>。</p>
+<pre><code class="language-java">Class&lt;?&gt;[] types = Clazz.args2class(new Object[]{&quot;text&quot;, 1});
+// [String.class, Integer.class]
 </code></pre>
-<h3>3. <code>newInstance(String className, Class&lt;T&gt; clazz)</code></h3>
-<p>通过类名创建类的实例并将其转换为指定的接口类型。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>className</code>: 类的全名。</li>
-<li><code>clazz</code>: 要转换为的接口类型。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 类型为 <code>T</code> 的创建的实例。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">String instance = Clazz.newInstance(&quot;java.lang.String&quot;, String.class);
-// instance 将会是一个空字符串
+<h2>检查接口和父类</h2>
+<p><code>getDeclaredInterface(Class&lt;?&gt;)</code> 返回类及其父类实现的所有接口，并递归遍历父接口。内部使用
+<code>Set&lt;Class&lt;?&gt;&gt;</code>，因此菱形接口继承不会产生重复结果。</p>
+<p><code>getAllSuperClass(Class&lt;?&gt;)</code> 返回父类链，不包含输入类和 <code>Object</code>。传入接口类型是安全的，此时返回空数组。</p>
+<pre><code class="language-java">Class&lt;?&gt;[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
+Class&lt;?&gt;[] parents = Clazz.getAllSuperClass(ArrayList.class);
 </code></pre>
-<h3>4. <code>newInstance(String clzName, Object... args)</code></h3>
-<p>通过类名和参数创建类的实例。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>clzName</code>: 类的全名。</li>
-<li><code>args</code>: 传递给构造函数的参数。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 创建的实例，类型为 <code>Object</code>。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">Object instance = Clazz.newInstance(&quot;java.lang.String&quot;, &quot;Hello&quot;);
-// instance 将会是 &quot;Hello&quot;
-</code></pre>
-<h2>类层次遍历</h2>
-<p>层次检查会分别处理类和接口：父类只在非 null 时继续向上遍历，父接口则通过 <code>getInterfaces()</code> 递归访问。内部使用 <code>Set&lt;Class&lt;?&gt;&gt;</code>，因此菱形接口继承不会产生重复结果或重复访问。查询时既可以传入具体类，也可以安全地传入接口类型。</p>
+<p><code>getClassByInterface(Type)</code> 根据 <code>Type.toString()</code> 推导类名，只适用于可以直接解析的类或参数化接口
+类型；类型变量、通配符和泛型数组不能可靠解析。</p>
+<p>各层次方法目前没有统一的 <code>null</code> 策略：<code>getAllSuperClass(null)</code> 会抛出 <code>NullPointerException</code>，
+而 <code>getDeclaredInterface(null)</code> 当前返回空数组。</p>
 
             </article>
         </div>

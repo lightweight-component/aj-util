@@ -78,6 +78,8 @@
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
                     <li><a href="/reflect/Types-cn/">Types</a></li>
                     <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
                 </ul>
 
                 <h3>Input/Output 输入/输出</h3>
@@ -104,6 +106,8 @@
             <article class="aj-text chinese">
                 <h1>Types</h1>
 <p><code>Types</code> 类提供了检索泛型类型信息、转换类型以及处理参数化类型的方法。这些方法有助于在运行时高效、方便地操作 Java 类型。</p>
+<p>解析范围有限：<code>type2class(Type)</code> 处理 <code>Class</code> 和 <code>ParameterizedType</code>；
+<code>TypeVariable</code>、<code>WildcardType</code> 和 <code>GenericArrayType</code> 当前返回 <code>null</code>。</p>
 <h2>方法</h2>
 <h3>1. <code>getActualType(Type type)</code></h3>
 <p>检索参数化类型的实际类型参数。</p>
@@ -146,7 +150,7 @@ Type[] actualType = Types.getActualType(type);
 <li><strong>返回值:</strong> 表示返回类型实际类型参数的 <code>Type</code> 数组。</li>
 </ul>
 <p><strong>示例:</strong></p>
-<pre><code class="language-java">Method method = TestTypes.class.getMethods()[0];
+<pre><code class="language-java">Method method = TestTypes.class.getMethod(&quot;getList2&quot;);
 Type[] actualType = Types.getGenericReturnType(method);
 // actualType 将包含方法的泛型返回类型
 </code></pre>
@@ -160,8 +164,10 @@ Type[] actualType = Types.getGenericReturnType(method);
 </li>
 <li><strong>返回值:</strong> 返回类型的第一个实际类型参数作为 <code>Class</code>，如果返回类型不是参数化的，则返回 <code>null</code>。</li>
 </ul>
+<p>该方法假设 <code>ParameterizedType</code> 至少包含一个类型参数。异常的自定义实现若返回空参数数组，会触发
+<code>ArrayIndexOutOfBoundsException</code>。</p>
 <p><strong>示例:</strong></p>
-<pre><code class="language-java">Method method = TestTypes.class.getMethods()[0];
+<pre><code class="language-java">Method method = TestTypes.class.getMethod(&quot;getList2&quot;);
 Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 // actualType 将是方法的第一个泛型返回类型，作为 Class
 </code></pre>
@@ -188,25 +194,40 @@ Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 </ul>
 </li>
 <li><strong>返回值:</strong> 超类的第一个实际类型参数作为 <code>Class</code>。</li>
+<li><strong>异常:</strong> 如果 <code>clz</code> 没有参数化父类，或第一个类型参数无法解析为 <code>Class</code>，抛出 <code>IllegalArgumentException</code>。</li>
 </ul>
 <p><strong>示例:</strong></p>
-<pre><code class="language-java">Class&lt;?&gt; actualClass = Types.getActualClass(ArrayList.class);
-// actualClass 将是 ArrayList 超类的第一个泛型类型参数，作为 Class
+<pre><code class="language-java">class StringList extends ArrayList&lt;String&gt; {
+}
+
+Class&lt;?&gt; actualClass = Types.getActualClass(StringList.class);
+// String.class
+
+Types.getActualClass(String.class);
+// 抛出 IllegalArgumentException，不再发生 NullPointerException
 </code></pre>
 <h3>6. <code>type2class(Type type)</code></h3>
-<p>将 <code>Type</code> 转换为 <code>Class</code>。</p>
+<p>将 <code>Type</code> 转换为 <code>Class</code>。如果输入是 <code>ParameterizedType</code>，会递归解析它的原始类型。</p>
 <ul>
 <li><strong>参数说明：</strong>
 <ul>
 <li><code>type</code>: 要转换的 <code>Type</code>。</li>
 </ul>
 </li>
-<li><strong>返回值:</strong> <code>Type</code> 的 <code>Class</code> 表示，如果 <code>Type</code> 不是 <code>Class</code>，则返回 <code>null</code>。</li>
+<li><strong>返回值:</strong> <code>Type</code> 的 <code>Class</code> 表示；无法解析为 <code>Class</code> 时返回 <code>null</code>。</li>
 </ul>
 <p><strong>示例:</strong></p>
 <pre><code class="language-java">Type type = String.class;
 Class&lt;?&gt; actualClass = Types.type2class(type);
 // actualClass 将是 String.class
+
+class Example {
+    List&lt;String&gt; names;
+}
+
+Type listType = Example.class.getDeclaredField(&quot;names&quot;).getGenericType();
+Class&lt;?&gt; rawClass = Types.type2class(listType);
+// 如果字段声明为 List&lt;String&gt;，rawClass 将是 List.class
 </code></pre>
 
             </article>

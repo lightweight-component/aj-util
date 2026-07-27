@@ -92,26 +92,6 @@
         </url>
     
         <url>
-            <loc>https://aj-util.ajaxjs.com/reflect/Methods-cn/</loc>
-            <lastmod>2025-10-27T08:41:32.656Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/reflect/Methods/</loc>
-            <lastmod>2025-10-27T08:41:32.657Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/reflect/Types-cn/</loc>
-            <lastmod>2025-10-27T08:41:32.659Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/reflect/Types/</loc>
-            <lastmod>2025-10-27T08:41:32.660Z</lastmod>
-        </url>
-    
-        <url>
             <loc>https://aj-util.ajaxjs.com/cryptography/flow/</loc>
             <lastmod>2025-12-06T02:23:24.005Z</lastmod>
         </url>
@@ -129,16 +109,6 @@
         <url>
             <loc>https://aj-util.ajaxjs.com/date/formatter/</loc>
             <lastmod>2025-12-06T02:23:24.007Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/date/intro-cn/</loc>
-            <lastmod>2025-12-06T02:23:24.007Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/date/intro/</loc>
-            <lastmod>2025-12-06T02:23:24.008Z</lastmod>
         </url>
     
         <url>
@@ -209,26 +179,6 @@
         <url>
             <loc>https://aj-util.ajaxjs.com/common/RandomTools/</loc>
             <lastmod>2026-07-20T09:37:01.949Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/common/XmlHelper-cn/</loc>
-            <lastmod>2026-07-20T09:37:01.950Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/common/XmlHelper/</loc>
-            <lastmod>2026-07-20T09:37:01.951Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/date/convert-cn/</loc>
-            <lastmod>2026-07-20T09:37:01.961Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/date/convert/</loc>
-            <lastmod>2026-07-20T09:37:01.962Z</lastmod>
         </url>
     
         <url>
@@ -307,13 +257,83 @@
         </url>
     
         <url>
+            <loc>https://aj-util.ajaxjs.com/common/XmlHelper-cn/</loc>
+            <lastmod>2026-07-27T01:21:49.464Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/common/XmlHelper/</loc>
+            <lastmod>2026-07-27T01:21:49.464Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/date/convert-cn/</loc>
+            <lastmod>2026-07-27T01:21:49.471Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/date/convert/</loc>
+            <lastmod>2026-07-27T01:21:49.475Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/date/intro-cn/</loc>
+            <lastmod>2026-07-27T01:21:49.477Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/date/intro/</loc>
+            <lastmod>2026-07-27T01:21:49.479Z</lastmod>
+        </url>
+    
+        <url>
             <loc>https://aj-util.ajaxjs.com/reflect/Clazz-cn/</loc>
-            <lastmod>2026-07-20T09:37:01.977Z</lastmod>
+            <lastmod>2026-07-27T09:08:47.513Z</lastmod>
         </url>
     
         <url>
             <loc>https://aj-util.ajaxjs.com/reflect/Clazz/</loc>
-            <lastmod>2026-07-20T09:37:01.977Z</lastmod>
+            <lastmod>2026-07-27T09:08:47.513Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/Fields-cn/</loc>
+            <lastmod>2026-07-27T09:08:47.514Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/Fields/</loc>
+            <lastmod>2026-07-27T09:08:47.538Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/Methods-cn/</loc>
+            <lastmod>2026-07-27T09:08:47.539Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/Methods/</loc>
+            <lastmod>2026-07-27T09:08:47.539Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/NewInstance-cn/</loc>
+            <lastmod>2026-07-27T09:08:47.540Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/NewInstance/</loc>
+            <lastmod>2026-07-27T09:08:47.540Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/Types-cn/</loc>
+            <lastmod>2026-07-27T09:08:47.540Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/reflect/Types/</loc>
+            <lastmod>2026-07-27T09:08:47.541Z</lastmod>
         </url>
     
 </urlset>

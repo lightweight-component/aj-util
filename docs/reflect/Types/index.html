@@ -80,6 +80,8 @@
                     <li><a href="/reflect/Methods/">Methods</a></li>
                     <li><a href="/reflect/Types/">Types</a></li>
                     <li><a href="/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields/">Fields</a></li>
                 </ul>
 
                 <h3>IO</h3>
@@ -108,6 +110,8 @@
                 <h1>Types</h1>
 <p>The <code>Types</code> class provides methods for retrieving generic type information, converting types, and handling parameterized
 types. These methods facilitate efficient and convenient manipulation of Java types at runtime.</p>
+<p>Resolution is intentionally limited: <code>type2class(Type)</code> handles <code>Class</code> and <code>ParameterizedType</code>.
+<code>TypeVariable</code>, <code>WildcardType</code>, and <code>GenericArrayType</code> currently return <code>null</code>.</p>
 <h2>Methods</h2>
 <h3>1. <code>getActualType(Type type)</code></h3>
 <p>Retrieves the actual type arguments of a parameterized type.</p>
@@ -151,7 +155,7 @@ Type[] actualType = Types.getActualType(type);
 <li><strong>Returns:</strong> An array of <code>Type</code> representing the actual type arguments of the return type.</li>
 </ul>
 <p><strong>Example:</strong></p>
-<pre><code class="language-java">Method method = TestTypes.class.getMethods()[0];
+<pre><code class="language-java">Method method = TestTypes.class.getMethod(&quot;getList2&quot;);
 Type[] actualType = Types.getGenericReturnType(method);
 // actualType will contain the generic return type of the method
 </code></pre>
@@ -165,8 +169,10 @@ Type[] actualType = Types.getGenericReturnType(method);
 </li>
 <li><strong>Returns:</strong> The first actual type argument as a <code>Class</code>, or <code>null</code> if the return type is not parameterized.</li>
 </ul>
+<p>This method assumes a <code>ParameterizedType</code> contains at least one argument. A malformed custom implementation that
+returns an empty argument array causes <code>ArrayIndexOutOfBoundsException</code>.</p>
 <p><strong>Example:</strong></p>
-<pre><code class="language-java">Method method = TestTypes.class.getMethods()[0];
+<pre><code class="language-java">Method method = TestTypes.class.getMethod(&quot;getList2&quot;);
 Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 // actualType will be the first generic return type of the method as a Class
 </code></pre>
@@ -193,25 +199,40 @@ Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 </ul>
 </li>
 <li><strong>Returns:</strong> The first actual type argument as a <code>Class</code>.</li>
+<li><strong>Throws:</strong> <code>IllegalArgumentException</code> if <code>clz</code> has no parameterized superclass or its first type argument cannot be resolved to a <code>Class</code>.</li>
 </ul>
 <p><strong>Example:</strong></p>
-<pre><code class="language-java">Class&lt;?&gt; actualClass = Types.getActualClass(ArrayList.class);
-// actualClass will be the first generic type argument of ArrayList's superclass as a Class
+<pre><code class="language-java">class StringList extends ArrayList&lt;String&gt; {
+}
+
+Class&lt;?&gt; actualClass = Types.getActualClass(StringList.class);
+// String.class
+
+Types.getActualClass(String.class);
+// throws IllegalArgumentException instead of failing with NullPointerException
 </code></pre>
 <h3>6. <code>type2class(Type type)</code></h3>
-<p>Converts a <code>Type</code> to a <code>Class</code>.</p>
+<p>Converts a <code>Type</code> to a <code>Class</code>. If the input is a <code>ParameterizedType</code>, its raw type is resolved recursively.</p>
 <ul>
 <li><strong>Parameters:</strong>
 <ul>
 <li><code>type</code>: The <code>Type</code> to convert.</li>
 </ul>
 </li>
-<li><strong>Returns:</strong> The <code>Class</code> representation of the <code>Type</code>, or <code>null</code> if the <code>Type</code> is not a <code>Class</code>.</li>
+<li><strong>Returns:</strong> The <code>Class</code> representation of the <code>Type</code>, or <code>null</code> if it cannot be resolved to a <code>Class</code>.</li>
 </ul>
 <p><strong>Example:</strong></p>
 <pre><code class="language-java">Type type = String.class;
 Class&lt;?&gt; actualClass = Types.type2class(type);
 // actualClass will be String.class
+
+class Example {
+    List&lt;String&gt; names;
+}
+
+Type listType = Example.class.getDeclaredField(&quot;names&quot;).getGenericType();
+Class&lt;?&gt; rawClass = Types.type2class(listType);
+// rawClass will be List.class for a field declared as List&lt;String&gt;
 </code></pre>
 
             </article>

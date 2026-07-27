@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Methods Tutorial</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for dynamically retrieving and invoking Java methods" />
+        <title>AJ Utils-Methods</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Finding and invoking Java methods through reflection" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, reflection,method invocation,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
@@ -80,6 +80,8 @@
                     <li><a href="/reflect/Methods/">Methods</a></li>
                     <li><a href="/reflect/Types/">Types</a></li>
                     <li><a href="/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields/">Fields</a></li>
                 </ul>
 
                 <h3>IO</h3>
@@ -106,214 +108,55 @@
             </menu>
             <article class="aj-text">
                 <h1>Methods</h1>
-<p>The <code>Methods</code> class provides methods for dynamically retrieving and invoking methods, as well as handling method
-parameters. These methods facilitate efficient and convenient manipulation of Java methods at runtime.</p>
-<h2>Methods</h2>
-<h3>1. <code>getDeclaredMethod(Class&lt;?&gt; clz, String methodName)</code></h3>
-<p>Retrieves a declared method of a class by its name.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>clz</code>: The class to retrieve the method from.</li>
-<li><code>methodName</code>: The name of the method.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The retrieved method, or <code>null</code> if the method does not exist.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">Method method = Methods.getDeclaredMethod(String.class, &quot;length&quot;);
-// method will be the &quot;length&quot; method of the String class
+<p><code>Methods</code> locates and invokes methods on a configured class or object.</p>
+<h2>Declared-method lookup</h2>
+<p><code>findDeclaredMethod(String, Class&lt;?&gt;...)</code> searches the configured class and then its superclasses, excluding
+<code>Object</code>. It can return private and other non-public declarations and makes the selected method accessible.
+The lookup uses exact parameter types and returns <code>null</code> when no method exists.</p>
+<pre><code class="language-java">Methods methods = new Methods(MyService.class);
+Method method = methods.findDeclaredMethod(&quot;handle&quot;, String.class);
 </code></pre>
-<h3>2. <code>getMethod(Object obj, String method, Class&lt;?&gt;... args)</code></h3>
-<p>Retrieves a method of a class or an instance by its name and parameter types.</p>
+<p>The overload accepting argument values converts each non-null value to its exact runtime class. It does not perform
+superclass, interface, or primitive-wrapper matching, and a <code>null</code> element causes <code>NullPointerException</code>.</p>
+<h2>Compatible public-method lookup</h2>
+<p><code>findCompatibleMethod(String, Object...)</code> searches public methods, including inherited methods. It supports:</p>
 <ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>obj</code>: The instance or class to retrieve the method from.</li>
-<li><code>method</code>: The name of the method.</li>
-<li><code>args</code>: The parameter types of the method.</li>
+<li>exact runtime types;</li>
+<li>superclass and recursively inherited interface parameters;</li>
+<li>primitive-wrapper pairs such as <code>int</code> and <code>Integer</code>;</li>
+<li><code>null</code> for non-primitive parameters.</li>
 </ul>
-</li>
-<li><strong>Returns:</strong> The retrieved method, or <code>null</code> if the method does not exist.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">Method method = Methods.getMethod(String.class, &quot;substring&quot;, int.class, int.class);
-// method will be the &quot;substring&quot; method of the String class that takes two int parameters
-</code></pre>
-<h3>3. <code>getMethod(Object obj, String method, Object... args)</code></h3>
-<p>Retrieves a method of a class or an instance by its name and parameters.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>obj</code>: The instance or class to retrieve the method from.</li>
-<li><code>method</code>: The name of the method.</li>
-<li><code>args</code>: The parameters of the method.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The retrieved method, or <code>null</code> if the method does not exist.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">Method method = Methods.getMethod(&quot;example&quot;, &quot;substring&quot;, 1, 3);
-// method will be the &quot;substring&quot; method of the String class that takes two int parameters
-</code></pre>
-<h3>4. <code>getMethodByUpCastingSearch(Class&lt;?&gt; clz, String method, Object arg)</code></h3>
-<p>Searches for a method by its name and parameter, automatically upcasting the parameter type.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>clz</code>: The class to search for the method in.</li>
-<li><code>method</code>: The name of the method.</li>
-<li><code>arg</code>: The parameter of the method.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The retrieved method, or <code>null</code> if the method does not exist.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">Method method = Methods.getMethodByUpCastingSearch(List.class, &quot;add&quot;, &quot;example&quot;);
-// method will be the &quot;add&quot; method of the List class that takes an Object parameter
-</code></pre>
-<h3>5. <code>getDeclaredMethodByInterface(Class&lt;?&gt; clz, String method, Object arg)</code></h3>
-<p>Retrieves a declared method of a class by its name and parameter, automatically upcasting the parameter type.</p>
-<ul>
-<li><strong>Parameters:</strong>
-<ul>
-<li><code>clz</code>: The class to retrieve the method from.</li>
-<li><code>method</code>: The name of the method.</li>
-<li><code>arg</code>: The parameter of the method.</li>
-</ul>
-</li>
-<li><strong>Returns:</strong> The retrieved method, or <code>null</code> if the method does not exist.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-java">Method method = Methods.getDeclaredMethodByInterface(List.class, &quot;add&quot;, &quot;example&quot;);
-// method will be the &quot;add&quot; method of the List class that takes an Object parameter
-</code></pre>
-<h2>Unit Test Examples</h2>
-<p>Here are some examples from the unit tests:</p>
-<pre><code class="language-java">package com.ajaxjs.util.reflect;
+<pre><code class="language-java">interface Parent {}
+interface Child extends Parent {}
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-public class TestReflectUtil {
-    public static class Foo {
-        public Foo() {
-        }
-
-        public Foo(String str, String str2) {
-        }
-
-        public void Bar() {
-
-        }
-
-        public void CC(String cc) {
-
-        }
-
-        public String Bar2() {
-            return &quot;bar2&quot;;
-        }
-
-        public String Bar3(String arg) {
-            return arg;
-        }
-    }
-
-    static class Foo2 {
-        public void m1() {
-        }
-
-        public void m1(String arg) {
-        }
-    }
-
-    static class Bar extends Foo {
-        public void m2() {
-        }
-    }
-
-    @Test
-    public void testGetMethod() {
-        assertNotNull(Methods.getMethod(new Foo(), &quot;m1&quot;));// 按实际对象
-        assertNotNull(Methods.getMethod(Foo2.class, &quot;m1&quot;));// 按类引用
-        assertNotNull(Methods.getMethod(Foo2.class, &quot;m1&quot;, String.class)); // 按参数类型
-        assertNotNull(Methods.getMethod(Foo2.class, &quot;m1&quot;, &quot;foo&quot;));// 按实际参数
-        assertNotNull(Methods.getMethod(Bar.class, &quot;m1&quot;));
-        assertNotNull(Methods.getMethod(Bar.class, &quot;m1&quot;, String.class));
-        assertNotNull(Methods.getMethod(Bar.class, &quot;m2&quot;));
-    }
-
-    static class Foo1 {
-        public void foo(Foo1 a) {
-
-        }
-    }
-
-    static class Bar2 extends Foo1 {
-
-    }
-
-    @Test
-    public void testGetMethodByUpCastingSearch() {
-        assertNull(Methods.getMethod(Foo1.class, &quot;foo&quot;, new Bar2())); // 找不到
-        assertNotNull(Methods.getMethodByUpCastingSearch(Foo1.class, &quot;foo&quot;, new Bar2())); // 找到了
-    }
-
-    public static class A {
-        public String foo(A a) {
-            return &quot;A.foo&quot;;
-        }
-
-        public String bar(C c) {
-            return &quot;A.bar&quot;;
-        }
-    }
-
-    public static class B extends A {
-    }
-
-    public interface C {
-    }
-
-    public static class D implements C {
-    }
-
-    @Test
-    public void testDeclaredMethod() {
-        assertNull(Methods.getMethodByUpCastingSearch(A.class, &quot;bar&quot;, new D())); // 找不到
-        assertNotNull(Methods.getDeclaredMethodByInterface(A.class, &quot;bar&quot;, new D()));// 找到了
-    }
-
-    public static class Foo3 {
-        public void m1() {
-        }
-
-        public String m1(String arg) {
-            return arg;
-        }
-    }
-
-    static class Bar3 extends Foo3 {
-        public void m2() {
-        }
-    }
-
-    @Test
-    public void testExecuteMethod() {
-        assertNull(Methods.executeMethod(new Foo3(), &quot;m1&quot;));
-        assertEquals(Methods.executeMethod(new Foo3(), &quot;m1&quot;, &quot;foo&quot;), &quot;foo&quot;);
-        assertNull(Methods.executeMethod(new Bar2(), &quot;m1&quot;));
-        assertEquals(Methods.executeMethod(new Bar3(), &quot;m1&quot;, &quot;bar&quot;), &quot;bar&quot;);
-        assertEquals(Methods.executeMethod(new Bar3(), &quot;m1&quot;, String.class, &quot;foo&quot;), &quot;foo&quot;);
-    }
+class ChildImpl implements Child {}
+class Target {
+    public void accept(Parent value) {}
 }
+
+Method method =
+        new Methods(Target.class).findCompatibleMethod(&quot;accept&quot;, new ChildImpl());
 </code></pre>
-<h2>Conclusion</h2>
-<p>The <code>Methods</code> class provides a set of useful utilities for working with Java methods through reflection. By using these
-methods, you can simplify your code and handle method operations more efficiently. Remember to
-consult the library's Javadoc for the most up-to-date information and additional methods.</p>
+<p>The candidate with the lowest type-hierarchy distance is selected. If unrelated overloads receive the same score,
+the current implementation selects the first method returned by reflection; callers should use explicit parameter
+types when overload ambiguity is possible. Numeric primitive widening and varargs expansion are not supported.</p>
+<h2>Invocation</h2>
+<p>The name-based <code>execute(instance, methodName, parameters)</code> overload uses compatible public-method lookup. A missing
+method ultimately raises <code>IllegalArgumentException</code>. The overload accepting <code>Class&lt;?&gt;[]</code> uses declared-method lookup
+and can therefore invoke a non-public method after it has been made accessible.</p>
+<pre><code class="language-java">Object result = Methods.execute(service, &quot;handle&quot;, new Object[]{&quot;value&quot;});
+
+Object privateResult = Methods.execute(
+        service,
+        &quot;privateHandle&quot;,
+        new Class&lt;?&gt;[]{String.class},
+        new Object[]{&quot;value&quot;}
+);
+</code></pre>
+<p>A legitimate target <code>null</code> return remains <code>null</code>. An exception thrown by the target method is unwrapped from
+<code>InvocationTargetException</code> and propagated.</p>
+<p><code>executeStatic(Method, Object[])</code> accepts only static methods. <code>executeDefault(...)</code> is the Java 8-oriented helper
+for interface default methods; its legacy <code>MethodHandles.Lookup</code> access may not work on newer modular JDKs.</p>
 
             </article>
         </div>
