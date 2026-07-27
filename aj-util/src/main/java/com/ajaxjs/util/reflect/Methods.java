@@ -35,7 +35,7 @@ public class Methods {
         try {
             return clz.getDeclaredMethod(methodName);
         } catch (NoSuchMethodException e) {
-            log.warn("No Such Method Exception " + methodName, e);
+            log.warn("No Such Method Exception {}", methodName, e);
             throw new RuntimeException("No Such Method Exception " + methodName, e);
         }
     }
@@ -135,9 +135,6 @@ public class Methods {
                     throw new RuntimeException("循环 object 向上转型（接口）异常 ", e);
                 }
             }
-            //			else {
-            // 无实现的接口
-            //			}
         }
 
         return null;
@@ -290,12 +287,10 @@ public class Methods {
     public static Object executeMethod(Object instance, Method method, Object... args) {
         try {
             return executeMethod_Throwable(instance, method, args);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Error e) {
+        } catch (RuntimeException | Error e) {
             throw e;
         } catch (Throwable e) {
-            log.warn("Error occurred when executing method: " + method, e);
+            log.warn("Error occurred when executing method: {}", method, e);
             throw new RuntimeException("Error occurred when executing method: " + method, e);
         }
     }
@@ -360,7 +355,7 @@ public class Methods {
             try {
                 return executeMethod_Throwable(new Object(), method, args);
             } catch (Throwable e) {
-                log.warn("Error when executing static method: " + method, e);
+                log.warn("Error when executing static method: {}", method, e);
                 throw new RuntimeException("Error when executing static method: " + method, e);
             }
         } else
@@ -408,7 +403,7 @@ public class Methods {
                     .bindTo(proxy)
                     .invokeWithArguments(args);
         } catch (Throwable e) {
-            log.warn("Error when executing default method: " + method, e);
+            log.warn("Error when executing default method: {}", method, e);
             throw new RuntimeException(e);
         }
     }

@@ -74,9 +74,8 @@ public class NewInstance<T> {
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
         try {
             return constructor.newInstance(args);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-                 InvocationTargetException e) {
-            log.error("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            log.error("Error occurred when creating instance of class: {}", constructor.getDeclaringClass(), e);
             throw new RuntimeException("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
         }
     }
@@ -113,10 +112,10 @@ public class NewInstance<T> {
         try {
             return argClz != null ? clz.getConstructor(argClz) : clz.getConstructor();
         } catch (NoSuchMethodException e) {
-            log.error("Error occurred when creating instance of class: " + clz, e);
+            log.error("Error occurred when creating instance of class: {}", clz, e);
             throw new RuntimeException("Error occurred when creating instance of class: " + clz, e);
         } catch (SecurityException e) {
-            log.error("Security Error occurred when getting the constructor  of class: " + clz, e);
+            log.error("Security Error occurred when getting the constructor  of class: {}", clz, e);
             throw new RuntimeException("Security Error occurred when getting the constructor  of class: " + clz, e);
         }
     }

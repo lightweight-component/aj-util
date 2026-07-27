@@ -2,7 +2,6 @@ package com.ajaxjs.util.reflect;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class Fields {
 
         while (clz != null && clz != Object.class) {  // 排除 Object 类
             Collections.addAll(fieldList, clz.getDeclaredFields());// 避免创建中间 ArrayList
-//            fieldList.addAll(new ArrayList<>(Arrays.asList(clz.getDeclaredFields())));
             clz = clz.getSuperclass();
         }
 
@@ -36,16 +34,6 @@ public class Fields {
      * @return 找到的字段对象，如果未找到则返回 null
      */
     public static Field findField(Class<?> clazz, String fieldName) {
-//        try {
-//            return clazz.getDeclaredField(fieldName);
-//        } catch (NoSuchFieldException e) {
-//            // 如果当前类没有该字段，则尝试在父类中查找
-//            Class<?> superClass = clazz.getSuperclass();
-//
-//            if (superClass != null)
-//                return findField(superClass, fieldName);
-//        }
-
         Class<?> current = clazz;
 
         while (current != null) {

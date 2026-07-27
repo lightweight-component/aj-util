@@ -28,7 +28,7 @@ public class Clazz {
         try {
             return Class.forName(clzName);
         } catch (ClassNotFoundException e) {
-            log.error("Class:" + clzName + " not Found.", e);
+            log.error("Class:{} not Found.", clzName, e);
             throw new RuntimeException("Class:" + clzName + " not Found.");
         }
     }
@@ -128,7 +128,7 @@ public class Clazz {
             try {
                 return newInstance(clz.getDeclaredConstructor());
             } catch (NoSuchMethodException e) {
-                log.error("The constructor of this class " + clz.getName() + " is not found.", e);
+                log.error("The constructor of this class {} is not found.", clz.getName(), e);
                 throw new RuntimeException("The constructor of this class " + clz.getName() + " is not found.", e);
             }
         }
@@ -153,7 +153,7 @@ public class Clazz {
             return constructor.newInstance(args);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
                  InvocationTargetException e) {
-            log.error("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
+            log.error("Error occurred when creating instance of class: {}", constructor.getDeclaringClass(), e);
             throw new RuntimeException("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
         }
     }
@@ -222,10 +222,10 @@ public class Clazz {
         try {
             return argClz != null ? clz.getConstructor(argClz) : clz.getConstructor();
         } catch (NoSuchMethodException e) {
-            log.error("Error occurred when creating instance of class: " + clz, e);
+            log.error("Error occurred when creating instance of class: {}", clz, e);
             throw new RuntimeException("Error occurred when creating instance of class: " + clz, e);
         } catch (SecurityException e) {
-            log.error("Security Error occurred when getting the constructor  of class: " + clz, e);
+            log.error("Security Error occurred when getting the constructor  of class： {}", clz, e);
             throw new RuntimeException("Security Error occurred when getting the constructor  of class: " + clz, e);
         }
     }
