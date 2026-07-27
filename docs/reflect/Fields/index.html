@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Clazz</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Class loading and hierarchy inspection utilities" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, reflection,class loading,Java" />
+        <title>AJ Utils-Fields</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Field hierarchy and wrapped-exception helpers" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, reflection,fields,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
@@ -107,38 +107,21 @@
                </ul>
             </menu>
             <article class="aj-text">
-                <h1>Clazz</h1>
-<p><code>Clazz</code> contains class-loading and type-hierarchy helpers. Object construction is provided separately by
-<code>NewInstance</code>.</p>
-<h2>Loading classes</h2>
-<p><code>getClassByName(String)</code> loads a class by its fully qualified name and throws <code>RuntimeException</code> if it cannot be
-found. The current wrapper does not retain <code>ClassNotFoundException</code> as its cause. The typed overload also verifies
-assignability:</p>
-<pre><code class="language-java">Class&lt;CharSequence&gt; type =
-        Clazz.getClassByName(&quot;java.lang.String&quot;, CharSequence.class);
-
-// Throws ClassCastException: String is not a Number.
-Clazz.getClassByName(&quot;java.lang.String&quot;, Number.class);
+                <h1>Fields</h1>
+<p><code>Fields</code> provides field-hierarchy lookup and helpers for unwrapping reflection exceptions.</p>
+<p><code>getSuperClassDeclaredFields(Class&lt;?&gt;)</code> returns fields declared by the input class and its superclasses, including
+private fields but excluding fields declared by <code>Object</code>.</p>
+<p><code>findField(Class&lt;?&gt;, String)</code> searches the same hierarchy and returns the first matching <code>Field</code>, or <code>null</code> when
+no field exists. Finding a non-public field does not by itself make it accessible.</p>
+<pre><code class="language-java">Field field = Fields.findField(MyClass.class, &quot;name&quot;);
+if (field != null &amp;&amp; !field.isAccessible())
+    field.setAccessible(true);
 </code></pre>
-<p>Passing a <code>null</code> target type throws <code>IllegalArgumentException</code>.</p>
-<h2>Converting arguments to classes</h2>
-<p><code>args2class(Object[])</code> returns the runtime class of each argument. A <code>null</code> or empty array produces <code>null</code>.
-Individual <code>null</code> elements are not supported; use an explicit <code>Class&lt;?&gt;[]</code> when a parameter value is <code>null</code>.</p>
-<pre><code class="language-java">Class&lt;?&gt;[] types = Clazz.args2class(new Object[]{&quot;text&quot;, 1});
-// [String.class, Integer.class]
-</code></pre>
-<h2>Inspecting interfaces and superclasses</h2>
-<p><code>getDeclaredInterface(Class&lt;?&gt;)</code> returns every interface implemented by the class and its superclasses. Parent
-interfaces are traversed recursively. A <code>Set&lt;Class&lt;?&gt;&gt;</code> prevents duplicates in diamond-shaped interface graphs.</p>
-<p><code>getAllSuperClass(Class&lt;?&gt;)</code> returns the superclass chain, excluding the input class and <code>Object</code>. It is safe to
-call with an interface type and returns an empty array in that case.</p>
-<pre><code class="language-java">Class&lt;?&gt;[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
-Class&lt;?&gt;[] parents = Clazz.getAllSuperClass(ArrayList.class);
-</code></pre>
-<p><code>getClassByInterface(Type)</code> derives a class name from <code>Type.toString()</code>. It is intended only for directly resolvable
-class or parameterized-interface types; type variables, wildcards, and generic arrays are not reliably supported.</p>
-<p>The hierarchy methods do not yet share a uniform <code>null</code> policy. <code>getAllSuperClass(null)</code> throws
-<code>NullPointerException</code>, while <code>getDeclaredInterface(null)</code> currently returns an empty array.</p>
+<p><code>getUnderLayerErr(Throwable)</code> unwraps nested <code>InvocationTargetException</code> and
+<code>UndeclaredThrowableException</code> instances. A wrapper without a cause is returned unchanged; a <code>null</code> input is
+rejected with <code>IllegalArgumentException</code>.</p>
+<p><code>getUnderLayerErrMsg(Throwable)</code> returns the unwrapped exception text without its leading class name. If an
+exception has no detail message, <code>Throwable.toString()</code> contains no colon and the class name is currently retained.</p>
 
             </article>
         </div>

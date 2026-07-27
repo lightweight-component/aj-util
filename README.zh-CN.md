@@ -1,5 +1,5 @@
 <h1 align="center">AJ-Utils</h1>
-<h3 align="center">小型的 Java 工具包</h3>
+<h3 align="center">小型的 Java 面向对象编程工具包</h3>
 
 <div style="text-align: center;">
 
@@ -17,8 +17,11 @@
 
 <hr />
 
+这是一个主打“面向对象（OOP）”的 Java 工具包。与其他工具包不同，它没有较多的 static 静态方法，而是要先建立对象实例，才能调用工具方法。
+实例化的同时通过重载构造器参数以适应不同的入参情形，作自动转换。这样的作法不仅可以驾驭复杂的情形，而且可以使得 API
+风格更清晰，代码更精简且避免重复。
 
-轻量级的 Java 工具库，包含多个强大的组件。该库的 JAR 文件大小约为 90KB，并包含了以下模块：
+另外改库主打“轻量级”、依赖少。该库的 JAR 文件大小约为 170KB，并包含了以下模块：
 
 | 类/包模块               | 详细描述                                      | 备注              |
 |---------------------|-------------------------------------------|-----------------|
@@ -46,7 +49,7 @@
 ## 链接
 
 - [教程](https://aj-util.ajaxjs.com/)
-- [DeepWiki 教程](https://deepwiki.com/lightweight-component/aj-util) 
+- [DeepWiki 教程](https://deepwiki.com/lightweight-component/aj-util)
 - [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
 
 ## 安装

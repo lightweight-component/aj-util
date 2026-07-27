@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Methods 教程</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  Methods 类提供了动态检索和调用 Java 方法的实用工具" />
+        <title>AJ Utils-Methods</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  通过反射查找和调用 Java 方法" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 反射,方法调用,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -78,6 +78,8 @@
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
                     <li><a href="/reflect/Types-cn/">Types</a></li>
                     <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
                 </ul>
 
                 <h3>Input/Output 输入/输出</h3>
@@ -103,209 +105,53 @@
             </menu>
             <article class="aj-text chinese">
                 <h1>Methods</h1>
-<p><code>Methods</code> 类提供了动态检索和调用方法以及处理方法参数的方法。这些方法有助于在运行时高效、方便地操作 Java 方法。</p>
-<h2>方法</h2>
-<h3>1. <code>getDeclaredMethod(Class&lt;?&gt; clz, String methodName)</code></h3>
-<p>通过方法名检索类的声明方法。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>clz</code>: 要检索方法的类。</li>
-<li><code>methodName</code>: 方法的名称。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 检索到的方法，如果方法不存在则返回 <code>null</code>。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">Method method = Methods.getDeclaredMethod(String.class, &quot;length&quot;);
-// method 将会是 String 类的 &quot;length&quot; 方法
+<p><code>Methods</code> 用于在指定类或对象上查找并调用方法。</p>
+<h2>声明方法查找</h2>
+<p><code>findDeclaredMethod(String, Class&lt;?&gt;...)</code> 从指定类开始沿父类向上查找，但不包含 <code>Object</code>。它可以返回
+private 等非 public 声明，并将找到的方法设为可访问。该入口按精确参数类型查找，找不到时返回 <code>null</code>。</p>
+<pre><code class="language-java">Methods methods = new Methods(MyService.class);
+Method method = methods.findDeclaredMethod(&quot;handle&quot;, String.class);
 </code></pre>
-<h3>2. <code>getMethod(Object obj, String method, Class&lt;?&gt;... args)</code></h3>
-<p>通过方法名和参数类型检索类或实例的方法。</p>
+<p>接收实际参数值的重载，会把每个非 <code>null</code> 参数转换成精确运行时类型。它不进行父类、接口或基本类型与
+包装类型的兼容匹配；参数数组中包含 <code>null</code> 元素时会抛出 <code>NullPointerException</code>。</p>
+<h2>兼容 public 方法查找</h2>
+<p><code>findCompatibleMethod(String, Object...)</code> 搜索 public 方法，包括继承的方法。它支持：</p>
 <ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>obj</code>: 要检索方法的实例或类。</li>
-<li><code>method</code>: 方法的名称。</li>
-<li><code>args</code>: 方法的参数类型。</li>
+<li>精确运行时类型；</li>
+<li>父类参数和递归继承的接口参数；</li>
+<li><code>int</code>/<code>Integer</code> 等基本类型与包装类型配对；</li>
+<li>非基本类型参数的 <code>null</code> 值。</li>
 </ul>
-</li>
-<li><strong>返回值:</strong> 检索到的方法，如果方法不存在则返回 <code>null</code>。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">Method method = Methods.getMethod(String.class, &quot;substring&quot;, int.class, int.class);
-// method 将会是 String 类的 &quot;substring&quot; 方法，带有两个 int 参数
-</code></pre>
-<h3>3. <code>getMethod(Object obj, String method, Object... args)</code></h3>
-<p>通过方法名和参数检索类或实例的方法。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>obj</code>: 要检索方法的实例或类。</li>
-<li><code>method</code>: 方法的名称。</li>
-<li><code>args</code>: 方法的参数。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 检索到的方法，如果方法不存在则返回 <code>null</code>。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">Method method = Methods.getMethod(&quot;example&quot;, &quot;substring&quot;, 1, 3);
-// method 将会是 String 类的 &quot;substring&quot; 方法，带有两个 int 参数
-</code></pre>
-<h3>4. <code>getMethodByUpCastingSearch(Class&lt;?&gt; clz, String method, Object arg)</code></h3>
-<p>通过方法名和参数搜索方法，自动向上转型参数类型。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>clz</code>: 要搜索方法的类。</li>
-<li><code>method</code>: 方法的名称。</li>
-<li><code>arg</code>: 方法的参数。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 检索到的方法，如果方法不存在则返回 <code>null</code>。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">Method method = Methods.getMethodByUpCastingSearch(List.class, &quot;add&quot;, &quot;example&quot;);
-// method 将会是 List 类的 &quot;add&quot; 方法，带有一个 Object 参数
-</code></pre>
-<h3>5. <code>getDeclaredMethodByInterface(Class&lt;?&gt; clz, String method, Object arg)</code></h3>
-<p>通过方法名和参数检索类的声明方法，自动向上转型参数类型。</p>
-<ul>
-<li><strong>参数说明：</strong>
-<ul>
-<li><code>clz</code>: 要检索方法的类。</li>
-<li><code>method</code>: 方法的名称。</li>
-<li><code>arg</code>: 方法的参数。</li>
-</ul>
-</li>
-<li><strong>返回值:</strong> 检索到的方法，如果方法不存在则返回 <code>null</code>。</li>
-</ul>
-<p><strong>示例:</strong></p>
-<pre><code class="language-java">Method method = Methods.getDeclaredMethodByInterface(List.class, &quot;add&quot;, &quot;example&quot;);
-// method 将会是 List 类的 &quot;add&quot; 方法，带有一个 Object 参数
-</code></pre>
-<h2>单元测试示例</h2>
-<p>以下是单元测试中的一些示例：</p>
-<pre><code class="language-java">package com.ajaxjs.util.reflect;
+<pre><code class="language-java">interface Parent {}
+interface Child extends Parent {}
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-public class TestReflectUtil {
-    public static class Foo {
-        public Foo() {
-        }
-
-        public Foo(String str, String str2) {
-        }
-
-        public void Bar() {
-
-        }
-
-        public void CC(String cc) {
-
-        }
-
-        public String Bar2() {
-            return &quot;bar2&quot;;
-        }
-
-        public String Bar3(String arg) {
-            return arg;
-        }
-    }
-
-    static class Foo2 {
-        public void m1() {
-        }
-
-        public void m1(String arg) {
-        }
-    }
-
-    static class Bar extends Foo {
-        public void m2() {
-        }
-    }
-
-    @Test
-    public void testGetMethod() {
-        assertNotNull(Methods.getMethod(new Foo(), &quot;m1&quot;));// 按实际对象
-        assertNotNull(Methods.getMethod(Foo2.class, &quot;m1&quot;));// 按类引用
-        assertNotNull(Methods.getMethod(Foo2.class, &quot;m1&quot;, String.class)); // 按参数类型
-        assertNotNull(Methods.getMethod(Foo2.class, &quot;m1&quot;, &quot;foo&quot;));// 按实际参数
-        assertNotNull(Methods.getMethod(Bar.class, &quot;m1&quot;));
-        assertNotNull(Methods.getMethod(Bar.class, &quot;m1&quot;, String.class));
-        assertNotNull(Methods.getMethod(Bar.class, &quot;m2&quot;));
-    }
-
-    static class Foo1 {
-        public void foo(Foo1 a) {
-
-        }
-    }
-
-    static class Bar2 extends Foo1 {
-
-    }
-
-    @Test
-    public void testGetMethodByUpCastingSearch() {
-        assertNull(Methods.getMethod(Foo1.class, &quot;foo&quot;, new Bar2())); // 找不到
-        assertNotNull(Methods.getMethodByUpCastingSearch(Foo1.class, &quot;foo&quot;, new Bar2())); // 找到了
-    }
-
-    public static class A {
-        public String foo(A a) {
-            return &quot;A.foo&quot;;
-        }
-
-        public String bar(C c) {
-            return &quot;A.bar&quot;;
-        }
-    }
-
-    public static class B extends A {
-    }
-
-    public interface C {
-    }
-
-    public static class D implements C {
-    }
-
-    @Test
-    public void testDeclaredMethod() {
-        assertNull(Methods.getMethodByUpCastingSearch(A.class, &quot;bar&quot;, new D())); // 找不到
-        assertNotNull(Methods.getDeclaredMethodByInterface(A.class, &quot;bar&quot;, new D()));// 找到了
-    }
-
-    public static class Foo3 {
-        public void m1() {
-        }
-
-        public String m1(String arg) {
-            return arg;
-        }
-    }
-
-    static class Bar3 extends Foo3 {
-        public void m2() {
-        }
-    }
-
-    @Test
-    public void testExecuteMethod() {
-        assertNull(Methods.executeMethod(new Foo3(), &quot;m1&quot;));
-        assertEquals(Methods.executeMethod(new Foo3(), &quot;m1&quot;, &quot;foo&quot;), &quot;foo&quot;);
-        assertNull(Methods.executeMethod(new Bar2(), &quot;m1&quot;));
-        assertEquals(Methods.executeMethod(new Bar3(), &quot;m1&quot;, &quot;bar&quot;), &quot;bar&quot;);
-        assertEquals(Methods.executeMethod(new Bar3(), &quot;m1&quot;, String.class, &quot;foo&quot;), &quot;foo&quot;);
-    }
+class ChildImpl implements Child {}
+class Target {
+    public void accept(Parent value) {}
 }
+
+Method method =
+        new Methods(Target.class).findCompatibleMethod(&quot;accept&quot;, new ChildImpl());
 </code></pre>
+<p>方法会选择类型层次距离最小的候选项。如果互不相关的重载得到相同分数，当前实现会选择反射返回的
+第一个方法；可能产生重载歧义时，应显式传入参数类型。当前不支持基本数值类型扩宽和可变参数展开。</p>
+<h2>调用方法</h2>
+<p>按方法名调用的 <code>execute(instance, methodName, parameters)</code> 使用兼容 public 方法查找。找不到方法时
+最终抛出 <code>IllegalArgumentException</code>。带 <code>Class&lt;?&gt;[]</code> 参数的重载使用声明方法查找，因此可以调用
+已经设为可访问的非 public 方法。</p>
+<pre><code class="language-java">Object result = Methods.execute(service, &quot;handle&quot;, new Object[]{&quot;value&quot;});
+
+Object privateResult = Methods.execute(
+        service,
+        &quot;privateHandle&quot;,
+        new Class&lt;?&gt;[]{String.class},
+        new Object[]{&quot;value&quot;}
+);
+</code></pre>
+<p>目标方法正常返回 <code>null</code> 时仍返回 <code>null</code>。目标方法抛出的异常会从 <code>InvocationTargetException</code>
+中解包并继续向上传播。</p>
+<p><code>executeStatic(Method, Object[])</code> 只接受静态方法。<code>executeDefault(...)</code> 是面向 Java 8 的接口默认方法
+辅助入口；它对旧版 <code>MethodHandles.Lookup</code> 的访问在较新的模块化 JDK 上可能无法工作。</p>
 
             </article>
         </div>

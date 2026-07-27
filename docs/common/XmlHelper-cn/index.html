@@ -78,6 +78,8 @@
                     <li><a href="/reflect/Methods-cn/">Methods</a></li>
                     <li><a href="/reflect/Types-cn/">Types</a></li>
                     <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
                 </ul>
 
                 <h3>Input/Output 输入/输出</h3>
@@ -104,7 +106,9 @@
             <article class="aj-text chinese">
                 <h1>XmlHelper</h1>
 <p><code>XmlHelper</code> 类提供了用于解析 XML 文档、检索元素以及将节点转换为映射的方法。这些方法可用于处理和操作 XML 数据。</p>
-<p><code>initBuilder()</code> 创建的解析器会禁用 DTD、外部实体、外部 Schema 和 XInclude。因此 <code>getRoot</code>、<code>parseXML</code>、<code>xPath</code> 以及 <code>MapTool.xmlToMap</code> 都会拒绝 XXE 输入。解析失败使用脱敏消息，不会把完整 XML 拼入日志或异常。</p>
+<p><code>initBuilder()</code> 创建解析器时会应用安全限制，禁用 DTD 声明、外部实体、外部 DTD/Schema 访问、
+XInclude 和实体引用展开。因此 <code>getRoot</code>、<code>parseXML</code>、<code>xPath</code> 以及 <code>MapTool.xmlToMap</code> 都会拒绝
+XXE 输入。解析失败使用脱敏消息，不会把完整 XML 拼入日志或异常。</p>
 <h2>方法</h2>
 <h3>1. <code>initBuilder()</code></h3>
 <p>初始化一个用于 XML 解析的 <code>DocumentBuilder</code>。</p>

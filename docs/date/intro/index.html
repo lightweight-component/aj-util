@@ -80,6 +80,8 @@
                     <li><a href="/reflect/Methods/">Methods</a></li>
                     <li><a href="/reflect/Types/">Types</a></li>
                     <li><a href="/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields/">Fields</a></li>
                 </ul>
 
                 <h3>IO</h3>
@@ -106,7 +108,12 @@
             </menu>
             <article class="aj-text">
                 <h1>A Clean and Clear Java Date API</h1>
-<p>When it comes to date types, they are relatively more tricky to handle compared to other primitive data types (int/long/boolean/string), and there are multiple reasons for this. Firstly, date is a broad concept - year-month-day can be called a date, year-month-day-hour-minute-second can also be called a date, or even just hour-minute-second alone can be considered a date. So which date are you actually referring to? The traditional Java date type <code>java.util.Date</code> does exactly this - one type encompasses all the above date concepts, which is the root cause of the混乱 in date APIs. Secondly, the way dates are expressed, also known as &quot;format&quot;, can be <code>2025-12-22 11:05</code>, or <code>2025-12-22 11-05</code> or even <code>3 Jun 2025 11:05</code>, with many varieties. Finally, dates also have the concept of time zones, such as <code>2024-12-03T10:15:30+01:00[Europe/Paris]</code>, <code>Tue, 3 Jun 2025 11:05:30 GMT</code>, etc.</p>
+<p>Date and time values are trickier to handle than primitive values such as numbers, booleans, and strings.
+The word “date” may mean a calendar date, a date and time, or even a time of day. The legacy
+<code>java.util.Date</code> type does not distinguish these concepts, which contributes to confusion in older date APIs.
+Date/time values also have many textual formats, such as <code>2025-12-22 11:05</code>, <code>2025-12-22 11-05</code>, and
+<code>3 Jun 2025 11:05</code>. Time zones add another dimension, as shown by
+<code>2024-12-03T10:15:30+01:00[Europe/Paris]</code> and <code>Tue, 3 Jun 2025 11:05:30 GMT</code>.</p>
 <h2>About the <code>Date</code> Type</h2>
 <p>In early Java versions, the <code>java.util.Date</code> type dominated everything, with many date processing methods built around it (before Java 1.1). In later version refactoring, many of these methods were deprecated and replaced by <code>java.util.Calendar</code> and <code>java.text.DateFormat</code>. Did Calendar solve the tricky date problems? Not really. Although Calendar handles dates more flexibly, it is still overly complex to use, and setting, comparing, and formatting remain troublesome and verbose. Therefore, the community came up with a replacement - Joda-Time, which was adopted by many projects. This excellent open-source project gradually became part of the Java standard, known as JSR310, and was finally integrated into Java 8 as <code>java.time</code>!</p>
 <p>In summary, the date types we advocate using are <code>Instant</code> and <code>LocalDateTime</code> from <code>java.time</code>. <code>Instant</code> represents a moment in time, roughly corresponding to a timestamp, and can support nanosecond precision. <code>LocalDateTime</code> might be more commonly used by us, along with its other derived precise types.</p>
@@ -195,6 +202,15 @@
 <li>Universal date formatting.</li>
 <li><code>now()</code> function that returns the current date and other utility functions.</li>
 </ol>
+<h3><code>DateTools.object2Date</code></h3>
+<p><code>DateTools.object2Date(Object)</code> accepts <code>Date</code>, epoch milliseconds as <code>Long</code>, epoch seconds as <code>Integer</code>,
+<code>LocalDate</code>, <code>LocalDateTime</code>, and strings in <code>yyyy-MM-dd</code>, <code>yyyy-MM-dd HH:mm</code>, or
+<code>yyyy-MM-dd HH:mm:ss</code> form. It returns <code>null</code> for <code>null</code>, blank, or unsupported inputs. A non-blank string
+with an invalid value or unsupported format throws <code>DateTimeParseException</code>; parse failures are not converted
+to <code>null</code>.</p>
+<p><code>DateTools.newISO8601DateWithHigherPrecision()</code> uses <code>DateTimeFormatter.ISO_INSTANT</code>. It preserves the
+fractional-second precision supplied by the system clock, up to nanoseconds, but does not guarantee a particular
+clock resolution such as microseconds.</p>
 <p>Source code at: <a href="https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date">https://gitee.com/lightweight-components/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/date</a>.</p>
 
             </article>
