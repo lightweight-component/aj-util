@@ -48,8 +48,8 @@ class TestTypes {
     }
 
     @Test
-    public void testGetGenericReturnType() {
-        Method method = TestTypes.class.getMethods()[0];
+    public void testGetGenericReturnType() throws NoSuchMethodException {
+        Method method = TestTypes.class.getMethod("getList2");
         Type[] actualType = Types.getGenericReturnType(method);
 
         assertEquals(1, actualType.length);
@@ -57,8 +57,8 @@ class TestTypes {
     }
 
     @Test
-    public void testGetGenericFirstReturnType() {
-        Method method = TestTypes.class.getMethods()[0];
+    public void testGetGenericFirstReturnType() throws NoSuchMethodException {
+        Method method = TestTypes.class.getMethod("getList2");
         Class<?> actualType = Types.getGenericFirstReturnType(method);
 
         assertEquals(String.class, actualType);
@@ -66,7 +66,7 @@ class TestTypes {
 
     @Test
     public void testGetActualType2() {
-        Class<?> clz = TestTypes.class;
+        Class<?> clz = StringList.class;
         Type[] actualType = Types.getActualType(clz);
 
         assertEquals(1, actualType.length);

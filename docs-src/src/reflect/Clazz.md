@@ -1,150 +1,54 @@
 ---
 title: Clazz
-description: Methods for dynamically creating class instances and inspecting constructors
+description: Class loading and hierarchy inspection utilities
 tags:
   - reflection
-  - instantiation
+  - class loading
   - Java
 layout: layouts/aj-util.njk
 ---
 
 # Clazz
 
-The `Clazz` class provides methods for dynamically creating class instances, getting constructors, and checking if a
-class has constructors with parameters. These methods facilitate efficient and convenient handling of
-Java classes at runtime.
+`Clazz` contains class-loading and type-hierarchy helpers. Object construction is provided separately by
+`NewInstance`.
 
-## Methods
+## Loading classes
 
-### 1. `newInstance(Constructor<T> constructor, Object... args)`
-
-Creates an instance of a class using the specified constructor and arguments.
-
-* **Parameters:**
-    * `constructor`: The constructor to use for creating the instance.
-    * `args`: The arguments to pass to the constructor.
-* **Returns:** The created instance of type `T`.
-
-**Example:**
+`getClassByName(String)` loads a class by its fully qualified name and throws `RuntimeException` if it cannot be
+found. The typed overload also verifies assignability:
 
 ```java
-Constructor<String> constructor=String.class.getConstructor(String.class);
-        String instance=Clazz.newInstance(constructor,"Hello");
-// instance will be "Hello"
+Class<CharSequence> type =
+        Clazz.getClassByName("java.lang.String", CharSequence.class);
+
+// Throws ClassCastException: String is not a Number.
+Clazz.getClassByName("java.lang.String", Number.class);
 ```
 
-### 2. `hasArgsCon(Class<?> clz)`
+Passing a `null` target type throws `IllegalArgumentException`.
 
-Determines if a class has any constructors with parameters.
+## Converting arguments to classes
 
-* **Parameters:**
-    * `clz`: The class to check.
-* **Returns:** `true` if the class has constructors with parameters, `false` otherwise.
-
-**Example:**
+`args2class(Object[])` returns the runtime class of each argument. A `null` or empty array produces `null`.
+Individual `null` elements are not supported; use an explicit `Class<?>[]` when a parameter value is `null`.
 
 ```java
-boolean hasArgsCon=Clazz.hasArgsCon(String.class);
-// hasArgsCon will be true
+Class<?>[] types = Clazz.args2class(new Object[]{"text", 1});
+// [String.class, Integer.class]
 ```
 
-### 3. `newInstance(String className, Class<T> clazz)`
+## Inspecting interfaces and superclasses
 
-Creates an instance of a class by its name and casts it to the specified interface type.
+`getDeclaredInterface(Class<?>)` returns every interface implemented by the class and its superclasses. Parent
+interfaces are traversed recursively. A `Set<Class<?>>` prevents duplicates in diamond-shaped interface graphs.
 
-* **Parameters:**
-    * `className`: The full name of the class.
-    * `clazz`: The interface type to cast to.
-* **Returns:** The created instance of type `T`.
-
-**Example:**
+`getAllSuperClass(Class<?>)` returns the superclass chain, excluding the input class and `Object`. It is safe to
+call with an interface type and returns an empty array in that case.
 
 ```java
-String instance=Clazz.newInstance("java.lang.String",String.class);
-// instance will be an empty string
+Class<?>[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
+Class<?>[] parents = Clazz.getAllSuperClass(ArrayList.class);
 ```
 
-### 4. `newInstance(String clzName, Object... args)`
-
-Creates an instance of a class by its name and arguments.
-
-* **Parameters:**
-    * `clzName`: The full name of the class.
-    * `args`: The arguments to pass to the constructor.
-* **Returns:** The created instance as an `Object`.
-
-**Example:**
-
-```java
-Object instance=Clazz.newInstance("java.lang.String","Hello");
-// instance will be "Hello"
-```
-
-## Unit Test Examples
-
-Here are some examples from the unit tests:
-
-```java name=src/test/java/com/ajaxjs/util/reflect/TestClazz.java
-package com.ajaxjs.util.reflect;
-
-import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import static com.ajaxjs.util.reflect.Clazz.getConstructor;
-import static com.ajaxjs.util.reflect.Clazz.newInstance;
-import static org.junit.jupiter.api.Assertions.*;
-
-public class TestClazz {
-    @Test
-    public void testGetClassByName() {
-        Class<?> actual = Clazz.getClassByName("java.lang.String");
-        assertEquals(String.class, actual);
-    }
-
-    @Test
-    public void testGetClassByName_whenClassNotFound() {
-        Class<?> actual = Clazz.getClassByName("com.example.NotFoundClass");
-        assertNull(actual);
-    }
-
-    @Test
-    public void testGetClassByName_whenClassFoundWithGenerics() {
-        Class<?> actual = Clazz.getClassByName("java.util.ArrayList");
-        assertEquals(ArrayList.class, actual);
-    }
-
-    @Test
-    public void testGetClassByInterface() {
-        Class<?> actual = Clazz.getClassByInterface(List.class);
-        assertEquals(List.class, actual);
-    }
-
-    @Test
-    public void testNewInstance() {
-        assertNotNull(newInstance(TestReflectUtil.Foo.class));
-        assertNotNull(newInstance(TestReflectUtil.Foo.class, "a", "b"));
-        assertNotNull(newInstance(Objects.requireNonNull(getConstructor(TestReflectUtil.Foo.class))));
-        assertNotNull(newInstance(Objects.requireNonNull(getConstructor(TestReflectUtil.Foo.class, String.class, String.class)), "a", "b"));
-        assertNotNull(newInstance("com.ajaxjs.util.reflect.TestReflectMethod"));
-        assertNotNull(Clazz.getClassByName("com.ajaxjs.util.reflect.TestReflectMethod"));
-
-        Class<?>[] cs = Clazz.getDeclaredInterface(ArrayList.class);
-        assertNotNull(cs);
-    }
-}
-```
-
-## Class-hierarchy traversal
-
-Hierarchy inspection handles classes and interfaces separately. Superclasses are followed only while non-null, while parent interfaces are recursively visited through `getInterfaces()`. A `Set<Class<?>>` prevents duplicate visits in diamond-shaped interface graphs. Callers may safely inspect either a concrete class or an interface type.
-
-## Conclusion
-
-The `Clazz` class provides a set of useful utilities for working with Java classes through reflection. By using these
-methods, you can simplify your code and handle class operations more efficiently. Remember to consult
-the library's Javadoc for the most up-to-date information and additional methods.
+`getClassByInterface(Type)` is intended for directly resolvable class or parameterized-interface types.

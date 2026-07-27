@@ -6,6 +6,7 @@
 2. Inspect the public method, private helpers, callers, and paired documentation.
 3. Separate a confirmed defect from an API preference or compatibility risk.
 4. For security reports, establish the trust boundary and whether attacker-controlled input reaches the sink.
+5. Check the repository-root `to_fix.md` before reporting or scheduling known remaining issues.
 
 ## Implement
 

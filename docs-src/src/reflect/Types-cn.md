@@ -56,7 +56,7 @@ Type[] actualType = Types.getActualType(type);
 **示例:**
 
 ```java
-Method method = TestTypes.class.getMethods()[0];
+Method method = TestTypes.class.getMethod("getList2");
 Type[] actualType = Types.getGenericReturnType(method);
 // actualType 将包含方法的泛型返回类型
 ```
@@ -72,7 +72,7 @@ Type[] actualType = Types.getGenericReturnType(method);
 **示例:**
 
 ```java
-Method method = TestTypes.class.getMethods()[0];
+Method method = TestTypes.class.getMethod("getList2");
 Class<?> actualType = Types.getGenericFirstReturnType(method);
 // actualType 将是方法的第一个泛型返回类型，作为 Class
 ```
@@ -116,11 +116,11 @@ Types.getActualClass(String.class);
 
 ### 6. `type2class(Type type)`
 
-将 `Type` 转换为 `Class`。
+将 `Type` 转换为 `Class`。如果输入是 `ParameterizedType`，会递归解析它的原始类型。
 
 * **参数说明：**
     * `type`: 要转换的 `Type`。
-* **返回值:** `Type` 的 `Class` 表示，如果 `Type` 不是 `Class`，则返回 `null`。
+* **返回值:** `Type` 的 `Class` 表示；无法解析为 `Class` 时返回 `null`。
 
 **示例:**
 
@@ -128,4 +128,12 @@ Types.getActualClass(String.class);
 Type type = String.class;
 Class<?> actualClass = Types.type2class(type);
 // actualClass 将是 String.class
+
+class Example {
+    List<String> names;
+}
+
+Type listType = Example.class.getDeclaredField("names").getGenericType();
+Class<?> rawClass = Types.type2class(listType);
+// 如果字段声明为 List<String>，rawClass 将是 List.class
 ```

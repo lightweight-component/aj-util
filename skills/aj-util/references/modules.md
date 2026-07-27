@@ -33,7 +33,7 @@ The Jackson dependencies are declared with `provided` scope. Code that uses `Jso
 - `XmlHelper`: hardened DOM and XPath helpers.
 - `JsonUtil`: facade over a pluggable `JsonEngine`.
 - `DateTypeConvert`, `DateTools`, `Formatter`: legacy and `java.time` conversion/formatting.
-- `Clazz`, `Fields`, `Methods`, `Types`, `NewInstance`: reflection utilities.
+- `Clazz`, `Fields`, `ReflectMethod`, `Types`, `NewInstance`: reflection utilities. `Methods` is retired.
 - `DataReader`, `DataWriter`, `FileHelper`, `Resources`, `ZipHelper`: I/O utilities.
 - `Cryptography`, `SecretKeyMgr`, `CertificateUtils`, RSA `KeyMgr`, `DoSignature`, `DoVerify`: cryptographic utilities.
 

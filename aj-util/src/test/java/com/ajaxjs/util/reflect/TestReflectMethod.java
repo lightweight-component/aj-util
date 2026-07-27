@@ -4,6 +4,7 @@ package com.ajaxjs.util.reflect;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -90,15 +91,41 @@ public class TestReflectMethod {
     public interface C {
     }
 
+    public interface Parent {
+    }
+
+    public interface Child extends Parent {
+    }
+
     public static class D implements C {
+    }
+
+    public static class ChildImpl implements Child {
+    }
+
+    public static class InterfaceTarget {
+        public String inheritedInterface(Parent value) {
+            return "parent";
+        }
     }
 
     @Test
     public void testDeclaredMethod() {
-        assertNull(new ReflectMethod(A.class).getMethodByArgumentUpCastingSearch("bar", new D())); // 找不到
+        assertNotNull(new ReflectMethod(A.class).getMethodByArgumentUpCastingSearch("bar", new D()));
         assertNotNull(new ReflectMethod(A.class).getDMethodByArgumentInterface("bar", new D()));// 找到了
         assertNull(new ReflectMethod(C.class).getSuperClassDeclaredMethod("missing", Object.class));
         assertNull(new ReflectMethod(C.class).getSuperClassDeclaredMethod("missing"));
+    }
+
+    @Test
+    public void testFindCompatibleMethodTraversesParentInterfaces() throws Throwable {
+        ReflectMethod reflectMethod = new ReflectMethod(InterfaceTarget.class);
+        Method method = reflectMethod.findCompatibleMethod("inheritedInterface", new ChildImpl());
+
+        assertNotNull(method);
+        assertEquals(Parent.class, method.getParameterTypes()[0]);
+        assertEquals("parent", reflectMethod.execute(new InterfaceTarget(), "inheritedInterface", new Object[]{new ChildImpl()}));
+        assertEquals(method, reflectMethod.getDMethodByArgumentInterface("inheritedInterface", new ChildImpl()));
     }
 
     public static class Foo3 {

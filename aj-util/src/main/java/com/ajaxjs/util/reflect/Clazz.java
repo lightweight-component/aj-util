@@ -42,12 +42,17 @@ public class Clazz {
      * @param clz     The target type to cast to
      * @param <T>     The class reference type
      * @return The corresponding class object cast to the specified type
+     * @throws IllegalArgumentException if the target type is null
+     * @throws ClassCastException       if the loaded class is not assignable to the target type
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getClassByName(String clzName, Class<T> clz) {
+        if (clz == null)
+            throw new IllegalArgumentException("Target type must not be null.");
+
         Class<?> c = getClassByName(clzName);
 
-        return (Class<T>) c;
+        return (Class<T>) c.asSubclass(clz);
     }
 
     /**

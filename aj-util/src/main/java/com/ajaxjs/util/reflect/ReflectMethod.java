@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.*;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * Can be either a class object or an instance object
@@ -55,7 +59,7 @@ public class ReflectMethod {
         try {
             Method method = ObjectHelper.isEmpty(args) ? inputClass.getDeclaredMethod(methodName) : inputClass.getDeclaredMethod(methodName, args);
 
-            if (Modifier.isPrivate(method.getModifiers()))
+            if (!method.isAccessible())
                 method.setAccessible(true);
 
             return method;
@@ -71,14 +75,20 @@ public class ReflectMethod {
      * @param methodName 方法名称
      * @param args       参数类引用
      * @return 匹配的方法对象，null 表示找不到
+     * @throws SecurityException 如果访问声明方法或修改其可访问性被拒绝
      */
     public Method getSuperClassDeclaredMethod(String methodName, Class<?>... args) {
         Class<?> clz = getInputClass();
 
         for (; clz != null && clz != Object.class; clz = clz.getSuperclass()) {
             try {
-                return clz.getDeclaredMethod(methodName, args);
-            } catch (NoSuchMethodException | SecurityException ignored) {
+                Method method = clz.getDeclaredMethod(methodName, args);
+
+                if (!method.isAccessible())
+                    method.setAccessible(true);
+
+                return method;
+            } catch (NoSuchMethodException ignored) {
             }
         }
 
@@ -115,6 +125,125 @@ public class ReflectMethod {
     }
 
     /**
+     * Finds a public method whose parameter types are compatible with the supplied arguments.
+     * Besides exact matches, this method supports superclass and interface assignment, including
+     * interfaces inherited through other interfaces.
+     *
+     * @param methodName method name
+     * @param args       invocation arguments; {@code null} is compatible with non-primitive parameters
+     * @return the best compatible method, or {@code null} if no compatible method exists
+     */
+    public Method findCompatibleMethod(String methodName, Object... args) {
+        Class<?> targetClass = getInputClass();
+        Object[] actualArgs = args == null ? new Object[0] : args;
+        Method bestMethod = null;
+        int bestScore = Integer.MAX_VALUE;
+
+        for (Method candidate : targetClass.getMethods()) {
+            if (!candidate.getName().equals(methodName))
+                continue;
+
+            Class<?>[] parameterTypes = candidate.getParameterTypes();
+            if (parameterTypes.length != actualArgs.length)
+                continue;
+
+            int score = getCompatibilityScore(parameterTypes, actualArgs);
+            if (score < bestScore) {
+                bestMethod = candidate;
+                bestScore = score;
+            }
+        }
+
+        return bestMethod;
+    }
+
+    private static int getCompatibilityScore(Class<?>[] parameterTypes, Object[] args) {
+        int score = 0;
+
+        for (int i = 0; i < parameterTypes.length; i++) {
+            Class<?> parameterType = wrapPrimitive(parameterTypes[i]);
+            Object arg = args[i];
+
+            if (arg == null) {
+                if (parameterTypes[i].isPrimitive())
+                    return Integer.MAX_VALUE;
+
+                score += 100;
+                continue;
+            }
+
+            Class<?> argumentType = arg.getClass();
+            if (!parameterType.isAssignableFrom(argumentType))
+                return Integer.MAX_VALUE;
+
+            score += getTypeDistance(argumentType, parameterType);
+        }
+
+        return score;
+    }
+
+    private static Class<?> wrapPrimitive(Class<?> type) {
+        if (!type.isPrimitive())
+            return type;
+        if (type == boolean.class)
+            return Boolean.class;
+        if (type == byte.class)
+            return Byte.class;
+        if (type == char.class)
+            return Character.class;
+        if (type == short.class)
+            return Short.class;
+        if (type == int.class)
+            return Integer.class;
+        if (type == long.class)
+            return Long.class;
+        if (type == float.class)
+            return Float.class;
+        if (type == double.class)
+            return Double.class;
+
+        return Void.class;
+    }
+
+    private static int getTypeDistance(Class<?> source, Class<?> target) {
+        if (source == target)
+            return 0;
+
+        Queue<Class<?>> queue = new ArrayDeque<>();
+        Queue<Integer> distances = new ArrayDeque<>();
+        Set<Class<?>> visited = new HashSet<>();
+        queue.add(source);
+        distances.add(0);
+        visited.add(source);
+
+        while (!queue.isEmpty()) {
+            Class<?> current = queue.remove();
+            int distance = distances.remove();
+
+            Class<?> superclass = current.getSuperclass();
+            if (superclass != null) {
+                if (superclass == target)
+                    return distance + 1;
+                if (visited.add(superclass)) {
+                    queue.add(superclass);
+                    distances.add(distance + 1);
+                }
+            }
+
+            for (Class<?> currentInterface : current.getInterfaces()) {
+                if (currentInterface == target)
+                    return distance + 1;
+                if (visited.add(currentInterface)) {
+                    queue.add(currentInterface);
+                    distances.add(distance + 1);
+                }
+            }
+        }
+
+        return Integer.MAX_VALUE;
+    }
+
+    /**
      * Find a method by name with automatic parameter type upcasting support.
      * This method searches through the class hierarchy for compatible parameter types.
      * Supports only single parameter methods currently.
@@ -122,20 +251,11 @@ public class ReflectMethod {
      * @param method Method name to find
      * @param arg    Argument object (must be an object, not a Class) for parameter type matching
      * @return Matching method object, or null if not found
+     * @deprecated Use {@link #findCompatibleMethod(String, Object...)}.
      */
+    @Deprecated
     public Method getMethodByArgumentUpCastingSearch(String method, Object arg) {
-        getInputClass();
-
-        for (Class<?> clazz = arg.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
-            try {
-                // return cls.getDeclaredMethod(methodName, clazz);
-                return inputClass.getMethod(method, clazz); // 用 getMethod 代替更好？
-            } catch (NoSuchMethodException | SecurityException e) {
-                // 这里的异常不能抛出去。 如果这里的异常打印或者往外抛，则就不会执行clazz = clazz.getSuperclass(), 最后就不会进入到父类中了
-            }
-        }
-
-        return null;
+        return findCompatibleMethod(method, arg);
     }
 
     /**
@@ -144,33 +264,11 @@ public class ReflectMethod {
      * @param method 方法名称
      * @param arg    参数对象，可能是子类或接口，所以要在这里找到对应的方法，当前只支持单个参数
      * @return 方法对象
+     * @deprecated Use {@link #findCompatibleMethod(String, Object...)}.
      */
+    @Deprecated
     public Method getDMethodByArgumentInterface(String method, Object arg) {
-        getInputClass();
-        Method methodObj;
-
-        for (Class<?> clazz = arg.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
-            Type[] interfaces = clazz.getGenericInterfaces();
-
-            if (interfaces.length != 0) { // 有接口！
-                try {
-                    for (Type _interface : interfaces) {
-                        // 旧方法，现在不行，不知道之前怎么可以的 methodObj = hostClazz.getDeclaredMethod(method, (Class<?>)_interface);
-                        // methodObj = cls.getMethod(methodName,
-                        // ReflectNewInstance.getClassByInterface(_interface));
-                        methodObj = getSuperClassDeclaredMethod(method, Clazz.getClassByInterface(_interface));
-
-                        if (methodObj != null)
-                            return methodObj;
-                    }
-                } catch (Exception e) {
-                    log.warn("循环 object 向上转型（接口）异常 ", e);
-                    throw new RuntimeException("循环 object 向上转型（接口）异常 ", e);
-                }
-            }
-        }
-
-        return null;
+        return findCompatibleMethod(method, arg);
     }
 
     /*--------------------------METHOD EXECUTION--------------------------------------*/
@@ -208,7 +306,8 @@ public class ReflectMethod {
 
     public Object execute(Object instance, String methodName, Object[] args) throws Throwable {
         inputObject = instance;
-        Method method = getMethod(methodName, Clazz.args2class(args));
+        inputClass = instance == null ? null : instance.getClass();
+        Method method = findCompatibleMethod(methodName, args);
 
         return execute(instance, method, args);
     }

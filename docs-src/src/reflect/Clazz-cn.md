@@ -1,84 +1,52 @@
 ---
 title: Clazz
-description: 用于动态创建类实例和检查构造函数的实用方法
+description: 类加载和类型层次检查工具
 tags:
   - 反射
-  - 实例化
+  - 类加载
   - Java
 layout: layouts/aj-util-cn.njk
 ---
 
 # Clazz
 
-`Clazz` 类提供了动态创建类实例、获取构造函数以及检查类是否具有带参数的构造函数的方法。这些方法有助于在运行时高效、方便地处理
-Java 类。
+`Clazz` 提供类加载和类型层次检查功能。对象实例化已经独立到 `NewInstance`。
 
-## 方法
+## 加载类
 
-### 1. `newInstance(Constructor<T> constructor, Object... args)`
-
-使用指定的构造函数和参数创建类的实例。
-
-* **参数说明：**
-    * `constructor`: 用于创建实例的构造函数。
-    * `args`: 传递给构造函数的参数。
-* **返回值:** 类型为 `T` 的创建的实例。
-
-**示例:**
+`getClassByName(String)` 根据完整类名加载类；找不到类时抛出 `RuntimeException`。泛型重载还会验证
+类型是否兼容：
 
 ```java
-Constructor<String> constructor = String.class.getConstructor(String.class);
-String instance = Clazz.newInstance(constructor, "Hello");
-// instance 将会是 "Hello"
+Class<CharSequence> type =
+        Clazz.getClassByName("java.lang.String", CharSequence.class);
+
+// String 不是 Number，抛出 ClassCastException。
+Clazz.getClassByName("java.lang.String", Number.class);
 ```
 
-### 2. `hasArgsCon(Class<?> clz)`
+目标类型为 `null` 时抛出 `IllegalArgumentException`。
 
-确定一个类是否具有带参数的构造函数。
+## 将参数转换为类
 
-* **参数说明：**
-    * `clz`: 要检查的类。
-* **返回值:** 如果类具有带参数的构造函数，则返回 `true`，否则返回 `false`。
-
-**示例:**
+`args2class(Object[])` 返回每个参数的运行时类型。参数数组为 `null` 或空数组时返回 `null`。
+数组内的单个 `null` 元素不受支持；参数值为 `null` 时应显式传入 `Class<?>[]`。
 
 ```java
-boolean hasArgsCon = Clazz.hasArgsCon(String.class);
-// hasArgsCon 将会是 true
+Class<?>[] types = Clazz.args2class(new Object[]{"text", 1});
+// [String.class, Integer.class]
 ```
 
-### 3. `newInstance(String className, Class<T> clazz)`
+## 检查接口和父类
 
-通过类名创建类的实例并将其转换为指定的接口类型。
+`getDeclaredInterface(Class<?>)` 返回类及其父类实现的所有接口，并递归遍历父接口。内部使用
+`Set<Class<?>>`，因此菱形接口继承不会产生重复结果。
 
-* **参数说明：**
-    * `className`: 类的全名。
-    * `clazz`: 要转换为的接口类型。
-* **返回值:** 类型为 `T` 的创建的实例。
-
-**示例:**
+`getAllSuperClass(Class<?>)` 返回父类链，不包含输入类和 `Object`。传入接口类型是安全的，此时返回空数组。
 
 ```java
-String instance = Clazz.newInstance("java.lang.String", String.class);
-// instance 将会是一个空字符串
+Class<?>[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
+Class<?>[] parents = Clazz.getAllSuperClass(ArrayList.class);
 ```
 
-### 4. `newInstance(String clzName, Object... args)`
-
-通过类名和参数创建类的实例。
-
-* **参数说明：**
-    * `clzName`: 类的全名。
-    * `args`: 传递给构造函数的参数。
-* **返回值:** 创建的实例，类型为 `Object`。
-
-**示例:**
-
-```java
-Object instance = Clazz.newInstance("java.lang.String", "Hello");
-// instance 将会是 "Hello"
-```
-
-## 类层次遍历
-
-层次检查会分别处理类和接口：父类只在非 null 时继续向上遍历，父接口则通过 `getInterfaces()` 递归访问。内部使用 `Set<Class<?>>`，因此菱形接口继承不会产生重复结果或重复访问。查询时既可以传入具体类，也可以安全地传入接口类型。
+`getClassByInterface(Type)` 适用于可以直接解析的类或参数化接口类型。

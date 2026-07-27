@@ -28,14 +28,24 @@ class TestClazz {
 
     @Test
     void testGetClassByName_whenClassNotFound() {
-        Class<?> actual = Clazz.getClassByName("com.example.NotFoundClass");
-        assertNull(actual);
+        assertThrows(RuntimeException.class, () -> Clazz.getClassByName("com.example.NotFoundClass"));
     }
 
     @Test
     void testGetClassByName_whenClassFoundWithGenerics() {
         Class<?> actual = Clazz.getClassByName("java.util.ArrayList");
         assertEquals(ArrayList.class, actual);
+    }
+
+    @Test
+    void testGetClassByNameWithTargetType() {
+        Class<CharSequence> actual = Clazz.getClassByName("java.lang.String", CharSequence.class);
+
+        assertEquals(String.class, actual);
+        assertThrows(ClassCastException.class,
+                () -> Clazz.getClassByName("java.lang.String", Number.class));
+        assertThrows(IllegalArgumentException.class,
+                () -> Clazz.getClassByName("java.lang.String", null));
     }
 
     @Test

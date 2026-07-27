@@ -92,13 +92,19 @@ public class Types {
     }
 
     /**
-     * Converts a Type interface to a Class
+     * Converts a Type to a Class. For a ParameterizedType, returns the Class
+     * represented by its raw type.
      *
      * @param type The Type interface to convert
-     * @return The corresponding Class, or null if the type is not a Class
+     * @return The corresponding Class, or null if the type cannot be resolved to a Class
      */
     public static Class<?> type2class(Type type) {
-        return type instanceof Class ? (Class<?>) type : null;
+        if (type instanceof Class)
+            return (Class<?>) type;
+        else if (type instanceof ParameterizedType)
+            return type2class(((ParameterizedType) type).getRawType());
+
+        return null;
     }
 
     /*

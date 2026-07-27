@@ -65,7 +65,7 @@ public class NewInstance<T> {
 
         if (ObjectHelper.isEmpty(args))
             try {
-                constructor = clz.getDeclaredConstructor();
+                constructor = clz.getConstructor();
             } catch (NoSuchMethodException e) {
                 log.error("The constructor of this class {} is not found.", clz.getName(), e);
                 throw new RuntimeException("The constructor of this class " + clz.getName() + " is not found.", e);
@@ -81,7 +81,7 @@ public class NewInstance<T> {
      * This function creates an instance of the class using the provided constructor
      * and argument list through reflection.
      * 根据构造器创建实例
-     * 该函数根据给定的构造器和参数列表创建指定类的实例。它使用反射调用构造函数来实例化对象，并在实例化失败时返回 null。
+     * 该函数根据给定的构造器和参数列表创建指定类的实例。它使用反射调用构造函数来实例化对象，并在实例化失败时抛出异常。
      *
      * @param constructor The class constructor to use 类构造器
      * @param args        Optional arguments for the constructor 获取指定参数类型的构造函数，这里传入我们想调用的构造函数所需的参数。可以不传。

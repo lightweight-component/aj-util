@@ -35,9 +35,15 @@ Use these as review checkpoints. Verify current source before relying on exact e
 
 - Class-hierarchy traversal must terminate safely for interfaces.
 - Traverse inherited interfaces recursively and use `Set<Class<?>>` to avoid duplicate visits and cycles.
+- The typed `Clazz.getClassByName` overload must validate assignability to its requested target type.
+- `Types.type2class` resolves a `ParameterizedType` through its raw type.
 - `Types.getActualClass` throws `IllegalArgumentException` when no parameterized superclass or resolvable first class argument exists.
-- `Methods.executeMethod` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing method, and propagates invocation failures without converting them to `null`.
-- `Methods.getUnderLayerErr` returns a cause-less wrapper unchanged and rejects a null input explicitly.
+- Reflection lookup must not convert a `SecurityException` into a missing-member result.
+- Use `ReflectMethod.findCompatibleMethod` as the main runtime-argument lookup API. It traverses superclass
+  and inherited-interface relationships with duplicate-safe type traversal; the older single-argument
+  upcasting/interface lookup methods are compatibility helpers only.
+- `ReflectMethod.execute` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing method, and propagates target invocation failures.
+- `Fields.getUnderLayerErr` returns a cause-less wrapper unchanged and rejects a null input explicitly.
 - Account for primitive/wrapper compatibility, null arguments, overload ambiguity, bridge methods, and accessibility when resolving members.
 
 ## I/O and ZIP

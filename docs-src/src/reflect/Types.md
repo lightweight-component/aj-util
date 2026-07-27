@@ -58,7 +58,7 @@ Retrieves the actual type arguments of a method's return type.
 **Example:**
 
 ```java
-Method method = TestTypes.class.getMethods()[0];
+Method method = TestTypes.class.getMethod("getList2");
 Type[] actualType = Types.getGenericReturnType(method);
 // actualType will contain the generic return type of the method
 ```
@@ -74,7 +74,7 @@ Retrieves the first actual type argument of a method's return type and converts 
 **Example:**
 
 ```java
-Method method = TestTypes.class.getMethods()[0];
+Method method = TestTypes.class.getMethod("getList2");
 Class<?> actualType = Types.getGenericFirstReturnType(method);
 // actualType will be the first generic return type of the method as a Class
 ```
@@ -118,11 +118,11 @@ Types.getActualClass(String.class);
 
 ### 6. `type2class(Type type)`
 
-Converts a `Type` to a `Class`.
+Converts a `Type` to a `Class`. If the input is a `ParameterizedType`, its raw type is resolved recursively.
 
 * **Parameters:**
     * `type`: The `Type` to convert.
-* **Returns:** The `Class` representation of the `Type`, or `null` if the `Type` is not a `Class`.
+* **Returns:** The `Class` representation of the `Type`, or `null` if it cannot be resolved to a `Class`.
 
 **Example:**
 
@@ -130,4 +130,12 @@ Converts a `Type` to a `Class`.
 Type type = String.class;
 Class<?> actualClass = Types.type2class(type);
 // actualClass will be String.class
+
+class Example {
+    List<String> names;
+}
+
+Type listType = Example.class.getDeclaredField("names").getGenericType();
+Class<?> rawClass = Types.type2class(listType);
+// rawClass will be List.class for a field declared as List<String>
 ```
