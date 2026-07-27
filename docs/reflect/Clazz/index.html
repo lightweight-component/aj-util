@@ -217,8 +217,8 @@ public class TestClazz {
         assertNotNull(newInstance(TestReflectUtil.Foo.class, &quot;a&quot;, &quot;b&quot;));
         assertNotNull(newInstance(Objects.requireNonNull(getConstructor(TestReflectUtil.Foo.class))));
         assertNotNull(newInstance(Objects.requireNonNull(getConstructor(TestReflectUtil.Foo.class, String.class, String.class)), &quot;a&quot;, &quot;b&quot;));
-        assertNotNull(newInstance(&quot;com.ajaxjs.util.reflect.TestReflectUtil&quot;));
-        assertNotNull(Clazz.getClassByName(&quot;com.ajaxjs.util.reflect.TestReflectUtil&quot;));
+        assertNotNull(newInstance(&quot;com.ajaxjs.util.reflect.TestReflectMethod&quot;));
+        assertNotNull(Clazz.getClassByName(&quot;com.ajaxjs.util.reflect.TestReflectMethod&quot;));
 
         Class&lt;?&gt;[] cs = Clazz.getDeclaredInterface(ArrayList.class);
         assertNotNull(cs);

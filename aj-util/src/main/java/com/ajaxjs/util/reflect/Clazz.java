@@ -1,12 +1,14 @@
 package com.ajaxjs.util.reflect;
 
 import com.ajaxjs.util.CommonConstant;
+import com.ajaxjs.util.ObjectHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -52,11 +54,17 @@ public class Clazz {
      * Converts an array of objects to an array of their corresponding class objects.
      * This function transforms a variable argument list into a Class array where
      * each element represents the class type of the corresponding input argument.
+     * 把参数转换为类对象列表
+     * 这个 Java 函数将一个可变参数列表转换为一个类对象列表。它接受一个可变参数 args，返回一个 Class 类型的数组 clazz，
+     * 数组长度与参数列表的长度相同，并且每个元素的类型与对应参数的类型相同。
      *
      * @param args The variable argument list
      * @return The array of corresponding class objects
      */
     public static Class<?>[] args2class(Object[] args) {
+        if (ObjectHelper.isEmpty(args))
+            return null;
+
         Class<?>[] clazz = new Class[args.length];
 
         for (int i = 0; i < args.length; i++)
@@ -109,124 +117,30 @@ public class Clazz {
     }
 
     /**
-     * Creates an instance of a class with optional constructor arguments.
-     * This function creates an instance based on the given class object and constructor arguments.
-     * If the class is an interface, an IllegalArgumentException is thrown.
-     * If no arguments are provided, the default no-args constructor is used.
-     * If arguments are provided, the constructor matching those argument types is used.
+     * 获取所有父类，排除自己
      *
-     * @param clz  The class object
-     * @param args Optional arguments for the constructor
-     * @param <T>  The class reference type
-     * @return The created object instance
+     * @param clz 类对象
+     * @return 所有父类
      */
-    public static <T> T newInstance(Class<T> clz, Object... args) {
-        if (clz.isInterface())
-            throw new IllegalArgumentException("所传递的 class 类型参数为接口 " + clz + "，无法实例化");
+    public static Class<?>[] getAllSuperClass(Class<?> clz) {
+        List<Class<?>> classList = new ArrayList<>();
+        Class<?> current = clz.getSuperclass();  // 从父类开始
 
-        if (args == null || args.length == 0) {
-            try {
-                return newInstance(clz.getDeclaredConstructor());
-            } catch (NoSuchMethodException e) {
-                log.error("The constructor of this class {} is not found.", clz.getName(), e);
-                throw new RuntimeException("The constructor of this class " + clz.getName() + " is not found.", e);
-            }
+        while (current != null && current != Object.class) {
+            classList.add(current);
+            current = current.getSuperclass();
         }
 
-        Constructor<T> constructor = getConstructor(clz, Clazz.args2class(args));// 获取构造器
+//        for (; clz != Object.class; clz = clz.getSuperclass()) {
+//            if (clz == null)
+//                break;
+//            else
+//                clzList.add(clz);
+//        }
+//
+//        if (!clzList.isEmpty())
+//            clzList.remove(0); // 排除自己
 
-        return newInstance(constructor, args);
-    }
-
-    /**
-     * Creates an instance using a specific constructor and arguments.
-     * This function creates an instance of the class using the provided constructor
-     * and argument list through reflection.
-     *
-     * @param constructor The class constructor to use
-     * @param args        Optional arguments for the constructor
-     * @param <T>         The class reference type
-     * @return The created object instance
-     */
-    public static <T> T newInstance(Constructor<T> constructor, Object... args) {
-        try {
-            return constructor.newInstance(args);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-                 InvocationTargetException e) {
-            log.error("Error occurred when creating instance of class: {}", constructor.getDeclaringClass(), e);
-            throw new RuntimeException("Error occurred when creating instance of class: " + constructor.getDeclaringClass(), e);
-        }
-    }
-
-    /**
-     * Checks if a class has any constructors with parameters.
-     * This function determines whether the provided class has any constructors that
-     * accept parameters by examining all available constructors.
-     *
-     * @param clz The class object to check
-     * @return true if the class has at least one constructor with parameters
-     */
-    public static boolean hasArgsCon(Class<?> clz) {
-        Constructor<?>[] constructors = clz.getConstructors();
-
-        for (Constructor<?> constructor : constructors) {
-            if (constructor.getParameterTypes().length != 0)
-                return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Creates an instance from a fully qualified class name and casts it to an interface type.
-     *
-     * @param className The fully qualified class name
-     * @param clazz     The interface type to cast to
-     * @param <T>       The class reference type
-     * @return The created object instance cast to the interface type
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T newInstance(String className, Class<T> clazz) {
-        Class<?> clz = getClassByName(className);
-
-        return clazz != null ? (T) newInstance(clz) : null;
-    }
-
-    /**
-     * Creates an instance from a fully qualified class name with optional constructor arguments.
-     * This function uses reflection to load the class and create an instance based on the
-     * provided class name and constructor arguments.
-     *
-     * @param clzName The fully qualified class name
-     * @param args    Arguments for the constructor
-     * @return The created object instance as an Object type
-     */
-    public static Object newInstance(String clzName, Object... args) {
-        Class<?> clazz = getClassByName(clzName);
-
-        return newInstance(clazz, args);
-    }
-
-    /**
-     * Gets a constructor for a class, supporting overloaded constructors with different parameters.
-     * This function retrieves a constructor based on the provided class object and optional parameter types.
-     * If parameter types are provided, the matching constructor is returned;
-     * otherwise, the no-args constructor is returned.
-     *
-     * @param clz    The class object
-     * @param argClz The parameter types for the desired constructor
-     * @param <T>    The class reference type
-     * @return The requested constructor
-     */
-    public static <T> Constructor<T> getConstructor(Class<T> clz, Class<?>... argClz) {
-        try {
-            return argClz != null ? clz.getConstructor(argClz) : clz.getConstructor();
-        } catch (NoSuchMethodException e) {
-            log.error("Error occurred when creating instance of class: {}", clz, e);
-            throw new RuntimeException("Error occurred when creating instance of class: " + clz, e);
-        } catch (SecurityException e) {
-            log.error("Security Error occurred when getting the constructor  of class： {}", clz, e);
-            throw new RuntimeException("Security Error occurred when getting the constructor  of class: " + clz, e);
-        }
+        return classList.toArray(new Class[0]);
     }
 }

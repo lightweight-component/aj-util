@@ -1,6 +1,10 @@
 package com.ajaxjs.util.reflect;
 
+import com.ajaxjs.util.CommonConstant;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,5 +49,43 @@ public class Fields {
         }
 
         return null;
+    }
+
+
+    /**
+     * 获取包装异常中的底层异常。对于 InvocationTargetException 或
+     * UndeclaredThrowableException，会沿 cause 链向下查找；如果包装异常没有 cause，
+     * 则原样返回该包装异常。
+     *
+     * @param e 异常对象
+     * @return 实际异常对象
+     * @throws IllegalArgumentException 如果异常对象为 null
+     */
+    public static Throwable getUnderLayerErr(Throwable e) {
+        if (e == null)
+            throw new IllegalArgumentException("Throwable must not be null.");
+
+        while (e instanceof InvocationTargetException || e instanceof UndeclaredThrowableException) {
+            Throwable cause = e.getCause();
+
+            if (cause == null || cause == e)
+                break;
+
+            e = cause;
+        }
+
+        return e;
+    }
+
+    /**
+     * 获取实际抛出的那个异常对象，并去掉前面的包名。
+     *
+     * @param e 异常对象
+     * @return 实际异常对象信息
+     */
+    public static String getUnderLayerErrMsg(Throwable e) {
+        String msg = getUnderLayerErr(e).toString();
+
+        return msg.replaceAll("^[^:]*:\\s?", CommonConstant.EMPTY_STRING);
     }
 }
