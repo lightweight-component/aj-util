@@ -11,22 +11,49 @@ import java.util.Queue;
 import java.util.Set;
 
 /**
- * Can be either a class object or an instance object
+ * Reflection helper for locating and invoking methods on a configured class or object.
+ * <p>
+ * Declared-method lookup walks the class hierarchy and can make non-public methods accessible.
+ * Compatible lookup searches public methods and matches runtime arguments against superclass,
+ * interface, and primitive-wrapper parameter types.
  */
 @Slf4j
 public class Methods {
+    /**
+     * Object used to derive the input class when the helper is constructed from an instance.
+     */
     private Object inputObject;
 
+    /**
+     * Class on which methods are searched.
+     */
     private Class<?> inputClass;
 
+    /**
+     * Creates a method helper for an object instance.
+     *
+     * @param inputObject object whose runtime class will be searched
+     */
     public Methods(Object inputObject) {
         this.inputObject = inputObject;
     }
 
+    /**
+     * Creates a method helper for a class.
+     *
+     * @param inputClass class on which methods will be searched
+     */
     public Methods(Class<?> inputClass) {
         this.inputClass = inputClass;
     }
 
+    /**
+     * Returns the configured input class. If this helper was constructed from an object,
+     * its runtime class is resolved lazily.
+     *
+     * @return class on which methods are searched
+     * @throws IllegalArgumentException if neither a class nor an object was supplied
+     */
     public Class<?> getInputClass() {
         if (inputClass == null) {
             if (inputObject == null)
@@ -69,8 +96,9 @@ public class Methods {
      * Get a declared method by method name. This method can access private methods and super methods.
      *
      * @param methodName 方法名称 The name of the method to find
-     * @param parameters 参数列表
+     * @param parameters 参数列表；按照每个非 null 参数的精确运行时类型查找
      * @return 匹配的方法对象，null 表示找不到 The declared method, or null if method doesn't exist
+     * @throws NullPointerException 如果参数数组中包含 null 元素
      */
     public Method findDeclaredMethod(String methodName, Object... parameters) {
         return findDeclaredMethod(methodName, Clazz.args2class(parameters));
@@ -83,7 +111,8 @@ public class Methods {
      *
      * @param methodName method name
      * @param args       invocation arguments; {@code null} is compatible with non-primitive parameters
-     * @return the best compatible method, or {@code null} if no compatible method exists
+     * @return the compatible method with the lowest type-distance score, or {@code null} if none exists.
+     *         If unrelated overloads have the same score, the first method returned by reflection is selected
      */
     public Method findCompatibleMethod(String methodName, Object... args) {
         Class<?> targetClass = getInputClass();
@@ -109,6 +138,12 @@ public class Methods {
         return bestMethod;
     }
 
+    /**
+     * Calculates the total assignment distance between arguments and method parameters.
+     *
+     * @return a non-negative score, where a lower value is a closer match;
+     *         {@link Integer#MAX_VALUE} means incompatible
+     */
     private static int getCompatibilityScore(Class<?>[] parameterTypes, Object[] args) {
         int score = 0;
 
@@ -134,6 +169,10 @@ public class Methods {
         return score;
     }
 
+    /**
+     * Maps a primitive type to its wrapper class so reflective lookup can compare it
+     * with the runtime class of a boxed argument.
+     */
     private static Class<?> wrapPrimitive(Class<?> type) {
         if (!type.isPrimitive())
             return type;
@@ -157,6 +196,10 @@ public class Methods {
         return Void.class;
     }
 
+    /**
+     * Finds the shortest superclass/interface distance from {@code source} to {@code target}.
+     * A visited set prevents duplicate traversal in interface diamonds.
+     */
     private static int getTypeDistance(Class<?> source, Class<?> target) {
         if (source == target)
             return 0;
@@ -199,6 +242,17 @@ public class Methods {
 
     /*--------------------------METHOD EXECUTION--------------------------------------*/
 
+    /**
+     * Invokes a resolved method and unwraps {@link InvocationTargetException}, propagating
+     * the exception thrown by the target method.
+     *
+     * @param instance   target object
+     * @param method     method to invoke
+     * @param parameters invocation arguments, or {@code null} for no arguments
+     * @return target method's return value
+     * @throws IllegalArgumentException if the instance or method is {@code null}, or arguments do not match
+     * @throws Throwable                if access fails or the target method throws
+     */
     public static Object execute(Object instance, Method method, Object[] parameters) throws Throwable {
         if (instance == null)
             throw new IllegalArgumentException("Instance must not be null.");
@@ -222,14 +276,40 @@ public class Methods {
         }
     }
 
+    /**
+     * Invokes a no-argument method.
+     *
+     * @param instance target object
+     * @param method   method to invoke
+     * @return target method's return value
+     * @throws Throwable if invocation fails
+     */
     public static Object execute(Object instance, Method method) throws Throwable {
         return execute(instance, method, null);
     }
 
+    /**
+     * Finds and invokes a compatible public no-argument method by name.
+     *
+     * @param instance   target object
+     * @param methodName method name
+     * @return target method's return value
+     * @throws Throwable if lookup or invocation fails
+     */
     public static Object execute(Object instance, String methodName) throws Throwable {
         return execute(instance, methodName, null);
     }
 
+    /**
+     * Finds a compatible public method from runtime argument values and invokes it.
+     *
+     * @param instance   target object
+     * @param methodName method name
+     * @param parameters invocation arguments, or {@code null} for no arguments
+     * @return target method's return value
+     * @throws IllegalArgumentException if the instance is null or no compatible method exists
+     * @throws Throwable                if invocation fails
+     */
     public static Object execute(Object instance, String methodName, Object[] parameters) throws Throwable {
         Method method = new Methods(instance).findCompatibleMethod(methodName, parameters);
 
@@ -254,6 +334,15 @@ public class Methods {
         return execute(instance, method, parameters);
     }
 
+    /**
+     * Invokes a static method.
+     *
+     * @param method static method to invoke
+     * @param args   invocation arguments, or {@code null} for no arguments
+     * @return target method's return value
+     * @throws UnsupportedOperationException if the supplied method is not static
+     * @throws Throwable                     if invocation fails
+     */
     public static Object executeStatic(Method method, Object[] args) throws Throwable {
         if (!Modifier.isStatic(method.getModifiers())) {
             log.warn("This is not a static method: {}", method);

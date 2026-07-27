@@ -2,92 +2,69 @@ package com.ajaxjs.util.reflect;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestMethods {
-    public static class Foo {
-        public Foo() {
-        }
-
-        public Foo(String str, String str2) {
-        }
-
-        public void Bar() {
-
-        }
-
-        public void CC(String cc) {
-
-        }
-
-        public String Bar2() {
-            return "bar2";
-        }
-
-        public String Bar3(String arg) {
-            return arg;
+class TestMethods {
+    public static class DeclaredParent {
+        private String hidden(String value) {
+            return "hidden:" + value;
         }
     }
 
-    static class Foo2 {
-        public void m1() {
+    public static class DeclaredTarget extends DeclaredParent {
+        public String overloaded() {
+            return "none";
         }
 
-        public void m1(String arg) {
-        }
-    }
-
-    static class Bar extends Foo {
-        public void m2() {
+        public String overloaded(String value) {
+            return "string:" + value;
         }
     }
 
     @Test
-    public void testGetMethod() {
-        assertNotNull(new Methods(new Foo2()).findDeclaredMethod("m1"));// 按实际对象
+    void resolvesInputClassFromClassOrObject() {
+        assertSame(DeclaredTarget.class, new Methods(DeclaredTarget.class).getInputClass());
+        assertSame(DeclaredTarget.class, new Methods(new DeclaredTarget()).getInputClass());
 
-        Methods rm = new Methods(Foo2.class);
-        assertNotNull(rm.findDeclaredMethod("m1"));// 按类引用
-        assertNotNull(rm.findDeclaredMethod("m1", String.class)); // 按参数类型
-        assertNotNull(rm.findDeclaredMethod("m1", "foo"));// 按实际参数
-        assertNotNull(rm.findDeclaredMethod("m1"));
-        assertNotNull(rm.findDeclaredMethod("m1", String.class));
-        assertNull(rm.findDeclaredMethod("m2"));
-    }
-
-    static class Foo1 {
-        public void foo(Foo1 a) {
-
-        }
-    }
-
-    static class Bar2 extends Foo1 {
-
+        IllegalArgumentException error =
+                assertThrows(IllegalArgumentException.class, () -> new Methods((Object) null).getInputClass());
+        assertEquals("No input argument of class or object.", error.getMessage());
     }
 
     @Test
-    public void testGetMethodByUpCastingSearch() {
-        assertNull(new Methods(Foo1.class).findDeclaredMethod("foo", new Bar2())); // 找不到
-        assertNotNull(new Methods(Foo1.class).findCompatibleMethod("foo", new Bar2())); // 找到了
+    void findsExactDeclaredOverloads() {
+        Methods methods = new Methods(DeclaredTarget.class);
+
+        Method noArgs = methods.findDeclaredMethod("overloaded");
+        assertNotNull(noArgs);
+        assertEquals("overloaded", noArgs.getName());
+        assertSame(DeclaredTarget.class, noArgs.getDeclaringClass());
+        assertArrayEquals(new Class<?>[0], noArgs.getParameterTypes());
+        assertSame(String.class, noArgs.getReturnType());
+
+        Method withStringType = methods.findDeclaredMethod("overloaded", String.class);
+        assertNotNull(withStringType);
+        assertArrayEquals(new Class<?>[]{String.class}, withStringType.getParameterTypes());
+
+        Method withStringValue = methods.findDeclaredMethod("overloaded", "value");
+        assertEquals(withStringType, withStringValue);
+        assertNull(methods.findDeclaredMethod("overloaded", Integer.class));
+        assertNull(methods.findDeclaredMethod("missing"));
     }
 
-    public static class A {
-        public String foo(A a) {
-            return "A.foo";
-        }
+    @Test
+    void findsAndMakesInheritedPrivateMethodAccessible() throws Throwable {
+        Methods methods = new Methods(DeclaredTarget.class);
+        Method method = methods.findDeclaredMethod("hidden", String.class);
 
-        public String bar(C c) {
-            return "A.bar";
-        }
-    }
-
-    public static class B extends A {
-    }
-
-    public interface C {
+        assertNotNull(method);
+        assertSame(DeclaredParent.class, method.getDeclaringClass());
+        assertTrue(Modifier.isPrivate(method.getModifiers()));
+        assertTrue(method.isAccessible());
+        assertEquals("hidden:value", Methods.execute(new DeclaredTarget(), method, new Object[]{"value"}));
     }
 
     public interface Parent {
@@ -96,43 +73,70 @@ public class TestMethods {
     public interface Child extends Parent {
     }
 
-    public static class D implements C {
-    }
-
     public static class ChildImpl implements Child {
     }
 
-    public static class InterfaceTarget {
-        public String inheritedInterface(Parent value) {
+    public static class CompatibleTarget {
+        public String choose(Object value) {
+            return "object";
+        }
+
+        public String choose(CharSequence value) {
+            return "sequence";
+        }
+
+        public String choose(String value) {
+            return "string";
+        }
+
+        public String accept(Parent value) {
             return "parent";
         }
+
+        public String primitive(int value) {
+            return "int:" + value;
+        }
     }
 
     @Test
-    public void testDeclaredMethod() {
-        assertNotNull(new Methods(A.class).findCompatibleMethod("bar", new D()));
-        assertNotNull(new Methods(A.class).findCompatibleMethod("bar", new D()));// 找到了
-        assertNull(new Methods(C.class).findDeclaredMethod("missing", Object.class));
-        assertNull(new Methods(C.class).findDeclaredMethod("missing"));
+    void choosesClosestCompatiblePublicMethod() {
+        Methods methods = new Methods(CompatibleTarget.class);
+
+        Method exact = methods.findCompatibleMethod("choose", "text");
+        assertNotNull(exact);
+        assertArrayEquals(new Class<?>[]{String.class}, exact.getParameterTypes());
+
+        Method interfaceMatch = methods.findCompatibleMethod("choose", new StringBuilder("text"));
+        assertNotNull(interfaceMatch);
+        assertArrayEquals(new Class<?>[]{CharSequence.class}, interfaceMatch.getParameterTypes());
+
+        Method primitiveMatch = methods.findCompatibleMethod("primitive", Integer.valueOf(7));
+        assertNotNull(primitiveMatch);
+        assertArrayEquals(new Class<?>[]{int.class}, primitiveMatch.getParameterTypes());
+
+        Method objectMatch = methods.findCompatibleMethod("choose", Integer.valueOf(7));
+        assertNotNull(objectMatch);
+        assertArrayEquals(new Class<?>[]{Object.class}, objectMatch.getParameterTypes());
+
+        assertNull(methods.findCompatibleMethod("primitive", "7"));
+        assertNull(methods.findCompatibleMethod("missing", "text"));
     }
 
     @Test
-    public void testFindCompatibleMethodTraversesParentInterfaces() throws Throwable {
-        Methods reflectMethod = new Methods(InterfaceTarget.class);
-        Method method = reflectMethod.findCompatibleMethod("inheritedInterface", new ChildImpl());
+    void traversesInheritedInterfacesWithoutDuplicates() throws Throwable {
+        Methods methods = new Methods(CompatibleTarget.class);
+        ChildImpl argument = new ChildImpl();
+        Method method = methods.findCompatibleMethod("accept", argument);
 
         assertNotNull(method);
-        assertEquals(Parent.class, method.getParameterTypes()[0]);
-        assertEquals("parent", Methods.execute(new InterfaceTarget(), "inheritedInterface", new Object[]{new ChildImpl()}));
-        assertEquals(method, reflectMethod.findCompatibleMethod("inheritedInterface", new ChildImpl()));
+        assertSame(CompatibleTarget.class, method.getDeclaringClass());
+        assertArrayEquals(new Class<?>[]{Parent.class}, method.getParameterTypes());
+        assertEquals("parent", Methods.execute(new CompatibleTarget(), "accept", new Object[]{argument}));
     }
 
-    public static class Foo3 {
-        public void m1() {
-        }
-
-        public String m1(String arg) {
-            return arg;
+    public static class InvocationTarget {
+        public String echo(String value) {
+            return "echo:" + value;
         }
 
         public String nullable() {
@@ -142,30 +146,61 @@ public class TestMethods {
         public void fail() {
             throw new IllegalStateException("boom");
         }
-    }
 
-    static class Bar3 extends Foo3 {
-        public void m2() {
+        private String privateEcho(String value) {
+            return "private:" + value;
+        }
+
+        public static String staticEcho(String value) {
+            return "static:" + value;
         }
     }
 
     @Test
-    public void testExecuteMethod() throws Throwable {
-        assertNull(Methods.execute(new Foo3(), "m1"));
-        assertNotNull(Methods.execute(new Foo3(), "m1", new Object[]{"foo"}));
-        assertNull(Methods.execute(new Foo3(), "nullable"));
-        assertThrows(IllegalArgumentException.class, () -> Methods.execute(new Bar2(), "m1"));
-        IllegalStateException error = assertThrows(IllegalStateException.class, () -> Methods.execute(new Foo3(), "fail"));
-        assertEquals("boom", error.getMessage());
-        assertEquals("bar", Methods.execute(new Bar3(), "m1", new Object[]{"bar"}));
-        assertEquals("foo", Methods.execute(new Bar3(), "m1", new Class[]{String.class}, new Object[]{"foo"}));
+    void executesByMethodNameAndPreservesReturnValue() throws Throwable {
+        InvocationTarget target = new InvocationTarget();
+
+        assertEquals("echo:value", Methods.execute(target, "echo", new Object[]{"value"}));
+        assertNull(Methods.execute(target, "nullable"));
+        assertEquals(
+                "private:value",
+                Methods.execute(target, "privateEcho", new Class<?>[]{String.class}, new Object[]{"value"})
+        );
     }
 
     @Test
-    public void testGetUnderLayerErrWithoutCause() {
-        InvocationTargetException wrapper = new InvocationTargetException(null);
+    void propagatesTargetExceptionAndValidatesRequiredArguments() throws Exception {
+        InvocationTarget target = new InvocationTarget();
+        Method echo = InvocationTarget.class.getMethod("echo", String.class);
 
-        assertSame(wrapper, Fields.getUnderLayerErr(wrapper));
-        assertThrows(IllegalArgumentException.class, () -> Fields.getUnderLayerErr(null));
+        IllegalStateException targetError =
+                assertThrows(IllegalStateException.class, () -> Methods.execute(target, "fail"));
+        assertEquals("boom", targetError.getMessage());
+
+        IllegalArgumentException instanceError =
+                assertThrows(IllegalArgumentException.class, () -> Methods.execute(null, echo, new Object[]{"x"}));
+        assertEquals("Instance must not be null.", instanceError.getMessage());
+
+        IllegalArgumentException methodError =
+                assertThrows(IllegalArgumentException.class, () -> Methods.execute(target, (Method) null));
+        assertEquals("Method must not be null.", methodError.getMessage());
+
+        IllegalArgumentException missingError =
+                assertThrows(IllegalArgumentException.class, () -> Methods.execute(target, "missing"));
+        assertEquals("Method must not be null.", missingError.getMessage());
+    }
+
+    @Test
+    void executesStaticMethodAndRejectsInstanceMethod() throws Throwable {
+        Method staticMethod = InvocationTarget.class.getMethod("staticEcho", String.class);
+        Method instanceMethod = InvocationTarget.class.getMethod("echo", String.class);
+
+        assertEquals("static:value", Methods.executeStatic(staticMethod, new Object[]{"value"}));
+
+        UnsupportedOperationException error = assertThrows(
+                UnsupportedOperationException.class,
+                () -> Methods.executeStatic(instanceMethod, new Object[]{"value"})
+        );
+        assertEquals("This is not a static method.", error.getMessage());
     }
 }

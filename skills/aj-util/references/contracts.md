@@ -39,12 +39,17 @@ Use these as review checkpoints. Verify current source before relying on exact e
 - `Types.type2class` resolves a `ParameterizedType` through its raw type.
 - `Types.getActualClass` throws `IllegalArgumentException` when no parameterized superclass or resolvable first class argument exists.
 - Reflection lookup must not convert a `SecurityException` into a missing-member result.
-- Use `ReflectMethod.findCompatibleMethod` as the main runtime-argument lookup API. It traverses superclass
-  and inherited-interface relationships with duplicate-safe type traversal; the older single-argument
-  upcasting/interface lookup methods are compatibility helpers only.
-- `ReflectMethod.execute` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing method, and propagates target invocation failures.
+- Use `Methods.findCompatibleMethod` as the main runtime-argument lookup API. It traverses superclass
+  and inherited-interface relationships with duplicate-safe type traversal.
+- `Methods.findDeclaredMethod(String, Class<?>...)` searches the configured class and its superclasses,
+  excluding `Object`, and uses exact parameter types. Its value-based overload currently inherits
+  `Clazz.args2class` null and exact-runtime-type limitations.
+- `Methods.execute` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing method, and propagates target invocation failures.
 - `Fields.getUnderLayerErr` returns a cause-less wrapper unchanged and rejects a null input explicitly.
-- Account for primitive/wrapper compatibility, null arguments, overload ambiguity, bridge methods, and accessibility when resolving members.
+- Compatible member resolution must account for primitive/wrapper compatibility, numeric primitive widening,
+  null arguments, varargs, overload ambiguity, bridge methods, and accessibility.
+- `NewInstance` intentionally searches public constructors only; do not treat lack of private-constructor support
+  as a defect. Compatible public-constructor matching remains tracked in `to_fix.md`.
 
 ## I/O and ZIP
 

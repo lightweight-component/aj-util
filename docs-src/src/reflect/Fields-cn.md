@@ -28,4 +28,5 @@ if (field != null && !field.isAccessible())
 `UndeclaredThrowableException`。包装异常没有 cause 时原样返回；输入为 `null` 时抛出
 `IllegalArgumentException`。
 
-`getUnderLayerErrMsg(Throwable)` 返回去掉开头异常类名后的底层异常文本。
+`getUnderLayerErrMsg(Throwable)` 返回去掉开头异常类名后的底层异常文本。异常没有详细消息时，
+`Throwable.toString()` 中没有冒号，当前会保留异常类名。

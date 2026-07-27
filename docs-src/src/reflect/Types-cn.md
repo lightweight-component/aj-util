@@ -12,6 +12,9 @@ layout: layouts/aj-util-cn.njk
 
 `Types` 类提供了检索泛型类型信息、转换类型以及处理参数化类型的方法。这些方法有助于在运行时高效、方便地操作 Java 类型。
 
+解析范围有限：`type2class(Type)` 处理 `Class` 和 `ParameterizedType`；
+`TypeVariable`、`WildcardType` 和 `GenericArrayType` 当前返回 `null`。
+
 ## 方法
 
 ### 1. `getActualType(Type type)`
@@ -68,6 +71,9 @@ Type[] actualType = Types.getGenericReturnType(method);
 * **参数说明：**
     * `method`: 要从中检索返回类型的类型。
 * **返回值:** 返回类型的第一个实际类型参数作为 `Class`，如果返回类型不是参数化的，则返回 `null`。
+
+该方法假设 `ParameterizedType` 至少包含一个类型参数。异常的自定义实现若返回空参数数组，会触发
+`ArrayIndexOutOfBoundsException`。
 
 **示例:**
 

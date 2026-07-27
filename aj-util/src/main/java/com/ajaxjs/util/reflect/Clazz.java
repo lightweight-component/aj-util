@@ -4,7 +4,6 @@ import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.ObjectHelper;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -12,8 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Class Reflection Utility - Provides comprehensive methods for class reflection operations
- * including class loading, instantiation, constructor management, and type conversion.
+ * Class Reflection Utility - Provides class loading, runtime argument type conversion,
+ * and class/interface hierarchy inspection.
  *
  * <p>This class simplifies common reflection tasks in Java, making it easier to work with
  * dynamic class loading, object creation, and interface implementations at runtime.

@@ -13,6 +13,9 @@ layout: layouts/aj-util.njk
 The `Types` class provides methods for retrieving generic type information, converting types, and handling parameterized
 types. These methods facilitate efficient and convenient manipulation of Java types at runtime.
 
+Resolution is intentionally limited: `type2class(Type)` handles `Class` and `ParameterizedType`.
+`TypeVariable`, `WildcardType`, and `GenericArrayType` currently return `null`.
+
 ## Methods
 
 ### 1. `getActualType(Type type)`
@@ -70,6 +73,9 @@ Retrieves the first actual type argument of a method's return type and converts 
 * **Parameters:**
     * `method`: The method to retrieve the return type from.
 * **Returns:** The first actual type argument as a `Class`, or `null` if the return type is not parameterized.
+
+This method assumes a `ParameterizedType` contains at least one argument. A malformed custom implementation that
+returns an empty argument array causes `ArrayIndexOutOfBoundsException`.
 
 **Example:**
 

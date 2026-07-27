@@ -28,4 +28,5 @@ if (field != null && !field.isAccessible())
 `UndeclaredThrowableException` instances. A wrapper without a cause is returned unchanged; a `null` input is
 rejected with `IllegalArgumentException`.
 
-`getUnderLayerErrMsg(Throwable)` returns the unwrapped exception text without its leading class name.
+`getUnderLayerErrMsg(Throwable)` returns the unwrapped exception text without its leading class name. If an
+exception has no detail message, `Throwable.toString()` contains no colon and the class name is currently retained.

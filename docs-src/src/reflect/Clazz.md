@@ -16,7 +16,8 @@ layout: layouts/aj-util.njk
 ## Loading classes
 
 `getClassByName(String)` loads a class by its fully qualified name and throws `RuntimeException` if it cannot be
-found. The typed overload also verifies assignability:
+found. The current wrapper does not retain `ClassNotFoundException` as its cause. The typed overload also verifies
+assignability:
 
 ```java
 Class<CharSequence> type =
@@ -51,4 +52,8 @@ Class<?>[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
 Class<?>[] parents = Clazz.getAllSuperClass(ArrayList.class);
 ```
 
-`getClassByInterface(Type)` is intended for directly resolvable class or parameterized-interface types.
+`getClassByInterface(Type)` derives a class name from `Type.toString()`. It is intended only for directly resolvable
+class or parameterized-interface types; type variables, wildcards, and generic arrays are not reliably supported.
+
+The hierarchy methods do not yet share a uniform `null` policy. `getAllSuperClass(null)` throws
+`NullPointerException`, while `getDeclaredInterface(null)` currently returns an empty array.
