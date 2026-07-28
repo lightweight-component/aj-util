@@ -4,6 +4,7 @@
 <div style="text-align: center;">
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
+![Java Version](https://img.shields.io/badge/Java-8-blue)
 [![Javadoc](https://img.shields.io/badge/javadoc-1.3.5-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
 ![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -23,24 +24,24 @@ By utilizing overloaded constructors, it automatically adapts to and converts va
 
 Furthermore, this library is designed to be lightweight with minimal dependencies. The JAR file is only about 170KB in size and includes the following modules:
 
-| Class/Package Module | Detail Description                                                                     | Memo                                      |
-|----------------------|----------------------------------------------------------------------------------------|-------------------------------------------|
-| BytesHelper          | Byte array utility class                                                               |                                           |
-| CollUtils            | Collection utility class                                                               |                                           |
-| ConvertBasicValue    | Attempts to convert target type, note that not all types can be converted              |                                           |
-| DateHelper           | Date utility class                                                                     |                                           |
-| EncodeTools          | String URL/Base64 encoder                                                              |                                           |
-| MessageDigestHelper  | MD5/SHA1/SHA256/384/512 encryption utility class                                       |                                           |
-| ObjectHelper         | A helper for Java Object                                                               |                                           |
-| HTTP Request         | A Small HTTP Request Component                                                         |                                           |
-| RandomTools          | Random Numbers and Strings                                                             |                                           |
-| RegExpUtils          | Regular expression utility class                                                       |                                           |
-| StrUtil              | String utility class                                                                   |                                           |
-| JsonUtil             | Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List | Jackson is only library that dependencies |
-| XmlHelper            | XML processing utility class                                                           |                                           |
-| Cryptography         | AES/RSA encryption and decryption package                                              |                                           |
-| IO                   | File, resource, stream utility package                                                 |                                           |
-| Reflection           | Reflection utility package                                                             |                                           |
+| Class/Package Module | Detail Description                                                                     | Memo                                          |
+|----------------------|----------------------------------------------------------------------------------------|-----------------------------------------------|
+| BytesHelper          | Byte array utility class                                                               |                                               |
+| CollUtils            | Collection utility class                                                               |                                               |
+| ConvertBasicValue    | Attempts to convert target type, note that not all types can be converted              |                                               |
+| DateHelper           | Date utility class                                                                     |                                               |
+| EncodeTools          | String URL/Base64 encoder                                                              |                                               |
+| MessageDigestHelper  | MD5/SHA1/SHA256/384/512 encryption utility class                                       |                                               |
+| ObjectHelper         | A helper for Java Object                                                               |                                               |
+| HTTP Request         | A Small HTTP Request Component                                                         |                                               |
+| RandomTools          | Random Numbers and Strings                                                             |                                               |
+| RegExpUtils          | Regular expression utility class                                                       |                                               |
+| StrUtil              | String utility class                                                                   |                                               |
+| JsonUtil             | Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List | Jackson is the only library that dependencies |
+| XmlHelper            | XML processing utility class                                                           |                                               |
+| Cryptography         | AES/RSA encryption and decryption package                                              |                                               |
+| IO                   | File, resource, stream utility package                                                 |                                               |
+| Reflection           | Reflection utility package                                                             |                                               |
 
 ## Source code
 
