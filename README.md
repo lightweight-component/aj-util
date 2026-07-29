@@ -1,7 +1,7 @@
 <h1 align="center">AJ Utilities</h1>
 <h3 align="center">A Lightweight Java OOP Utils Library.</h3>
 
-<div style="text-align: center;">
+<div align="center" style="text-align: center;">
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
 ![Java Version](https://img.shields.io/badge/Java-8-blue)
