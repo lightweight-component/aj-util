@@ -110,13 +110,13 @@ public class Methods {
      * interfaces inherited through other interfaces.
      *
      * @param methodName method name
-     * @param args       invocation arguments; {@code null} is compatible with non-primitive parameters
+     * @param parameters invocation arguments; {@code null} is compatible with non-primitive parameters
      * @return the compatible method with the lowest type-distance score, or {@code null} if none exists.
-     *         If unrelated overloads have the same score, the first method returned by reflection is selected
+     * If unrelated overloads have the same score, the first method returned by reflection is selected
      */
-    public Method findCompatibleMethod(String methodName, Object... args) {
+    public Method findCompatibleMethod(String methodName, Object... parameters) {
         Class<?> targetClass = getInputClass();
-        Object[] actualArgs = args == null ? new Object[0] : args;
+        Object[] actualArgs = parameters == null ? new Object[0] : parameters;
         Method bestMethod = null;
         int bestScore = Integer.MAX_VALUE;
 
@@ -142,7 +142,7 @@ public class Methods {
      * Calculates the total assignment distance between arguments and method parameters.
      *
      * @return a non-negative score, where a lower value is a closer match;
-     *         {@link Integer#MAX_VALUE} means incompatible
+     * {@link Integer#MAX_VALUE} means incompatible
      */
     private static int getCompatibilityScore(Class<?>[] parameterTypes, Object[] args) {
         int score = 0;
@@ -214,8 +214,8 @@ public class Methods {
         while (!queue.isEmpty()) {
             Class<?> current = queue.remove();
             int distance = distances.remove();
-
             Class<?> superclass = current.getSuperclass();
+
             if (superclass != null) {
                 if (superclass == target)
                     return distance + 1;
@@ -266,13 +266,12 @@ public class Methods {
             log.warn("IllegalAccessException when executing method of {}", method.getName());
             throw e;
         } catch (IllegalArgumentException e) {
-            log.warn("IllegalArgumentException when executing method of {}", method.getName());
+            log.error("IllegalArgumentException when executing method of {}", method.getName());
             throw e;
         } catch (InvocationTargetException e) {
-            Throwable e1 = e.getTargetException();
-            log.error("反射执行方法异常！所在类[{}] 方法：[{}]", instance.getClass().getName(), method.getName());
+            log.error("InvocationTargetException when executing method of {}", method.getName());
 
-            throw e1;
+            throw e.getTargetException();
         }
     }
 
@@ -301,6 +300,51 @@ public class Methods {
     }
 
     /**
+     * Finds a public method using exact parameter types.
+     *
+     * @param methodName     method name
+     * @param parameterTypes exact parameter types; null means no parameters
+     * @return matched public method, or null if not found
+     */
+    public Method findPublicExactMethodByTypes(String methodName, Class<?>[] parameterTypes) {
+        try {
+            Class<?>[] types = parameterTypes == null ? new Class<?>[0] : parameterTypes;
+
+            for (Class<?> type : types) {
+                if (type == null)
+                    throw new IllegalArgumentException("Parameter types must not contain null.");
+            }
+
+            return getInputClass().getMethod(methodName, types);
+        } catch (NoSuchMethodException ignored) {
+            return null;
+        }
+    }
+
+    /**
+     * Finds a public method using the exact runtime types of argument values.
+     *
+     * @param methodName method name
+     * @param parameters runtime argument values
+     * @return matched public method, or null when no exact match is available
+     */
+    public Method findPublicExactMethod(String methodName, Object[] parameters) {
+        if (ObjectHelper.isEmpty(parameters))
+            return findPublicExactMethodByTypes(methodName, new Class<?>[0]);
+
+        Class<?>[] parameterTypes = new Class<?>[parameters.length];
+
+        for (int i = 0; i < parameters.length; i++) {
+            if (parameters[i] == null)
+                return null;// 无法精确匹配，交给 compatible lookup
+
+            parameterTypes[i] = parameters[i].getClass();
+        }
+
+        return findPublicExactMethodByTypes(methodName, parameterTypes);
+    }
+
+    /**
      * Finds a compatible public method from runtime argument values and invokes it.
      *
      * @param instance   target object
@@ -311,7 +355,11 @@ public class Methods {
      * @throws Throwable                if invocation fails
      */
     public static Object execute(Object instance, String methodName, Object[] parameters) throws Throwable {
-        Method method = new Methods(instance).findCompatibleMethod(methodName, parameters);
+        Methods methods = new Methods(instance);
+        Method method = methods.findPublicExactMethod(methodName, parameters);
+
+        if (method == null)
+            method = methods.findCompatibleMethod(methodName, parameters);
 
         return execute(instance, method, parameters);
     }
@@ -320,16 +368,16 @@ public class Methods {
      * 调用方法。 注意获取方法对象，原始类型和包装类型不能混用，否则得不到正确的方法， 例如 Integer 不能与 int 混用。 这里提供一个
      * argType 的参数，指明参数类型为何。
      *
-     * @param instance        对象实例
-     * @param methodName      方法名称
-     * @param parametersTypes 参数类型
-     * @param parameters      参数值
+     * @param instance       对象实例
+     * @param methodName     方法名称
+     * @param parameterTypes 参数类型
+     * @param parameters     参数值
      * @return 执行结果
      * @throws IllegalArgumentException 实例为 null 或找不到匹配的方法
      * @throws Throwable                方法执行失败
      */
-    public static Object execute(Object instance, String methodName, Class<?>[] parametersTypes, Object[] parameters) throws Throwable {
-        Method method = new Methods(instance).findDeclaredMethod(methodName, parametersTypes);
+    public static Object execute(Object instance, String methodName, Class<?>[] parameterTypes, Object[] parameters) throws Throwable {
+        Method method = new Methods(instance).findPublicExactMethodByTypes(methodName, parameterTypes);
 
         return execute(instance, method, parameters);
     }
