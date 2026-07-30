@@ -46,20 +46,21 @@ class TestMethods {
         assertArrayEquals(new Class<?>[0], noArgs.getParameterTypes());
         assertSame(String.class, noArgs.getReturnType());
 
-        Method withStringType = methods.findDeclaredMethod("overloaded", String.class);
+        Method withStringType = methods.findDeclaredMethodByTypes("overloaded", String.class);
         assertNotNull(withStringType);
         assertArrayEquals(new Class<?>[]{String.class}, withStringType.getParameterTypes());
 
         Method withStringValue = methods.findDeclaredMethod("overloaded", "value");
         assertEquals(withStringType, withStringValue);
-        assertNull(methods.findDeclaredMethod("overloaded", Integer.class));
+        assertNull(methods.findDeclaredMethodByTypes("overloaded", Integer.class));
+        assertNull(methods.findDeclaredMethod("overloaded", new Object[]{null}));
         assertNull(methods.findDeclaredMethod("missing"));
     }
 
     @Test
     void findsAndMakesInheritedPrivateMethodAccessible() throws Throwable {
         Methods methods = new Methods(DeclaredTarget.class);
-        Method method = methods.findDeclaredMethod("hidden", String.class);
+        Method method = methods.findDeclaredMethodByTypes("hidden", String.class);
 
         assertNotNull(method);
         assertSame(DeclaredParent.class, method.getDeclaringClass());
@@ -217,7 +218,7 @@ class TestMethods {
         );
         assertEquals("Method must not be null.", privateLookupError.getMessage());
 
-        Method privateMethod = new Methods(target).findDeclaredMethod("privateEcho", String.class);
+        Method privateMethod = new Methods(target).findDeclaredMethodByTypes("privateEcho", String.class);
         assertEquals("private:value", Methods.execute(target, privateMethod, new Object[]{"value"}));
     }
 

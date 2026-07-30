@@ -14,16 +14,17 @@ layout: layouts/aj-util-cn.njk
 
 ## 声明方法查找
 
-`findDeclaredMethod(String, Class<?>...)` 从指定类开始沿父类向上查找，但不包含 `Object`。它可以返回
+`findDeclaredMethodByTypes(String, Class<?>...)` 从指定类开始沿父类向上查找，但不包含 `Object`。它可以返回
 private 等非 public 声明，并将找到的方法设为可访问。该入口按精确参数类型查找，找不到时返回 `null`。
 
 ```java
 Methods methods = new Methods(MyService.class);
-Method method = methods.findDeclaredMethod("handle", String.class);
+Method method = methods.findDeclaredMethodByTypes("handle", String.class);
 ```
 
-接收实际参数值的重载，会把每个非 `null` 参数转换成精确运行时类型。它不进行父类、接口或基本类型与
-包装类型的兼容匹配；参数数组中包含 `null` 元素时会抛出 `NullPointerException`。
+`findDeclaredMethod(String, Object...)` 会把每个参数值转换成精确运行时类型。它不进行父类、接口或
+基本类型与包装类型的兼容匹配。参数值为 `null` 时无法推断精确类型，因此返回 `null`；调用方已知
+null 参数的声明类型时，应使用 `findDeclaredMethodByTypes(...)`。
 
 ## 兼容 public 方法查找
 
@@ -85,12 +86,12 @@ Object primitiveResult = Methods.execute(
 );
 ```
 
-需要调用非 public 方法时，应先通过 `findDeclaredMethod(...)` 显式取得 `Method`，再调用
+需要调用非 public 方法时，应先通过 `findDeclaredMethodByTypes(...)` 显式取得 `Method`，再调用
 `execute(instance, method, parameters)`，使访问范围变化清晰可见：
 
 ```java
 Method privateMethod = new Methods(service)
-        .findDeclaredMethod("privateHandle", String.class);
+        .findDeclaredMethodByTypes("privateHandle", String.class);
 Object privateResult = Methods.execute(service, privateMethod, new Object[]{"value"});
 ```
 

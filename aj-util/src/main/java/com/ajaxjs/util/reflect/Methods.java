@@ -73,7 +73,7 @@ public class Methods {
      * @param parameterTypes 参数类引用
      * @return 匹配的方法对象，null 表示找不到 The declared method, or null if method doesn't exist
      */
-    public Method findDeclaredMethod(String methodName, Class<?>... parameterTypes) {
+    public Method findDeclaredMethodByTypes(String methodName, Class<?>... parameterTypes) {
         Class<?> clz = getInputClass();
 
         for (; clz != null && clz != Object.class; clz = clz.getSuperclass()) {
@@ -96,12 +96,23 @@ public class Methods {
      * Get a declared method by method name. This method can access private methods and super methods.
      *
      * @param methodName 方法名称 The name of the method to find
-     * @param parameters 参数列表；按照每个非 null 参数的精确运行时类型查找
+     * @param parameters 参数列表；按照每个参数的精确运行时类型查找
      * @return 匹配的方法对象，null 表示找不到 The declared method, or null if method doesn't exist
-     * @throws NullPointerException 如果参数数组中包含 null 元素
      */
     public Method findDeclaredMethod(String methodName, Object... parameters) {
-        return findDeclaredMethod(methodName, Clazz.args2class(parameters));
+        if (ObjectHelper.isEmpty(parameters))
+            return findDeclaredMethodByTypes(methodName);
+
+        Class<?>[] parameterTypes = new Class<?>[parameters.length];
+
+        for (int i = 0; i < parameters.length; i++) {
+            if (parameters[i] == null)
+                return null;// 无法精确匹配；需要调用方使用 findDeclaredMethodByTypes() 明确类型
+
+            parameterTypes[i] = parameters[i].getClass();
+        }
+
+        return findDeclaredMethodByTypes(methodName, parameterTypes);
     }
 
     /**

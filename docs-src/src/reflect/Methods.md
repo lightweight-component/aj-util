@@ -14,17 +14,18 @@ layout: layouts/aj-util.njk
 
 ## Declared-method lookup
 
-`findDeclaredMethod(String, Class<?>...)` searches the configured class and then its superclasses, excluding
+`findDeclaredMethodByTypes(String, Class<?>...)` searches the configured class and then its superclasses, excluding
 `Object`. It can return private and other non-public declarations and makes the selected method accessible.
 The lookup uses exact parameter types and returns `null` when no method exists.
 
 ```java
 Methods methods = new Methods(MyService.class);
-Method method = methods.findDeclaredMethod("handle", String.class);
+Method method = methods.findDeclaredMethodByTypes("handle", String.class);
 ```
 
-The overload accepting argument values converts each non-null value to its exact runtime class. It does not perform
-superclass, interface, or primitive-wrapper matching, and a `null` element causes `NullPointerException`.
+`findDeclaredMethod(String, Object...)` converts each value to its exact runtime class. It does not perform
+superclass, interface, or primitive-wrapper matching. If a value is `null`, the method returns `null` because its
+exact type cannot be inferred; use `findDeclaredMethodByTypes(...)` when a null argument has a known declared type.
 
 ## Compatible public-method lookup
 
@@ -87,12 +88,12 @@ Object primitiveResult = Methods.execute(
 );
 ```
 
-To invoke a non-public method, resolve it explicitly with `findDeclaredMethod(...)` and pass the resulting `Method`
+To invoke a non-public method, resolve it explicitly with `findDeclaredMethodByTypes(...)` and pass the resulting `Method`
 to `execute(instance, method, parameters)`. This makes the visibility change explicit:
 
 ```java
 Method privateMethod = new Methods(service)
-        .findDeclaredMethod("privateHandle", String.class);
+        .findDeclaredMethodByTypes("privateHandle", String.class);
 Object privateResult = Methods.execute(service, privateMethod, new Object[]{"value"});
 ```
 

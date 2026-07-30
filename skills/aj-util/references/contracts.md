@@ -45,12 +45,13 @@ Use these as review checkpoints. Verify current source before relying on exact e
   `null`, allowing compatible lookup to decide among reference parameters.
 - `Methods.findPublicExactMethodByTypes` searches public methods using explicit exact types and rejects null
   elements. It is the appropriate entry point for distinctions such as `int.class` versus `Integer.class`.
-- `Methods.findDeclaredMethod(String, Class<?>...)` searches the configured class and its superclasses,
-  excluding `Object`, and uses exact parameter types. Its value-based overload currently inherits
-  `Clazz.args2class` null and exact-runtime-type limitations.
+- `Methods.findDeclaredMethodByTypes(String, Class<?>...)` searches the configured class and its superclasses,
+  excluding `Object`, and uses explicit exact parameter types.
+- `Methods.findDeclaredMethod(String, Object...)` uses exact runtime types and returns `null` when a value is
+  `null`; callers must use `findDeclaredMethodByTypes` when the declared type of a null argument is known.
 - Name-based `Methods.execute` invokes public methods only: runtime values use exact lookup followed by compatible
   fallback, while the explicit-type overload uses exact public lookup. Invoke a non-public method only by resolving
-  it explicitly with `findDeclaredMethod` and passing the resulting `Method` to `execute`.
+  it explicitly with `findDeclaredMethodByTypes` and passing the resulting `Method` to `execute`.
 - `Methods.execute` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing
   method, and propagates target invocation failures.
 - `Fields.getUnderLayerErr` returns a cause-less wrapper unchanged and rejects a null input explicitly.
