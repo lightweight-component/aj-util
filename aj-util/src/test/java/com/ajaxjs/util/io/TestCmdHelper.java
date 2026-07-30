@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 class TestCmdHelper {
@@ -18,6 +19,21 @@ class TestCmdHelper {
         assertTimeoutPreemptively(Duration.ofSeconds(10),
                 () -> CmdHelper.exec(command, line -> callbacks.incrementAndGet() < 1));
         assertEquals(1, callbacks.get());
+    }
+
+    @Test
+    void propagatesCallbackFailureAfterDrainingProcessOutput() {
+        String java = System.getProperty("java.home") + "/bin/java";
+        String command = java + " -cp " + System.getProperty("java.class.path") + " " + NoisyProcess.class.getName();
+
+        IllegalStateException error = assertThrows(
+                IllegalStateException.class,
+                () -> CmdHelper.exec(command, line -> {
+                    throw new IllegalStateException("callback failed");
+                })
+        );
+
+        assertEquals("callback failed", error.getMessage());
     }
 
     public static class NoisyProcess {

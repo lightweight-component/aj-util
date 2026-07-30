@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -96,6 +97,10 @@ class TestMethods {
         public String primitive(int value) {
             return "int:" + value;
         }
+
+        public String nullable(CharSequence value) {
+            return value == null ? "null" : value.toString();
+        }
     }
 
     @Test
@@ -120,6 +125,10 @@ class TestMethods {
 
         assertNull(methods.findCompatibleMethod("primitive", "7"));
         assertNull(methods.findCompatibleMethod("missing", "text"));
+
+        Method nullable = methods.findCompatibleMethod("nullable", new Object[]{null});
+        assertNotNull(nullable);
+        assertArrayEquals(new Class<?>[]{CharSequence.class}, nullable.getParameterTypes());
     }
 
     @Test
@@ -202,5 +211,27 @@ class TestMethods {
                 () -> Methods.executeStatic(instanceMethod, new Object[]{"value"})
         );
         assertEquals("This is not a static method.", error.getMessage());
+    }
+
+    interface Greeting {
+        default String greet(String name) {
+            return "hello:" + name;
+        }
+    }
+
+    @Test
+    void executesInterfaceDefaultMethod() throws Exception {
+        Method method = Greeting.class.getMethod("greet", String.class);
+        Greeting proxy = (Greeting) Proxy.newProxyInstance(
+                Greeting.class.getClassLoader(),
+                new Class<?>[]{Greeting.class},
+                (instance, invoked, args) -> {
+                    if (invoked.isDefault())
+                        return Methods.executeDefault(instance, invoked, args);
+                    throw new UnsupportedOperationException(invoked.getName());
+                }
+        );
+
+        assertEquals("hello:ajaxjs", proxy.greet("ajaxjs"));
     }
 }

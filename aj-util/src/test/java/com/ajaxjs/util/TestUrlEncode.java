@@ -23,7 +23,7 @@ class TestUrlEncode {
     // 测试 encodeSafe()
     @Test
     void testEncodeSafe_ReplacesSpecialCharacters() {
-        assertEquals("a%20b%2A%2Ac%7Ed%2Fe", new UrlEncode("a+b*c~d/e").encodeSafe());
+        assertEquals("a%2Bb%2Ac%7Ed%2Fe", new UrlEncode("a+b*c~d/e").encodeSafe());
     }
 
     // 测试 decode()

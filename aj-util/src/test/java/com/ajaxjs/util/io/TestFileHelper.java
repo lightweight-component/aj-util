@@ -1,45 +1,82 @@
 package com.ajaxjs.util.io;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
-import java.util.List;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
-public class TestFileHelper {
-    final String dir = Resources.getResourcesFromClass(TestFileHelper.class, "");
-    final String fullPath = dir + File.separator + "test.txt";
+import static org.junit.jupiter.api.Assertions.*;
+
+class TestFileHelper {
+    @TempDir
+    Path tempDir;
 
     @Test
-    public void test() {
-        // 读取文件内容
-        String content = new FileHelper(fullPath).getFileContent();
-        System.out.println("File content: " + content);
+    void writesReadsAndReportsExactFileData() throws Exception {
+        Path file = tempDir.resolve("data.txt");
+        String content = "Hello, World! 你好世界";
 
-        // 写入文件内容
-        new FileHelper(fullPath).writeFileContent("Hello, World! 你好世界");
+        FileHelper helper = new FileHelper(file);
+        helper.writeFileContent(content);
 
-        // 列出目录内容
-        List<String> directoryContents = new FileHelper(dir).listDirectoryContents();
-        System.out.println("Directory contents: " + directoryContents);
+        assertEquals(content, helper.getFileContent());
+        assertArrayEquals(content.getBytes(StandardCharsets.UTF_8), helper.readFileBytes());
+        assertEquals(content.getBytes(StandardCharsets.UTF_8).length, helper.getFileSize());
+    }
 
-        // 创建目录
-        new FileHelper(dir + File.separator + "newDirectory").createDirectory();
+    @Test
+    void readingTextPreservesLineEndingsAndTrailingNewline() throws Exception {
+        Path file = tempDir.resolve("lines.txt");
+        String content = "first\r\nsecond\n";
+        Files.write(file, content.getBytes(StandardCharsets.UTF_8));
 
-        // 删除文件或目录
-//            FileHelper.deleteFileOrDirectory("output.txt");
+        assertEquals(content, new FileHelper(file).getFileContent());
+    }
 
-        // 检查文件或目录是否存在
-        boolean exists = new File(fullPath).exists();
-        System.out.println("File exists: " + exists);
+    @Test
+    void createsAndListsDirectoryContents() throws Exception {
+        Path directory = tempDir.resolve("nested/directory");
+        new FileHelper(directory).createDirectory();
+        Files.write(directory.resolve("b.txt"), new byte[]{2});
+        Files.write(directory.resolve("a.txt"), new byte[]{1});
 
-        // 获取文件或目录的大小
-        long size = new FileHelper(fullPath).getFileSize();
-        System.out.println("File size: " + size + " bytes");
+        assertTrue(Files.isDirectory(directory));
+        assertEquals(
+                new java.util.HashSet<>(Arrays.asList("a.txt", "b.txt")),
+                new java.util.HashSet<>(new FileHelper(directory).listDirectoryContents())
+        );
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new FileHelper(directory.resolve("a.txt")).listDirectoryContents()
+        );
+    }
 
-        // 复制文件或目录
-        new FileHelper(fullPath).setTarget("example_copy.txt").copyTo();
+    @Test
+    void copiesAndMovesFilesWithoutTouchingProjectFiles() throws Exception {
+        Path source = tempDir.resolve("source.txt");
+        Path copy = tempDir.resolve("copy.txt");
+        Path moved = tempDir.resolve("moved.txt");
+        Files.write(source, "content".getBytes(StandardCharsets.UTF_8));
 
-        // 移动文件或目录
-        new FileHelper(fullPath).setTarget("moved_example.txt").moveTo();
+        new FileHelper(source).setTarget(copy.toString()).copyTo();
+        assertEquals("content", new String(Files.readAllBytes(copy), StandardCharsets.UTF_8));
+        assertTrue(Files.exists(source));
+
+        new FileHelper(source).setTarget(moved.toString()).moveTo();
+        assertFalse(Files.exists(source));
+        assertEquals("content", new String(Files.readAllBytes(moved), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void missingOrDirectoryTextInputFailsClearly() throws Exception {
+        assertThrows(
+                UncheckedIOException.class,
+                () -> new FileHelper(tempDir.resolve("missing.txt")).getFileContent()
+        );
+        assertThrows(UncheckedIOException.class, () -> new FileHelper(tempDir).getFileContent());
     }
 }

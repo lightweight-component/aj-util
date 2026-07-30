@@ -96,6 +96,46 @@ class TestZipHelper {
     }
 
     @Test
+    void testRecognizesRegularAndEmptyZipArchives() throws IOException {
+        Path regular = createZip("regular.zip", entries("file.txt", "content"));
+        Path empty = tempDir.resolve("empty.zip");
+        try (ZipOutputStream ignored = new ZipOutputStream(Files.newOutputStream(empty))) {
+        }
+        Path plain = tempDir.resolve("plain.txt");
+        Files.write(plain, "PK-not-a-zip".getBytes(StandardCharsets.UTF_8));
+
+        assertTrue(ZipHelper.isZipFile(regular.toString()));
+        assertTrue(ZipHelper.isZipFile(empty.toString()));
+        assertFalse(ZipHelper.isZipFile(plain.toString()));
+        assertFalse(ZipHelper.isZipFile(tempDir.resolve("missing.zip").toString()));
+    }
+
+    @Test
+    void testEntryCountAndTotalSizeLimits() throws IOException {
+        Path zip = createZip("limits.zip", entries(
+                "one.txt", "1234",
+                "two.txt", "5678"
+        ));
+
+        assertThrows(
+                UncheckedIOException.class,
+                () -> ZipHelper.unzip(
+                        tempDir.resolve("entry-limit").toString(),
+                        zip.toString(),
+                        new ZipHelper.ExtractionLimits(1, 100, 100, 100)
+                )
+        );
+        assertThrows(
+                UncheckedIOException.class,
+                () -> ZipHelper.unzip(
+                        tempDir.resolve("total-limit").toString(),
+                        zip.toString(),
+                        new ZipHelper.ExtractionLimits(10, 100, 7, 100)
+                )
+        );
+    }
+
+    @Test
     void testZipFailureIsPropagatedWithoutPublishingPartialArchive() {
         Path missing = tempDir.resolve("missing.txt");
         Path zip = tempDir.resolve("failed.zip");

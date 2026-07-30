@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,6 +99,35 @@ class TestFormatter {
         DateTimeFormatter formatter1 = Formatter.getDateFormatter("yyyy-MM-dd HH:mm:ss.SSS");
         DateTimeFormatter formatter2 = Formatter.getDateFormatter("yyyy-MM-dd HH:mm:ss.SSS");
         assertSame(formatter1, formatter2, "Formatter should be cached and return the same instance");
+    }
+
+    @Test
+    void strictParsersRejectInvalidCalendarDates() {
+        assertThrows(
+                DateTimeParseException.class,
+                () -> LocalDate.parse("2023-02-29", Formatter.getDateParser())
+        );
+        assertThrows(
+                DateTimeParseException.class,
+                () -> LocalDateTime.parse("2023-04-31 10:15:30", Formatter.getDateTimeParser())
+        );
+        assertThrows(
+                DateTimeParseException.class,
+                () -> LocalDateTime.parse("2023-04-31 10:15", Formatter.getDateTimeShortParser())
+        );
+    }
+
+    @Test
+    void parserAndOutputFormatterHaveIndependentResolverSemantics() {
+        assertNotSame(Formatter.getDateFormatter(), Formatter.getDateParser());
+        assertEquals(
+                LocalDate.of(2024, 2, 29),
+                LocalDate.parse("2024-02-29", Formatter.getDateParser())
+        );
+        assertEquals(
+                "2024-02-29",
+                Formatter.getDateFormatter().format(LocalDate.of(2024, 2, 29))
+        );
     }
 
     @Test

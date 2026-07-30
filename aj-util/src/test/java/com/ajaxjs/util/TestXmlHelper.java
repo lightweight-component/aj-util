@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,25 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class TestXmlHelper {
     @Test
     void testInitBuilder() {
-        // 测试 initBuilder 方法是否能够返回非空的 DocumentBuilder 实例
         DocumentBuilder builder = XmlHelper.initBuilder();
         assertNotNull(builder);
-
-        // 测试 initBuilder 在异常情况下的行为，是否返回 null
-        // 我们将通过反射禁用工厂来模拟 ParserConfigurationException
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            Method method = DocumentBuilderFactory.class.getDeclaredMethod("setValidating", boolean.class);
-            method.setAccessible(true);
-            method.invoke(factory, true); // 设置为验证状态，这将导致 ParserConfigurationException
-
-            DocumentBuilder invalidBuilder = factory.newDocumentBuilder();
-            assertNotNull(invalidBuilder);
-            System.out.println("Expected ParserConfigurationException to be thrown");
-        } catch (Exception e) {
-            // 我们期望在调用 factory.newDocumentBuilder() 时捕获异常
-            assertInstanceOf(ParserConfigurationException.class, e.getCause());
-        }
+        assertFalse(builder.isValidating());
     }
 
     @Test

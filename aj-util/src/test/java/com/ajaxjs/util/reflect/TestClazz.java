@@ -67,17 +67,13 @@ class TestClazz {
         );
     }
 
-
-//    @Test
-//    void testNewInstance() {
-//        assertNotNull(newInstance(TestReflectUtil.Foo.class));
-//        assertNotNull(newInstance(TestReflectUtil.Foo.class, "a", "b"));
-//        assertNotNull(newInstance(Objects.requireNonNull(NewInstance.getConstructor(TestReflectUtil.Foo.class))));
-//        assertNotNull(newInstance(Objects.requireNonNull(NewInstance.getConstructor(TestReflectUtil.Foo.class, String.class, String.class)), "a", "b"));
-//        assertNotNull(newInstance("com.ajaxjs.util.reflect.TestReflectUtil"));
-//        assertNotNull(Clazz.getClassByName("com.ajaxjs.util.reflect.TestReflectUtil"));
-//
-//        Class<?>[] cs = Clazz.getDeclaredInterface(ArrayList.class);
-//        assertNotNull(cs);
-//    }
+    @Test
+    void convertsRuntimeArgumentsToClasses() {
+        assertArrayEquals(
+                new Class<?>[]{String.class, Integer.class},
+                Clazz.args2class(new Object[]{"value", 1})
+        );
+        assertNull(Clazz.args2class(null));
+        assertNull(Clazz.args2class(new Object[0]));
+    }
 }

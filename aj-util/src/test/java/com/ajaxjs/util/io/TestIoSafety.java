@@ -25,6 +25,20 @@ class TestIoSafety {
     }
 
     @Test
+    void moveRequiresTarget() throws Exception {
+        Path source = tempDir.resolve("source.txt");
+        Files.write(source, new byte[]{1});
+
+        IllegalStateException error = assertThrows(
+                IllegalStateException.class,
+                () -> new FileHelper(source).moveTo()
+        );
+
+        assertEquals("Target path not set", error.getMessage());
+        assertTrue(Files.exists(source));
+    }
+
+    @Test
     void copyDirectoryRejectsTargetInsideSource() throws Exception {
         Path source = Files.createDirectory(tempDir.resolve("source"));
         Files.write(source.resolve("file.txt"), new byte[]{1});
@@ -66,6 +80,33 @@ class TestIoSafety {
         Path merged = tempDir.resolve("merged.bin");
         new FileHelper(merged).mergeFile(chunks.toArray(new Path[0]));
         assertArrayEquals(content, Files.readAllBytes(merged));
+    }
+
+    @Test
+    void chunkRejectsInvalidSizeAndMissingInput() throws Exception {
+        Path source = tempDir.resolve("source.bin");
+        Files.write(source, new byte[]{1});
+
+        assertThrows(IllegalArgumentException.class, () -> new FileHelper(source).chunkFile(0));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new FileHelper(tempDir.resolve("missing.bin")).chunkFile(1)
+        );
+    }
+
+    @Test
+    void mergeRejectsMissingChunkListAndExistingDestination() throws Exception {
+        Path destination = tempDir.resolve("merged.bin");
+        FileHelper helper = new FileHelper(destination);
+
+        assertThrows(IllegalArgumentException.class, () -> helper.mergeFile((Path[]) null));
+        assertThrows(IllegalArgumentException.class, helper::mergeFile);
+
+        Files.write(destination, new byte[]{1});
+        Path chunk = tempDir.resolve("part.bin");
+        Files.write(chunk, new byte[]{2});
+        assertThrows(UncheckedIOException.class, () -> helper.mergeFile(chunk));
+        assertArrayEquals(new byte[]{1}, Files.readAllBytes(destination));
     }
 
     @Test
