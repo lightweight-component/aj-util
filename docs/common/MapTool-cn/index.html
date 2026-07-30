@@ -139,14 +139,17 @@
 <li><code>as(Map&lt;String, K&gt; map, Function&lt;K, T&gt; fn)</code> - 使用函数转换 Map 值</li>
 <li><code>as(Map&lt;String, String[]&gt; map)</code> - 将 String[] 值的 Map 转换为 Map&lt;String, Object&gt;</li>
 </ol>
-<h3>5. <code>deepCopy()</code>（浅复制）</h3>
-<p>尽管沿用了历史方法名，<code>deepCopy(Map&lt;T, K&gt; map)</code> 只创建新的 <code>HashMap</code>，不会克隆嵌套的可变对象。</p>
+<h3>5. <code>shallowCopy()</code></h3>
+<p><code>shallowCopy(Map&lt;T, K&gt; map)</code> 创建包含相同 key 和 value 的新 <code>HashMap</code>。嵌套 Map、Collection、
+数组及对象仍为共享引用。</p>
 <h3>6. XML 转换方法</h3>
 <ol>
 <li><code>beanToXml(Object bean)</code> - 将 Java bean 转换为 XML 字符串</li>
 <li><code>mapToXml(Map&lt;String, ?&gt; data)</code> - 将 Map 转换为 XML 字符串</li>
 <li><code>xmlToMap(String strXML)</code> - 将 XML 字符串转换为 Map</li>
 </ol>
+<p><code>mapToXml</code> 保留 value 的前后空白。每个 key 必须是合法的 XML 元素名；非法 key 会触发
+<code>IllegalArgumentException</code>，异常消息会指出对应 key。</p>
 <h2>使用示例</h2>
 <h3>连接 Map 条目</h3>
 <pre><code class="language-java">Map&lt;String, String&gt; map = new HashMap&lt;&gt;();

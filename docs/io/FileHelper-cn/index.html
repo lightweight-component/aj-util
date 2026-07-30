@@ -150,7 +150,7 @@ List&lt;String&gt; contents = new FileHelper(&quot;directory&quot;).listDirector
 // 创建目录（支持多级目录）
 new FileHelper(&quot;new/directory/path&quot;).createDirectory();
 
-// 获取文件或目录大小
+// 获取单个路径的元数据大小（不是目录内容的递归总大小）
 long size = new FileHelper(&quot;file-or-directory&quot;).getFileSize();
 </code></pre>
 <h3>6. 文件复制和移动</h3>

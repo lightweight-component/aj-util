@@ -4,8 +4,8 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>AJ Utils-Resources</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  用于定位和检索类路径资源的方法" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 资源加载,类路径,Java" />
+        <meta name="description" content="Small Java utilities with many useful functions.  对文件和 JAR 使用一致的 classpath 资源加载方式" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 资源加载,classpath,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -105,148 +105,26 @@
             </menu>
             <article class="aj-text chinese">
                 <h1>Resources</h1>
-<p><code>Resources</code> 类提供静态方法来定位和检索类路径中或相对于特定类的资源。 这对于访问与应用程序捆绑在一起的配置文件、模板或其他数据文件特别有用。</p>
-<p>需要兼容打包后的 JAR 时应优先使用 <code>getResource(String)</code> 获取流。返回文件系统路径的方法只适用于 <code>file:</code> 协议资源；<code>jar:</code> 资源不是普通 <code>File</code> 路径。</p>
-<h2>方法</h2>
-<h3>1. <code>getResourcesFromClasspath(String resource)</code></h3>
-<p>检索位于类路径中的资源的路径。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>resource</code>：资源文件的名称。 可以包括包目录（例如，<code>com/example/my_resource.txt</code>）。 空字符串返回类路径根目录。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 资源的绝对路径。</li>
-<li><strong>抛出：</strong> 如果找不到资源，则抛出 <code>RuntimeException</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClasspath(&quot;com/example/config.properties&quot;);
-System.out.println(resourcePath);
-</code></pre>
-<h3>2. <code>getResourcesFromClasspath(String resource, boolean isDecode)</code></h3>
-<p>检索位于类路径中的资源的路径，并可选择进行 URL 解码。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>resource</code>：资源文件的名称。</li>
-<li><code>isDecode</code>：一个布尔值，指示是否应解码 URL。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 资源的绝对路径。</li>
-<li><strong>抛出：</strong> 如果找不到资源，则抛出 <code>RuntimeException</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClasspath(&quot;com/example/config.properties&quot;, true);
-System.out.println(resourcePath);
-</code></pre>
-<h3>3. <code>getResourcesFromClass(Class&lt;?&gt; clz, String resource)</code></h3>
-<p>检索位于相对于给定类的资源的路径。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>clz</code>：用于定位资源的类。</li>
-<li><code>resource</code>：资源文件的名称。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 资源的绝对路径；如果未找到，则返回 <code>null</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClass(MyClass.class, &quot;my_resource.txt&quot;);
-System.out.println(resourcePath);
-</code></pre>
-<h3>4. <code>getResourcesFromClass(Class&lt;?&gt; clz, String resource, boolean isDecode)</code></h3>
-<p>检索位于相对于给定类的资源的路径，并可选择进行 URL 解码。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>clz</code>：用于定位资源的类。</li>
-<li><code>resource</code>：资源文件的名称。</li>
-<li><code>isDecode</code>：一个布尔值，指示是否应解码 URL。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 资源的绝对路径；如果未找到，则返回 <code>null</code>。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">String resourcePath = Resources.getResourcesFromClass(MyClass.class, &quot;my_resource.txt&quot;, true);
-System.out.println(resourcePath);
-</code></pre>
-<h3>5. <code>getClassName(File file, String packageName)</code></h3>
-<p>从 Java 类文件中提取类名。</p>
-<ul>
-<li><strong>参数：</strong>
-<ul>
-<li><code>file</code>：Java 类文件。</li>
-<li><code>packageName</code>：类的包名。</li>
-</ul>
-</li>
-<li><strong>返回值：</strong> 完全限定的类名。</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-java">File classFile = new File(&quot;path/to/MyClass.class&quot;);
-String className = Resources.getClassName(classFile, &quot;com.example&quot;);
-System.out.println(className); // Output: com.example.MyClass
-</code></pre>
-<h2>单元测试示例</h2>
-<pre><code class="language-java">package com.ajaxjs.util.io;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-public class TestResources {
-    @Test
-    public void testGetResourcesFromClasspath_FoundResource_ShouldReturnPath() {
-        assertThrows(RuntimeException.class, () -&gt; Resources.getResourcesFromClasspath(&quot;\\com\\test.txt&quot;));
-    }
-
-    @Test
-    public void testGetResourcesFromClasspath_NotFoundResource_ShouldReturnNull() {
-        assertThrows(RuntimeException.class, () -&gt; Resources.getResourcesFromClasspath(&quot;application.yml&quot;));
-    }
-
-    @Test
-    public void testGetResourcesFromClass_FoundResource_ShouldReturnPath() {
-        String resourcePath = Resources.getResourcesFromClass(TestResources.class, &quot;test.txt&quot;);
-        System.out.println(resourcePath);
-        assertNull(resourcePath);
-    }
-
-    @Test
-    public void testGetResourcesFromClass_NotFoundResource_ShouldReturnNull() {
-        String resourcePath = Resources.getResourcesFromClass(TestResources.class, &quot;non-existent-resource.txt&quot;);
-        assertNull(resourcePath, &quot;Expected null for non-existent resource&quot;);
-    }
-
-    @Test
-    public void testGetResourceText_FoundResource_ShouldReturnContent() {
-        String resourceContent = Resources.getResourceText(&quot;README.md&quot;);
-        //assertNotNull(resourceContent, &quot;Resource content not found&quot;);
-    }
-
-    @Test
-    public void testGetResourceText_NotFoundResource_ShouldReturnNull() {
-        String resourceContent = Resources.getResourceText(&quot;non-existent-file.md&quot;);
-        //assertNull(resourceContent, &quot;Expected null for non-existent resource&quot;);
-    }
-
-    @Test
-    public void testGetProperties_ValidPropertiesFile_ShouldLoadProperties() {
-        Properties properties = Resources.getProperties(&quot;test-demo.properties&quot;);
-        System.out.println(properties);
-        //assertNotNull(properties);
-    }
-
-    @Test
-    public void testGetProperties_NotFoundPropertiesFile_ShouldThrowException() {
-        assertThrows(RuntimeException.class, () -&gt; Resources.getProperties(&quot;application.properties&quot;));
-    }
+<p><code>Resources</code> 可以把 classpath 资源读取为输入流、文本、Properties 或文件系统路径。</p>
+<p>所有资源查找方法在资源不存在时统一抛出 <code>IllegalArgumentException</code>，不会返回 <code>null</code>，也不会向
+标准错误输出诊断文本。</p>
+<h2>输入流、文本和 Properties</h2>
+<p>需要同时支持 IDE 和打包 JAR 时，应使用流式 API：</p>
+<pre><code class="language-java">try (InputStream in = Resources.getResource(&quot;config/app.yml&quot;)) {
+    // 读取资源
 }
+
+String text = Resources.getResourceText(&quot;templates/page.html&quot;);
+Properties properties = Resources.getProperties(&quot;application.properties&quot;);
 </code></pre>
-<p><strong>注意：</strong> 单元测试使用 <code>assertThrows</code> 和 <code>assertNull</code> 来检查预期的异常和 null 返回值。 由于提供的代码中没有相关方法，因此某些测试被注释掉了。</p>
-<h2>结论</h2>
-<p><code>Resources</code> 类提供了一种简单有效的方法来访问应用程序中的资源。 通过使用这些方法，您可以轻松地从类路径或相对于特定类检索配置文件、模板和其他数据文件。</p>
+<h2>文件系统路径</h2>
+<p><code>getResourcesFromClasspath(...)</code> 和 <code>getResourcesFromClass(...)</code> 只对 <code>file:</code> URL 返回路径：</p>
+<pre><code class="language-java">String path = Resources.getResourcesFromClasspath(&quot;com/example/config.properties&quot;);
+String relative = Resources.getResourcesFromClass(MyClass.class, &quot;template.txt&quot;);
+</code></pre>
+<p>JAR 内资源不是普通 <code>Path</code>；这些方法遇到非文件 URL 时抛出 <code>UnsupportedOperationException</code>。读取
+JAR 内容应使用 <code>getResource(...)</code>，不能解析 URL 的展示字符串来伪造文件路径。</p>
+<p><code>getClassName(File, String)</code> 根据 <code>.class</code> 文件名构造完整类名；<code>getJarDir()</code> 返回当前代码源的父目录。</p>
 
             </article>
         </div>

@@ -117,8 +117,8 @@ if (field != null &amp;&amp; !field.isAccessible())
 <p><code>getUnderLayerErr(Throwable)</code> 解开嵌套的 <code>InvocationTargetException</code> 和
 <code>UndeclaredThrowableException</code>。包装异常没有 cause 时原样返回；输入为 <code>null</code> 时抛出
 <code>IllegalArgumentException</code>。</p>
-<p><code>getUnderLayerErrMsg(Throwable)</code> 返回去掉开头异常类名后的底层异常文本。异常没有详细消息时，
-<code>Throwable.toString()</code> 中没有冒号，当前会保留异常类名。</p>
+<p><code>getUnderLayerErrMsg(Throwable)</code> 直接返回底层异常的 detail message。异常没有详细消息时返回空字符串，
+不会把异常类名误当作消息文本。</p>
 
             </article>
         </div>

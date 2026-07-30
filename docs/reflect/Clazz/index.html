@@ -112,8 +112,7 @@
 <code>NewInstance</code>.</p>
 <h2>Loading classes</h2>
 <p><code>getClassByName(String)</code> loads a class by its fully qualified name and throws <code>RuntimeException</code> if it cannot be
-found. The current wrapper does not retain <code>ClassNotFoundException</code> as its cause. The typed overload also verifies
-assignability:</p>
+found. The original <code>ClassNotFoundException</code> is retained as the cause. The typed overload also verifies assignability:</p>
 <pre><code class="language-java">Class&lt;CharSequence&gt; type =
         Clazz.getClassByName(&quot;java.lang.String&quot;, CharSequence.class);
 
@@ -123,7 +122,8 @@ Clazz.getClassByName(&quot;java.lang.String&quot;, Number.class);
 <p>Passing a <code>null</code> target type throws <code>IllegalArgumentException</code>.</p>
 <h2>Converting arguments to classes</h2>
 <p><code>args2class(Object[])</code> returns the runtime class of each argument. A <code>null</code> or empty array produces <code>null</code>.
-Individual <code>null</code> elements are not supported; use an explicit <code>Class&lt;?&gt;[]</code> when a parameter value is <code>null</code>.</p>
+An individual <code>null</code> element causes <code>IllegalArgumentException</code> identifying its index; use an explicit <code>Class&lt;?&gt;[]</code>
+when a parameter value is <code>null</code>.</p>
 <pre><code class="language-java">Class&lt;?&gt;[] types = Clazz.args2class(new Object[]{&quot;text&quot;, 1});
 // [String.class, Integer.class]
 </code></pre>
@@ -135,10 +135,10 @@ call with an interface type and returns an empty array in that case.</p>
 <pre><code class="language-java">Class&lt;?&gt;[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
 Class&lt;?&gt;[] parents = Clazz.getAllSuperClass(ArrayList.class);
 </code></pre>
-<p><code>getClassByInterface(Type)</code> derives a class name from <code>Type.toString()</code>. It is intended only for directly resolvable
-class or parameterized-interface types; type variables, wildcards, and generic arrays are not reliably supported.</p>
-<p>The hierarchy methods do not yet share a uniform <code>null</code> policy. <code>getAllSuperClass(null)</code> throws
-<code>NullPointerException</code>, while <code>getDeclaredInterface(null)</code> currently returns an empty array.</p>
+<p><code>getClassByInterface(Type)</code> delegates directly to <code>Types.type2class(Type)</code> instead of parsing the display value
+returned by <code>Type.toString()</code>. It therefore follows the same rules for classes, parameterized types, type variables,
+wildcards, and generic arrays. A type without one unique resolution causes <code>IllegalArgumentException</code>.</p>
+<p>Both hierarchy methods reject a null class with <code>IllegalArgumentException</code>.</p>
 
             </article>
         </div>

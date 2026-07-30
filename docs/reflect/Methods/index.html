@@ -110,14 +110,15 @@
                 <h1>Methods</h1>
 <p><code>Methods</code> locates and invokes methods on a configured class or object.</p>
 <h2>Declared-method lookup</h2>
-<p><code>findDeclaredMethod(String, Class&lt;?&gt;...)</code> searches the configured class and then its superclasses, excluding
+<p><code>findDeclaredMethodByTypes(String, Class&lt;?&gt;...)</code> searches the configured class and then its superclasses, excluding
 <code>Object</code>. It can return private and other non-public declarations and makes the selected method accessible.
 The lookup uses exact parameter types and returns <code>null</code> when no method exists.</p>
 <pre><code class="language-java">Methods methods = new Methods(MyService.class);
-Method method = methods.findDeclaredMethod(&quot;handle&quot;, String.class);
+Method method = methods.findDeclaredMethodByTypes(&quot;handle&quot;, String.class);
 </code></pre>
-<p>The overload accepting argument values converts each non-null value to its exact runtime class. It does not perform
-superclass, interface, or primitive-wrapper matching, and a <code>null</code> element causes <code>NullPointerException</code>.</p>
+<p><code>findDeclaredMethod(String, Object...)</code> converts each value to its exact runtime class. It does not perform
+superclass, interface, or primitive-wrapper matching. If a value is <code>null</code>, the method returns <code>null</code> because its
+exact type cannot be inferred; use <code>findDeclaredMethodByTypes(...)</code> when a null argument has a known declared type.</p>
 <h2>Compatible public-method lookup</h2>
 <p><code>findCompatibleMethod(String, Object...)</code> searches public methods, including inherited methods. It supports:</p>
 <ul>
@@ -140,23 +141,43 @@ Method method =
 <p>The candidate with the lowest type-hierarchy distance is selected. If unrelated overloads receive the same score,
 the current implementation selects the first method returned by reflection; callers should use explicit parameter
 types when overload ambiguity is possible. Numeric primitive widening and varargs expansion are not supported.</p>
+<h2>Exact public-method lookup</h2>
+<p><code>findPublicExactMethod(String, Object[])</code> looks up a public method using the exact runtime class of every argument.
+It returns <code>null</code> when an argument is <code>null</code>, because an exact type cannot be inferred. The caller can then use
+<code>findCompatibleMethod(...)</code>, which supports <code>null</code> for reference parameters.</p>
+<p><code>findPublicExactMethodByTypes(String, Class&lt;?&gt;[])</code> accepts explicit exact types. This is useful when the runtime
+value is boxed but the declaration is primitive:</p>
+<pre><code class="language-java">Method setter = new Methods(Target.class)
+        .findPublicExactMethodByTypes(&quot;setAge&quot;, new Class&lt;?&gt;[]{int.class});
+</code></pre>
+<p>Both methods use <code>Class.getMethod</code>, so they search only public methods, including inherited class and interface
+methods. A <code>null</code> element in the explicit type array is rejected with <code>IllegalArgumentException</code>.</p>
 <h2>Invocation</h2>
-<p>The name-based <code>execute(instance, methodName, parameters)</code> overload uses compatible public-method lookup. A missing
-method ultimately raises <code>IllegalArgumentException</code>. The overload accepting <code>Class&lt;?&gt;[]</code> uses declared-method lookup
-and can therefore invoke a non-public method after it has been made accessible.</p>
+<p>The name-based <code>execute(instance, methodName, parameters)</code> overload first attempts exact public-method lookup and
+then falls back to compatible public-method lookup. A missing method ultimately raises <code>IllegalArgumentException</code>.
+The overload accepting <code>Class&lt;?&gt;[]</code> performs exact public-method lookup with the supplied types. For example, it
+can distinguish <code>int.class</code> from <code>Integer.class</code>.</p>
 <pre><code class="language-java">Object result = Methods.execute(service, &quot;handle&quot;, new Object[]{&quot;value&quot;});
 
-Object privateResult = Methods.execute(
+Object primitiveResult = Methods.execute(
         service,
-        &quot;privateHandle&quot;,
-        new Class&lt;?&gt;[]{String.class},
-        new Object[]{&quot;value&quot;}
+        &quot;setAge&quot;,
+        new Class&lt;?&gt;[]{int.class},
+        new Object[]{Integer.valueOf(18)}
 );
+</code></pre>
+<p>To invoke a non-public method, resolve it explicitly with <code>findDeclaredMethodByTypes(...)</code> and pass the resulting <code>Method</code>
+to <code>execute(instance, method, parameters)</code>. This makes the visibility change explicit:</p>
+<pre><code class="language-java">Method privateMethod = new Methods(service)
+        .findDeclaredMethodByTypes(&quot;privateHandle&quot;, String.class);
+Object privateResult = Methods.execute(service, privateMethod, new Object[]{&quot;value&quot;});
 </code></pre>
 <p>A legitimate target <code>null</code> return remains <code>null</code>. An exception thrown by the target method is unwrapped from
 <code>InvocationTargetException</code> and propagated.</p>
-<p><code>executeStatic(Method, Object[])</code> accepts only static methods. <code>executeDefault(...)</code> is the Java 8-oriented helper
-for interface default methods; its legacy <code>MethodHandles.Lookup</code> access may not work on newer modular JDKs.</p>
+<p><code>executeStatic(Method, Object[])</code> rejects a null <code>Method</code> with <code>IllegalArgumentException</code>, accepts only static
+methods, and invokes them with a null reflection receiver. Target exceptions are unwrapped and propagated in the
+same way as ordinary invocation. <code>executeDefault(...)</code> is the Java 8-oriented helper for interface default methods;
+its legacy <code>MethodHandles.Lookup</code> access may not work on newer modular JDKs.</p>
 
             </article>
         </div>

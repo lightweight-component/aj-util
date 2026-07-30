@@ -121,13 +121,15 @@
 <li><code>join(List&lt;String&gt; list, String str)</code> - 使用分隔符连接字符串列表</li>
 <li><code>join(List&lt;String&gt; list, String tpl, String str)</code> - 格式化并连接字符串列表</li>
 </ol>
+<p>数组和列表重载都将 <code>null</code> 元素输出为空字符串。</p>
 <h3>3. 模板</h3>
 <ol>
 <li><code>simpleTpl(String template, Map&lt;String, Object&gt; params)</code> - <code>${var}</code> 替换</li>
 <li><code>simpleTpl2(String template, Map&lt;String, Object&gt; data)</code> - <code>#{var}</code> 替换</li>
 <li><code>simpleTpl(String template, Object data)</code> - JavaBean 属性替换</li>
 </ol>
-<p>替换值按字面量处理，值中包含 <code>$</code> 或 <code>\</code> 也不会被解释为分组引用。</p>
+<p>替换值按字面量处理，值中包含 <code>$</code> 或 <code>\</code> 也不会被解释为分组引用。JavaBean 模板会跳过只写属性；
+getter 执行失败时，抛出的 <code>RuntimeException</code> 会指出属性名并保留 getter 异常作为 cause。</p>
 <h3>4. 实用工具</h3>
 <ol>
 <li><code>charCount(String str, String _char)</code> - 统计出现次数，支持重叠匹配</li>

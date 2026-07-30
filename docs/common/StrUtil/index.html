@@ -124,13 +124,16 @@
 <li><code>join(List&lt;String&gt; list, String str)</code> - Join a string list with a delimiter</li>
 <li><code>join(List&lt;String&gt; list, String tpl, String str)</code> - Format and join a string list</li>
 </ol>
+<p>Array and list overloads serialize a <code>null</code> element as an empty string.</p>
 <h3>3. Templating</h3>
 <ol>
 <li><code>simpleTpl(String template, Map&lt;String, Object&gt; params)</code> - <code>${var}</code> replacement</li>
 <li><code>simpleTpl2(String template, Map&lt;String, Object&gt; data)</code> - <code>#{var}</code> replacement</li>
 <li><code>simpleTpl(String template, Object data)</code> - JavaBean property replacement</li>
 </ol>
-<p>Replacement values are treated literally, so <code>$</code> and <code>\</code> are safe in values.</p>
+<p>Replacement values are treated literally, so <code>$</code> and <code>\</code> are safe in values. JavaBean templating skips write-only
+properties. If a getter fails, the thrown <code>RuntimeException</code> identifies the property and retains the getter failure
+as its cause.</p>
 <h3>4. Utilities</h3>
 <ol>
 <li><code>charCount(String str, String _char)</code> - Count occurrences, including overlapping matches</li>

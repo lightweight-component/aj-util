@@ -120,8 +120,8 @@ if (field != null &amp;&amp; !field.isAccessible())
 <p><code>getUnderLayerErr(Throwable)</code> unwraps nested <code>InvocationTargetException</code> and
 <code>UndeclaredThrowableException</code> instances. A wrapper without a cause is returned unchanged; a <code>null</code> input is
 rejected with <code>IllegalArgumentException</code>.</p>
-<p><code>getUnderLayerErrMsg(Throwable)</code> returns the unwrapped exception text without its leading class name. If an
-exception has no detail message, <code>Throwable.toString()</code> contains no colon and the class name is currently retained.</p>
+<p><code>getUnderLayerErrMsg(Throwable)</code> returns the unwrapped exception's detail message directly. It returns an empty
+string when the exception has no detail message, so an exception class name is never mistaken for message text.</p>
 
             </article>
         </div>

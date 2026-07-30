@@ -142,14 +142,17 @@
 <li><code>as(Map&lt;String, K&gt; map, Function&lt;K, T&gt; fn)</code> - Convert Map values using a function</li>
 <li><code>as(Map&lt;String, String[]&gt; map)</code> - Convert Map with String[] values to Map&lt;String, Object&gt;</li>
 </ol>
-<h3>5. <code>deepCopy()</code> (shallow copy)</h3>
-<p>Despite its historical name, <code>deepCopy(Map&lt;T, K&gt; map)</code> creates a new <code>HashMap</code> but does not clone nested mutable values.</p>
+<h3>5. <code>shallowCopy()</code></h3>
+<p><code>shallowCopy(Map&lt;T, K&gt; map)</code> creates a new <code>HashMap</code> containing the same keys and values. Nested maps,
+collections, arrays, and objects remain shared references.</p>
 <h3>6. XML Conversion Methods</h3>
 <ol>
 <li><code>beanToXml(Object bean)</code> - Convert Java bean to XML string</li>
 <li><code>mapToXml(Map&lt;String, ?&gt; data)</code> - Convert Map to XML string</li>
 <li><code>xmlToMap(String strXML)</code> - Convert XML string to Map</li>
 </ol>
+<p><code>mapToXml</code> preserves value whitespace. Every key must be a valid XML element name; an invalid key causes
+<code>IllegalArgumentException</code> whose message identifies that key.</p>
 <h2>Usage Examples</h2>
 <h3>Joining Map Entries</h3>
 <pre><code class="language-java">Map&lt;String, String&gt; map = new HashMap&lt;&gt;();

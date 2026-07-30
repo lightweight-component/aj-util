@@ -3,7 +3,10 @@ package com.ajaxjs.util.io;
 import com.ajaxjs.util.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -24,7 +27,7 @@ public class Resources {
      * @param resource 文件名称，输入空字符串这返回 Classpath 根目录
      * @param isDecode 是否解码
      * @return 所在工程路径和资源路径
-     * @throws IllegalArgumentException 如果资源不存在
+     * @throws IllegalArgumentException      如果资源不存在
      * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClasspath(String resource, boolean isDecode) {
@@ -45,7 +48,7 @@ public class Resources {
      * @param clz      类引用
      * @param resource 资源文件名
      * @return 当前类的绝对路径
-     * @throws IllegalArgumentException 如果资源不存在
+     * @throws IllegalArgumentException      如果资源不存在
      * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClass(Class<?> clz, String resource) {
@@ -59,7 +62,7 @@ public class Resources {
      * @param resource 资源文件名
      * @param isDecode 是否解码
      * @return 当前类的绝对路径
-     * @throws IllegalArgumentException 如果资源不存在
+     * @throws IllegalArgumentException      如果资源不存在
      * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClass(Class<?> clz, String resource, boolean isDecode) {
@@ -71,7 +74,7 @@ public class Resources {
      *
      * @param resource 文件名称，输入空字符串这返回 Classpath 根目录。可以支持包目录，例如  com\\foo\\new-file.txt
      * @return 所在工程路径和资源路径
-     * @throws IllegalArgumentException 如果资源不存在
+     * @throws IllegalArgumentException      如果资源不存在
      * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClasspath(String resource) {
@@ -88,12 +91,13 @@ public class Resources {
      * @param url      The URL object to convert
      * @param isDecode Whether to decode URL-encoded characters in the path
      * @return The converted file system path
-     * @throws IllegalArgumentException if the URL is null
+     * @throws IllegalArgumentException      if the URL is null
      * @throws UnsupportedOperationException if the URL does not use the file protocol
      */
     private static String url2path(URL url, boolean isDecode) {
         if (url == null)
             throw new IllegalArgumentException("Resource URL must not be null.");
+
         if (!"file".equalsIgnoreCase(url.getProtocol()))
             throw new UnsupportedOperationException("Resource is not a file-system resource: " + url);
 
@@ -179,7 +183,7 @@ public class Resources {
             assert files != null;
             for (File file : files) {
                 if (file.isFile()) // 是否为普通文件（非目录）
-                    System.out.println(file.getName());
+                    log.info(file.getName());
             }
         }
     }
@@ -194,8 +198,7 @@ public class Resources {
         Properties prop = new Properties();
 
         try (InputStream input = getResource(filename)) {
-            // 加载输入流中的键值对到 Properties 对象
-            prop.load(input);
+            prop.load(input);// 加载输入流中的键值对到 Properties 对象
 
             return prop;
         } catch (IOException e) {

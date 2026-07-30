@@ -106,8 +106,9 @@
             <article class="aj-text chinese">
                 <h1>Types</h1>
 <p><code>Types</code> 类提供了检索泛型类型信息、转换类型以及处理参数化类型的方法。这些方法有助于在运行时高效、方便地操作 Java 类型。</p>
-<p>解析范围有限：<code>type2class(Type)</code> 处理 <code>Class</code> 和 <code>ParameterizedType</code>；
-<code>TypeVariable</code>、<code>WildcardType</code> 和 <code>GenericArrayType</code> 当前返回 <code>null</code>。</p>
+<p><code>type2class(Type)</code> 支持所有标准反射 <code>Type</code> 实现。类型变量通过唯一上界解析；上界通配符和无界通配符
+通过唯一上界解析；泛型数组会先解析组件类型。下界通配符或多个上界不能确定唯一类，因此会抛出
+<code>IllegalArgumentException</code>。</p>
 <h2>方法</h2>
 <h3>1. <code>getActualType(Type type)</code></h3>
 <p>检索参数化类型的实际类型参数。</p>
@@ -163,9 +164,8 @@ Type[] actualType = Types.getGenericReturnType(method);
 </ul>
 </li>
 <li><strong>返回值:</strong> 返回类型的第一个实际类型参数作为 <code>Class</code>，如果返回类型不是参数化的，则返回 <code>null</code>。</li>
+<li><strong>异常:</strong> 参数化返回类型不包含实际类型参数时抛出 <code>IllegalArgumentException</code>。</li>
 </ul>
-<p>该方法假设 <code>ParameterizedType</code> 至少包含一个类型参数。异常的自定义实现若返回空参数数组，会触发
-<code>ArrayIndexOutOfBoundsException</code>。</p>
 <p><strong>示例:</strong></p>
 <pre><code class="language-java">Method method = TestTypes.class.getMethod(&quot;getList2&quot;);
 Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
@@ -207,14 +207,23 @@ Types.getActualClass(String.class);
 // 抛出 IllegalArgumentException，不再发生 NullPointerException
 </code></pre>
 <h3>6. <code>type2class(Type type)</code></h3>
-<p>将 <code>Type</code> 转换为 <code>Class</code>。如果输入是 <code>ParameterizedType</code>，会递归解析它的原始类型。</p>
+<p>按照以下规则将 <code>Type</code> 转换为 <code>Class</code>：</p>
+<ul>
+<li><code>Class</code>：直接返回；</li>
+<li><code>ParameterizedType</code>：解析其原始类型；</li>
+<li><code>TypeVariable</code>：解析其唯一上界；</li>
+<li><code>WildcardType</code>：没有下界时解析其唯一上界；</li>
+<li><code>GenericArrayType</code>：解析组件类型并返回对应的数组类。</li>
+</ul>
 <ul>
 <li><strong>参数说明：</strong>
 <ul>
 <li><code>type</code>: 要转换的 <code>Type</code>。</li>
 </ul>
 </li>
-<li><strong>返回值:</strong> <code>Type</code> 的 <code>Class</code> 表示；无法解析为 <code>Class</code> 时返回 <code>null</code>。</li>
+<li><strong>返回值:</strong> <code>Type</code> 的 <code>Class</code> 表示；输入为 <code>null</code> 时返回 <code>null</code>。</li>
+<li><strong>异常:</strong> 类型不受支持或不能唯一解析时抛出 <code>IllegalArgumentException</code>，包括下界通配符以及具有多个
+上界的类型变量。</li>
 </ul>
 <p><strong>示例:</strong></p>
 <pre><code class="language-java">Type type = String.class;

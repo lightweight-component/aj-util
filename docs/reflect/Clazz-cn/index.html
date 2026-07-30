@@ -107,8 +107,8 @@
                 <h1>Clazz</h1>
 <p><code>Clazz</code> 提供类加载和类型层次检查功能。对象实例化已经独立到 <code>NewInstance</code>。</p>
 <h2>加载类</h2>
-<p><code>getClassByName(String)</code> 根据完整类名加载类；找不到类时抛出 <code>RuntimeException</code>，当前包装异常不会
-保留 <code>ClassNotFoundException</code> 作为 cause。泛型重载还会验证类型是否兼容：</p>
+<p><code>getClassByName(String)</code> 根据完整类名加载类；找不到类时抛出 <code>RuntimeException</code>，并将原始
+<code>ClassNotFoundException</code> 保留为 cause。泛型重载还会验证类型是否兼容：</p>
 <pre><code class="language-java">Class&lt;CharSequence&gt; type =
         Clazz.getClassByName(&quot;java.lang.String&quot;, CharSequence.class);
 
@@ -118,7 +118,8 @@ Clazz.getClassByName(&quot;java.lang.String&quot;, Number.class);
 <p>目标类型为 <code>null</code> 时抛出 <code>IllegalArgumentException</code>。</p>
 <h2>将参数转换为类</h2>
 <p><code>args2class(Object[])</code> 返回每个参数的运行时类型。参数数组为 <code>null</code> 或空数组时返回 <code>null</code>。
-数组内的单个 <code>null</code> 元素不受支持；参数值为 <code>null</code> 时应显式传入 <code>Class&lt;?&gt;[]</code>。</p>
+数组内的单个 <code>null</code> 元素会触发 <code>IllegalArgumentException</code>，异常会指出元素索引；参数值为 <code>null</code>
+时应显式传入 <code>Class&lt;?&gt;[]</code>。</p>
 <pre><code class="language-java">Class&lt;?&gt;[] types = Clazz.args2class(new Object[]{&quot;text&quot;, 1});
 // [String.class, Integer.class]
 </code></pre>
@@ -129,10 +130,10 @@ Clazz.getClassByName(&quot;java.lang.String&quot;, Number.class);
 <pre><code class="language-java">Class&lt;?&gt;[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
 Class&lt;?&gt;[] parents = Clazz.getAllSuperClass(ArrayList.class);
 </code></pre>
-<p><code>getClassByInterface(Type)</code> 根据 <code>Type.toString()</code> 推导类名，只适用于可以直接解析的类或参数化接口
-类型；类型变量、通配符和泛型数组不能可靠解析。</p>
-<p>各层次方法目前没有统一的 <code>null</code> 策略：<code>getAllSuperClass(null)</code> 会抛出 <code>NullPointerException</code>，
-而 <code>getDeclaredInterface(null)</code> 当前返回空数组。</p>
+<p><code>getClassByInterface(Type)</code> 直接委托给 <code>Types.type2class(Type)</code>，不再解析 <code>Type.toString()</code> 的展示
+字符串。因此它对类、参数化类型、类型变量、通配符和泛型数组遵循相同规则；不能唯一解析的类型会
+抛出 <code>IllegalArgumentException</code>。</p>
+<p>两个层次方法都对 null 类参数抛出 <code>IllegalArgumentException</code>。</p>
 
             </article>
         </div>

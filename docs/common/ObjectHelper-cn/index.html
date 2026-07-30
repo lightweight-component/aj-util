@@ -176,6 +176,8 @@ Map&lt;String, String&gt; map3 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;valu
 // 创建指定容量的映射
 Map&lt;String, String&gt; map4 = ObjectHelper.mapOf(10); // 优化容量的HashMap
 </code></pre>
+<p><code>getInitialCapacity(int)</code> 使用不会溢出的容量计算。负数会触发 <code>IllegalArgumentException</code>；超过
+<code>HashMap</code> 实用上限的容量会饱和为 <code>1 &lt;&lt; 30</code>。</p>
 <h4>2. 创建列表</h4>
 <pre><code class="language-java">// 创建不可变列表
 List&lt;String&gt; list1 = ObjectHelper.listOf(&quot;item1&quot;);

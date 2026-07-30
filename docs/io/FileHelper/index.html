@@ -153,7 +153,7 @@ List&lt;String&gt; contents = new FileHelper(&quot;directory&quot;).listDirector
 // Create directory (supports multi-level directories)
 new FileHelper(&quot;new/directory/path&quot;).createDirectory();
 
-// Get file or directory size
+// Get one path's metadata size (not recursive directory content size)
 long size = new FileHelper(&quot;file-or-directory&quot;).getFileSize();
 </code></pre>
 <h3>6. File Copying and Moving</h3>

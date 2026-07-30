@@ -116,7 +116,7 @@
 <li>ZIP extraction with Zip Slip, symbolic-link, entry-count, size, and compression-ratio protection</li>
 <li>File and directory compression (with STORED or DEFLATED options)</li>
 <li>Recursive directory compression</li>
-<li>ZIP file detection (magic number check)</li>
+<li>ZIP file detection by opening and validating the archive structure, including empty ZIPs</li>
 <li>Buffered CRC32 calculation for STORED entries</li>
 <li>Automatic directory creation</li>
 </ul>
@@ -155,6 +155,7 @@ ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // Use DEFLATED compre
 <h3>ZIP File Detection</h3>
 <pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
 </code></pre>
+<p>Missing files, directories, and malformed archives return <code>false</code>.</p>
 <h3>Directory Creation</h3>
 <pre><code class="language-java">ZipHelper.initFolder(&quot;C:/new/path/file.txt&quot;); // Creates C:/new/path if needed
 </code></pre>

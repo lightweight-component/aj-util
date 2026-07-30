@@ -179,6 +179,8 @@ Map&lt;String, String&gt; map3 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;valu
 // Create map with specified capacity
 Map&lt;String, String&gt; map4 = ObjectHelper.mapOf(10); // HashMap with optimized capacity
 </code></pre>
+<p><code>getInitialCapacity(int)</code> uses overflow-safe capacity calculation. Negative sizes cause
+<code>IllegalArgumentException</code>; capacities exceeding the practical <code>HashMap</code> limit saturate at <code>1 &lt;&lt; 30</code>.</p>
 <h4>2. Creating Lists</h4>
 <pre><code class="language-java">// Create immutable list
 List&lt;String&gt; list1 = ObjectHelper.listOf(&quot;item1&quot;);

@@ -152,6 +152,8 @@ ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // 使用 DEFLATED 压
 <h3>ZIP 文件检测</h3>
 <pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
 </code></pre>
+<p>检测通过打开并校验 ZIP 结构完成，因此也支持合法的空 ZIP。文件不存在、路径是目录或压缩包损坏时
+返回 <code>false</code>。</p>
 <h3>目录创建</h3>
 <pre><code class="language-java">ZipHelper.initFolder(&quot;C:/new/path/file.txt&quot;); // 如果需要则创建 C:/new/path
 </code></pre>
