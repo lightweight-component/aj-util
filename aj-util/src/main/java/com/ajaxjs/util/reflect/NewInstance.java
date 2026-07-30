@@ -27,6 +27,9 @@ public class NewInstance<T> {
      * @param clz 要创建实例的类对象
      */
     public NewInstance(Class<T> clz) {
+        if (clz == null)
+            throw new IllegalArgumentException("Class must not be null.");
+
         if (clz.isInterface())
             throw new IllegalArgumentException("所传递的 class 类型参数为接口 " + clz + "，无法实例化");
 
@@ -87,8 +90,12 @@ public class NewInstance<T> {
      * @param args        Optional arguments for the constructor 获取指定参数类型的构造函数，这里传入我们想调用的构造函数所需的参数。可以不传。
      * @param <T>         The class reference type 类引用
      * @return The created object instance 对象实例
+     * @throws IllegalArgumentException if constructor is null
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
+        if (constructor == null)
+            throw new IllegalArgumentException("Constructor must not be null.");
+
         try {
             return ObjectHelper.isEmpty(args) ? constructor.newInstance() : constructor.newInstance(args);
         } catch (IllegalAccessException e) {
@@ -113,8 +120,12 @@ public class NewInstance<T> {
      * @param argClz 指定构造函数的参数类型，这里传入我们想调用的构造函数所需的参数类型
      * @param <T>    类引用
      * @return 类的构造器
+     * @throws IllegalArgumentException 如果 clz 为 null
      */
     public static <T> Constructor<T> getConstructor(Class<T> clz, Class<?>... argClz) {
+        if (clz == null)
+            throw new IllegalArgumentException("Class must not be null.");
+
         try {
             return argClz != null ? clz.getConstructor(argClz) : clz.getConstructor();
         } catch (NoSuchMethodException e) {
@@ -133,8 +144,12 @@ public class NewInstance<T> {
      *
      * @param clz The class object to check
      * @return true if the class has at least one constructor with parameters
+     * @throws IllegalArgumentException if clz is null
      */
     public static boolean hasArgsCon(Class<?> clz) {
+        if (clz == null)
+            throw new IllegalArgumentException("Class must not be null.");
+
         Constructor<?>[] constructors = clz.getConstructors();
 
         for (Constructor<?> constructor : constructors) {

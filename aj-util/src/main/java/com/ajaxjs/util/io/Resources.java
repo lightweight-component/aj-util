@@ -1,12 +1,12 @@
 package com.ajaxjs.util.io;
 
 import com.ajaxjs.util.CommonConstant;
-import com.ajaxjs.util.UrlEncode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -23,14 +23,16 @@ public class Resources {
      *
      * @param resource 文件名称，输入空字符串这返回 Classpath 根目录
      * @param isDecode 是否解码
-     * @return 所在工程路径+资源路径，找不到文件则返回 null
+     * @return 所在工程路径和资源路径
+     * @throws IllegalArgumentException 如果资源不存在
+     * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClasspath(String resource, boolean isDecode) {
         URL url = Resources.class.getClassLoader().getResource(resource);
 
         if (url == null) {
             log.warn("The resource " + resource + " not found");
-            throw new RuntimeException("The resource " + resource + " not found");
+            throw new IllegalArgumentException("Resource not found: " + resource);
         }
 
         return url2path(url, isDecode);
@@ -42,7 +44,9 @@ public class Resources {
      *
      * @param clz      类引用
      * @param resource 资源文件名
-     * @return 当前类的绝对路径，找不到文件则返回 null
+     * @return 当前类的绝对路径
+     * @throws IllegalArgumentException 如果资源不存在
+     * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClass(Class<?> clz, String resource) {
         return getResourcesFromClass(clz, resource, true);
@@ -54,7 +58,9 @@ public class Resources {
      * @param clz      类引用
      * @param resource 资源文件名
      * @param isDecode 是否解码
-     * @return 当前类的绝对路径，找不到文件则返回 null
+     * @return 当前类的绝对路径
+     * @throws IllegalArgumentException 如果资源不存在
+     * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClass(Class<?> clz, String resource, boolean isDecode) {
         return url2path(clz.getResource(resource), isDecode);
@@ -64,7 +70,9 @@ public class Resources {
      * 获取 Classpath 根目录下的资源文件
      *
      * @param resource 文件名称，输入空字符串这返回 Classpath 根目录。可以支持包目录，例如  com\\foo\\new-file.txt
-     * @return 所在工程路径+资源路径，找不到文件则返回 null
+     * @return 所在工程路径和资源路径
+     * @throws IllegalArgumentException 如果资源不存在
+     * @throws UnsupportedOperationException 如果资源不是普通文件 URL
      */
     public static String getResourcesFromClasspath(String resource) {
         return getResourcesFromClasspath(resource, true);
@@ -79,23 +87,21 @@ public class Resources {
      *
      * @param url      The URL object to convert
      * @param isDecode Whether to decode URL-encoded characters in the path
-     * @return The converted file system path, or null if the URL is null
+     * @return The converted file system path
+     * @throws IllegalArgumentException if the URL is null
+     * @throws UnsupportedOperationException if the URL does not use the file protocol
      */
     private static String url2path(URL url, boolean isDecode) {
         if (url == null)
-            return null;
+            throw new IllegalArgumentException("Resource URL must not be null.");
+        if (!"file".equalsIgnoreCase(url.getProtocol()))
+            throw new UnsupportedOperationException("Resource is not a file-system resource: " + url);
 
-        String path;
-
-        if (isDecode)
-            path = new UrlEncode(new File(url.getPath()).toString()).decode();
-        else {
-            path = url.getPath();
-            path = path.startsWith("/") ? path.substring(1) : path;
+        try {
+            return isDecode ? Paths.get(url.toURI()).toString() : Paths.get(url.getPath()).toString();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid resource URL: " + url, e);
         }
-
-        // path = path.replaceAll("file:\\", "");
-        return path;
     }
 
     /**
@@ -119,11 +125,6 @@ public class Resources {
      */
     public static String getResourceText(String path) {
         try (InputStream in = getResource(path)) {
-            if (in == null) {
-                System.err.println(getResourcesFromClasspath(CommonConstant.EMPTY_STRING) + " 下没有资源文件 " + path);
-                return null;
-            }
-
             return new DataReader(in).readAsString();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -139,10 +140,16 @@ public class Resources {
      * 主要用于简化资源文件的读取过程，避免直接操作文件系统或处理类路径的问题
      *
      * @param path 资源的路径。可以是类路径上的相对路径或文件系统中的绝对路径
-     * @return 找到的资源的输入流，如果找不到则返回 null
+     * @return 找到的资源输入流
+     * @throws IllegalArgumentException 如果资源不存在
      */
     public static InputStream getResource(String path) {
-        return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+
+        if (in == null)
+            throw new IllegalArgumentException("Resource not found: " + path);
+
+        return in;
     }
 
     /**
@@ -187,14 +194,10 @@ public class Resources {
         Properties prop = new Properties();
 
         try (InputStream input = getResource(filename)) {
-            if (input == null)
-                throw new FileNotFoundException();
             // 加载输入流中的键值对到 Properties 对象
             prop.load(input);
 
             return prop;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Properties File not found " + filename, e);
         } catch (IOException e) {
             throw new RuntimeException("Properties File error " + filename, e);
         }

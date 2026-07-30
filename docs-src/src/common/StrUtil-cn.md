@@ -31,13 +31,16 @@ layout: layouts/aj-util-cn.njk
 2. `join(List<String> list, String str)` - 使用分隔符连接字符串列表
 3. `join(List<String> list, String tpl, String str)` - 格式化并连接字符串列表
 
+数组和列表重载都将 `null` 元素输出为空字符串。
+
 ### 3. 模板
 
 1. `simpleTpl(String template, Map<String, Object> params)` - `${var}` 替换
 2. `simpleTpl2(String template, Map<String, Object> data)` - `#{var}` 替换
 3. `simpleTpl(String template, Object data)` - JavaBean 属性替换
 
-替换值按字面量处理，值中包含 `$` 或 `\` 也不会被解释为分组引用。
+替换值按字面量处理，值中包含 `$` 或 `\` 也不会被解释为分组引用。JavaBean 模板会跳过只写属性；
+getter 执行失败时，抛出的 `RuntimeException` 会指出属性名并保留 getter 异常作为 cause。
 
 ### 4. 实用工具
 

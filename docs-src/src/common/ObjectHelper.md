@@ -104,6 +104,9 @@ Map<String, String> map3 = ObjectHelper.mapOf("key1", "value1", "key2", "value2"
 Map<String, String> map4 = ObjectHelper.mapOf(10); // HashMap with optimized capacity
 ```
 
+`getInitialCapacity(int)` uses overflow-safe capacity calculation. Negative sizes cause
+`IllegalArgumentException`; capacities exceeding the practical `HashMap` limit saturate at `1 << 30`.
+
 
 #### 2. Creating Lists
 ```java

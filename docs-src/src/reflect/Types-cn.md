@@ -12,8 +12,9 @@ layout: layouts/aj-util-cn.njk
 
 `Types` 类提供了检索泛型类型信息、转换类型以及处理参数化类型的方法。这些方法有助于在运行时高效、方便地操作 Java 类型。
 
-解析范围有限：`type2class(Type)` 处理 `Class` 和 `ParameterizedType`；
-`TypeVariable`、`WildcardType` 和 `GenericArrayType` 当前返回 `null`。
+`type2class(Type)` 支持所有标准反射 `Type` 实现。类型变量通过唯一上界解析；上界通配符和无界通配符
+通过唯一上界解析；泛型数组会先解析组件类型。下界通配符或多个上界不能确定唯一类，因此会抛出
+`IllegalArgumentException`。
 
 ## 方法
 
@@ -71,9 +72,7 @@ Type[] actualType = Types.getGenericReturnType(method);
 * **参数说明：**
     * `method`: 要从中检索返回类型的类型。
 * **返回值:** 返回类型的第一个实际类型参数作为 `Class`，如果返回类型不是参数化的，则返回 `null`。
-
-该方法假设 `ParameterizedType` 至少包含一个类型参数。异常的自定义实现若返回空参数数组，会触发
-`ArrayIndexOutOfBoundsException`。
+* **异常:** 参数化返回类型不包含实际类型参数时抛出 `IllegalArgumentException`。
 
 **示例:**
 
@@ -122,11 +121,19 @@ Types.getActualClass(String.class);
 
 ### 6. `type2class(Type type)`
 
-将 `Type` 转换为 `Class`。如果输入是 `ParameterizedType`，会递归解析它的原始类型。
+按照以下规则将 `Type` 转换为 `Class`：
+
+- `Class`：直接返回；
+- `ParameterizedType`：解析其原始类型；
+- `TypeVariable`：解析其唯一上界；
+- `WildcardType`：没有下界时解析其唯一上界；
+- `GenericArrayType`：解析组件类型并返回对应的数组类。
 
 * **参数说明：**
     * `type`: 要转换的 `Type`。
-* **返回值:** `Type` 的 `Class` 表示；无法解析为 `Class` 时返回 `null`。
+* **返回值:** `Type` 的 `Class` 表示；输入为 `null` 时返回 `null`。
+* **异常:** 类型不受支持或不能唯一解析时抛出 `IllegalArgumentException`，包括下界通配符以及具有多个
+  上界的类型变量。
 
 **示例:**
 

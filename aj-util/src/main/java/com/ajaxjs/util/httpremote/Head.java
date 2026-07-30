@@ -2,6 +2,7 @@ package com.ajaxjs.util.httpremote;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -105,18 +106,19 @@ public class Head extends Request {
      *
      * @param conn HTTP connection object
      * @param in   Original input stream
-     * @return GZIPInputStream if Content-Encoding is gzip, otherwise null
+     * @return GZIPInputStream if Content-Encoding is gzip, otherwise the original stream
+     * @throws UncheckedIOException if gzip data is malformed or cannot be read
      */
     public static InputStream gzip(HttpURLConnection conn, InputStream in) {
         if ("gzip".equals(conn.getHeaderField("Content-Encoding"))) {
             try {
                 return new GZIPInputStream(in);
             } catch (IOException e) {
-                // Logging commented out in original code
+                throw new UncheckedIOException("Invalid gzip stream.", e);
             }
         }
 
-        return null;
+        return in;
     }
 
     /**

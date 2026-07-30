@@ -7,12 +7,27 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestTypes {
+    static class GenericOwner<T> {
+        class NonGenericInner {
+        }
+    }
+
+    static class GenericTypes<T extends Number, M extends Number & Comparable<M>> {
+        T value;
+        T[] values;
+        List<? extends Number> upper;
+        List<? super Integer> lower;
+        List<?> any;
+        M multiple;
+    }
+
     static class StringList extends ArrayList<String> {
     }
 
@@ -45,6 +60,10 @@ class TestTypes {
         return null;
     }
 
+    public GenericOwner<String>.NonGenericInner getParameterizedOwnerOnly() {
+        return null;
+    }
+
     @Test
     void testGetActualType() {
         Type[] actualType = Types.getActualType(type);
@@ -69,6 +88,12 @@ class TestTypes {
         assertEquals(String.class, Types.getGenericFirstReturnType(method));
         assertNull(Types.getGenericFirstReturnType(TestTypes.class.getMethod("getPlainString")));
         assertEquals(List.class, Types.getGenericFirstReturnType(TestTypes.class.getMethod("getNestedList")));
+
+        IllegalArgumentException error = assertThrows(
+                IllegalArgumentException.class,
+                () -> Types.getGenericFirstReturnType(TestTypes.class.getMethod("getParameterizedOwnerOnly"))
+        );
+        assertTrue(error.getMessage().contains("has no actual type arguments"));
     }
 
     @Test
@@ -110,5 +135,35 @@ class TestTypes {
         assertEquals(List.class, actualClass);
         assertEquals(String.class, Types.type2class(String.class));
         assertNull(Types.type2class(null));
+    }
+
+    @Test
+    void resolvesTypeVariablesWildcardsAndGenericArrays() throws NoSuchFieldException {
+        Type variable = GenericTypes.class.getDeclaredField("value").getGenericType();
+        Type array = GenericTypes.class.getDeclaredField("values").getGenericType();
+        Type upper = firstTypeArgument("upper");
+        Type any = firstTypeArgument("any");
+
+        assertEquals(Number.class, Types.type2class(variable));
+        assertEquals(Number[].class, Types.type2class(array));
+        assertEquals(Number.class, Types.type2class(upper));
+        assertEquals(Object.class, Types.type2class(any));
+    }
+
+    @Test
+    void rejectsTypesWithoutOneUniqueResolution() throws NoSuchFieldException {
+        Type lower = firstTypeArgument("lower");
+        Type multiple = GenericTypes.class.getDeclaredField("multiple").getGenericType();
+
+        assertInstanceOf(WildcardType.class, lower);
+        assertThrows(IllegalArgumentException.class, () -> Types.type2class(lower));
+        assertThrows(IllegalArgumentException.class, () -> Types.type2class(multiple));
+    }
+
+    private static Type firstTypeArgument(String fieldName) throws NoSuchFieldException {
+        ParameterizedType fieldType =
+                (ParameterizedType) GenericTypes.class.getDeclaredField(fieldName).getGenericType();
+
+        return fieldType.getActualTypeArguments()[0];
     }
 }

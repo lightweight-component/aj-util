@@ -81,7 +81,21 @@ BatchDownload downloader = new BatchDownload(urls, "/downloads",
     () -> "custom_" + System.currentTimeMillis());
     
 downloader.start();
+String[] downloadedNames = downloader.getFileNames();
 ```
+
+The input URL array is copied and is never overwritten. Result names are stored separately and use
+`Path.getFileName()`, so Unix and Windows paths are handled consistently.
+
+## Multipart file upload
+
+`FileUpload.upload(...)` creates a random boundary for every request, encodes headers and text fields as UTF-8,
+and streams `File` values to the connection. Empty multipart maps and invalid field names are rejected explicitly;
+null field values are serialized as empty text fields. `writeFormData(...)` exposes the same streaming encoder for
+custom transports.
+
+`Head.gzip(...)` returns the original stream when the response is not gzip encoded. Invalid gzip content causes
+`UncheckedIOException` with the original `IOException` as its cause.
 
 # SSL Certificate Utility
 

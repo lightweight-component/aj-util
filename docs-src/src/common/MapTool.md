@@ -53,15 +53,19 @@ Two methods for Map conversion:
 1. `as(Map<String, K> map, Function<K, T> fn)` - Convert Map values using a function
 2. `as(Map<String, String[]> map)` - Convert Map with String[] values to Map<String, Object>
 
-### 5. `deepCopy()` (shallow copy)
+### 5. `shallowCopy()`
 
-Despite its historical name, `deepCopy(Map<T, K> map)` creates a new `HashMap` but does not clone nested mutable values.
+`shallowCopy(Map<T, K> map)` creates a new `HashMap` containing the same keys and values. Nested maps,
+collections, arrays, and objects remain shared references.
 
 ### 6. XML Conversion Methods
 
 1. `beanToXml(Object bean)` - Convert Java bean to XML string
 2. `mapToXml(Map<String, ?> data)` - Convert Map to XML string
 3. `xmlToMap(String strXML)` - Convert XML string to Map
+
+`mapToXml` preserves value whitespace. Every key must be a valid XML element name; an invalid key causes
+`IllegalArgumentException` whose message identifies that key.
 
 ## Usage Examples
 

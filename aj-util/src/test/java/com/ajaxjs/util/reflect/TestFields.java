@@ -99,6 +99,7 @@ class TestFields {
         InvocationTargetException wrapper = new InvocationTargetException(null);
 
         assertSame(wrapper, Fields.getUnderLayerErr(wrapper));
+        assertEquals("", Fields.getUnderLayerErrMsg(wrapper));
         assertThrows(IllegalArgumentException.class, () -> Fields.getUnderLayerErr(null));
     }
 }

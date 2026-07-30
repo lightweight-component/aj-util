@@ -76,7 +76,7 @@ List<String> contents = new FileHelper("directory").listDirectoryContents();
 // Create directory (supports multi-level directories)
 new FileHelper("new/directory/path").createDirectory();
 
-// Get file or directory size
+// Get one path's metadata size (not recursive directory content size)
 long size = new FileHelper("file-or-directory").getFileSize();
 ```
 

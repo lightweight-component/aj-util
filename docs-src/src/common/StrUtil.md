@@ -31,13 +31,17 @@ The `StrUtil` class contains static methods for counting, padding, templating, j
 2. `join(List<String> list, String str)` - Join a string list with a delimiter
 3. `join(List<String> list, String tpl, String str)` - Format and join a string list
 
+Array and list overloads serialize a `null` element as an empty string.
+
 ### 3. Templating
 
 1. `simpleTpl(String template, Map<String, Object> params)` - `${var}` replacement
 2. `simpleTpl2(String template, Map<String, Object> data)` - `#{var}` replacement
 3. `simpleTpl(String template, Object data)` - JavaBean property replacement
 
-Replacement values are treated literally, so `$` and `\` are safe in values.
+Replacement values are treated literally, so `$` and `\` are safe in values. JavaBean templating skips write-only
+properties. If a getter fails, the thrown `RuntimeException` identifies the property and retains the getter failure
+as its cause.
 
 ### 4. Utilities
 

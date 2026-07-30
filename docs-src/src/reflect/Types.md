@@ -13,8 +13,10 @@ layout: layouts/aj-util.njk
 The `Types` class provides methods for retrieving generic type information, converting types, and handling parameterized
 types. These methods facilitate efficient and convenient manipulation of Java types at runtime.
 
-Resolution is intentionally limited: `type2class(Type)` handles `Class` and `ParameterizedType`.
-`TypeVariable`, `WildcardType`, and `GenericArrayType` currently return `null`.
+`type2class(Type)` handles all standard reflection `Type` implementations. Type variables resolve through their
+single upper bound, upper-bounded and unbounded wildcards resolve through their single upper bound, and generic
+arrays resolve after their component type. A lower-bounded wildcard or multiple upper bounds cannot identify one
+unique class and therefore cause `IllegalArgumentException`.
 
 ## Methods
 
@@ -73,9 +75,7 @@ Retrieves the first actual type argument of a method's return type and converts 
 * **Parameters:**
     * `method`: The method to retrieve the return type from.
 * **Returns:** The first actual type argument as a `Class`, or `null` if the return type is not parameterized.
-
-This method assumes a `ParameterizedType` contains at least one argument. A malformed custom implementation that
-returns an empty argument array causes `ArrayIndexOutOfBoundsException`.
+* **Throws:** `IllegalArgumentException` if a parameterized return type contains no actual type arguments.
 
 **Example:**
 
@@ -124,11 +124,19 @@ Types.getActualClass(String.class);
 
 ### 6. `type2class(Type type)`
 
-Converts a `Type` to a `Class`. If the input is a `ParameterizedType`, its raw type is resolved recursively.
+Converts a `Type` to a `Class` according to these rules:
+
+- `Class`: returned directly;
+- `ParameterizedType`: resolves its raw type;
+- `TypeVariable`: resolves its only upper bound;
+- `WildcardType`: resolves its only upper bound when it has no lower bound;
+- `GenericArrayType`: resolves its component and returns the corresponding array class.
 
 * **Parameters:**
     * `type`: The `Type` to convert.
-* **Returns:** The `Class` representation of the `Type`, or `null` if it cannot be resolved to a `Class`.
+* **Returns:** The `Class` representation of the `Type`, or `null` when the input is `null`.
+* **Throws:** `IllegalArgumentException` when the type is unsupported or has no unique resolution, including
+  lower-bounded wildcards and type variables with multiple upper bounds.
 
 **Example:**
 

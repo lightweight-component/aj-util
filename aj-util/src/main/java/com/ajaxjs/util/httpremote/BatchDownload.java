@@ -22,6 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -41,7 +43,9 @@ public class BatchDownload {
     /**
      * Array of URLs to download
      */
-    private final String[] arr;
+    private final String[] urls;
+
+    private final String[] fileNames;
 
     /**
      * Directory to save downloaded files
@@ -61,9 +65,11 @@ public class BatchDownload {
      * @param newFileNameFn function to generate new file names. If null, original file names are used.
      */
     public BatchDownload(String[] arr, String saveFolder, Supplier<String> newFileNameFn) {
+        if (arr == null)
+            throw new IllegalArgumentException("URL array must not be null.");
         latch = new CountDownLatch(arr.length);
-
-        this.arr = arr;
+        this.urls = arr.clone();
+        this.fileNames = new String[arr.length];
         this.saveFolder = saveFolder;
         this.newFileNameFn = newFileNameFn;
     }
@@ -83,9 +89,7 @@ public class BatchDownload {
             else
                 newFileName = download(HttpConstant.HttpMethod.GET, url, null, saveFolder, newFileNameFn.get());
 
-            String[] _arr = newFileName.split("\\\\");
-            String f = _arr[_arr.length - 1];
-            arr[i] = f;
+            fileNames[i] = getFileNameFromPath(newFileName);
         } finally {
             latch.countDown(); // Decrement latch in all cases, regardless of success or exception
         }
@@ -96,9 +100,9 @@ public class BatchDownload {
      * Spawns a new thread for each download and waits for completion (with timeout).
      */
     public void start() {
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < urls.length; i++) {
             final int j = i;
-            new Thread(() -> exec(arr[j], j)).start();
+            new Thread(() -> exec(urls[j], j)).start();
         }
 
         try {
@@ -107,6 +111,17 @@ public class BatchDownload {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public String[] getFileNames() {
+        return Arrays.copyOf(fileNames, fileNames.length);
+    }
+
+    public static String getFileNameFromPath(String path) {
+        if (path == null || path.isEmpty())
+            throw new IllegalArgumentException("Path must not be null or empty.");
+
+        return Paths.get(path).getFileName().toString();
     }
 
     /**

@@ -131,18 +131,18 @@ class TestMapTool {
     }
 
     @Test
-    void testDeepCopy() {
+    void testShallowCopy() {
         Map<String, Object> child = new HashMap<>();
         child.put("value", "before");
         Map<String, Object> originalMap = new HashMap<>();
         originalMap.put("child", child);
-        Map<String, Object> clonedMap = MapTool.deepCopy(originalMap);
+        Map<String, Object> clonedMap = MapTool.shallowCopy(originalMap);
 
         assertNotSame(originalMap, clonedMap);
-        assertNotSame(originalMap.get("child"), clonedMap.get("child"));
+        assertSame(originalMap.get("child"), clonedMap.get("child"));
 
         child.put("value", "after");
-        assertEquals("before", ((Map<?, ?>) clonedMap.get("child")).get("value"));
+        assertEquals("after", ((Map<?, ?>) clonedMap.get("child")).get("value"));
     }
 
     @Test
@@ -151,6 +151,18 @@ class TestMapTool {
         values.put("text", "  keep me  ");
 
         assertEquals("  keep me  ", Objects.requireNonNull(MapTool.xmlToMap(MapTool.mapToXml(values))).get("text"));
+    }
+
+    @Test
+    void mapToXmlRejectsInvalidElementNamesWithTheKey() {
+        for (String key : Arrays.asList("", "1name", "has space")) {
+            Map<String, Object> values = new HashMap<>();
+            values.put(key, "value");
+
+            IllegalArgumentException error =
+                    assertThrows(IllegalArgumentException.class, () -> MapTool.mapToXml(values));
+            assertTrue(error.getMessage().contains(key));
+        }
     }
 
     @Test

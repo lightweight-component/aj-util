@@ -507,39 +507,24 @@ public class ZipHelper {
     }
 
     /**
-     * 检查给定的字节数组是否为 Zip 文件的魔数。
-     * 魔数是一段特定的字节序列，用于标识文件的类型。
-     * 此方法专门检查 Zip 文件的魔数，该魔数由 PK\03\04 组成。
-     *
-     * @param magicNumber 字节数组，代表待检查的文件的前四个字节。
-     * @return 如果字节数组的前四个字节与 Zip 文件的魔数匹配，则返回 true；否则返回 false。
-     */
-    private static boolean isZipFile(byte[] magicNumber) {
-        // 比较字节数组的前四个字
-        return magicNumber != null && magicNumber.length >= 4  &&
-                magicNumber[0] == 0x50 && magicNumber[1] == 0x4b && magicNumber[2] == 0x03 && magicNumber[3] == 0x04;
-    }
-
-//    private static final String ZIP_MAGIC_NUMBER = "504B0304";
-
-    /**
      * 判断给定的文件路径是否为 ZIP 文件。
      *
      * @param filePath 文件路径
      * @return 如果是 ZIP 文件则返回 true，否则返回 false
      */
     public static boolean isZipFile(String filePath) {
-        try (InputStream inputStream = Files.newInputStream(Paths.get(filePath))) {
-            byte[] magicNumber = new byte[4];
+        if (filePath == null)
+            return false;
 
-            if (inputStream.read(magicNumber, 0, 4) == 4)  // 读取到了 4 个字节
-                return magicNumber[0] == 0x50 && magicNumber[1] == 0x4b && magicNumber[2] == 0x03 && magicNumber[3] == 0x04;
-            // ZIP_MAGIC_NUMBER.equalsIgnoreCase(StreamHelper.bytesToHexStr(magicNumber));
+        File file = new File(filePath);
+        if (!file.isFile())
+            return false;
+
+        try (ZipFile ignored = new ZipFile(file)) {
+            return true;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return false;
         }
-
-        return false;
     }
 
     /**

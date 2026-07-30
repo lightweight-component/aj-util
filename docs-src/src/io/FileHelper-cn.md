@@ -75,7 +75,7 @@ List<String> contents = new FileHelper("directory").listDirectoryContents();
 // 创建目录（支持多级目录）
 new FileHelper("new/directory/path").createDirectory();
 
-// 获取文件或目录大小
+// 获取单个路径的元数据大小（不是目录内容的递归总大小）
 long size = new FileHelper("file-or-directory").getFileSize();
 ```
 

@@ -72,6 +72,9 @@ ZipHelper.zipDirectory("C:/data", "backup.zip", true); // 使用 STORED（无压
 boolean isZip = ZipHelper.isZipFile("unknown.zip");
 ```
 
+检测通过打开并校验 ZIP 结构完成，因此也支持合法的空 ZIP。文件不存在、路径是目录或压缩包损坏时
+返回 `false`。
+
 ### 目录创建
 ```java
 ZipHelper.initFolder("C:/new/path/file.txt"); // 如果需要则创建 C:/new/path

@@ -11,12 +11,6 @@
 
 ## `com.ajaxjs.util` 直属类
 
-### 单元测试确认
-
-2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.Test*`：共 105 个测试，100 个通过、
-4 个失败、1 个错误。失败对应下列第 1、2、4、5、10 项。测试已作为回归用例保留，
-生产源码尚未修改。
-
 ### 高优先级
 
 1. `HashHelper.getMac()` 在没有设置 HMAC 密钥时临时生成随机密钥，但既不保存也不返回该密钥。
@@ -26,51 +20,25 @@
    `hash()` 与 `getMac()` 的状态语义。
    单测：`TestHashHelper.macRequiresAnExplicitKey()`。
 
-2. `MapTool.deepCopy()` 实际只执行 `new HashMap<>(map)`，嵌套的 Map、Collection、数组和对象仍与
-   原 Map 共享引用，与方法名和注释中的“深复制”不符。
-   修复方案：实现明确支持范围内的递归复制，或将方法改名为 `shallowCopy()` 并修正文档。
-   单测：`TestMapTool.testDeepCopy()`。
-
 ### 中优先级
 
-3. `ConvertBasicValue` 的整数转换使用 `Number.intValue()`、`longValue()` 等截断式转换。
+2. `ConvertBasicValue` 的整数转换使用 `Number.intValue()`、`longValue()` 等截断式转换。
    超出目标类型范围或把小数转换为整数时不会报错，可能静默产生溢出或精度丢失。
    修复方案：默认使用精确、带范围检查的转换；如需 Java 强制转换语义，另提供名称明确的方法。
 
-4. `MapTool.mapToXml()` 直接把 Map key 当作 XML 元素名。空 key、以数字开头或含空格等非法名称会
-   触发不明确的 `DOMException`；value 还会被 `trim()`，改变原始数据。
-   修复方案：创建节点前校验 XML 名称并报告对应 key，且默认保留 value 的前后空白。
-   单测：`TestMapTool.mapToXmlPreservesValueWhitespace()`。
-
-5. `StrUtil.simpleTpl(String, Object)` 假定每个属性描述符都有 getter。遇到 write-only JavaBean
-   属性时，`getReadMethod()` 返回 `null`，随后调用会空指针。
-   修复方案：跳过没有 read method 的属性，并为 getter 执行失败保留属性名和 cause。
-   单测：`TestStrUtil.simpleTplSkipsWriteOnlyBeanProperties()`。
-
-6. `UrlEncode.encodeSafe()` 的名称暗示 RFC 3986 URL 编码，但实现基于表单编码
+3. `UrlEncode.encodeSafe()` 的名称暗示 RFC 3986 URL 编码，但实现基于表单编码
    `URLEncoder`，仍会编码 `~`，并且不能区分 query、path segment 等不同 URL 组件。
    修复方案：明确它只处理 `application/x-www-form-urlencoded`，或实现真正的 RFC 3986
    component encoder。
 
 ### 低优先级
 
-7. `RegExpUtils.isMatch(Pattern, String)` 内部调用 `Matcher.find()`，而同类方法
+4. `RegExpUtils.isMatch(Pattern, String)` 内部调用 `Matcher.find()`，而同类方法
    `match()` 才调用 `matches()`。“isMatch” 很容易被理解成整串匹配。
    修复方案：统一命名与语义，保留旧方法时标记弃用并在文档中明确是“查找子串”。
 
-8. `StrUtil.join(T[])` 遇到 `null` 元素会空指针，而 List 重载会把它追加成字符串 `"null"`，
-   两个同名 API 的行为不一致。
-   修复方案：统一 null 元素策略，建议允许调用者指定空值文本或默认输出空串。
-
-9. `StringBytes` 在未指定 charset 时存在回退到平台默认字符集的入口，跨机器结果不稳定。
+5. `StringBytes` 在未指定 charset 时存在回退到平台默认字符集的入口，跨机器结果不稳定。
    修复方案：文本与字节互转默认固定为 UTF-8，其他字符集必须显式指定。
-
-10. `ObjectHelper.getInitialCapacity()` 对很大的 `expectedSize` 计算下一次方时发生整数溢出。
-    例如传入 `Integer.MAX_VALUE` 最终返回默认容量 16，完全背离调用者预期，可能导致大型 Map
-    反复扩容。
-    修复方案：先校验非负输入，使用 `long` 计算所需容量，并在超过 HashMap 最大实用容量时饱和到
-    `1 << 30`，避免左移溢出。
-    单测：`TestObjectHelper.initialCapacityDoesNotOverflowForLargeExpectedSize()`。
 
 ## `com.ajaxjs.util.httpremote`
 
@@ -120,31 +88,7 @@
    multipart 分支还是空的 TODO。
    修复方案：不支持的类型立即抛出异常，任何一次 set 调用都不能静默沿用旧数据。
 
-10. `FileUpload.uploadFile()` 接受连接初始化回调 `fn`，但没有使用它，调用者设置请求头或其他连接
-    参数不会生效。
-    修复方案：将回调传给底层 `Request.init(fn)`，并增加验证自定义请求头的测试。
-
-11. `FileUpload` 使用固定 boundary 和平台默认字符集组装 multipart，并把整个文件读入内存。
-    空参数依赖 `assert` 检查，断言关闭时可能空指针；null value 也会直接调用 `toString()`。
-    修复方案：生成随机 boundary，固定 UTF-8，流式写文件内容，并使用普通参数校验。
-
-12. `BatchDownload` 从路径取文件名时只按反斜杠拆分，在 Unix 路径上会得到错误名称；它还会原地
-    改写调用者传入的 URL 数组。
-    修复方案：使用 `Path.getFileName()`，并在内部创建独立结果集合。
-
-### 低优先级
-
-13. `Head.gzip()` 对非 gzip 输入返回 `null`，解压失败也吞掉 `IOException` 后返回 `null`，
-    无法区分“不需要解压”和“解压失败”。
-    修复方案：非 gzip 原样返回输入流；格式损坏则抛出带 cause 的异常。
-
 ## `com.ajaxjs.util.io`
-
-### 单元测试确认
-
-2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.io.Test*`：共 46 个测试，39 个通过、
-7 个失败。失败集中在下列第 1、2、3、5、7 项；`Resources.getResourceText()` 的失败是第 1 项
-经资源读取入口传播的结果，不另列重复问题。测试已作为回归用例保留，生产源码尚未修改。
 
 ### 高优先级
 
@@ -175,32 +119,11 @@
    修复方案：复用修正后的原样文本读取实现。
    单测：`TestFileHelper.readingTextPreservesLineEndingsAndTrailingNewline()`。
 
-6. `FileHelper.getFileSize()` 文档声称可取得文件或目录大小，但对目录只返回目录项自身的文件系统
-   元数据大小，不是目录内容总大小。
-   修复方案：改正文档为“单个路径元数据大小”，或另行实现带符号链接策略的递归目录大小。
-
-7. `ZipHelper.isZipFile()` 只识别 `PK\003\004` 的 local-file-header 签名，合法的空 ZIP
-   （以 `PK\005\006` 开始）会被判断为非 ZIP。
-   修复方案：优先尝试打开 `ZipFile`，或完整识别 ZIP 规范允许的签名并校验结构。
-   单测：`TestZipHelper.testRecognizesRegularAndEmptyZipArchives()`。
-
-8. `CmdHelper.exec(String)` 依赖 `Runtime.exec(String)` 的平台相关分词规则，没有超时，也没有检查
-   进程退出码。带空格/引号的参数容易执行错误，子进程还可能无限运行。
-   修复方案：核心入口接受参数列表并使用 `ProcessBuilder`，支持超时、取消和退出码检查。
-
-9. `Resources` 对“资源不存在”的处理不一致：部分方法返回 `null`，部分方法抛异常，还有方法直接向
-   `stderr` 输出；调用者难以建立稳定错误处理逻辑。
-   修复方案：统一为明确异常或 `Optional`，且不直接写标准错误。
-
 ### 低优先级
 
-10. `DataReader.readStreamAsBytes()` 把同一个复用缓冲区交给回调。回调若异步处理或保存数组引用，
+6. `DataReader.readStreamAsBytes()` 把同一个复用缓冲区交给回调。回调若异步处理或保存数组引用，
     后续读取会覆盖之前的数据。
     修复方案：在契约中明确数组只在回调期间有效，或提供交付独立 byte[] 的安全重载。
-
-11. `Resources.url2path()` 把 classpath URL 直接转成文件系统路径；资源位于 JAR 内时并不存在可用的
-    普通 `Path`。
-    修复方案：文件资源才返回 `Path`，JAR 资源提供 `InputStream`/URL API 或显式挂载文件系统。
 
 ## `com.ajaxjs.util.date`
 
@@ -323,38 +246,6 @@
 5. 按名称执行时，找不到方法最终只抛出 `Method must not be null.`。
    异常没有目标类、方法名和参数类型，难以诊断。
    修复方案：在名称查找入口检测 `null`，抛出包含目标签名的 `IllegalArgumentException`。
-
-6. `Methods.executeStatic()` 在检查 `method == null` 之前调用 `getModifiers()`，会产生不明确的
-   `NullPointerException`；调用静态方法时还传入无意义的 `new Object()` 接收者。
-   修复方案：先做参数校验，并直接使用 `Method.invoke(null, args)`。
-
-7. `Types.type2class()` 只处理 `Class` 和 `ParameterizedType`。
-   `TypeVariable`、`WildcardType` 和 `GenericArrayType` 返回 `null`，导致部分泛型声明无法解析。
-   修复方案：为各种 `Type` 子类型定义明确解析规则；无法唯一解析时保留显式失败语义。
-
-8. `Clazz.getClassByInterface(Type)` 通过清洗 `Type.toString()` 再调用 `Class.forName()`。
-   类型变量、通配符、泛型数组和复杂 owner type 可能生成无法加载或错误的类名。
-   修复方案：直接按 `Type` 子类型解析，复用 `Types.type2class()`，不要解析展示字符串。
-
-### 低优先级
-
-9. `Types.getGenericFirstReturnType()` 未检查实际类型参数数组是否为空。
-    异常的自定义 `ParameterizedType` 返回空数组时会触发 `ArrayIndexOutOfBoundsException`。
-    修复方案：检查长度并返回 `null` 或抛出明确的 `IllegalArgumentException`。
-
-10. `Clazz.getClassByName(String)` 包装 `ClassNotFoundException` 时没有保留 cause。
-    修复方案：将原异常作为 `RuntimeException` 的 cause。
-
-11. `Clazz.args2class()` 遇到数组内的 `null` 元素会抛出不明确的 `NullPointerException`。
-    修复方案：明确拒绝并报告参数索引，或仅在兼容匹配入口中允许 `null`。
-
-12. 公开入口的 null 校验不一致。
-    `getAllSuperClass(null)` 和 `NewInstance(null)` 会空指针，`getDeclaredInterface(null)` 却返回空数组；
-    `NewInstance.newInstance(null, ...)` 也没有明确校验。
-    修复方案：统一公开边界的 null 策略，并抛出带参数名称的 `IllegalArgumentException`。
-
-13. `Fields.getUnderLayerErrMsg()` 对没有 detail message 的异常不会移除异常类名。
-    修复方案：不要依赖冒号正则处理 `Throwable.toString()`；优先使用 `getMessage()`，并明确空消息策略。
 
 ## 已接受的边界
 

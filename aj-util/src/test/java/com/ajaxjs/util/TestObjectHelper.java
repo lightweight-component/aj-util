@@ -43,5 +43,6 @@ class TestObjectHelper {
         assertEquals(16, ObjectHelper.getInitialCapacity(12));
         assertEquals(32, ObjectHelper.getInitialCapacity(13));
         assertEquals(1 << 30, ObjectHelper.getInitialCapacity(Integer.MAX_VALUE));
+        assertThrows(IllegalArgumentException.class, () -> ObjectHelper.getInitialCapacity(-1));
     }
 }

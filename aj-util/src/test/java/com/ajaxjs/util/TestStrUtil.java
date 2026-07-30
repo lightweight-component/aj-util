@@ -3,16 +3,25 @@ package com.ajaxjs.util;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.ajaxjs.util.StrUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestStrUtil {
     final static String str = "中国";
+
+    public static class FailingBean {
+        public String getValue() {
+            throw new IllegalStateException("boom");
+        }
+    }
 
     @Test
     void testCharCount() {
@@ -52,6 +61,15 @@ class TestStrUtil {
     }
 
     @Test
+    void simpleTplReportsFailingBeanPropertyAndCause() {
+        RuntimeException error =
+                assertThrows(RuntimeException.class, () -> simpleTpl("#{value}", new FailingBean()));
+        assertTrue(error.getMessage().contains("value"));
+        assertSame(IllegalStateException.class, error.getCause().getClass());
+        assertEquals("boom", error.getCause().getMessage());
+    }
+
+    @Test
     void testJoin() {
         List<String> list = new ArrayList<>();
         list.add("a");
@@ -60,5 +78,8 @@ class TestStrUtil {
 
         assertEquals("a&b&c", join(list, "&"));
         assertEquals("[a], [b], [c]", join(list, "[%s]", ", "));
+        assertEquals("a&&c", join(new String[]{"a", null, "c"}, "&"));
+        assertEquals("a&&c", join(Arrays.asList("a", null, "c"), "&"));
+        assertEquals("[a], [], [c]", join(Arrays.asList("a", null, "c"), "[%s]", ", "));
     }
 }

@@ -33,7 +33,8 @@ class TestResources {
 
         assertNotNull(resourcePath);
         assertTrue(Files.exists(Paths.get(resourcePath)));
-        assertNull(Resources.getResourcesFromClass(TestResources.class, "non-existent-resource.txt"));
+        assertThrows(IllegalArgumentException.class,
+                () -> Resources.getResourcesFromClass(TestResources.class, "non-existent-resource.txt"));
     }
 
     @Test
@@ -44,13 +45,15 @@ class TestResources {
             assertEquals("你好 Hi", new String(bytes, StandardCharsets.UTF_8));
         }
 
-        assertNull(Resources.getResource("non-existent-resource.txt"));
+        assertThrows(IllegalArgumentException.class,
+                () -> Resources.getResource("non-existent-resource.txt"));
     }
 
     @Test
     void readsResourceText() {
         assertEquals("你好 Hi", Resources.getResourceText("test.txt"));
-        assertNull(Resources.getResourceText("non-existent-resource.txt"));
+        assertThrows(IllegalArgumentException.class,
+                () -> Resources.getResourceText("non-existent-resource.txt"));
     }
 
     @Test
@@ -65,8 +68,8 @@ class TestResources {
 
     @Test
     void missingPropertiesThrows() {
-        RuntimeException error = assertThrows(
-                RuntimeException.class,
+        IllegalArgumentException error = assertThrows(
+                IllegalArgumentException.class,
                 () -> Resources.getProperties("non-existent.properties")
         );
 

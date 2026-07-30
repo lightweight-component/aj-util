@@ -53,15 +53,19 @@ layout: layouts/aj-util-cn.njk
 1. `as(Map<String, K> map, Function<K, T> fn)` - 使用函数转换 Map 值
 2. `as(Map<String, String[]> map)` - 将 String[] 值的 Map 转换为 Map<String, Object>
 
-### 5. `deepCopy()`（浅复制）
+### 5. `shallowCopy()`
 
-尽管沿用了历史方法名，`deepCopy(Map<T, K> map)` 只创建新的 `HashMap`，不会克隆嵌套的可变对象。
+`shallowCopy(Map<T, K> map)` 创建包含相同 key 和 value 的新 `HashMap`。嵌套 Map、Collection、
+数组及对象仍为共享引用。
 
 ### 6. XML 转换方法
 
 1. `beanToXml(Object bean)` - 将 Java bean 转换为 XML 字符串
 2. `mapToXml(Map<String, ?> data)` - 将 Map 转换为 XML 字符串
 3. `xmlToMap(String strXML)` - 将 XML 字符串转换为 Map
+
+`mapToXml` 保留 value 的前后空白。每个 key 必须是合法的 XML 元素名；非法 key 会触发
+`IllegalArgumentException`，异常消息会指出对应 key。
 
 ## 使用示例
 

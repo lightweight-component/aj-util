@@ -34,11 +34,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Map Conversion Utility - Provides comprehensive map manipulation operations including
  * joining maps to strings, converting between different map formats, XML serialization,
- * and deep copying functionality.
+ * and shallow copying functionality.
  */
 @Slf4j
 public class MapTool {
@@ -192,21 +193,19 @@ public class MapTool {
     }
 
     /**
-     * 克隆一个 Map 到新的 Map 中， Map 深复制操作
+     * 浅复制 Map。返回新的 HashMap，但 key、value 及嵌套对象仍与原 Map 共享引用。
      *
      * @param map 需要克隆的映射表
      * @param <T> 键的类型
      * @param <K> 值的类型
      * @return 克隆后的映射表
      */
-    public static <T, K> Map<T, K> deepCopy(Map<T, K> map) {
-        Map<T, K> newMap = new HashMap<>();
-
-        for (T key : map.keySet())
-            newMap.put(key, map.get(key));
-
-        return newMap;
+    public static <T, K> Map<T, K> shallowCopy(Map<T, K> map) {
+        return new HashMap<>(map);
     }
+
+    private static final Pattern XML_ELEMENT_NAME =
+            Pattern.compile("[:_\\p{L}][:_\\p{L}\\p{N}\\p{M}.-]*");
 
     /**
      * 将给定的对象转换为 XML 格式的字符串
@@ -223,6 +222,7 @@ public class MapTool {
      *
      * @param data Map 类型数据
      * @return XML 格式的字符串
+     * @throws IllegalArgumentException 如果 Map key 不是合法的 XML 元素名
      */
     public static String mapToXml(Map<String, ?> data) {
         Document doc = XmlHelper.initBuilder().newDocument();
@@ -230,10 +230,13 @@ public class MapTool {
         doc.appendChild(root);
 
         data.forEach((k, v) -> {
+            if (k == null || !XML_ELEMENT_NAME.matcher(k).matches())
+                throw new IllegalArgumentException("Invalid XML element name for map key: " + k);
+
             String value = v == null ? CommonConstant.EMPTY_STRING : v.toString();
 
             Element filed = doc.createElement(k);
-            filed.appendChild(doc.createTextNode(value.trim()));
+            filed.appendChild(doc.createTextNode(value));
             root.appendChild(filed);
         });
 

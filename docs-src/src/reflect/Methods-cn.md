@@ -98,5 +98,7 @@ Object privateResult = Methods.execute(service, privateMethod, new Object[]{"val
 目标方法正常返回 `null` 时仍返回 `null`。目标方法抛出的异常会从 `InvocationTargetException`
 中解包并继续向上传播。
 
-`executeStatic(Method, Object[])` 只接受静态方法。`executeDefault(...)` 是面向 Java 8 的接口默认方法
-辅助入口；它对旧版 `MethodHandles.Lookup` 的访问在较新的模块化 JDK 上可能无法工作。
+`executeStatic(Method, Object[])` 对 null `Method` 抛出 `IllegalArgumentException`，只接受静态方法，
+并使用 null 反射接收者执行。目标方法异常会像普通调用一样解包并继续抛出。`executeDefault(...)` 是
+面向 Java 8 的接口默认方法辅助入口；它对旧版 `MethodHandles.Lookup` 的访问在较新的模块化 JDK 上
+可能无法工作。

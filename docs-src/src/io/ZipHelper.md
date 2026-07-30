@@ -21,7 +21,7 @@ The `ZipHelper` class contains static methods for working with ZIP files, includ
 - ZIP extraction with Zip Slip, symbolic-link, entry-count, size, and compression-ratio protection
 - File and directory compression (with STORED or DEFLATED options)
 - Recursive directory compression
-- ZIP file detection (magic number check)
+- ZIP file detection by opening and validating the archive structure, including empty ZIPs
 - Buffered CRC32 calculation for STORED entries
 - Automatic directory creation
 
@@ -71,6 +71,8 @@ Directory compression does not follow symbolic links. The destination ZIP must b
 ```java
 boolean isZip = ZipHelper.isZipFile("unknown.zip");
 ```
+
+Missing files, directories, and malformed archives return `false`.
 
 ### Directory Creation
 ```java

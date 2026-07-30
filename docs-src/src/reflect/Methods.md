@@ -100,5 +100,7 @@ Object privateResult = Methods.execute(service, privateMethod, new Object[]{"val
 A legitimate target `null` return remains `null`. An exception thrown by the target method is unwrapped from
 `InvocationTargetException` and propagated.
 
-`executeStatic(Method, Object[])` accepts only static methods. `executeDefault(...)` is the Java 8-oriented helper
-for interface default methods; its legacy `MethodHandles.Lookup` access may not work on newer modular JDKs.
+`executeStatic(Method, Object[])` rejects a null `Method` with `IllegalArgumentException`, accepts only static
+methods, and invokes them with a null reflection receiver. Target exceptions are unwrapped and propagated in the
+same way as ordinary invocation. `executeDefault(...)` is the Java 8-oriented helper for interface default methods;
+its legacy `MethodHandles.Lookup` access may not work on newer modular JDKs.

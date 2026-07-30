@@ -61,6 +61,15 @@ class TestNewInstance {
                 RuntimeException.class,
                 () -> NewInstance.getConstructor(Sample.class, Integer.class)
         );
+
+        assertEquals("Class must not be null.",
+                assertThrows(IllegalArgumentException.class, () -> new NewInstance<>((Class<Object>) null)).getMessage());
+        assertEquals("Class must not be null.",
+                assertThrows(IllegalArgumentException.class, () -> NewInstance.getConstructor(null)).getMessage());
+        assertEquals("Class must not be null.",
+                assertThrows(IllegalArgumentException.class, () -> NewInstance.hasArgsCon(null)).getMessage());
+        assertEquals("Constructor must not be null.",
+                assertThrows(IllegalArgumentException.class, () -> NewInstance.newInstance(null)).getMessage());
     }
 
     @Test

@@ -81,7 +81,20 @@ BatchDownload downloader = new BatchDownload(urls, "/downloads",
     () -> "custom_" + System.currentTimeMillis());
     
 downloader.start();
+String[] downloadedNames = downloader.getFileNames();
 ```
+
+输入 URL 数组会先复制，不会被原地改写。下载结果文件名保存在独立数组中，并通过
+`Path.getFileName()` 提取，因此 Unix 和 Windows 路径行为一致。
+
+## Multipart 文件上传
+
+`FileUpload.upload(...)` 为每次请求生成随机 boundary，请求头和文本字段固定使用 UTF-8，并将
+`File` 值流式写入连接。空 multipart Map 和非法字段名会被明确拒绝；null value 会序列化为空文本
+字段。自定义传输可以复用 `writeFormData(...)` 流式编码器。
+
+`Head.gzip(...)` 对非 gzip 响应原样返回输入流；gzip 内容损坏时抛出 `UncheckedIOException`，
+并保留原始 `IOException` 作为 cause。
 
 # SSL证书工具
 

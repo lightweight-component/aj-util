@@ -104,6 +104,9 @@ Map<String, String> map3 = ObjectHelper.mapOf("key1", "value1", "key2", "value2"
 Map<String, String> map4 = ObjectHelper.mapOf(10); // 优化容量的HashMap
 ```
 
+`getInitialCapacity(int)` 使用不会溢出的容量计算。负数会触发 `IllegalArgumentException`；超过
+`HashMap` 实用上限的容量会饱和为 `1 << 30`。
+
 
 #### 2. 创建列表
 ```java

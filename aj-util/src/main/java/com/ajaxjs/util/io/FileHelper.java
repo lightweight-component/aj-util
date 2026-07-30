@@ -190,7 +190,8 @@ public class FileHelper {
     }
 
     /**
-     * Gets the size of a file or directory in bytes.
+     * Gets the file-system metadata size of this single path in bytes.
+     * For a directory this is not the recursive size of its contents.
      *
      * @return the size in bytes
      * @throws UncheckedIOException if an IO error occurs during size calculation

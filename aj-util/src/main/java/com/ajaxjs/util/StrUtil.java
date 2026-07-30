@@ -19,6 +19,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +146,21 @@ public class StrUtil {
         try {
             for (PropertyDescriptor descriptor : Introspector.getBeanInfo(data.getClass()).getPropertyDescriptors()) {
                 String name = descriptor.getName();
-                Object value = descriptor.getReadMethod().invoke(data);
+                Method readMethod = descriptor.getReadMethod();
+
+                if (readMethod == null)
+                    continue;
+
+                Object value;
+
+                try {
+                    value = readMethod.invoke(data);
+                } catch (InvocationTargetException e) {
+                    Throwable cause = e.getTargetException();
+                    throw new RuntimeException("Failed to read bean property: " + name, cause);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("Failed to read bean property: " + name, e);
+                }
 
                 if (value == null)
                     value = "null";
@@ -153,8 +168,8 @@ public class StrUtil {
                 String placeholder = "#{" + name + "}";
                 result = result.replace(placeholder, value.toString());
             }
-        } catch (InvocationTargetException | IllegalAccessException | IntrospectionException e) {
-            throw new RuntimeException(e);
+        } catch (IntrospectionException e) {
+            throw new RuntimeException("Failed to inspect bean properties.", e);
         }
 
         return result;
@@ -188,7 +203,7 @@ public class StrUtil {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0, len = arr.length; i < len; i++) {
-            String s = arr[i].toString();
+            String s = arr[i] == null ? CommonConstant.EMPTY_STRING : arr[i].toString();
 
             if (i != (len - 1))
                 sb.append(s).append(str);
@@ -235,6 +250,9 @@ public class StrUtil {
 
         for (int i = 0, len = list.size(); i < len; i++) {
             String s = list.get(i);
+
+            if (s == null)
+                s = CommonConstant.EMPTY_STRING;
 
             if (tpl != null)
                 s = String.format(tpl, s);

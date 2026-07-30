@@ -62,6 +62,12 @@ public class Request implements HttpConstant {
      */
     private byte[] data;
 
+    private Consumer<OutputStream> outputStreamConsumer;
+
+    public void setOutputStreamConsumer(Consumer<OutputStream> outputStreamConsumer) {
+        this.outputStreamConsumer = outputStreamConsumer;
+    }
+
     /**
      * Sets the raw byte data for the request body.
      *
@@ -358,7 +364,14 @@ public class Request implements HttpConstant {
         conn.setDoOutput(true); // Allow writing to output stream
         conn.setDoInput(true); // Allow reading from input stream
 
-        if (data != null && data.length > 0) {
+        if (outputStreamConsumer != null) {
+            try (OutputStream out = conn.getOutputStream()) {
+                outputStreamConsumer.accept(out);
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException("Write data to connection failed!", e);
+            }
+        } else if (data != null && data.length > 0) {
             try (OutputStream out = conn.getOutputStream()) {
                 out.write(data); // Write byte data through output stream
                 out.flush();

@@ -14,8 +14,8 @@ layout: layouts/aj-util-cn.njk
 
 ## 加载类
 
-`getClassByName(String)` 根据完整类名加载类；找不到类时抛出 `RuntimeException`，当前包装异常不会
-保留 `ClassNotFoundException` 作为 cause。泛型重载还会验证类型是否兼容：
+`getClassByName(String)` 根据完整类名加载类；找不到类时抛出 `RuntimeException`，并将原始
+`ClassNotFoundException` 保留为 cause。泛型重载还会验证类型是否兼容：
 
 ```java
 Class<CharSequence> type =
@@ -30,7 +30,8 @@ Clazz.getClassByName("java.lang.String", Number.class);
 ## 将参数转换为类
 
 `args2class(Object[])` 返回每个参数的运行时类型。参数数组为 `null` 或空数组时返回 `null`。
-数组内的单个 `null` 元素不受支持；参数值为 `null` 时应显式传入 `Class<?>[]`。
+数组内的单个 `null` 元素会触发 `IllegalArgumentException`，异常会指出元素索引；参数值为 `null`
+时应显式传入 `Class<?>[]`。
 
 ```java
 Class<?>[] types = Clazz.args2class(new Object[]{"text", 1});
@@ -49,8 +50,8 @@ Class<?>[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
 Class<?>[] parents = Clazz.getAllSuperClass(ArrayList.class);
 ```
 
-`getClassByInterface(Type)` 根据 `Type.toString()` 推导类名，只适用于可以直接解析的类或参数化接口
-类型；类型变量、通配符和泛型数组不能可靠解析。
+`getClassByInterface(Type)` 直接委托给 `Types.type2class(Type)`，不再解析 `Type.toString()` 的展示
+字符串。因此它对类、参数化类型、类型变量、通配符和泛型数组遵循相同规则；不能唯一解析的类型会
+抛出 `IllegalArgumentException`。
 
-各层次方法目前没有统一的 `null` 策略：`getAllSuperClass(null)` 会抛出 `NullPointerException`，
-而 `getDeclaredInterface(null)` 当前返回空数组。
+两个层次方法都对 null 类参数抛出 `IllegalArgumentException`。

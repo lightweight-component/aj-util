@@ -176,18 +176,22 @@ public class ObjectHelper {
      *
      * @param expectedSize the expected number of entries in the map
      * @return a new HashMap with optimal initial capacity and load factor
+     * @throws IllegalArgumentException if expectedSize is negative
      */
 
     public static int getInitialCapacity(int expectedSize) {
-        // Calculate the initial capacity as the next power of two greater than or equal to expectedSize / default_load_factor
-        int initialCapacity = (int) Math.ceil(expectedSize / DEFAULT_LOAD_FACTOR);
-        initialCapacity = Integer.highestOneBit(initialCapacity - 1) << 1;
+        if (expectedSize < 0)
+            throw new IllegalArgumentException("Expected size must not be negative.");
 
-        // Ensure that the initial capacity is at least 16 (the default capacity)
-        if (initialCapacity < 16)
-            initialCapacity = 16;
+        final int maximumCapacity = 1 << 30;
+        long requiredCapacity = ((long) expectedSize * 4 + 2) / 3;
 
-        return initialCapacity;
+        if (requiredCapacity <= 16)
+            return 16;
+        if (requiredCapacity >= maximumCapacity)
+            return maximumCapacity;
+
+        return (int) (Long.highestOneBit(requiredCapacity - 1) << 1);
     }
 
     /**

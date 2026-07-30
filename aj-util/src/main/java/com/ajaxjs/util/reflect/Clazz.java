@@ -1,6 +1,5 @@
 package com.ajaxjs.util.reflect;
 
-import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.ObjectHelper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +29,7 @@ public class Clazz {
             return Class.forName(clzName);
         } catch (ClassNotFoundException e) {
             log.error("Class:{} not Found.", clzName, e);
-            throw new RuntimeException("Class:" + clzName + " not Found.");
+            throw new RuntimeException("Class:" + clzName + " not Found.", e);
         }
     }
 
@@ -64,6 +63,7 @@ public class Clazz {
      *
      * @param args The variable argument list
      * @return The array of corresponding class objects
+     * @throws IllegalArgumentException if an element is null
      */
     public static Class<?>[] args2class(Object[] args) {
         if (ObjectHelper.isEmpty(args))
@@ -71,23 +71,25 @@ public class Clazz {
 
         Class<?>[] clazz = new Class[args.length];
 
-        for (int i = 0; i < args.length; i++)
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] == null)
+                throw new IllegalArgumentException("Argument at index " + i + " must not be null.");
+
             clazz[i] = args[i].getClass();
+        }
 
         return clazz;
     }
 
     /**
-     * Gets the class object for a given interface type.
+     * Resolves the class represented by a reflection type.
      *
-     * @param type The interface type
-     * @return The class object for the interface
+     * @param type the type to resolve
+     * @return the resolved class, or null when type is null
+     * @throws IllegalArgumentException if the type cannot be resolved uniquely
      */
     public static Class<?> getClassByInterface(Type type) {
-        String className = type.toString();
-        className = className.replaceAll("<.*>$", CommonConstant.EMPTY_STRING).replaceAll("(class|interface)\\s", CommonConstant.EMPTY_STRING); // 不要泛型的字符
-
-        return getClassByName(className);
+        return Types.type2class(type);
     }
 
     /**
@@ -95,8 +97,12 @@ public class Clazz {
      *
      * @param clz The target class
      * @return All interfaces implemented by the class
+     * @throws IllegalArgumentException if clz is null
      */
     public static Class<?>[] getDeclaredInterface(Class<?> clz) {
+        if (clz == null)
+            throw new IllegalArgumentException("Class must not be null.");
+
         Set<Class<?>> interfaces = new LinkedHashSet<>();
 
         for (Class<?> current = clz; current != null && current != Object.class; current = current.getSuperclass())
@@ -125,8 +131,12 @@ public class Clazz {
      *
      * @param clz 类对象
      * @return 所有父类
+     * @throws IllegalArgumentException 如果 clz 为 null
      */
     public static Class<?>[] getAllSuperClass(Class<?> clz) {
+        if (clz == null)
+            throw new IllegalArgumentException("Class must not be null.");
+
         List<Class<?>> classList = new ArrayList<>();
         Class<?> current = clz.getSuperclass();  // 从父类开始
 

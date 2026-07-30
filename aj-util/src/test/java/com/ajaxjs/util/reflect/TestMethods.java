@@ -251,6 +251,12 @@ class TestMethods {
 
         assertEquals("static:value", Methods.executeStatic(staticMethod, new Object[]{"value"}));
 
+        IllegalArgumentException nullError = assertThrows(
+                IllegalArgumentException.class,
+                () -> Methods.executeStatic(null, null)
+        );
+        assertEquals("Method must not be null.", nullError.getMessage());
+
         UnsupportedOperationException error = assertThrows(
                 UnsupportedOperationException.class,
                 () -> Methods.executeStatic(instanceMethod, new Object[]{"value"})

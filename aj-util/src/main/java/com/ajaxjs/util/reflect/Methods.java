@@ -401,16 +401,31 @@ public class Methods {
      * @param method static method to invoke
      * @param args   invocation arguments, or {@code null} for no arguments
      * @return target method's return value
+     * @throws IllegalArgumentException      if the method is null or the arguments do not match
      * @throws UnsupportedOperationException if the supplied method is not static
      * @throws Throwable                     if invocation fails
      */
     public static Object executeStatic(Method method, Object[] args) throws Throwable {
+        if (method == null)
+            throw new IllegalArgumentException("Method must not be null.");
+
         if (!Modifier.isStatic(method.getModifiers())) {
             log.warn("This is not a static method: {}", method);
             throw new UnsupportedOperationException("This is not a static method.");
         }
 
-        return execute(new Object(), method, args);
+        try {
+            return ObjectHelper.isEmpty(args) ? method.invoke(null) : method.invoke(null, args);
+        } catch (IllegalAccessException e) {
+            log.warn("IllegalAccessException when executing static method of {}", method.getName());
+            throw e;
+        } catch (IllegalArgumentException e) {
+            log.error("IllegalArgumentException when executing static method of {}", method.getName());
+            throw e;
+        } catch (InvocationTargetException e) {
+            log.error("InvocationTargetException when executing static method of {}", method.getName());
+            throw e.getTargetException();
+        }
     }
 
     /**

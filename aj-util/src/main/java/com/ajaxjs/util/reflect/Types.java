@@ -2,9 +2,7 @@ package com.ajaxjs.util.reflect;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 
 /**
  * Type Reflection Utility - Provides methods for working with Java reflection types,
@@ -47,11 +45,18 @@ public class Types {
      *
      * @param method The method to analyze
      * @return The first actual type as a Class
+     * @throws IllegalArgumentException if a parameterized return type contains no actual type arguments
      */
     public static Class<?> getGenericFirstReturnType(Method method) {
         Type[] type = getGenericReturnType(method);
 
-        return type == null ? null : type2class(type[0]);
+        if (type == null)
+            return null;
+
+        if (type.length == 0)
+            throw new IllegalArgumentException("Parameterized return type has no actual type arguments: " + method);
+
+        return type2class(type[0]);
     }
 
     /**
@@ -92,19 +97,49 @@ public class Types {
     }
 
     /**
-     * Converts a Type to a Class. For a ParameterizedType, returns the Class
-     * represented by its raw type.
+     * Converts a {@link Type} to a {@link Class}.
+     * <ul>
+     *     <li>{@link ParameterizedType}: resolves its raw type.</li>
+     *     <li>{@link TypeVariable}: resolves its single upper bound.</li>
+     *     <li>{@link WildcardType}: resolves its single upper bound when no lower bound exists.</li>
+     *     <li>{@link GenericArrayType}: resolves its component and creates the corresponding array class.</li>
+     * </ul>
      *
      * @param type The Type interface to convert
-     * @return The corresponding Class, or null if the type cannot be resolved to a Class
+     * @return The corresponding Class, or null when type is null
+     * @throws IllegalArgumentException if the type is unsupported or cannot be resolved uniquely
      */
     public static Class<?> type2class(Type type) {
+        if (type == null)
+            return null;
+
         if (type instanceof Class)
             return (Class<?>) type;
         else if (type instanceof ParameterizedType)
             return type2class(((ParameterizedType) type).getRawType());
+        else if (type instanceof GenericArrayType) {
+            Class<?> componentType = type2class(((GenericArrayType) type).getGenericComponentType());
 
-        return null;
+            return Array.newInstance(componentType, 0).getClass();
+        } else if (type instanceof TypeVariable)
+            return resolveSingleUpperBound(type, ((TypeVariable<?>) type).getBounds());
+        else if (type instanceof WildcardType) {
+            WildcardType wildcardType = (WildcardType) type;
+
+            if (wildcardType.getLowerBounds().length > 0)
+                throw new IllegalArgumentException("Wildcard type with a lower bound cannot be resolved uniquely: " + type);
+
+            return resolveSingleUpperBound(type, wildcardType.getUpperBounds());
+        }
+
+        throw new IllegalArgumentException("Unsupported Type implementation: " + type.getClass().getName());
+    }
+
+    private static Class<?> resolveSingleUpperBound(Type source, Type[] bounds) {
+        if (bounds.length != 1)
+            throw new IllegalArgumentException("Type does not have exactly one upper bound: " + source);
+
+        return type2class(bounds[0]);
     }
 
     /*

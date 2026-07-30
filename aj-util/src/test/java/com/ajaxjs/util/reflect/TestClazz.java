@@ -3,6 +3,8 @@ package com.ajaxjs.util.reflect;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +30,10 @@ class TestClazz {
 
     @Test
     void testGetClassByName_whenClassNotFound() {
-        assertThrows(RuntimeException.class, () -> Clazz.getClassByName("com.example.NotFoundClass"));
+        RuntimeException error =
+                assertThrows(RuntimeException.class, () -> Clazz.getClassByName("com.example.NotFoundClass"));
+
+        assertInstanceOf(ClassNotFoundException.class, error.getCause());
     }
 
     @Test
@@ -50,8 +55,23 @@ class TestClazz {
 
     @Test
     void testGetClassByInterface() {
-        Class<?> actual = Clazz.getClassByInterface(List.class);
-        assertEquals(List.class, actual);
+        Type parameterized = new ParameterizedType() {
+            public Type[] getActualTypeArguments() {
+                return new Type[]{String.class};
+            }
+
+            public Type getRawType() {
+                return List.class;
+            }
+
+            public Type getOwnerType() {
+                return null;
+            }
+        };
+
+        assertEquals(List.class, Clazz.getClassByInterface(List.class));
+        assertEquals(List.class, Clazz.getClassByInterface(parameterized));
+        assertNull(Clazz.getClassByInterface(null));
     }
 
     @Test
@@ -75,5 +95,19 @@ class TestClazz {
         );
         assertNull(Clazz.args2class(null));
         assertNull(Clazz.args2class(new Object[0]));
+
+        IllegalArgumentException error = assertThrows(
+                IllegalArgumentException.class,
+                () -> Clazz.args2class(new Object[]{"value", null})
+        );
+        assertEquals("Argument at index 1 must not be null.", error.getMessage());
+    }
+
+    @Test
+    void rejectsNullHierarchyInputs() {
+        assertEquals("Class must not be null.",
+                assertThrows(IllegalArgumentException.class, () -> Clazz.getDeclaredInterface(null)).getMessage());
+        assertEquals("Class must not be null.",
+                assertThrows(IllegalArgumentException.class, () -> Clazz.getAllSuperClass(null)).getMessage());
     }
 }

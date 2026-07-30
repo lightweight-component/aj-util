@@ -1,7 +1,5 @@
 package com.ajaxjs.util.reflect;
 
-import com.ajaxjs.util.CommonConstant;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -81,11 +79,11 @@ public class Fields {
      * 获取实际抛出的那个异常对象，并去掉前面的包名。
      *
      * @param e 异常对象
-     * @return 实际异常对象信息
+     * @return 底层异常的 detail message；没有 detail message 时返回空字符串
      */
     public static String getUnderLayerErrMsg(Throwable e) {
-        String msg = getUnderLayerErr(e).toString();
+        String msg = getUnderLayerErr(e).getMessage();
 
-        return msg.replaceAll("^[^:]*:\\s?", CommonConstant.EMPTY_STRING);
+        return msg == null ? "" : msg;
     }
 }
