@@ -50,21 +50,48 @@ Method method =
 方法会选择类型层次距离最小的候选项。如果互不相关的重载得到相同分数，当前实现会选择反射返回的
 第一个方法；可能产生重载歧义时，应显式传入参数类型。当前不支持基本数值类型扩宽和可变参数展开。
 
+## 精确 public 方法查找
+
+`findPublicExactMethod(String, Object[])` 按每个实参的精确运行时类型查找 public 方法。参数中包含
+`null` 时无法推断精确类型，因此返回 `null`；调用方随后可使用支持引用类型 `null` 参数的
+`findCompatibleMethod(...)`。
+
+`findPublicExactMethodByTypes(String, Class<?>[])` 接收显式精确类型，适合运行时值是包装类型、声明
+参数却是基本类型的情况：
+
+```java
+Method setter = new Methods(Target.class)
+        .findPublicExactMethodByTypes("setAge", new Class<?>[]{int.class});
+```
+
+两个入口都使用 `Class.getMethod`，因此只搜索 public 方法，包括继承的类方法和接口方法。显式类型
+数组包含 `null` 元素时会抛出 `IllegalArgumentException`。
+
 ## 调用方法
 
-按方法名调用的 `execute(instance, methodName, parameters)` 使用兼容 public 方法查找。找不到方法时
-最终抛出 `IllegalArgumentException`。带 `Class<?>[]` 参数的重载使用声明方法查找，因此可以调用
-已经设为可访问的非 public 方法。
+按方法名调用的 `execute(instance, methodName, parameters)` 会先尝试精确 public 方法查找，找不到
+时再回退到兼容 public 方法查找。最终仍找不到时抛出 `IllegalArgumentException`。带 `Class<?>[]`
+参数的重载按调用者给出的类型执行精确 public 方法查找，例如可以明确区分 `int.class` 与
+`Integer.class`。
 
 ```java
 Object result = Methods.execute(service, "handle", new Object[]{"value"});
 
-Object privateResult = Methods.execute(
+Object primitiveResult = Methods.execute(
         service,
-        "privateHandle",
-        new Class<?>[]{String.class},
-        new Object[]{"value"}
+        "setAge",
+        new Class<?>[]{int.class},
+        new Object[]{Integer.valueOf(18)}
 );
+```
+
+需要调用非 public 方法时，应先通过 `findDeclaredMethod(...)` 显式取得 `Method`，再调用
+`execute(instance, method, parameters)`，使访问范围变化清晰可见：
+
+```java
+Method privateMethod = new Methods(service)
+        .findDeclaredMethod("privateHandle", String.class);
+Object privateResult = Methods.execute(service, privateMethod, new Object[]{"value"});
 ```
 
 目标方法正常返回 `null` 时仍返回 `null`。目标方法抛出的异常会从 `InvocationTargetException`

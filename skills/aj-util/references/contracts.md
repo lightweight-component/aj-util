@@ -41,10 +41,18 @@ Use these as review checkpoints. Verify current source before relying on exact e
 - Reflection lookup must not convert a `SecurityException` into a missing-member result.
 - Use `Methods.findCompatibleMethod` as the main runtime-argument lookup API. It traverses superclass
   and inherited-interface relationships with duplicate-safe type traversal.
+- `Methods.findPublicExactMethod` is the value-based public fast path. It returns `null` when any value is
+  `null`, allowing compatible lookup to decide among reference parameters.
+- `Methods.findPublicExactMethodByTypes` searches public methods using explicit exact types and rejects null
+  elements. It is the appropriate entry point for distinctions such as `int.class` versus `Integer.class`.
 - `Methods.findDeclaredMethod(String, Class<?>...)` searches the configured class and its superclasses,
   excluding `Object`, and uses exact parameter types. Its value-based overload currently inherits
   `Clazz.args2class` null and exact-runtime-type limitations.
-- `Methods.execute` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing method, and propagates target invocation failures.
+- Name-based `Methods.execute` invokes public methods only: runtime values use exact lookup followed by compatible
+  fallback, while the explicit-type overload uses exact public lookup. Invoke a non-public method only by resolving
+  it explicitly with `findDeclaredMethod` and passing the resulting `Method` to `execute`.
+- `Methods.execute` preserves a legitimate target `null` return, throws `IllegalArgumentException` for a missing
+  method, and propagates target invocation failures.
 - `Fields.getUnderLayerErr` returns a cause-less wrapper unchanged and rejects a null input explicitly.
 - Compatible member resolution must account for primitive/wrapper compatibility, numeric primitive widening,
   null arguments, varargs, overload ambiguity, bridge methods, and accessibility.

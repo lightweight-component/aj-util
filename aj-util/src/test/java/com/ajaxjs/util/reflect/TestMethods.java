@@ -101,6 +101,32 @@ class TestMethods {
         public String nullable(CharSequence value) {
             return value == null ? "null" : value.toString();
         }
+
+        public String inherited(Number value) {
+            return "number:" + value;
+        }
+    }
+
+    @Test
+    void findsPublicMethodsByExactRuntimeOrDeclaredTypes() {
+        Methods methods = new Methods(CompatibleTarget.class);
+
+        Method exactRuntime = methods.findPublicExactMethod("choose", new Object[]{"text"});
+        assertNotNull(exactRuntime);
+        assertArrayEquals(new Class<?>[]{String.class}, exactRuntime.getParameterTypes());
+
+        assertNull(methods.findPublicExactMethod("choose", new Object[]{new StringBuilder("text")}));
+        assertNull(methods.findPublicExactMethod("nullable", new Object[]{null}));
+
+        Method primitive = methods.findPublicExactMethodByTypes("primitive", new Class<?>[]{int.class});
+        assertNotNull(primitive);
+        assertArrayEquals(new Class<?>[]{int.class}, primitive.getParameterTypes());
+
+        IllegalArgumentException error = assertThrows(
+                IllegalArgumentException.class,
+                () -> methods.findPublicExactMethodByTypes("choose", new Class<?>[]{null})
+        );
+        assertEquals("Parameter types must not contain null.", error.getMessage());
     }
 
     @Test
@@ -148,6 +174,10 @@ class TestMethods {
             return "echo:" + value;
         }
 
+        public String primitiveEcho(int value) {
+            return "primitive:" + value;
+        }
+
         public String nullable() {
             return null;
         }
@@ -172,9 +202,23 @@ class TestMethods {
         assertEquals("echo:value", Methods.execute(target, "echo", new Object[]{"value"}));
         assertNull(Methods.execute(target, "nullable"));
         assertEquals(
-                "private:value",
-                Methods.execute(target, "privateEcho", new Class<?>[]{String.class}, new Object[]{"value"})
+                "primitive:7",
+                Methods.execute(target, "primitiveEcho", new Class<?>[]{int.class}, new Object[]{Integer.valueOf(7)})
         );
+
+        IllegalArgumentException privateLookupError = assertThrows(
+                IllegalArgumentException.class,
+                () -> Methods.execute(
+                        target,
+                        "privateEcho",
+                        new Class<?>[]{String.class},
+                        new Object[]{"value"}
+                )
+        );
+        assertEquals("Method must not be null.", privateLookupError.getMessage());
+
+        Method privateMethod = new Methods(target).findDeclaredMethod("privateEcho", String.class);
+        assertEquals("private:value", Methods.execute(target, privateMethod, new Object[]{"value"}));
     }
 
     @Test

@@ -52,21 +52,48 @@ The candidate with the lowest type-hierarchy distance is selected. If unrelated 
 the current implementation selects the first method returned by reflection; callers should use explicit parameter
 types when overload ambiguity is possible. Numeric primitive widening and varargs expansion are not supported.
 
+## Exact public-method lookup
+
+`findPublicExactMethod(String, Object[])` looks up a public method using the exact runtime class of every argument.
+It returns `null` when an argument is `null`, because an exact type cannot be inferred. The caller can then use
+`findCompatibleMethod(...)`, which supports `null` for reference parameters.
+
+`findPublicExactMethodByTypes(String, Class<?>[])` accepts explicit exact types. This is useful when the runtime
+value is boxed but the declaration is primitive:
+
+```java
+Method setter = new Methods(Target.class)
+        .findPublicExactMethodByTypes("setAge", new Class<?>[]{int.class});
+```
+
+Both methods use `Class.getMethod`, so they search only public methods, including inherited class and interface
+methods. A `null` element in the explicit type array is rejected with `IllegalArgumentException`.
+
 ## Invocation
 
-The name-based `execute(instance, methodName, parameters)` overload uses compatible public-method lookup. A missing
-method ultimately raises `IllegalArgumentException`. The overload accepting `Class<?>[]` uses declared-method lookup
-and can therefore invoke a non-public method after it has been made accessible.
+The name-based `execute(instance, methodName, parameters)` overload first attempts exact public-method lookup and
+then falls back to compatible public-method lookup. A missing method ultimately raises `IllegalArgumentException`.
+The overload accepting `Class<?>[]` performs exact public-method lookup with the supplied types. For example, it
+can distinguish `int.class` from `Integer.class`.
 
 ```java
 Object result = Methods.execute(service, "handle", new Object[]{"value"});
 
-Object privateResult = Methods.execute(
+Object primitiveResult = Methods.execute(
         service,
-        "privateHandle",
-        new Class<?>[]{String.class},
-        new Object[]{"value"}
+        "setAge",
+        new Class<?>[]{int.class},
+        new Object[]{Integer.valueOf(18)}
 );
+```
+
+To invoke a non-public method, resolve it explicitly with `findDeclaredMethod(...)` and pass the resulting `Method`
+to `execute(instance, method, parameters)`. This makes the visibility change explicit:
+
+```java
+Method privateMethod = new Methods(service)
+        .findDeclaredMethod("privateHandle", String.class);
+Object privateResult = Methods.execute(service, privateMethod, new Object[]{"value"});
 ```
 
 A legitimate target `null` return remains `null`. An exception thrown by the target method is unwrapped from

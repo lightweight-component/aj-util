@@ -365,16 +365,18 @@ public class Methods {
     }
 
     /**
-     * 调用方法。 注意获取方法对象，原始类型和包装类型不能混用，否则得不到正确的方法， 例如 Integer 不能与 int 混用。 这里提供一个
-     * argType 的参数，指明参数类型为何。
+     * Finds and invokes a public method using explicitly supplied, exact parameter types.
+     * This overload is useful when runtime argument types differ from declared parameter types,
+     * such as {@link Integer} and {@code int}.
      *
-     * @param instance       对象实例
-     * @param methodName     方法名称
-     * @param parameterTypes 参数类型
-     * @param parameters     参数值
-     * @return 执行结果
-     * @throws IllegalArgumentException 实例为 null 或找不到匹配的方法
-     * @throws Throwable                方法执行失败
+     * @param instance       target object
+     * @param methodName     method name
+     * @param parameterTypes exact declared parameter types; {@code null} means no parameters
+     * @param parameters     invocation arguments, or {@code null} for no arguments
+     * @return target method's return value
+     * @throws IllegalArgumentException if the instance is null, a parameter type is null,
+     *                                  no public method exists, or arguments do not match
+     * @throws Throwable                if invocation fails
      */
     public static Object execute(Object instance, String methodName, Class<?>[] parameterTypes, Object[] parameters) throws Throwable {
         Method method = new Methods(instance).findPublicExactMethodByTypes(methodName, parameterTypes);
