@@ -11,6 +11,7 @@ import java.util.Arrays;
 import static com.ajaxjs.util.BytesHelper.bytesToHexStr;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -86,8 +87,8 @@ class TestBytesHelper {
     @Test
     void testParseHexStr2Byte() {
         byte[] bs = BytesHelper.parseHexStr2Byte("1A2B3C");
-        assert bs != null;
-        assertEquals(0x1A, bs[0]);
+        assertNotNull(bs);
+        assertArrayEquals(new byte[]{0x1A, 0x2B, 0x3C}, bs);
     }
 
     @Test

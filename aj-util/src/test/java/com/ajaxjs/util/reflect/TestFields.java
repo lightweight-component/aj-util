@@ -3,10 +3,15 @@ package com.ajaxjs.util.reflect;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestFields {
+class TestFields {
     public static class Parent {
         public String publicField;
         private int privateField;
@@ -21,59 +26,79 @@ public class TestFields {
     }
 
     @Test
-    public void testGetSuperClassDeclaredFields() {
+    void testGetSuperClassDeclaredFields() {
         Field[] fields = Fields.getSuperClassDeclaredFields(Child.class);
 
-        assertNotNull(fields);
-        assertTrue(fields.length >= 4);
-        assertTrue(java.util.Arrays.stream(fields).anyMatch(f -> f.getName().equals("publicField")));
-        assertTrue(java.util.Arrays.stream(fields).anyMatch(f -> f.getName().equals("privateField")));
-        assertTrue(java.util.Arrays.stream(fields).anyMatch(f -> f.getName().equals("childField")));
-        assertTrue(java.util.Arrays.stream(fields).anyMatch(f -> f.getName().equals("childPrivateField")));
+        Set<String> names = Arrays.stream(fields).map(Field::getName).collect(Collectors.toSet());
+        assertEquals(4, fields.length);
+        assertEquals(
+                new java.util.HashSet<>(Arrays.asList(
+                        "publicField", "privateField", "childField", "childPrivateField"
+                )),
+                names
+        );
     }
 
     @Test
-    public void testGetSuperClassDeclaredFieldsExcludesObject() {
+    void testGetSuperClassDeclaredFieldsExcludesObject() {
         Field[] fields = Fields.getSuperClassDeclaredFields(Object.class);
 
-        assertNotNull(fields);
-        assertEquals(0, fields.length);
+        assertArrayEquals(new Field[0], fields);
     }
 
     @Test
-    public void testGetSuperClassDeclaredFieldsWithNoOwnFields() {
+    void testGetSuperClassDeclaredFieldsWithNoOwnFields() {
         Field[] fields = Fields.getSuperClassDeclaredFields(NoFields.class);
 
-        assertNotNull(fields);
-        assertEquals(0, fields.length);
+        assertArrayEquals(new Field[0], fields);
     }
 
     @Test
-    public void testFindFieldInCurrentClass() {
+    void testFindFieldInCurrentClass() {
         Field field = Fields.findField(Child.class, "childField");
 
         assertNotNull(field);
         assertEquals("childField", field.getName());
+        assertSame(Child.class, field.getDeclaringClass());
     }
 
     @Test
-    public void testFindFieldInSuperClass() {
+    void testFindFieldInSuperClass() {
         Field field = Fields.findField(Child.class, "privateField");
 
         assertNotNull(field);
         assertEquals("privateField", field.getName());
+        assertSame(Parent.class, field.getDeclaringClass());
     }
 
     @Test
-    public void testFindFieldNotFound() {
+    void testFindFieldNotFound() {
         assertNull(Fields.findField(Child.class, "missingField"));
     }
 
     @Test
-    public void testFindFieldInParentOnlyClass() {
+    void testFindFieldInParentOnlyClass() {
         Field field = Fields.findField(Parent.class, "publicField");
 
         assertNotNull(field);
         assertEquals("publicField", field.getName());
+        assertSame(Parent.class, field.getDeclaringClass());
+    }
+
+    @Test
+    void unwrapsNestedReflectionWrappers() {
+        IllegalStateException cause = new IllegalStateException("boom");
+        Throwable wrapped = new InvocationTargetException(new UndeclaredThrowableException(cause));
+
+        assertSame(cause, Fields.getUnderLayerErr(wrapped));
+        assertEquals("boom", Fields.getUnderLayerErrMsg(wrapped));
+    }
+
+    @Test
+    void keepsCauseLessWrapperAndRejectsNull() {
+        InvocationTargetException wrapper = new InvocationTargetException(null);
+
+        assertSame(wrapper, Fields.getUnderLayerErr(wrapper));
+        assertThrows(IllegalArgumentException.class, () -> Fields.getUnderLayerErr(null));
     }
 }

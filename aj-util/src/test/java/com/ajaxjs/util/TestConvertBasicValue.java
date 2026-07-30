@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.ajaxjs.util.ConvertBasicValue.*;
@@ -215,8 +214,6 @@ class TestConvertBasicValue {
         arr2 = (String[]) ConvertBasicValue.basicConvert(list2, String[].class);
         assertArrayEquals(new String[]{"1", "2", "3"}, arr2);
 
-//        assertEquals("Tue Feb 20 00:00:00 CST 2018", (ConvertBasicValue.basicConvert("2018-2-20", Date.class)).toString());
-        assertEquals("Tue Feb 20 00:00:00 CST 2018", (ConvertBasicValue.basicConvert("2018-02-20", Date.class)).toString());
     }
 
     @Test

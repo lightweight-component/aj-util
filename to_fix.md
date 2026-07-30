@@ -11,6 +11,12 @@
 
 ## `com.ajaxjs.util` 直属类
 
+### 单元测试确认
+
+2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.Test*`：共 105 个测试，100 个通过、
+4 个失败、1 个错误。失败对应下列第 1、2、4、5、10 项。测试已作为回归用例保留，
+生产源码尚未修改。
+
 ### 高优先级
 
 1. `HashHelper.getMac()` 在没有设置 HMAC 密钥时临时生成随机密钥，但既不保存也不返回该密钥。
@@ -18,10 +24,12 @@
    `hash()` 在没有密钥时走普通摘要，而直接调用 `getMac()` 却使用不可见的随机密钥。
    修复方案：要求调用者显式提供密钥；或者将生成的密钥保存到字段并提供安全的导出 API，同时统一
    `hash()` 与 `getMac()` 的状态语义。
+   单测：`TestHashHelper.macRequiresAnExplicitKey()`。
 
 2. `MapTool.deepCopy()` 实际只执行 `new HashMap<>(map)`，嵌套的 Map、Collection、数组和对象仍与
    原 Map 共享引用，与方法名和注释中的“深复制”不符。
    修复方案：实现明确支持范围内的递归复制，或将方法改名为 `shallowCopy()` 并修正文档。
+   单测：`TestMapTool.testDeepCopy()`。
 
 ### 中优先级
 
@@ -32,10 +40,12 @@
 4. `MapTool.mapToXml()` 直接把 Map key 当作 XML 元素名。空 key、以数字开头或含空格等非法名称会
    触发不明确的 `DOMException`；value 还会被 `trim()`，改变原始数据。
    修复方案：创建节点前校验 XML 名称并报告对应 key，且默认保留 value 的前后空白。
+   单测：`TestMapTool.mapToXmlPreservesValueWhitespace()`。
 
 5. `StrUtil.simpleTpl(String, Object)` 假定每个属性描述符都有 getter。遇到 write-only JavaBean
    属性时，`getReadMethod()` 返回 `null`，随后调用会空指针。
    修复方案：跳过没有 read method 的属性，并为 getter 执行失败保留属性名和 cause。
+   单测：`TestStrUtil.simpleTplSkipsWriteOnlyBeanProperties()`。
 
 6. `UrlEncode.encodeSafe()` 的名称暗示 RFC 3986 URL 编码，但实现基于表单编码
    `URLEncoder`，仍会编码 `~`，并且不能区分 query、path segment 等不同 URL 组件。
@@ -54,6 +64,13 @@
 
 9. `StringBytes` 在未指定 charset 时存在回退到平台默认字符集的入口，跨机器结果不稳定。
    修复方案：文本与字节互转默认固定为 UTF-8，其他字符集必须显式指定。
+
+10. `ObjectHelper.getInitialCapacity()` 对很大的 `expectedSize` 计算下一次方时发生整数溢出。
+    例如传入 `Integer.MAX_VALUE` 最终返回默认容量 16，完全背离调用者预期，可能导致大型 Map
+    反复扩容。
+    修复方案：先校验非负输入，使用 `long` 计算所需容量，并在超过 HashMap 最大实用容量时饱和到
+    `1 << 30`，避免左移溢出。
+    单测：`TestObjectHelper.initialCapacityDoesNotOverflowForLargeExpectedSize()`。
 
 ## `com.ajaxjs.util.httpremote`
 
@@ -123,21 +140,32 @@
 
 ## `com.ajaxjs.util.io`
 
+### 单元测试确认
+
+2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.io.Test*`：共 46 个测试，39 个通过、
+7 个失败。失败集中在下列第 1、2、3、5、7 项；`Resources.getResourceText()` 的失败是第 1 项
+经资源读取入口传播的结果，不另列重复问题。测试已作为回归用例保留，生产源码尚未修改。
+
 ### 高优先级
 
 1. `DataReader.readAsString()` 使用 `readLine()` 后统一追加系统换行符，既改变原有 LF/CRLF，又会给
    没有结尾换行的内容强行增加换行。它被 HTTP 和文件读取 API 复用，会静默修改数据。
    修复方案：用 `Reader` 的字符缓冲区直接复制，保留原始字符序列。
+   单测：`TestDataReader.testReadAsString()`、
+   `TestDataReader.readAsStringPreservesOriginalLineEndingsAndTrailingNewline()` 和
+   `TestResources.readsResourceText()`。
 
 2. `DataWriter.write(InputStream)` 会通过 `DataReader` 关闭调用者传入的输入流，但注释只强调输出流
    不会关闭，所有权约定不清晰且容易导致后续读取失败。
    修复方案：复制方法默认不关闭任一外部流；需要托管生命周期时提供名称明确的独立入口。
+   单测：`TestDataWriter.writeDoesNotCloseCallerInputOrOutput()`。
 
 ### 中优先级
 
 3. `DataWriter.write(byte[], off, length)` 把 `(0, 0)` 当作“写入整个数组”。这违反
    `OutputStream.write` 的常规约定：length 为 0 应写入零字节。
    修复方案：让三参数重载严格遵守 offset/length 语义；单参数重载直接写完整数组。
+   单测：`TestDataWriter.zeroLengthWritesNoBytes()`。
 
 4. `FileHelper.writeFileContent()` 使用平台默认字符集，而读取文本默认 UTF-8，同一 API 往返可能
    乱码。
@@ -145,6 +173,7 @@
 
 5. `FileHelper.getFileContent()` 按行读取后重新拼接，会统一换行并丢失文件最后是否有换行的信息。
    修复方案：复用修正后的原样文本读取实现。
+   单测：`TestFileHelper.readingTextPreservesLineEndingsAndTrailingNewline()`。
 
 6. `FileHelper.getFileSize()` 文档声称可取得文件或目录大小，但对目录只返回目录项自身的文件系统
    元数据大小，不是目录内容总大小。
@@ -153,6 +182,7 @@
 7. `ZipHelper.isZipFile()` 只识别 `PK\003\004` 的 local-file-header 签名，合法的空 ZIP
    （以 `PK\005\006` 开始）会被判断为非 ZIP。
    修复方案：优先尝试打开 `ZipFile`，或完整识别 ZIP 规范允许的签名并校验结构。
+   单测：`TestZipHelper.testRecognizesRegularAndEmptyZipArchives()`。
 
 8. `CmdHelper.exec(String)` 依赖 `Runtime.exec(String)` 的平台相关分词规则，没有超时，也没有检查
    进程退出码。带空格/引号的参数容易执行错误，子进程还可能无限运行。
@@ -174,16 +204,29 @@
 
 ## `com.ajaxjs.util.date`
 
+### 单元测试确认
+
+2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.date.Test*`：共 66 个测试，63 个通过、
+2 个失败、1 个错误。失败对应下列 3 个问题。测试已作为回归用例保留，生产源码尚未修改。
+
 ### 中优先级
 
-1. `DateTools` 的日期正则允许一位月、日、时、分、秒，但之后选择的严格 formatter 使用
+1. `DateTools` 的日期正则允许一位月、日、时，但之后选择的严格 formatter 使用
    `MM/dd/HH/mm/ss`。例如 `2024-1-1` 通过格式识别后仍解析失败。
    修复方案：正则与 formatter 接受范围保持一致；若要支持一位字段，为解析器单独构造可变宽度
    formatter。
+   单测：`TestDateTools.object2DateSupportsWidthsAcceptedByItsFormatDetection()`。
 
 2. `DateTypeConvert` 将 `LocalDate` 转换为 instant 类目标时使用 `atStartOfDay(zone)`。
    某些时区在当天零点发生 DST/规则切换时，该调用会把时间静默推进到下一个有效时刻。
    修复方案：明确“当天开始”的冲突策略；严格模式检查实际得到的 local date/time 是否仍符合输入。
+   单测：`TestDateTypeConvert.testLocalDateRejectsSkippedStartOfDay()`。
+
+3. `DateTypeConvert.to(null, zoneId)` 没有先校验目标类型，最终在拼接错误信息时调用
+   `clz.getName()`，抛出缺少上下文的 `NullPointerException`。
+   修复方案：在任何输入分支之前校验 `clz`，为空时抛出带明确消息的
+   `IllegalArgumentException`。
+   单测：`TestDateTypeConvert.testNullTargetTypeIsRejectedClearly()`。
 
 ## `com.ajaxjs.util.json`
 
@@ -201,6 +244,12 @@
 
 ## `com.ajaxjs.util.cryptography`
 
+### 单元测试确认
+
+2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.cryptography.Test*`：共 13 个测试，
+9 个通过、3 个失败、1 个错误。失败集中在下列第 2、6 项；第 6 项的 algorithm、key、data
+三个状态分别保留独立回归测试。生产源码尚未修改。
+
 ### 高优先级
 
 1. RSA 加解密入口把 transformation 写成 `"RSA"`，具体 padding 由 provider 默认值决定，通常落到
@@ -208,25 +257,40 @@
    修复方案：要求显式 transformation，新加密默认使用 OAEP（建议 SHA-256/MGF1），旧 PKCS#1
    仅保留兼容解密入口。
 
+2. `Cryptography.setKeyData()` 和 `setSecretKey()` 使用完整的 cipher transformation 作为
+   `SecretKeySpec` 的算法名。例如配置 `AES/GCM/NoPadding` 时会生成同名 key，SunJCE 随后以
+   “AES or Rijndael required” 拒绝该密钥。
+   修复方案：将 transformation 与基础 key algorithm 分离；构造器或 setter 明确接收
+   `AES` 等 key algorithm，不要依赖字符串截取猜测。
+   单测：`TestCryptographySecurity.testTransformationAcceptsRawAesKeyData()`。
+
 ### 中优先级
 
-2. `KeyMgr.action()` 一次把全部数据传给 RSA `Cipher.doFinal()`，超过单个 RSA block 的输入会直接
+3. `KeyMgr.action()` 一次把全部数据传给 RSA `Cipher.doFinal()`，超过单个 RSA block 的输入会直接
    失败，但 API 没有预检或说明长度限制。
    修复方案：RSA 只用于封装随机对称密钥并提供混合加密 API；至少应按 key/padding 预检最大长度并
    给出明确错误。
 
-3. `SecretKeyMgr.getRandom()` 用调用者提供的字符串对 `SecureRandom.setSeed()`，但 setSeed 只是
+4. `SecretKeyMgr.getRandom()` 用调用者提供的字符串对 `SecureRandom.setSeed()`，但 setSeed 只是
    混入熵，并不保证可复现；方法注释容易让人把它当作确定性密钥派生。
    修复方案：密码派生统一使用 PBKDF2/Argon2 等 KDF；随机数 API 不接受“密钥字符串”作为种子。
 
-4. `Constant` 仍公开 `DES`、`MD5withRSA`、`PBEWITHMD5andDES`、OAEP-SHA1 等弱算法常量，部分还有
+5. `Constant` 仍公开 `DES`、`MD5withRSA`、`PBEWITHMD5andDES`、OAEP-SHA1 等弱算法常量，部分还有
    便捷加解密方法，容易在新代码中误用。
    修复方案：弱算法 API 标记弃用并集中到 legacy 命名空间；文档明确仅允许兼容历史数据，默认示例
    使用 AES-GCM、SHA-256 以上签名和现代 OAEP。
 
+6. `Cryptography.doCipher()` 没有像签名/验证 API 一样预检必填状态。algorithm、key 或 data
+   缺失时，异常由不同 provider 调用偶然产生，分别表现为 `RuntimeException` 或
+   `IllegalArgumentException`，消息也不能稳定说明调用者漏设了哪个字段。
+   修复方案：进入 JCA/JCE provider 前统一校验非空 algorithm、合法 mode、key 和 data；
+   对未配置状态抛出带稳定消息的 `IllegalStateException`，同时允许显式传入空字节数组。
+   单测：`TestCryptographySecurity.testCipherRejectsMissingAlgorithmClearly()`、
+   `testCipherRejectsMissingKeyClearly()` 和 `testCipherRejectsMissingDataClearly()`。
+
 ### 低优先级
 
-5. `CertificateUtils.deserializeToCerts()` 对远端 Map 结构进行多次未经校验的强制转换，并对缺失值
+7. `CertificateUtils.deserializeToCerts()` 对远端 Map 结构进行多次未经校验的强制转换，并对缺失值
    直接 `toString()`。响应结构稍有变化就会产生难以定位的 `ClassCastException` 或空指针。
    修复方案：逐层校验字段类型和必填字段，并在异常中包含字段路径。
 

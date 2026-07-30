@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestDataWriter {
     private ByteArrayOutputStream mockOut;
@@ -61,5 +61,48 @@ class TestDataWriter {
 
         writerWithoutBuffer.write(testBytes, 7, 5);
         assertEquals("Array", new String(noBufferMockOut.toByteArray(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void zeroLengthWritesNoBytes() {
+        writerWithBuffer.write(testBytes, 0, 0);
+
+        assertArrayEquals(new byte[0], mockOut.toByteArray());
+    }
+
+    @Test
+    void writeDoesNotCloseCallerInputOrOutput() throws IOException {
+        TrackingInputStream input = new TrackingInputStream(testBytes);
+        TrackingOutputStream output = new TrackingOutputStream();
+
+        new DataWriter(output).write(input);
+
+        assertArrayEquals(testBytes, output.toByteArray());
+        assertFalse(input.closed);
+        assertFalse(output.closed);
+    }
+
+    private static final class TrackingInputStream extends ByteArrayInputStream {
+        private boolean closed;
+
+        private TrackingInputStream(byte[] bytes) {
+            super(bytes);
+        }
+
+        @Override
+        public void close() throws IOException {
+            closed = true;
+            super.close();
+        }
+    }
+
+    private static final class TrackingOutputStream extends ByteArrayOutputStream {
+        private boolean closed;
+
+        @Override
+        public void close() throws IOException {
+            closed = true;
+            super.close();
+        }
     }
 }

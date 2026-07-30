@@ -2,61 +2,84 @@ package com.ajaxjs.util.io;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestResources {
+class TestResources {
     @Test
-    public void testGetResourcesFromClasspath_FoundResource_ShouldReturnPath() {
-        String resourcePath = Resources.getResourcesFromClasspath("\\com\\test.txt");
+    void locatesClasspathResource() {
+        String resourcePath = Resources.getResourcesFromClasspath("com/test.txt");
+
+        assertNotNull(resourcePath);
+        assertTrue(Files.exists(Paths.get(resourcePath)));
     }
 
     @Test
-    public void testGetResourcesFromClasspath_NotFoundResource_ShouldReturnNull() {
-        assertThrows(RuntimeException.class, () -> Resources.getResourcesFromClasspath("application.yml"));
+    void missingClasspathResourceThrows() {
+        assertThrows(
+                RuntimeException.class,
+                () -> Resources.getResourcesFromClasspath("non-existent-resource.txt")
+        );
     }
 
     @Test
-    public void testGetResourcesFromClass_FoundResource_ShouldReturnPath() {
-        String resourcePath = Resources.getResourcesFromClass(TestResources.class, "test.txt");
-        System.out.println(resourcePath);
-        assertNull(resourcePath);
+    void locatesAbsoluteResourceRelativeToClass() {
+        String resourcePath = Resources.getResourcesFromClass(TestResources.class, "/test.txt");
+
+        assertNotNull(resourcePath);
+        assertTrue(Files.exists(Paths.get(resourcePath)));
+        assertNull(Resources.getResourcesFromClass(TestResources.class, "non-existent-resource.txt"));
     }
 
     @Test
-    public void testGetResourcesFromClass_NotFoundResource_ShouldReturnNull() {
-        String resourcePath = Resources.getResourcesFromClass(TestResources.class, "non-existent-resource.txt");
-        assertNull(resourcePath, "Expected null for non-existent resource");
+    void opensAndReadsResourceContent() throws Exception {
+        try (InputStream input = Resources.getResource("test.txt")) {
+            assertNotNull(input);
+            byte[] bytes = new DataReader(input).readAsBytes();
+            assertEquals("你好 Hi", new String(bytes, StandardCharsets.UTF_8));
+        }
+
+        assertNull(Resources.getResource("non-existent-resource.txt"));
     }
 
     @Test
-    public void testGetJarDir_ShouldReturnValidJarDirectory() {
-        String jarDir = Resources.getJarDir();
-        assertNotNull(jarDir, "JAR directory not found");
+    void readsResourceText() {
+        assertEquals("你好 Hi", Resources.getResourceText("test.txt"));
+        assertNull(Resources.getResourceText("non-existent-resource.txt"));
     }
 
     @Test
-    public void testGetResourceText_FoundResource_ShouldReturnContent() {
-        String resourceContent = Resources.getResourceText("README.md");
-        assertNotNull(resourceContent, "Resource content not found");
-    }
-
-    @Test
-    public void testGetResourceText_NotFoundResource_ShouldReturnNull() {
-        String resourceContent = Resources.getResourceText("non-existent-file.md");
-        assertNull(resourceContent, "Expected null for non-existent resource");
-    }
-
-    @Test
-    public void testGetProperties_ValidPropertiesFile_ShouldLoadProperties() {
+    void loadsPropertiesWithExactValues() {
         Properties properties = Resources.getProperties("test-demo.properties");
-        System.out.println(properties);
-        assertNotNull(properties);
+
+        assertEquals("hi", properties.getProperty("database.ipPort"));
+        assertEquals("root", properties.getProperty("database.username"));
+        assertEquals("root", properties.getProperty("database.password"));
+        assertEquals(3, properties.size());
     }
 
     @Test
-    public void testGetProperties_NotFoundPropertiesFile_ShouldThrowException() {
-        assertThrows(RuntimeException.class, () -> Resources.getProperties("application.properties"));
+    void missingPropertiesThrows() {
+        RuntimeException error = assertThrows(
+                RuntimeException.class,
+                () -> Resources.getProperties("non-existent.properties")
+        );
+
+        assertTrue(error.getMessage().contains("non-existent.properties"));
+    }
+
+    @Test
+    void derivesClassNameAndRuntimeDirectory() {
+        assertEquals(
+                "com.example.Sample",
+                Resources.getClassName(new java.io.File("Sample.class"), "com.example")
+        );
+        assertNotNull(Resources.getJarDir());
+        assertFalse(Resources.getJarDir().isEmpty());
     }
 }

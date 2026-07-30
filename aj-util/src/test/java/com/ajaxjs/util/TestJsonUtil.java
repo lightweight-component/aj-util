@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Modifier;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -152,11 +151,11 @@ class TestJsonUtil {
 
         assertNotNull(map);
         assertEquals(3, map.size());
-        // LinkedHashMap 保持插入顺序（Jackson 默认按字母排序键）
+        // LinkedHashMap preserves the order found in the JSON object.
         Iterator<String> keys = map.keySet().iterator();
+        assertEquals("zKey", keys.next());
         assertEquals("aKey", keys.next());
         assertEquals("mKey", keys.next());
-        assertEquals("zKey", keys.next());
     }
 
     // ==================== json2map (无 Class 参数) 测试 ====================
@@ -237,14 +236,16 @@ class TestJsonUtil {
 
     @Test
     void convertValue_DifferentType_ReturnsConvertedObject() {
-        User user = new User();
-        user.setName("John");
-        user.setAge(30);
+        Map<String, Object> source = new HashMap<>();
+        source.put("firstName", "John");
+        source.put("lastName", "Doe");
+        source.put("age", 30);
 
-        Person person = JsonUtil.convertValue(user, Person.class);
+        Person person = JsonUtil.convertValue(source, Person.class);
 
         assertNotNull(person);
         assertEquals("John", person.getFirstName());
+        assertEquals("Doe", person.getLastName());
         assertEquals(30, person.getAge());
     }
 
@@ -346,21 +347,19 @@ class TestJsonUtil {
     @Test
     void testDate() {
         Map<String, Object> sourceMap = new HashMap<>();
-        sourceMap.put("name", "Test Device");
-        sourceMap.put("createTime", LocalDateTime.of(2023, 10, 27, 10, 30, 0));
+        Date expected = new Date(1_698_375_000_000L);
+        sourceMap.put("createTime", expected);
 
         MyPojoWithDate pojo = JsonUtil.map2pojo(sourceMap, MyPojoWithDate.class);
-        System.out.println("Converted POJO: " + pojo);
         assertNotNull(pojo);
+        assertEquals(expected, pojo.getCreateTime());
     }
 
     // ==================== 边界情况测试 ====================
 
     @Test
-    void toJson_EmptyObject_ReturnsEmptyJson() {
-        Object emptyObj = new Object();
-        String json = JsonUtil.toJson(emptyObj);
-        assertNotNull(json);
+    void toJson_EmptyMap_ReturnsEmptyJson() {
+        assertEquals("{}", JsonUtil.toJson(Collections.emptyMap()));
     }
 
     @Test

@@ -67,13 +67,11 @@ class TestDateTypeConvert {
     @Test
     void testSqlDateToOffsetDateTime() {
         java.sql.Date sqlDate = java.sql.Date.valueOf("2025-10-23");
-        OffsetDateTime expected = sqlDate.toLocalDate()
-                .atStartOfDay(zone)
-                .toInstant()
-                .atOffset(zone.getRules().getOffset(sqlDate.toLocalDate().atStartOfDay()));
+        Instant instant = sqlDate.toLocalDate().atStartOfDay(zone).toInstant();
+        OffsetDateTime expected = instant.atOffset(zone.getRules().getOffset(instant));
 
         OffsetDateTime result = new DateTypeConvert(sqlDate).to(OffsetDateTime.class, null);
-        assertEquals(expected.toLocalDate(), result.toLocalDate()); // compare date only
+        assertEquals(expected, result);
     }
 
     @Test
@@ -94,6 +92,16 @@ class TestDateTypeConvert {
                 () -> new DateTypeConvert(LocalDateTime.of(2024, 3, 10, 2, 30)).to(Instant.class, newYork));
         assertThrows(DateTimeException.class,
                 () -> new DateTypeConvert(LocalDateTime.of(2024, 11, 3, 1, 30)).to(Instant.class, newYork));
+    }
+
+    @Test
+    void testLocalDateRejectsSkippedStartOfDay() {
+        LocalDate skippedDate = LocalDate.of(2011, 12, 30);
+
+        assertThrows(
+                DateTimeException.class,
+                () -> new DateTypeConvert(skippedDate).to(Instant.class, ZoneId.of("Pacific/Apia"))
+        );
     }
 
     @Test
@@ -151,10 +159,9 @@ class TestDateTypeConvert {
 
     @Test
     void testTimestampToInstant2() {
-        // 测试 java.sql.Timestamp 转换为 Instant
-        Timestamp timestamp = Timestamp.from(Instant.EPOCH);
+        Timestamp timestamp = Timestamp.from(Instant.parse("2024-01-02T03:04:05.123456789Z"));
         Instant result = new DateTypeConvert(timestamp).to(Instant.class, null);
-        assertEquals(Instant.EPOCH, result);
+        assertEquals(Instant.parse("2024-01-02T03:04:05.123456789Z"), result);
     }
 
     @Test
@@ -178,7 +185,11 @@ class TestDateTypeConvert {
         // 测试 LocalTime 输入转换为 OffsetTime
         LocalTime localTime = LocalTime.of(10, 30, 45);
         OffsetTime result = new DateTypeConvert(localTime).to(OffsetTime.class, ZoneOffset.UTC);
-        assertEquals(localTime, result.toLocalTime());
+        assertEquals(OffsetTime.of(localTime, ZoneOffset.UTC), result);
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> new DateTypeConvert(localTime).to(OffsetTime.class, ZoneId.of("Asia/Shanghai"))
+        );
     }
 
     @Test
@@ -230,9 +241,8 @@ class TestDateTypeConvert {
 
     @Test
     void testInstantToOffsetTime() {
-        // 测试 Instant 转换为 OffsetTime
         OffsetTime result = new DateTypeConvert(Instant.EPOCH).to(OffsetTime.class, ZoneOffset.UTC);
-        assertNotNull(result);
+        assertEquals(OffsetTime.of(0, 0, 0, 0, ZoneOffset.UTC), result);
     }
 
     @Test
@@ -248,6 +258,29 @@ class TestDateTypeConvert {
         // 测试不支持的目标类型抛出异常
         assertThrows(UnsupportedOperationException.class,
                 () -> new DateTypeConvert(Instant.EPOCH).to(String.class, null));
+    }
+
+    @Test
+    void testNullTargetTypeIsRejectedClearly() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new DateTypeConvert(Instant.EPOCH).to(null, ZoneOffset.UTC)
+        );
+    }
+
+    @Test
+    void testExplicitZoneChangesCivilTimeWithoutChangingInstant() {
+        Instant instant = Instant.parse("2024-01-01T00:00:00Z");
+
+        ZonedDateTime tokyo = new DateTypeConvert(instant)
+                .to(ZonedDateTime.class, ZoneId.of("Asia/Tokyo"));
+        ZonedDateTime newYork = new DateTypeConvert(instant)
+                .to(ZonedDateTime.class, ZoneId.of("America/New_York"));
+
+        assertEquals(instant, tokyo.toInstant());
+        assertEquals(instant, newYork.toInstant());
+        assertEquals(LocalDateTime.of(2024, 1, 1, 9, 0), tokyo.toLocalDateTime());
+        assertEquals(LocalDateTime.of(2023, 12, 31, 19, 0), newYork.toLocalDateTime());
     }
 
     @Test

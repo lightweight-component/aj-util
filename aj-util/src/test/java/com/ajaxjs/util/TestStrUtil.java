@@ -2,7 +2,6 @@ package com.ajaxjs.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestStrUtil {
     final static String str = "中国";
-
-    public static void main(String[] args) {
-        System.out.println("你好 %s".replace("%s", "张三"));
-    }
 
     @Test
     void testCharCount() {
@@ -46,9 +41,14 @@ class TestStrUtil {
     }
 
     @Test
-    void messageFormat() {
-        String result = MessageFormat.format("您好{0}，晚上好！您目前余额：{1,number,#.##}元，积分：{2}", "张三", 10.155, 10);
-        System.out.println(result);
+    void simpleTplSkipsWriteOnlyBeanProperties() {
+        class WriteOnlyBean {
+            @SuppressWarnings("unused")
+            public void setSecret(String secret) {
+            }
+        }
+
+        assertEquals("unchanged", simpleTpl("unchanged", new WriteOnlyBean()));
     }
 
     @Test
@@ -58,6 +58,7 @@ class TestStrUtil {
         list.add("b");
         list.add("c");
 
-        System.out.println(join(list, "&"));
+        assertEquals("a&b&c", join(list, "&"));
+        assertEquals("[a], [b], [c]", join(list, "[%s]", ", "));
     }
 }

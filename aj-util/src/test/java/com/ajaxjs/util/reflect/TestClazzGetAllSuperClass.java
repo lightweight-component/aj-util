@@ -23,60 +23,45 @@ class TestClazzGetAllSuperClass {
 
     @Test
     void testGetAllSuperClazz_withMultiLevelInheritance() {
-        // 测试多层继承：Child -> Parent -> GrandParent -> Object
-        Class<?>[] result = Clazz.getAllSuperClass(Child.class);
-
-        // 应该返回 [Parent, GrandParent]，不包含 Object 和自己
-        assertEquals(2, result.length);
-        assertEquals(Parent.class, result[0]);
-        assertEquals(GrandParent.class, result[1]);
+        assertArrayEquals(
+                new Class<?>[]{Parent.class, GrandParent.class},
+                Clazz.getAllSuperClass(Child.class)
+        );
     }
 
     @Test
     void testGetAllSuperClazz_withSingleLevelInheritance() {
         // 测试单层继承：Parent -> GrandParent -> Object
-        Class<?>[] result = Clazz.getAllSuperClass(Parent.class);
-
-        // 应该返回 [GrandParent]
-        assertEquals(1, result.length);
-        assertEquals(GrandParent.class, result[0]);
+        assertArrayEquals(
+                new Class<?>[]{GrandParent.class},
+                Clazz.getAllSuperClass(Parent.class)
+        );
     }
 
     @Test
     void testGetAllSuperClazz_withNoParent() {
         // 测试没有父类的情况（除了 Object）
-        Class<?>[] result = Clazz.getAllSuperClass(NoParent.class);
-
-        // 应该返回空数组
-        assertEquals(0, result.length);
+        assertArrayEquals(new Class<?>[0], Clazz.getAllSuperClass(NoParent.class));
     }
 
     @Test
     void testGetAllSuperClazz_withObjectClass() {
         // 测试 Object 类本身
-        Class<?>[] result = Clazz.getAllSuperClass(Object.class);
-
-        // Object 类没有父类（除了 null），应该返回空数组
-        assertEquals(0, result.length);
+        assertArrayEquals(new Class<?>[0], Clazz.getAllSuperClass(Object.class));
     }
 
     @Test
     void testGetAllSuperClazz_withInterface() {
         // 测试接口：接口没有父类（除了 Object，但这里被排除）
-        Class<?>[] result = Clazz.getAllSuperClass(Runnable.class);
-
-        // 接口没有 super class（接口继承自 Object，但被排除）
-        assertEquals(0, result.length);
+        assertArrayEquals(new Class<?>[0], Clazz.getAllSuperClass(Runnable.class));
     }
 
     @Test
     void testGetAllSuperClazz_withStandardLibraryClass() {
         // 使用标准库类测试：ArrayList -> AbstractList -> AbstractCollection -> Object
-        Class<?>[] result = Clazz.getAllSuperClass(java.util.ArrayList.class);
-
-        // 验证返回的数组不为空且包含预期的父类
-        assertTrue(result.length >= 2);
-        // 第一个应该是 AbstractList
-        assertEquals(java.util.AbstractList.class, result[0]);
+        assertArrayEquals(
+                new Class<?>[]{java.util.AbstractList.class, java.util.AbstractCollection.class},
+                Clazz.getAllSuperClass(java.util.ArrayList.class)
+        );
     }
 }

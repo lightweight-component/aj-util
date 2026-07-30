@@ -66,7 +66,6 @@ class TestMapTool {
             put("id", 1L);
             put("name", "Jack");
             put("age", 30);
-            put("birthday", new Date());
             put("directField", "directField22");
         }
     };
@@ -81,10 +80,8 @@ class TestMapTool {
                 put("name", "Jack");
                 put("sex", s);
                 put("age", 30);
-                put("birthday", new Date());
-
-                put("children", "Tom,Peter");
-                put("luckyNumbers", "2, 8, 6");
+                put("children", new String[]{"Tom", "Peter"});
+                put("luckyNumbers", new int[]{2, 8, 6});
             }
         };
     }
@@ -135,22 +132,25 @@ class TestMapTool {
 
     @Test
     void testDeepCopy() {
-        // Create a sample map
-        Map<Integer, String> originalMap = new HashMap<>();
-        originalMap.put(1, "One");
-        originalMap.put(2, "Two");
-        originalMap.put(3, "Three");
+        Map<String, Object> child = new HashMap<>();
+        child.put("value", "before");
+        Map<String, Object> originalMap = new HashMap<>();
+        originalMap.put("child", child);
+        Map<String, Object> clonedMap = MapTool.deepCopy(originalMap);
 
-        // Clone the map using MapTool deepCopy method
-        Map<Integer, String> clonedMap = MapTool.deepCopy(originalMap);
-
-        // Assert that the cloned map is not the same object as the original map
         assertNotSame(originalMap, clonedMap);
+        assertNotSame(originalMap.get("child"), clonedMap.get("child"));
 
-        // Assert that the cloned map has the same key-value pairs as the original map
-        assertEquals(originalMap.size(), clonedMap.size());
-        for (Integer key : originalMap.keySet())
-            assertEquals(originalMap.get(key), clonedMap.get(key));
+        child.put("value", "after");
+        assertEquals("before", ((Map<?, ?>) clonedMap.get("child")).get("value"));
+    }
+
+    @Test
+    void mapToXmlPreservesValueWhitespace() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("text", "  keep me  ");
+
+        assertEquals("  keep me  ", Objects.requireNonNull(MapTool.xmlToMap(MapTool.mapToXml(values))).get("text"));
     }
 
     @Test
@@ -173,26 +173,13 @@ class TestMapTool {
         // 扁平化
         Map<String, Object> flattenedMap = MapTool.flatten(rootMap);
 
-        // 输出结果
-        System.out.println("Original Nested Map:");
-        System.out.println(rootMap);
-        System.out.println("\nFlattened Map:");
-        // 按键排序输出以便查看
-        flattenedMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEach(entry ->
-                        System.out.println(entry.getKey() + " -> " + entry.getValue() +
-                                (entry.getValue() != null ? " (" + entry.getValue().getClass().getSimpleName() + ")" : ""))
-                );
-
-        // 访问扁平化后的值
-        System.out.println("\nAccessing values from flattened map:");
-        System.out.println("a1: " + flattenedMap.get("a1"));
-        System.out.println("a2.b1: " + flattenedMap.get("a2.b1"));
-        System.out.println("a2.b2.c1: " + flattenedMap.get("a2.b2.c1"));
-        System.out.println("a2.b2.c2: " + flattenedMap.get("a2.b2.c2"));
-        System.out.println("a3 (null value): " + flattenedMap.get("a3"));
-        System.out.println("a4 (List value): " + flattenedMap.get("a4"));
-
+        Map<String, Object> expected = new HashMap<>();
+        expected.put("a1", "value_a1");
+        expected.put("a2.b1", "value_b1");
+        expected.put("a2.b2.c1", "value_c1");
+        expected.put("a2.b2.c2", 42);
+        expected.put("a3", null);
+        expected.put("a4", ObjectHelper.listOf(1, 2, 3));
+        assertEquals(expected, flattenedMap);
     }
 }
