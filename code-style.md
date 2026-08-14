@@ -1,3 +1,53 @@
+# 编程语言的风格约束
+
+对于 C 语系的编程语言，包括 C/Java/Js/Ts 统一采用下面的语言风格生成代码。
+
+## 单行 if/for/while 可以不用尖括号
+
+例如：
+```csharp
+  if (readonly.value) {
+    return;
+  }
+```
+
+要求是：
+
+```csharp
+  if (readonly.value) 
+    return;
+```
+
+## if/for/while 语块之间有一个空行
+
+例如：
+```javascript
+  if (readonly.value) 
+    return;
+  if (type === "start" && Object.values(workflow.value.states).some((node) => node.type === "start")) {
+    window.alert("流程只能包含一个开始节点");
+    return;
+  }
+```
+
+要求是：
+
+```javascript
+  if (readonly.value) 
+    return;
+    
+  if (type === "start" && Object.values(workflow.value.states).some((node) => node.type === "start")) {
+    window.alert("流程只能包含一个开始节点");
+    return;
+  }
+```
+
+## 对于可以省略变量类型的语言，尽量加上类型提示
+
+例如 ts、swift，不应省略，以便于人类阅读，例如`let index = 1;`应该是` let index:number = 1;`
+
+## `return` 所在的行，上一行应该有一个空行
+
 
 # 注释
 
