@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ Utils-Working with Jackson 3</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Working with Jackson 3" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Jackson3" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/cn');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/cn">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    AJ Utils
+                </h1>
+                <h3>Small Java Utils Library</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
+                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
+                    <li><a href="/common/MapTool/">MapTool</a></li>
+                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+                </ul>
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/date/intro/">Introduction</a></li>
+                    <li><a href="/date/convert/">Date Converter</a></li>
+                    <li><a href="/date/formatter/">Date Formatter</a></li>
+                </ul>
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/reflect/Methods/">Methods</a></li>
+                    <li><a href="/reflect/Types/">Types</a></li>
+                    <li><a href="/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/reflect/Fields/">Fields</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/io/Resources/">Resources</a></li>
+                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                </ul>
+
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/http_request/Base/">HTTP Request</a></li>
+                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+                </ul>
+    
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/cryptography/intro/">Introduction</a></li>
+                <li><a href="/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+               </ul>
+               <h3>Misc.</h3>
+               <ul>
+                <li><a href="/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/misc/contact/">Contact</a></li>
+               </ul>
+            </menu>
+            <article class="aj-text">
+                <h1>Working with Jackson 3</h1>
+<p><code>aj-util</code> ships with the Jackson JSON library by default, currently at version 2.x, which works well with Java 8. However, as JDK 11/17 becomes more popular, upgrading to Jackson 3.x is necessary. <code>aj-util</code> supports newer versions of Jackson and provides a unified interface for JSON utility functions. This article will show you how to use Jackson 3 with <code>aj-util</code>.</p>
+<h3>Step 1: Exclude Jackson 2 Dependencies</h3>
+<p>First, exclude the Jackson 2 dependencies and add the Jackson 3 dependencies. If you're using Spring, you can omit this step because the Spring framework already includes Jackson 3.</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;ajaxjs-util&lt;/artifactId&gt;
+    &lt;version&gt;1.3.6&lt;/version&gt;
+
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+            &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+        &lt;exclusion&gt;
+            &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+            &lt;artifactId&gt;jackson-core&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Since the Maven scope of the old Jackson library is <code>provided</code>, you don't actually have to exclude the dependencies mentioned above. However, the next step is necessary.</p>
+<h3>Step 2: Configure Java SPI</h3>
+<p>Create a file named <code>com.ajaxjs.util.json.JsonEngineProvider</code> under the folder <code>src/main/resources/META-INF/services</code>. This is a Java SPI configuration file.</p>
+<p>The content of this file should be:</p>
+<pre><code class="language-text">com.ajaxjs.util.json.jackson3.Jackson3Provider
+</code></pre>
+<h3>Step 3: Add the Jackson 3 Adapter</h3>
+<p>The Jackson 3 adapter is located at:</p>
+<ul>
+<li><a href="https://gitee.com/lightweight-components/ajaxjs/blob/master/aj-spring-base/src/main/java/com/ajaxjs/util/json/jackson3/Jackson3Engine.java">Jackson3Engine.java</a></li>
+<li><a href="https://gitee.com/lightweight-components/ajaxjs/blob/master/aj-spring-base/src/main/java/com/ajaxjs/util/json/jackson3/Jackson3Provider.java">Jackson3Provider.java</a></li>
+</ul>
+<p>Simply copy these two files into your source code.</p>
+<p>With that, you have finished configuring <code>aj-util</code> to work with Jackson 3.</p>
+<h3>Optional: Exclude Unnecessary Libraries</h3>
+<p>Optionally, you can also exclude libraries such as SLF4j, Logback, JUnit, and Jakarta Servlet if they are not needed in your project.</p>
+<pre><code class="language-xml">&lt;exclusion&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+&lt;/exclusion&gt;
+
+&lt;exclusion&gt;
+    &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+    &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;
+&lt;/exclusion&gt;
+
+&lt;exclusion&gt;
+    &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+    &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+&lt;/exclusion&gt;
+
+&lt;exclusion&gt;
+    &lt;groupId&gt;jakarta.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;jakarta.servlet-api&lt;/artifactId&gt;
+&lt;/exclusion&gt;
+</code></pre>
+
+            </article>
+        </div>
+
+       <footer>
+            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>
