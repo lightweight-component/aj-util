@@ -5,7 +5,9 @@ import com.ajaxjs.util.BytesHelper;
 import com.ajaxjs.util.RandomTools;
 import com.ajaxjs.util.StringBytes;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
@@ -63,6 +65,8 @@ public class Cryptography {
     /**
      * The cryptographic key used for cipher operations.
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Key key;
 
     /**
@@ -71,12 +75,14 @@ public class Cryptography {
      * @param keyData the raw key bytes
      */
     public void setKeyData(byte[] keyData) {
-        key = new SecretKeySpec(keyData, algorithmName);
+        key = new SecretKeySpec(keyData, getKeyAlgorithm());
     }
 
     /**
      * The source secret key whose encoded bytes are used to rebuild the cipher key.
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private SecretKey secretKey;
 
     /**
@@ -87,12 +93,14 @@ public class Cryptography {
      */
     public void setSecretKey(SecretKey secretKey) {
         this.secretKey = secretKey;
-        key = new SecretKeySpec(secretKey.getEncoded(), algorithmName);
+        key = new SecretKeySpec(secretKey.getEncoded(), getKeyAlgorithm());
     }
 
     /**
      * The input data for the cipher operation.
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private byte[] data;
 
     /**
@@ -121,6 +129,8 @@ public class Cryptography {
     /**
      * Additional authenticated data used with AEAD ciphers such as GCM.
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private byte[] associatedData;
 
     /**
@@ -129,6 +139,8 @@ public class Cryptography {
      * @return the encrypted or decrypted bytes
      */
     public byte[] doCipher() {
+        validateState();
+
         try {
             Cipher cipher = Cipher.getInstance(algorithmName);
 
@@ -154,6 +166,40 @@ public class Cryptography {
         } catch (InvalidAlgorithmParameterException e) {
             throw new IllegalArgumentException("Invalid Algorithm Parameter.", e);
         }
+    }
+
+    /**
+     * Returns the base key algorithm from the configured cipher transformation.
+     *
+     * @return the key algorithm, such as {@code AES}
+     * @throws IllegalStateException if the cipher algorithm is missing
+     */
+    String getKeyAlgorithm() {
+        if (algorithmName == null || algorithmName.trim().isEmpty())
+            throw new IllegalStateException("Cipher algorithm is required.");
+
+        int separator = algorithmName.indexOf('/');
+
+        return separator < 0 ? algorithmName : algorithmName.substring(0, separator);
+    }
+
+    /**
+     * Validates the state required to perform a cipher operation.
+     *
+     * @throws IllegalStateException if the algorithm, mode, key, or input data is invalid
+     */
+    void validateState() {
+        if (algorithmName == null || algorithmName.trim().isEmpty())
+            throw new IllegalStateException("Cipher algorithm is required.");
+
+        if (mode != Cipher.ENCRYPT_MODE && mode != Cipher.DECRYPT_MODE)
+            throw new IllegalStateException("Cipher mode must be ENCRYPT_MODE or DECRYPT_MODE.");
+
+        if (key == null)
+            throw new IllegalStateException("Cipher key is required.");
+
+        if (data == null)
+            throw new IllegalStateException("Cipher data is required.");
     }
 
     /**
@@ -373,7 +419,7 @@ public class Cryptography {
      * @param iterationCount the iteration count
      * @return the derived AES secret key
      */
-    private static SecretKeySpec derivePbeKey(String password, byte[] salt, int iterationCount) {
+    static SecretKeySpec derivePbeKey(String password, byte[] salt, int iterationCount) {
         if (password == null || password.isEmpty())
             throw new IllegalArgumentException("PBE password must not be empty.");
 
@@ -393,7 +439,7 @@ public class Cryptography {
      * @param salt           the salt to validate
      * @param iterationCount the iteration count to validate
      */
-    private static void validatePbeParameters(byte[] salt, int iterationCount) {
+    static void validatePbeParameters(byte[] salt, int iterationCount) {
         if (salt == null || salt.length < PBE_SALT_LENGTH)
             throw new IllegalArgumentException("PBE salt must contain at least " + PBE_SALT_LENGTH + " bytes.");
 

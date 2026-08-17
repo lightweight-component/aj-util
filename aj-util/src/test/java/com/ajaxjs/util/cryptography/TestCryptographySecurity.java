@@ -9,6 +9,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.security.KeyPair;
 import java.util.Arrays;
 
@@ -186,5 +188,74 @@ class TestCryptographySecurity {
                 "Cipher algorithm is required.",
                 assertThrows(IllegalStateException.class, missingAlgorithm::doCipher).getMessage()
         );
+    }
+
+    @Test
+    void testCipherRejectsInvalidModeClearly() {
+        Cryptography invalidMode = new Cryptography(Constant.AES, Cipher.WRAP_MODE);
+        invalidMode.setKey(new SecretKeySpec(new byte[16], Constant.AES));
+        invalidMode.setData(new byte[0]);
+
+        assertEquals(
+                "Cipher mode must be ENCRYPT_MODE or DECRYPT_MODE.",
+                assertThrows(IllegalStateException.class, invalidMode::doCipher).getMessage()
+        );
+    }
+
+    @Test
+    void testSensitiveFieldsAreExcludedFromToString() throws Exception {
+        String plaintext = "plain-secret";
+        String privateKey = "private-key-secret";
+        Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
+        cryptography.setKey(new SecretKeySpec(new byte[16], Constant.AES));
+        cryptography.setData(plaintext.getBytes(StandardCharsets.UTF_8));
+        DoSignature signature = new DoSignature(Constant.SHA256_RSA);
+        signature.setStrData(plaintext);
+        Field privateKeyStringField = DoSignature.class.getDeclaredField("privateKeyStr");
+        privateKeyStringField.setAccessible(true);
+        privateKeyStringField.set(signature, privateKey);
+
+        assertFalse(cryptography.toString().contains(plaintext));
+        assertFalse(signature.toString().contains(plaintext));
+        assertFalse(signature.toString().contains(privateKey));
+    }
+
+    @Test
+    void testCertificateGcmRejectsInvalidParameters() {
+        byte[] key = new byte[32];
+        byte[] aad = new byte[0];
+        byte[] nonce = new byte[12];
+
+        assertThrows(IllegalArgumentException.class,
+                () -> CertificateUtils.aesDecryptToString(null, aad, nonce, "AA=="));
+        assertThrows(IllegalArgumentException.class,
+                () -> CertificateUtils.aesDecryptToString(key, aad, new byte[8], "AA=="));
+        assertThrows(IllegalArgumentException.class,
+                () -> CertificateUtils.aesDecryptToString(key, null, nonce, "AA=="));
+        assertThrows(IllegalArgumentException.class,
+                () -> CertificateUtils.aesDecryptToString(key, aad, nonce, " "));
+        assertThrows(IllegalArgumentException.class,
+                () -> CertificateUtils.aesDecryptToString(key, (String) null, "123456789012", "AA=="));
+        assertThrows(IllegalArgumentException.class,
+                () -> CertificateUtils.aesDecryptToString(key, "", (String) null, "AA=="));
+    }
+
+    @Test
+    void testCertificateFieldUnquotingOnlyRemovesSurroundingQuotes() throws Exception {
+        Method remove = CertificateUtils.class.getDeclaredMethod("remove", Object.class);
+        remove.setAccessible(true);
+
+        assertEquals("a\"b", remove.invoke(null, "\"a\"b\""));
+        assertEquals("a\"b", remove.invoke(null, "a\"b"));
+    }
+
+    @Test
+    void testKeyAccessRequiresGeneratedPair() {
+        KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
+
+        assertEquals("Key pair has not been generated.",
+                assertThrows(IllegalStateException.class, keyMgr::getPublicKeyBytes).getMessage());
+        assertEquals("Key pair has not been generated.",
+                assertThrows(IllegalStateException.class, keyMgr::getPrivateKeyBytes).getMessage());
     }
 }

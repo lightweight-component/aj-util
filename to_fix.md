@@ -169,53 +169,86 @@
 
 ### 单元测试确认
 
-2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.cryptography.Test*`：共 13 个测试，
-9 个通过、3 个失败、1 个错误。失败集中在下列第 2、6 项；第 6 项的 algorithm、key、data
-三个状态分别保留独立回归测试。生产源码尚未修改。
+2026-08-17 使用 JDK 8 定向执行 `TestCryptographySecurity`：共 18 个测试，全部通过。
+转换名与密钥算法混用、cipher 状态校验、敏感字段输出、GCM 参数校验、证书字段去引号和未生成
+密钥对时的错误提示已经修复，不再列为待处理问题。
 
 ### 高优先级
 
-1. RSA 加解密入口把 transformation 写成 `"RSA"`，具体 padding 由 provider 默认值决定，通常落到
+1. `AES_encode()`、`DES_encode()` 和 Triple DES 便捷入口只传入算法名，没有显式指定 mode 和
+   padding。在常见 JDK provider 中会落到 ECB/PKCS5Padding；ECB 会暴露重复明文块，并且这些入口
+   都不提供密文完整性认证。
+   修复方案：新增带随机 12 字节 nonce 和认证标签的 AES-GCM API；旧 AES/DES/3DES 方法只保留
+   历史数据兼容，标记弃用，不直接改变已有密文格式。
+
+2. `AES_encode(data, key)` 和 DES 便捷入口把口令字符串设置为 `SHA1PRNG` 的种子，再通过
+   `KeyGenerator` 生成密钥。这不是标准口令派生函数，结果还可能依赖 provider 行为。
+   修复方案：口令派生统一使用带随机 salt 和成本参数的 PBKDF2；真实随机 AES key 使用
+   `SecretKey` 或固定长度字节数组传入。
+
+3. RSA 加解密入口把 transformation 写成 `"RSA"`，具体 padding 由 provider 默认值决定，通常落到
    PKCS#1 v1.5；同一数据在不同 provider 下的行为也可能不同。
    修复方案：要求显式 transformation，新加密默认使用 OAEP（建议 SHA-256/MGF1），旧 PKCS#1
    仅保留兼容解密入口。
 
-2. `Cryptography.setKeyData()` 和 `setSecretKey()` 使用完整的 cipher transformation 作为
-   `SecretKeySpec` 的算法名。例如配置 `AES/GCM/NoPadding` 时会生成同名 key，SunJCE 随后以
-   “AES or Rijndael required” 拒绝该密钥。
-   修复方案：将 transformation 与基础 key algorithm 分离；构造器或 setter 明确接收
-   `AES` 等 key algorithm，不要依赖字符串截取猜测。
-   单测：`TestCryptographySecurity.testTransformationAcceptsRawAesKeyData()`。
-
-### 中优先级
-
-3. `KeyMgr.action()` 一次把全部数据传给 RSA `Cipher.doFinal()`，超过单个 RSA block 的输入会直接
-   失败，但 API 没有预检或说明长度限制。
-   修复方案：RSA 只用于封装随机对称密钥并提供混合加密 API；至少应按 key/padding 预检最大长度并
-   给出明确错误。
-
-4. `SecretKeyMgr.getRandom()` 用调用者提供的字符串对 `SecureRandom.setSeed()`，但 setSeed 只是
-   混入熵，并不保证可复现；方法注释容易让人把它当作确定性密钥派生。
-   修复方案：密码派生统一使用 PBKDF2/Argon2 等 KDF；随机数 API 不接受“密钥字符串”作为种子。
+4. `KeyMgr.privateKeyEncrypt()` 和 `publicKeyDecrypt()` 把私钥运算包装成普通“加密/解密”，容易被
+   错当成数字签名，但它不具备标准签名协议的安全属性。
+   修复方案：这两个入口标记弃用，文档和新代码统一使用 `DoSignature`、`DoVerify`。
 
 5. `Constant` 仍公开 `DES`、`MD5withRSA`、`PBEWITHMD5andDES`、OAEP-SHA1 等弱算法常量，部分还有
    便捷加解密方法，容易在新代码中误用。
    修复方案：弱算法 API 标记弃用并集中到 legacy 命名空间；文档明确仅允许兼容历史数据，默认示例
    使用 AES-GCM、SHA-256 以上签名和现代 OAEP。
 
-6. `Cryptography.doCipher()` 没有像签名/验证 API 一样预检必填状态。algorithm、key 或 data
-   缺失时，异常由不同 provider 调用偶然产生，分别表现为 `RuntimeException` 或
-   `IllegalArgumentException`，消息也不能稳定说明调用者漏设了哪个字段。
-   修复方案：进入 JCA/JCE provider 前统一校验非空 algorithm、合法 mode、key 和 data；
-   对未配置状态抛出带稳定消息的 `IllegalStateException`，同时允许显式传入空字节数组。
-   单测：`TestCryptographySecurity.testCipherRejectsMissingAlgorithmClearly()`、
-   `testCipherRejectsMissingKeyClearly()` 和 `testCipherRejectsMissingDataClearly()`。
+### 中优先级
+
+6. 当前 PBE 密文只包含 `nonce + ciphertext + tag`，salt、迭代次数、KDF 和格式版本依赖调用方
+   在外部保存。以后调整迭代次数或算法时无法从密文本身判断版本。
+   修复方案：设计带 magic、版本、KDF、迭代次数、salt 和 nonce 的自描述密文格式；旧格式保留
+   独立解密入口。
+
+7. PBE API 使用不可主动清除的 `String` 接收口令。内部虽然会清理 `PBEKeySpec`，调用方原始
+   `String` 仍会留在堆中等待 GC。
+   修复方案：增加接受 `char[]` 的重载并在完成后由调用方清理；旧 `String` 方法保留兼容。
+
+8. `Cryptography`、签名和验证对象是可变对象，数组 setter/getter 直接保存或返回引用。调用方在
+   设置后修改原数组，可能改变待加密、签名或验证的数据；对象也不适合跨线程或跨请求复用。
+   修复方案：字节数组使用防御性复制，文档明确实例非线程安全；长期考虑不可变参数对象。
+
+9. 为避免敏感字段进入 Lombok 生成的 `toString()`，key/data 等字段也从 `equals/hashCode` 排除。
+   因此拥有不同密钥和数据、但配置相同的执行对象可能被判断相等。
+   修复方案：加密执行对象不要定义值对象式相等语义，或者通过
+   `@EqualsAndHashCode(onlyExplicitlyIncluded = true)` 明确选择真正构成身份的字段。
+
+10. `KeyMgr.action()` 一次把全部数据传给 RSA `Cipher.doFinal()`，超过单个 RSA block 的输入会直接
+   失败，但 API 没有预检或说明长度限制。
+   修复方案：RSA 只用于封装随机对称密钥并提供混合加密 API；至少应按 key/padding 预检最大长度并
+   给出明确错误。
+
+11. `CertificateUtils.getCert()` 只解析 X.509 证书并检查有效期，没有验证证书链、信任锚、签名、
+   Key Usage、吊销状态、主机名或预期主体。调用者可能误以为返回的证书已经可信。
+   修复方案：把解析和信任验证拆成两个 API；验证入口基于显式 `TrustAnchor` 和
+   `CertPathValidator`，具体协议再校验主体及用途。
+
+12. `CertificateUtils.deserializeToCerts()` 对远端 Map 结构进行多次未经校验的强制转换。响应结构
+   缺失或类型变化时仍会产生难以定位的 `ClassCastException` 或空指针。
+   修复方案：逐层校验 `data`、`encrypt_certificate` 及其字段类型，在异常中包含字段路径但不包含
+   完整密文或密钥。
+
+13. `CertificateUtils.getCert(InputStream)` 会关闭调用方传入的流。虽然当前 JavaDoc 已说明，但这与
+   常见的“谁创建谁关闭”约定不同，复用流的调用方容易意外失败。
+   修复方案：增加不关闭调用方流的解析入口；原方法为兼容保留现有行为。
+
+14. `DoSignature` 和 `DoVerify` 完全接受调用方提供的算法字符串，没有安全算法白名单，新代码仍可
+   选择 MD5withRSA 等弱算法。
+   修复方案：增加推荐算法枚举或受限工厂，默认允许 SHA-256/384/512 with RSA 及 RSA-PSS；原始
+   字符串构造器只作为高级兼容入口。
 
 ### 低优先级
 
-7. `CertificateUtils.deserializeToCerts()` 对远端 Map 结构进行多次未经校验的强制转换，并对缺失值
-   直接 `toString()`。响应结构稍有变化就会产生难以定位的 `ClassCastException` 或空指针。
-   修复方案：逐层校验字段类型和必填字段，并在异常中包含字段路径。
+15. `DoVerify.verify()` 对普通签名不匹配返回 `false`，但部分 provider 遇到畸形签名字节时会抛出
+   `SignatureException` 并被包装成 `RuntimeException`。调用者难以稳定区分“不匹配”和“格式损坏”。
+   修复方案：定义并测试统一契约，明确畸形签名应返回 `false` 还是抛出专用参数异常。
 
 ## `com.ajaxjs.util.reflect`
 

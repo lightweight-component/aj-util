@@ -8,7 +8,9 @@ import com.ajaxjs.util.cryptography.Cryptography;
 import com.ajaxjs.util.io.DataWriter;
 import com.ajaxjs.util.io.FileHelper;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.crypto.Cipher;
@@ -41,6 +43,8 @@ public class KeyMgr implements Constant {
     /**
      * The result of generating a key pair
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private KeyPair keyPair;
 
     /**
@@ -69,6 +73,7 @@ public class KeyMgr implements Constant {
      * @return 私钥的 byte[]
      */
     public byte[] getPublicKeyBytes() {
+        requireGeneratedKeyPair();
         return keyPair.getPublic().getEncoded();
     }
 
@@ -78,7 +83,19 @@ public class KeyMgr implements Constant {
      * @return 私钥的 byte[]
      */
     public byte[] getPrivateKeyBytes() {
+        requireGeneratedKeyPair();
+
         return keyPair.getPrivate().getEncoded();
+    }
+
+    /**
+     * Ensures that a key pair has been generated before accessing its keys.
+     *
+     * @throws IllegalStateException if no key pair has been generated
+     */
+    private void requireGeneratedKeyPair() {
+        if (keyPair == null)
+            throw new IllegalStateException("Key pair has not been generated.");
     }
 
     /**
@@ -124,7 +141,9 @@ public class KeyMgr implements Constant {
      *
      * @param isPublic 是否公钥，反之私钥
      * @param key      公钥或私钥的字符串表示，应该为 Base64 编码的字符串
-     * @return 还原后的公钥或私钥对象，如果还原失败则返回 null
+     * @return 还原后的公钥或私钥对象
+     * @throws IllegalArgumentException 如果密钥编码无效
+     * @throws RuntimeException 如果当前 Java 环境不支持 RSA 算法
      */
     public static Key restoreKey(boolean isPublic, String key) {
         // auto removes the pem

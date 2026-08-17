@@ -3,7 +3,9 @@ package com.ajaxjs.util.cryptography.rsa;
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.cryptography.Constant;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.nio.charset.StandardCharsets;
@@ -25,11 +27,15 @@ public class DoVerify {
     /**
      * The data to be verified, in bytes.
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private byte[] data;
 
     /**
      * The data to be verified, in string. It'll be converted to bytes in UTF-8 by default.
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private String strData;
 
     /**
@@ -48,6 +54,8 @@ public class DoVerify {
     /**
      * The signature bytes to be verified.
      */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private byte[] signatureData;
 
     /**
@@ -113,7 +121,7 @@ public class DoVerify {
      *
      * @throws IllegalStateException if any required field is missing
      */
-    private void validateState() {
+    void validateState() {
         if (algorithmName == null || algorithmName.trim().isEmpty())
             throw new IllegalStateException("Signature algorithm is required.");
 

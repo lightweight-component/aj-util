@@ -95,7 +95,12 @@ public class CertificateUtils {
      * @return the unquoted string
      */
     private static String remove(Object v) {
-        return v.toString().replace("\"", "");
+        if (v == null)
+            throw new IllegalArgumentException("Certificate response field is required.");
+
+        String value = v.toString();
+        return value.length() >= 2 && value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"'
+                ? value.substring(1, value.length() - 1) : value;
     }
 
     /**
@@ -125,6 +130,12 @@ public class CertificateUtils {
      * @return the decrypted plaintext
      */
     public static String aesDecryptToString(byte[] aesKey, String associatedData, String nonce, String cipherText) {
+        if (associatedData == null)
+            throw new IllegalArgumentException("GCM associated data 不能为空");
+
+        if (nonce == null)
+            throw new IllegalArgumentException("GCM nonce 不能为空");
+
         return aesDecryptToString(aesKey, new StringBytes(associatedData).getUTF8_Bytes(), new StringBytes(nonce).getUTF8_Bytes(), cipherText);
     }
 
@@ -138,8 +149,17 @@ public class CertificateUtils {
      * @return the decrypted plaintext
      */
     public static String aesDecryptToString(byte[] aesKey, byte[] associatedData, byte[] nonce, String cipherText) {
-        if (aesKey.length != 32)
+        if (aesKey == null || aesKey.length != 32)
             throw new IllegalArgumentException("无效的 ApiV3Key，长度必须为32个字节");
+
+        if (nonce == null || nonce.length != 12)
+            throw new IllegalArgumentException("无效的 GCM nonce，长度必须为12个字节");
+
+        if (associatedData == null)
+            throw new IllegalArgumentException("GCM associated data 不能为空");
+
+        if (cipherText == null || cipherText.trim().isEmpty())
+            throw new IllegalArgumentException("GCM ciphertext 不能为空");
 
         Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.DECRYPT_MODE);
         cryptography.setKey(new SecretKeySpec(aesKey, Constant.AES)); // little odd, it's AES.
