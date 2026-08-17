@@ -14,15 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utils for certificate
+ * Provides X.509 certificate loading and AES-GCM certificate-payload decryption utilities.
  */
 public class CertificateUtils {
     /**
-     * Get a certificate by a file path
-     * X509Certificate is text file, not binary file.
+     * Loads a PEM- or DER-encoded X.509 certificate from a file path and checks its validity period.
      *
      * @param filePath File path
      * @return Certificate Object
+     * @throws UncheckedIOException if the certificate file cannot be opened or read
+     * @throws RuntimeException if the certificate is invalid or outside its validity period
      */
     public static X509Certificate getCert(String filePath) {
         try {
@@ -33,12 +34,12 @@ public class CertificateUtils {
     }
 
     /**
-     * Get a certificate by an Input Stream
-     * X509Certificate is text file, not binary file.
+     * Loads a PEM- or DER-encoded X.509 certificate from an input stream and checks its validity period.
      *
      * @param in Input stream, which contains a certificate. When it's done, it will be closed.
      * @return Certificate Object
-     * @throws UncheckedIOException 如果证书读取过程中发生 IO 错误，则抛出运行时异常
+     * @throws UncheckedIOException if an I/O error occurs while reading the certificate
+     * @throws RuntimeException if the certificate is invalid or outside its validity period
      */
     public static X509Certificate getCert(InputStream in) {
         try (InputStream input = in) {
@@ -58,11 +59,13 @@ public class CertificateUtils {
     }
 
     /**
-     * 反序列化证书并解密
+     * Decrypts certificate entries from a platform response and indexes them by serial number.
      *
-     * @param apiV3Key APIv3 密钥
-     * @param pMap     下载证书的请求返回体
-     * @return 证书 list
+     * @param apiV3Key the API v3 key
+     * @param pMap     the certificate-download response body
+     * @return a map of certificate serial numbers to certificates
+     * @throws IllegalArgumentException if a required response field or GCM parameter is invalid
+     * @throws ClassCastException if the response contains values of unexpected types
      */
     @SuppressWarnings("unchecked")
     public static Map<BigInteger, X509Certificate> deserializeToCerts(String apiV3Key, Map<String, Object> pMap) {
@@ -73,9 +76,7 @@ public class CertificateUtils {
         if (!ObjectHelper.isEmpty(list)) {
             for (Map<String, Object> map : list) {
                 Map<String, Object> certificate = (Map<String, Object>) map.get("encrypt_certificate");
-
-                // 解密
-                String cert = aesDecryptToString(apiV3KeyByte,
+                String cert = aesDecryptToString(apiV3KeyByte, // 解密
                         remove(certificate.get("associated_data")),
                         remove(certificate.get("nonce")),
                         remove(certificate.get("ciphertext")));
@@ -93,8 +94,9 @@ public class CertificateUtils {
      *
      * @param v the object whose string representation will be unquoted
      * @return the unquoted string
+     * @throws IllegalArgumentException if the value is null
      */
-    private static String remove(Object v) {
+    static String remove(Object v) {
         if (v == null)
             throw new IllegalArgumentException("Certificate response field is required.");
 
@@ -104,13 +106,14 @@ public class CertificateUtils {
     }
 
     /**
-     * AEAD_AES_256_GCM 解密
+     * Decrypts an AEAD AES-256-GCM payload.
      *
-     * @param aesKey         key 密钥，ApiV3Key，长度必须为32个字节
-     * @param associatedData 相关数据
-     * @param nonce          随机字符串
-     * @param cipherText     密文
-     * @return 解密后的文本
+     * @param aesKey         the 32-byte API v3 AES key
+     * @param associatedData the additional authenticated data
+     * @param nonce          the GCM nonce
+     * @param cipherText     the Base64-encoded ciphertext
+     * @return the decrypted UTF-8 text
+     * @throws IllegalArgumentException if the key, nonce, associated data, ciphertext, or authentication tag is invalid
      */
 //    public static String aesDecryptToString(byte[] aesKey, byte[] associatedData, byte[] nonce, String cipherText) {
 //        if (aesKey.length != 32)
@@ -128,6 +131,7 @@ public class CertificateUtils {
      * @param nonce          the nonce as a string
      * @param cipherText     the Base64-encoded ciphertext
      * @return the decrypted plaintext
+     * @throws IllegalArgumentException if the key, nonce, associated data, ciphertext, or authentication tag is invalid
      */
     public static String aesDecryptToString(byte[] aesKey, String associatedData, String nonce, String cipherText) {
         if (associatedData == null)
@@ -147,19 +151,20 @@ public class CertificateUtils {
      * @param nonce          the nonce
      * @param cipherText     the Base64-encoded ciphertext
      * @return the decrypted plaintext
+     * @throws IllegalArgumentException if the key, nonce, associated data, ciphertext, or authentication tag is invalid
      */
     public static String aesDecryptToString(byte[] aesKey, byte[] associatedData, byte[] nonce, String cipherText) {
         if (aesKey == null || aesKey.length != 32)
-            throw new IllegalArgumentException("无效的 ApiV3Key，长度必须为32个字节");
+            throw new IllegalArgumentException("The length of ApiV3Key should be 32 bytes");
 
         if (nonce == null || nonce.length != 12)
-            throw new IllegalArgumentException("无效的 GCM nonce，长度必须为12个字节");
+            throw new IllegalArgumentException("The length of GCM nonce should be 12 bytes");
 
         if (associatedData == null)
-            throw new IllegalArgumentException("GCM associated data 不能为空");
+            throw new IllegalArgumentException("GCM associated data can't be null.");
 
         if (cipherText == null || cipherText.trim().isEmpty())
-            throw new IllegalArgumentException("GCM ciphertext 不能为空");
+            throw new IllegalArgumentException("GCM ciphertext can't be null.");
 
         Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.DECRYPT_MODE);
         cryptography.setKey(new SecretKeySpec(aesKey, Constant.AES)); // little odd, it's AES.

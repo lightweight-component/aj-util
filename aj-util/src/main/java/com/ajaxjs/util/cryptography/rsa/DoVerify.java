@@ -12,8 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 
 /**
- * Verify signature
- * Inputs algorithm, data(string/bytes[]), signature and public key to verify signature.
+ * Verifies a digital signature using an algorithm, input data, signature bytes, and a public key.
  */
 @RequiredArgsConstructor
 @Accessors(chain = true)
@@ -43,6 +42,7 @@ public class DoVerify {
      *
      * @param strData the data to be verified
      * @return this builder instance
+     * @throws NullPointerException if the input string is null
      */
     public DoVerify setStrData(String strData) {
         this.strData = strData;
@@ -61,6 +61,7 @@ public class DoVerify {
     /**
      * @param signatureBase64 The signature string should be a Base64 string.
      * @return This
+     * @throws IllegalArgumentException if the signature is not valid Base64
      */
     public DoVerify setSignatureBase64(String signatureBase64) {
         signatureData = new Base64Utils(signatureBase64).decode();
@@ -83,6 +84,7 @@ public class DoVerify {
      *
      * @param publicKeyStr the public key string
      * @return this builder instance
+     * @throws IllegalArgumentException if the key encoding is invalid
      */
     public DoVerify setPublicKeyStr(String publicKeyStr) {
         this.publicKeyStr = publicKeyStr;
@@ -92,11 +94,12 @@ public class DoVerify {
     }
 
     /**
-     * 验证数字签名的有效性
+     * Verifies the configured digital signature.
      *
-     * @return boolean 签名验证结果，true 表示签名有效，false 表示签名无效
-     * @throws RuntimeException         当签名算法不可用或签名失败时抛出
-     * @throws IllegalArgumentException 当公钥无效时抛出
+     * @return {@code true} if the signature is valid; {@code false} otherwise
+     * @throws IllegalStateException if the algorithm, data, signature, or public key is missing
+     * @throws RuntimeException if the algorithm is unavailable or verification fails
+     * @throws IllegalArgumentException if the public key is invalid
      */
     public boolean verify() {
         validateState();

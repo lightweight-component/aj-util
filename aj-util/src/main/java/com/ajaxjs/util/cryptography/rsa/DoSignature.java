@@ -12,8 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 
 /**
- * 签名
- * Inputs algorithm, data(string/bytes[]) and private key to generate signature.
+ * Generates a digital signature from an algorithm, input data, and a private key.
  */
 @RequiredArgsConstructor
 @Accessors(chain = true)
@@ -43,6 +42,7 @@ public class DoSignature {
      *
      * @param strData the data to be signed
      * @return this builder instance
+     * @throws NullPointerException if the input string is null
      */
     public DoSignature setStrData(String strData) {
         this.strData = strData;
@@ -70,6 +70,7 @@ public class DoSignature {
      *
      * @param privateKeyStr the private key string
      * @return this builder instance
+     * @throws IllegalArgumentException if the key encoding is invalid
      */
     public DoSignature setPrivateKeyStr(String privateKeyStr) {
         this.privateKeyStr = privateKeyStr;
@@ -82,6 +83,9 @@ public class DoSignature {
      * Sign the data.
      *
      * @return The signature in bytes.
+     * @throws IllegalStateException if the algorithm, data, or private key is missing
+     * @throws IllegalArgumentException if the private key is invalid
+     * @throws RuntimeException if the algorithm is unavailable or signing fails
      */
     public byte[] sign() {
         validateState();
@@ -121,6 +125,9 @@ public class DoSignature {
      * Sign the data then returns it as Base64 string.
      *
      * @return The signature in Base64 string.
+     * @throws IllegalStateException if the algorithm, data, or private key is missing
+     * @throws IllegalArgumentException if the private key is invalid
+     * @throws RuntimeException if the algorithm is unavailable or signing fails
      */
     public String signToString() {
         return new Base64Utils(sign()).encodeAsString();

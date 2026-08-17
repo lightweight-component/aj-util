@@ -10,7 +10,6 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.security.KeyPair;
 import java.util.Arrays;
 
@@ -241,12 +240,10 @@ class TestCryptographySecurity {
     }
 
     @Test
-    void testCertificateFieldUnquotingOnlyRemovesSurroundingQuotes() throws Exception {
-        Method remove = CertificateUtils.class.getDeclaredMethod("remove", Object.class);
-        remove.setAccessible(true);
-
-        assertEquals("a\"b", remove.invoke(null, "\"a\"b\""));
-        assertEquals("a\"b", remove.invoke(null, "a\"b"));
+    void testCertificateFieldUnquotingOnlyRemovesSurroundingQuotes() {
+        assertEquals("a\"b", CertificateUtils.remove("\"a\"b\""));
+        assertEquals("a\"b", CertificateUtils.remove("a\"b"));
+        assertThrows(IllegalArgumentException.class, () -> CertificateUtils.remove(null));
     }
 
     @Test

@@ -13,16 +13,18 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
 /**
- * 对称加密的密钥工具类
+ * Provides symmetric secret-key generation, derivation, and encoding utilities.
  */
 public class SecretKeyMgr {
     /**
-     * 获取对称加密用的 SecretKey
+     * Generates a symmetric secret key using the requested algorithm and optional initialization parameters.
      *
-     * @param algorithmName The name of algorithm
-     * @param secure        Pass 0 if it's optional
-     * @param keySize       Pass null if it's optional
-     * @return The secret key, it's symmetric
+     * @param algorithmName the key-generation algorithm
+     * @param keySize       the requested key size, or zero to use the provider default
+     * @param secure        the optional secure random generator
+     * @return the generated symmetric secret key
+     * @throws RuntimeException if the requested algorithm is unavailable
+     * @throws IllegalArgumentException if the key size or random parameters are invalid
      */
     public static SecretKey getSecretKey(String algorithmName, int keySize, SecureRandom secure) {
         KeyGenerator kg;
@@ -44,11 +46,13 @@ public class SecretKeyMgr {
     }
 
     /**
-     * Get the secret key by the given algorithm name and key spec
+     * Derives or reconstructs a secret key from a key specification.
      *
-     * @param algorithmName The name of algorithm
-     * @param spec          A (transparent) specification of the key material
-     * @return A key does not belong to symmetric or not
+     * @param algorithmName the secret-key factory algorithm
+     * @param spec          the specification of the key material
+     * @return the generated secret key
+     * @throws IllegalArgumentException if the key specification is invalid
+     * @throws RuntimeException if the requested algorithm is unavailable
      */
     public static Key getSecretKey(String algorithmName, KeySpec spec) {
         try {
@@ -61,12 +65,13 @@ public class SecretKeyMgr {
     }
 
     /**
-     * 获取指定算法的安全随机数生成器实例，并使用给定密钥作为种子初始化
+     * Creates a secure random generator for the requested algorithm and supplements its seed with the given string.
      *
-     * @param algorithmName 随机数生成算法名称，如"SHA1PRNG"
-     * @param key           用于初始化随机数生成器的种子密钥字符串
-     * @return 初始化完成的 SecureRandom 实例
-     * @throws RuntimeException 当指定的算法不存在时抛出
+     * @param algorithmName the secure-random algorithm name, such as {@code SHA1PRNG}
+     * @param key           the string whose UTF-8 bytes supplement the random seed
+     * @return the initialized secure random generator
+     * @throws RuntimeException if the requested algorithm is unavailable
+     * @throws NullPointerException if the seed string is null
      */
     public static SecureRandom getRandom(String algorithmName, String key) {
         SecureRandom random;
@@ -83,12 +88,14 @@ public class SecretKeyMgr {
     }
 
     /**
-     * 根据指定算法和安全随机数生成一个秘密密钥，并将其以 Base64 编码的字符串形式返回
+     * Generates a secret key and returns its encoded bytes as a Base64 string.
      *
-     * @param algorithmName The name of algorithm
-     * @param keySize       The size of key
-     * @param secure        安全随机数
-     * @return Base64 编码后的秘密密钥字符串
+     * @param algorithmName the key-generation algorithm
+     * @param keySize       the requested key size, or zero to use the provider default
+     * @param secure        the optional secure random generator
+     * @return the Base64-encoded secret key
+     * @throws RuntimeException if the requested algorithm is unavailable
+     * @throws IllegalArgumentException if the key size or random parameters are invalid
      */
     public static String getSecretKeyAsStr(String algorithmName, int keySize, SecureRandom secure) {
         byte[] encoded = getSecretKey(algorithmName, keySize, secure).getEncoded();

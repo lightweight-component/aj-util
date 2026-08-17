@@ -24,7 +24,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
- * 密钥管理
+ * Generates, encodes, restores, loads, and applies RSA public and private keys.
  */
 @RequiredArgsConstructor
 @Accessors(chain = true)
@@ -51,6 +51,8 @@ public class KeyMgr implements Constant {
      * Get a pair of keys: public key and private key
      *
      * @return Key pair object
+     * @throws IllegalArgumentException if the key size is not 2048, 3072, or 4096 bits
+     * @throws RuntimeException if the requested key-pair algorithm is unavailable
      */
     public KeyPair generateKeyPair() {
         if (keySize == 2048 || keySize == 3072 || keySize == 4096)
@@ -68,9 +70,10 @@ public class KeyMgr implements Constant {
     }
 
     /**
-     * 返回公钥的 byte[]
+     * Returns the encoded public-key bytes.
      *
-     * @return 私钥的 byte[]
+     * @return the encoded public-key bytes
+     * @throws IllegalStateException if a key pair has not been generated
      */
     public byte[] getPublicKeyBytes() {
         requireGeneratedKeyPair();
@@ -78,9 +81,10 @@ public class KeyMgr implements Constant {
     }
 
     /**
-     * 返回私钥的 byte[]
+     * Returns the encoded private-key bytes.
      *
-     * @return 私钥的 byte[]
+     * @return the encoded private-key bytes
+     * @throws IllegalStateException if a key pair has not been generated
      */
     public byte[] getPrivateKeyBytes() {
         requireGeneratedKeyPair();
@@ -93,15 +97,16 @@ public class KeyMgr implements Constant {
      *
      * @throws IllegalStateException if no key pair has been generated
      */
-    private void requireGeneratedKeyPair() {
+    void requireGeneratedKeyPair() {
         if (keyPair == null)
             throw new IllegalStateException("Key pair has not been generated.");
     }
 
     /**
-     * 返回公钥的 Base64 编码
+     * Returns the public key as Base64.
      *
-     * @return 私钥的 Base64 编码
+     * @return the Base64-encoded public key
+     * @throws IllegalStateException if a key pair has not been generated
      */
     public String getPublicKeyStr() {
         return new Base64Utils(getPublicKeyBytes()).encodeAsString();
@@ -111,15 +116,17 @@ public class KeyMgr implements Constant {
      * Returns the public key in PEM format.
      *
      * @return the PEM-encoded public key
+     * @throws IllegalStateException if a key pair has not been generated
      */
     public String getPublicToPem() {
         return publicKeyToPem(getPublicKeyStr());
     }
 
     /**
-     * 返回私钥的 Base64 编码
+     * Returns the private key as Base64.
      *
-     * @return 私钥的 Base64 编码
+     * @return the Base64-encoded private key
+     * @throws IllegalStateException if a key pair has not been generated
      */
     public String getPrivateKeyStr() {
         return new Base64Utils(getPrivateKeyBytes()).encodeAsString();
@@ -129,6 +136,7 @@ public class KeyMgr implements Constant {
      * Returns the private key in PEM format.
      *
      * @return the PEM-encoded private key
+     * @throws IllegalStateException if a key pair has not been generated
      */
     public String getPrivateToPem() {
         return privateKeyToPem(getPrivateKeyStr());
@@ -137,13 +145,13 @@ public class KeyMgr implements Constant {
     /* ------------------------- Restore Key ------------------------ */
 
     /**
-     * 还原公钥/私钥
+     * Restores an RSA public or private key from Base64 or PEM text.
      *
-     * @param isPublic 是否公钥，反之私钥
-     * @param key      公钥或私钥的字符串表示，应该为 Base64 编码的字符串
-     * @return 还原后的公钥或私钥对象
-     * @throws IllegalArgumentException 如果密钥编码无效
-     * @throws RuntimeException 如果当前 Java 环境不支持 RSA 算法
+     * @param isPublic {@code true} to restore a public key; {@code false} to restore a private key
+     * @param key      the Base64- or PEM-encoded key
+     * @return the restored public or private key
+     * @throws IllegalArgumentException if the key encoding is invalid
+     * @throws RuntimeException if RSA is unavailable
      */
     public static Key restoreKey(boolean isPublic, String key) {
         // auto removes the pem
@@ -172,6 +180,8 @@ public class KeyMgr implements Constant {
      *
      * @param key the Base64 or PEM-encoded private key string
      * @return the restored private key
+     * @throws IllegalArgumentException if the key encoding is invalid
+     * @throws RuntimeException if RSA is unavailable
      */
     public static PrivateKey restorePrivateKey(String key) {
         Key _key = restoreKey(false, key);
@@ -182,10 +192,11 @@ public class KeyMgr implements Constant {
     /* ------------------------- PEM ------------------------ */
 
     /**
-     * 将私钥转换为 PEM 格式字符串
+     * Converts a private key to PEM text.
      *
-     * @param privateKey 待转换的私钥对象
-     * @return PEM 格式的私钥字符串
+     * @param privateKey the private key to convert
+     * @return the PEM-encoded private key
+     * @throws NullPointerException if the private key is null
      */
     @Deprecated
     public static String privateKeyToPem(PrivateKey privateKey) {
@@ -195,10 +206,11 @@ public class KeyMgr implements Constant {
     }
 
     /**
-     * 将私钥转换为 PEM 格式字符串
+     * Wraps a Base64-encoded private key in PEM boundaries.
      *
-     * @param encoded 待转换的私钥对象
-     * @return PEM 格式的私钥字符串
+     * @param encoded the Base64-encoded private key
+     * @return the PEM-encoded private key
+     * @throws NullPointerException if the encoded key is null
      */
     public static String privateKeyToPem(String encoded) {
         return "-----BEGIN PRIVATE KEY-----\n" +
@@ -207,10 +219,11 @@ public class KeyMgr implements Constant {
     }
 
     /**
-     * 将公钥转换为 PEM 格式字符串
+     * Converts a public key to PEM text.
      *
-     * @param publicKey 公钥对象
-     * @return PEM 格式的公钥字符串
+     * @param publicKey the public key to convert
+     * @return the PEM-encoded public key
+     * @throws NullPointerException if the public key is null
      */
     @Deprecated
     public static String publicKeyToPem(PublicKey publicKey) {
@@ -220,10 +233,11 @@ public class KeyMgr implements Constant {
     }
 
     /**
-     * 将公钥转换为 PEM 格式字符串
+     * Wraps a Base64-encoded public key in PEM boundaries.
      *
-     * @param encoded 公钥
-     * @return PEM 格式的公钥字符串
+     * @param encoded the Base64-encoded public key
+     * @return the PEM-encoded public key
+     * @throws NullPointerException if the encoded key is null
      */
     public static String publicKeyToPem(String encoded) {
         return "-----BEGIN PUBLIC KEY-----\n" +
@@ -234,14 +248,17 @@ public class KeyMgr implements Constant {
     /* ------------------------- encrypt/decrypt ------------------------ */
 
     /**
-     * 处理公钥
+     * Applies an RSA cipher operation with a public or private key.
      *
-     * @param isEncrypt 是否加密(true)，反之为解密（false）
-     * @param data      需要加密或解密的数据
-     * @param key       公钥或私钥的字符串表示
-     * @return 加密或解密后的字节数据
+     * @param isEncrypt {@code true} to encrypt; {@code false} to decrypt
+     * @param isPublic  {@code true} to use a public key; {@code false} to use a private key
+     * @param data      the input bytes
+     * @param key       the Base64- or PEM-encoded key
+     * @return the cipher result
+     * @throws IllegalArgumentException if the key or input is invalid
+     * @throws RuntimeException if RSA is unavailable
      */
-    private static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
+    static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
         int mode = isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
 
         Cryptography cryptography = new Cryptography(RSA, mode);
@@ -252,11 +269,12 @@ public class KeyMgr implements Constant {
     }
 
     /**
-     * 公钥加密
+     * Encrypts data with an RSA public key.
      *
-     * @param data 待加密数据
-     * @param key  公钥
-     * @return 加密后的字节数组
+     * @param data the plaintext bytes
+     * @param key  the public key
+     * @return the encrypted bytes
+     * @throws IllegalArgumentException if the key or input is invalid
      */
     public static byte[] publicKeyEncrypt(byte[] data, String key) {
         return action(true, true, data, key);
@@ -268,39 +286,43 @@ public class KeyMgr implements Constant {
      * @param data the plaintext bytes
      * @param key  the public key string
      * @return the Base64-encoded encrypted data
+     * @throws IllegalArgumentException if the key or input is invalid
      */
     public static String publicKeyEncryptAsBase64Str(byte[] data, String key) {
         return new Base64Utils(publicKeyEncrypt(data, key)).encodeAsString();
     }
 
     /**
-     * 公钥解密
+     * Decrypts data with an RSA public key for legacy compatibility.
      *
-     * @param data 加密数据
-     * @param key  公钥
-     * @return 解密后的字节数组
+     * @param data the encrypted bytes
+     * @param key  the public key
+     * @return the decrypted bytes
+     * @throws IllegalArgumentException if the key or input is invalid
      */
     public static byte[] publicKeyDecrypt(byte[] data, String key) {
         return action(false, true, data, key);
     }
 
     /**
-     * 私钥加密
+     * Encrypts data with an RSA private key for legacy compatibility.
      *
-     * @param data 待加密数据
-     * @param key  私钥
-     * @return 加密后的字节数组
+     * @param data the plaintext bytes
+     * @param key  the private key
+     * @return the encrypted bytes
+     * @throws IllegalArgumentException if the key or input is invalid
      */
     public static byte[] privateKeyEncrypt(byte[] data, String key) {
         return action(true, false, data, key);
     }
 
     /**
-     * 私钥解密
+     * Decrypts data with an RSA private key.
      *
-     * @param data 加密数据
-     * @param key  私钥
-     * @return 解密后的字节数组
+     * @param data the encrypted bytes
+     * @param key  the private key
+     * @return the decrypted bytes
+     * @throws IllegalArgumentException if the key or input is invalid
      */
     public static byte[] privateKeyDecrypt(byte[] data, String key) {
         return action(false, false, data, key);
@@ -312,33 +334,32 @@ public class KeyMgr implements Constant {
      * @param data the encrypted bytes
      * @param key  the private key string
      * @return the decrypted UTF-8 string
+     * @throws IllegalArgumentException if the key or ciphertext is invalid
      */
     public static String privateKeyDecryptAsStr(byte[] data, String key) {
         return new StringBytes(privateKeyDecrypt(data, key)).getUTF8_String(); // needs to Base64?
     }
 
     /**
-     * 从输入流中加载私钥
-     * 该方法首先将输入流中的字节读取到 ByteArrayOutputStream 中，然后将其转换为字符串形式的私钥，
-     * 最后调用另一方法 loadPrivateKey(String) 来解析并返回私钥对象
+     * Loads a UTF-8 Base64- or PEM-encoded private key from an input stream.
      *
-     * @param in 包含私钥信息的输入流
-     * @return 解析后的 PrivateKey 对象
-     * @throws IllegalArgumentException 如果输入流中的数据无法被正确读取或解析为私钥，则抛出此异常
+     * @param in the stream containing the private key
+     * @return the restored private key
+     * @throws IllegalArgumentException if the key encoding is invalid
+     * @throws UncheckedIOException if the stream cannot be read
      */
     public static PrivateKey loadPrivateKey(InputStream in) {
         return loadPrivateKey(in, CommonConstant.UTF8);
     }
 
     /**
-     * 从输入流中加载私钥
-     * 该方法首先将输入流中的字节读取到 ByteArrayOutputStream 中，然后将其转换为字符串形式的私钥，
-     * 最后调用另一方法 loadPrivateKey(String) 来解析并返回私钥对象
+     * Loads a Base64- or PEM-encoded private key from an input stream using the requested charset.
      *
-     * @param in      包含私钥信息的输入流
-     * @param charset 字符集编码
-     * @return 解析后的 PrivateKey 对象
-     * @throws IllegalArgumentException 如果输入流中的数据无法被正确读取或解析为私钥，则抛出此异常
+     * @param in      the stream containing the private key
+     * @param charset the charset name used to decode the stream
+     * @return the restored private key
+     * @throws IllegalArgumentException if the key encoding or charset is invalid
+     * @throws UncheckedIOException if the stream cannot be read
      */
     public static PrivateKey loadPrivateKey(InputStream in, String charset) {
         String privateKey;
@@ -358,6 +379,8 @@ public class KeyMgr implements Constant {
      *
      * @param filePath the path to the file containing the private key
      * @return the loaded private key
+     * @throws IllegalArgumentException if the key encoding is invalid
+     * @throws RuntimeException if the file cannot be read
      */
     public static PrivateKey loadPrivateKey(String filePath) {
         String fileContent = new FileHelper(filePath).getFileContent();
