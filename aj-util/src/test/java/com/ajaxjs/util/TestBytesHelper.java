@@ -9,11 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.ajaxjs.util.BytesHelper.bytesToHexStr;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestBytesHelper {
     /**

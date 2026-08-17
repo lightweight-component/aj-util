@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 public class StrUtil {
     /**
      * 统计文本中某个字符串出现的次数
-     *
+     * <p>
      * 支持重叠匹配，例如 {@code charCount("aaa", "aa")} 返回 2。
      * 空匹配串返回 0。
      *

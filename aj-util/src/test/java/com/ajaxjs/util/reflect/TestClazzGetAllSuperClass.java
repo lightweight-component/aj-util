@@ -2,7 +2,7 @@ package com.ajaxjs.util.reflect;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * 针对 Clazz.getAllSuperClass 方法的单元测试

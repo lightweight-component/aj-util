@@ -9,6 +9,7 @@ package com.ajaxjs.util.json;
 public interface JsonEngineProvider {
     /**
      * 优先级，越大越优先
+     *
      * @return 优先级，越大越优先
      */
     int priority();
