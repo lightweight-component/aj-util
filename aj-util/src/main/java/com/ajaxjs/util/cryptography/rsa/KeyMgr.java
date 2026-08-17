@@ -143,7 +143,7 @@ public class KeyMgr implements Constant {
      * @param key      公钥或私钥的字符串表示，应该为 Base64 编码的字符串
      * @return 还原后的公钥或私钥对象
      * @throws IllegalArgumentException 如果密钥编码无效
-     * @throws RuntimeException 如果当前 Java 环境不支持 RSA 算法
+     * @throws RuntimeException         如果当前 Java 环境不支持 RSA 算法
      */
     public static Key restoreKey(boolean isPublic, String key) {
         // auto removes the pem

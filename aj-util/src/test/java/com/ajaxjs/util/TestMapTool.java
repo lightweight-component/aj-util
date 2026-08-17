@@ -2,7 +2,10 @@ package com.ajaxjs.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.ajaxjs.util.MapTool.as;
 import static com.ajaxjs.util.MapTool.join;

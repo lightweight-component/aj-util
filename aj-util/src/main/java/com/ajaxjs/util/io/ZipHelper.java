@@ -4,13 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.FileVisitResult;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
 import java.util.Objects;
@@ -65,9 +59,9 @@ public class ZipHelper {
         /**
          * Creates a new set of extraction limits.
          *
-         * @param maxEntries         the maximum number of entries
-         * @param maxEntrySize       the maximum size of a single entry in bytes
-         * @param maxTotalSize       the maximum total uncompressed size in bytes
+         * @param maxEntries          the maximum number of entries
+         * @param maxEntrySize        the maximum size of a single entry in bytes
+         * @param maxTotalSize        the maximum total uncompressed size in bytes
          * @param maxCompressionRatio the maximum compression ratio
          */
         public ExtractionLimits(int maxEntries, long maxEntrySize, long maxTotalSize, double maxCompressionRatio) {
@@ -268,12 +262,12 @@ public class ZipHelper {
     /**
      * Extracts a single ZIP entry to the target path while enforcing safety limits.
      *
-     * @param in      the input stream of the ZIP entry
-     * @param root    the extraction root
-     * @param target  the target file path
-     * @param entry   the ZIP entry being extracted
-     * @param state   the current extraction state
-     * @param limits  the configured extraction limits
+     * @param in     the input stream of the ZIP entry
+     * @param root   the extraction root
+     * @param target the target file path
+     * @param entry  the ZIP entry being extracted
+     * @param state  the current extraction state
+     * @param limits the configured extraction limits
      * @throws IOException if any safety limit is violated or an IO error occurs
      */
     private static void extractEntry(InputStream in, Path root, Path target, ZipEntry entry,

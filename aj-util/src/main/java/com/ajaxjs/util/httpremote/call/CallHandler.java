@@ -134,10 +134,10 @@ public class CallHandler implements InvocationHandler {
     /**
      * Builds the full URL by combining the root URL, method-level path and path variables.
      *
-     * @param rootUrl        the root URL from the interface annotation
-     * @param valueOnMethod  the path specified on the method annotation
-     * @param method         the invoked method
-     * @param args           the method arguments
+     * @param rootUrl       the root URL from the interface annotation
+     * @param valueOnMethod the path specified on the method annotation
+     * @param method        the invoked method
+     * @param args          the method arguments
      * @return the resolved URL
      */
     private static String getUrl(String rootUrl, String valueOnMethod, Method method, Object[] args/*Annotation annotation*/) {
@@ -179,7 +179,7 @@ public class CallHandler implements InvocationHandler {
     /**
      * Combines class-level and method-level connection initializers.
      *
-     * @param initClzByClz   the class-level initializer class
+     * @param initClzByClz    the class-level initializer class
      * @param initClzByMethod the method-level initializer class
      * @return the combined initializer, or {@code null} if neither is configured
      */

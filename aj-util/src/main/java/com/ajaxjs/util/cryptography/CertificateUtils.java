@@ -120,6 +120,7 @@ public class CertificateUtils {
 //
 //        return doCipher("AES/GCM/NoPadding", Cipher.DECRYPT_MODE, aesKey, spec, cipherText, associatedData);
 //    }
+
     /**
      * Decrypts the given ciphertext using AEAD_AES_256_GCM with string associated data and nonce.
      *
