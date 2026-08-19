@@ -5,7 +5,7 @@
 ## 单行 if/for/while 可以不用尖括号
 
 例如：
-```csharp
+```js
   if (readonly.value) {
     return;
   }
@@ -13,10 +13,12 @@
 
 要求是：
 
-```csharp
+```js
   if (readonly.value) 
     return;
 ```
+
+`else`语句也是如此。
 
 ## if/for/while 语块之间有一个空行
 
