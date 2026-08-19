@@ -59,6 +59,49 @@
 - 注释要求符合 JavaDoc 注释规范，包括方法的描述、入参、出参、异常、返回值等。如果已经有的注释，保持不变，缺少的则补充
 - 形成 skill 并保存到源码 git 中分享，让 AI 学习如何使用这个库
 
+某些注释转换为多行注释（这样才符合 javadoc），举例：
+
+```java
+// 路径遍历关键字列表
+private static final Set<String> illegalFileStrList;
+```
+
+转换为：
+
+```java
+/**
+ * 路径遍历关键字列表
+ */
+private static final Set<String> illegalFileStrList;
+```
+
+字段与下一行的注释之间有一行空格，例如：
+
+```java
+/**
+ * Defines the file dir.
+ */
+private static final String fileDir = ConfigConstants.getFileDir();
+/**
+ * Defines the url param ftp username.
+ */
+private static final String URL_PARAM_FTP_USERNAME = "ftp.username";
+```
+转换为：
+
+
+```java
+/**
+ * Defines the file dir.
+ */
+private static final String fileDir = ConfigConstants.getFileDir();
+
+/**
+ * Defines the url param ftp username.
+ */
+private static final String URL_PARAM_FTP_USERNAME = "ftp.username";
+```
+
 
 # 单元测试
 
