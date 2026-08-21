@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.util.Arrays;
 

@@ -23,7 +23,7 @@ public class SecretKeyMgr {
      * @param keySize       the requested key size, or zero to use the provider default
      * @param secure        the optional secure random generator
      * @return the generated symmetric secret key
-     * @throws RuntimeException if the requested algorithm is unavailable
+     * @throws RuntimeException         if the requested algorithm is unavailable
      * @throws IllegalArgumentException if the key size or random parameters are invalid
      */
     public static SecretKey getSecretKey(String algorithmName, int keySize, SecureRandom secure) {
@@ -52,7 +52,7 @@ public class SecretKeyMgr {
      * @param spec          the specification of the key material
      * @return the generated secret key
      * @throws IllegalArgumentException if the key specification is invalid
-     * @throws RuntimeException if the requested algorithm is unavailable
+     * @throws RuntimeException         if the requested algorithm is unavailable
      */
     public static Key getSecretKey(String algorithmName, KeySpec spec) {
         try {
@@ -70,7 +70,7 @@ public class SecretKeyMgr {
      * @param algorithmName the secure-random algorithm name, such as {@code SHA1PRNG}
      * @param key           the string whose UTF-8 bytes supplement the random seed
      * @return the initialized secure random generator
-     * @throws RuntimeException if the requested algorithm is unavailable
+     * @throws RuntimeException     if the requested algorithm is unavailable
      * @throws NullPointerException if the seed string is null
      */
     public static SecureRandom getRandom(String algorithmName, String key) {
@@ -94,7 +94,7 @@ public class SecretKeyMgr {
      * @param keySize       the requested key size, or zero to use the provider default
      * @param secure        the optional secure random generator
      * @return the Base64-encoded secret key
-     * @throws RuntimeException if the requested algorithm is unavailable
+     * @throws RuntimeException         if the requested algorithm is unavailable
      * @throws IllegalArgumentException if the key size or random parameters are invalid
      */
     public static String getSecretKeyAsStr(String algorithmName, int keySize, SecureRandom secure) {

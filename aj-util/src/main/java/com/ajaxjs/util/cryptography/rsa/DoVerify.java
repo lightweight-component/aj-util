@@ -97,8 +97,8 @@ public class DoVerify {
      * Verifies the configured digital signature.
      *
      * @return {@code true} if the signature is valid; {@code false} otherwise
-     * @throws IllegalStateException if the algorithm, data, signature, or public key is missing
-     * @throws RuntimeException if the algorithm is unavailable or verification fails
+     * @throws IllegalStateException    if the algorithm, data, signature, or public key is missing
+     * @throws RuntimeException         if the algorithm is unavailable or verification fails
      * @throws IllegalArgumentException if the public key is invalid
      */
     public boolean verify() {

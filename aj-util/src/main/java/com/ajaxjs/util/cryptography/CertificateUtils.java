@@ -23,7 +23,7 @@ public class CertificateUtils {
      * @param filePath File path
      * @return Certificate Object
      * @throws UncheckedIOException if the certificate file cannot be opened or read
-     * @throws RuntimeException if the certificate is invalid or outside its validity period
+     * @throws RuntimeException     if the certificate is invalid or outside its validity period
      */
     public static X509Certificate getCert(String filePath) {
         try {
@@ -39,7 +39,7 @@ public class CertificateUtils {
      * @param in Input stream, which contains a certificate. When it's done, it will be closed.
      * @return Certificate Object
      * @throws UncheckedIOException if an I/O error occurs while reading the certificate
-     * @throws RuntimeException if the certificate is invalid or outside its validity period
+     * @throws RuntimeException     if the certificate is invalid or outside its validity period
      */
     public static X509Certificate getCert(InputStream in) {
         try (InputStream input = in) {
@@ -65,7 +65,7 @@ public class CertificateUtils {
      * @param pMap     the certificate-download response body
      * @return a map of certificate serial numbers to certificates
      * @throws IllegalArgumentException if a required response field or GCM parameter is invalid
-     * @throws ClassCastException if the response contains values of unexpected types
+     * @throws ClassCastException       if the response contains values of unexpected types
      */
     @SuppressWarnings("unchecked")
     public static Map<BigInteger, X509Certificate> deserializeToCerts(String apiV3Key, Map<String, Object> pMap) {

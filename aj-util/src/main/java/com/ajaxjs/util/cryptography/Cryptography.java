@@ -75,7 +75,7 @@ public class Cryptography {
      * Sets the cryptographic key from raw key bytes.
      *
      * @param keyData the raw key bytes
-     * @throws IllegalStateException if the configured cipher algorithm is missing
+     * @throws IllegalStateException    if the configured cipher algorithm is missing
      * @throws IllegalArgumentException if the key bytes are null or invalid
      */
     public void setKeyData(byte[] keyData) {
@@ -94,7 +94,7 @@ public class Cryptography {
      * the configured cipher algorithm name.
      *
      * @param secretKey the secret key
-     * @throws NullPointerException if the secret key is null
+     * @throws NullPointerException  if the secret key is null
      * @throws IllegalStateException if the configured cipher algorithm is missing
      */
     public void setSecretKey(SecretKey secretKey) {
@@ -145,9 +145,9 @@ public class Cryptography {
      * Performs the configured cipher operation and returns the result as bytes.
      *
      * @return the encrypted or decrypted bytes
-     * @throws IllegalStateException if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required cipher state is missing or invalid
      * @throws IllegalArgumentException if the key, parameters, input length, padding, or authentication tag is invalid
-     * @throws RuntimeException if the configured transformation is unavailable
+     * @throws RuntimeException         if the configured transformation is unavailable
      */
     public byte[] doCipher() {
         validateState();
@@ -217,9 +217,9 @@ public class Cryptography {
      * Performs the configured cipher operation and returns the result as a UTF-8 string.
      *
      * @return the encrypted or decrypted string
-     * @throws IllegalStateException if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required cipher state is missing or invalid
      * @throws IllegalArgumentException if the cipher operation fails for invalid input or parameters
-     * @throws RuntimeException if the configured transformation is unavailable
+     * @throws RuntimeException         if the configured transformation is unavailable
      */
     public String doCipherAsStr() {
         return new StringBytes(doCipher()).getUTF8_String();
@@ -229,9 +229,9 @@ public class Cryptography {
      * Performs the configured cipher operation and returns the result as a Base64-encoded string.
      *
      * @return the Base64-encoded result
-     * @throws IllegalStateException if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required cipher state is missing or invalid
      * @throws IllegalArgumentException if the cipher operation fails for invalid input or parameters
-     * @throws RuntimeException if the configured transformation is unavailable
+     * @throws RuntimeException         if the configured transformation is unavailable
      */
     public String doCipherAsBase64Str() {
         return new Base64Utils(doCipher()).encodeAsString();
@@ -241,9 +241,9 @@ public class Cryptography {
      * Get hex string of cipher, which is good for encrypt.
      *
      * @return Hex string of cipher.
-     * @throws IllegalStateException if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required cipher state is missing or invalid
      * @throws IllegalArgumentException if the cipher operation fails for invalid input or parameters
-     * @throws RuntimeException if the configured transformation is unavailable
+     * @throws RuntimeException         if the configured transformation is unavailable
      */
     public String doCipherAsHexStr() {
         return BytesHelper.bytesToHexStr(doCipher());
@@ -255,7 +255,7 @@ public class Cryptography {
      * @param data The text to be encrypted
      * @param key  The key
      * @return The encrypted string
-     * @throws RuntimeException if AES or the configured secure-random algorithm is unavailable
+     * @throws RuntimeException         if AES or the configured secure-random algorithm is unavailable
      * @throws IllegalArgumentException if the key or input is invalid
      */
     public static String AES_encode(String data, String key) {
@@ -272,7 +272,7 @@ public class Cryptography {
      * @param data The text to be decrypted
      * @param key  The key
      * @return The decrypted string
-     * @throws RuntimeException if AES or the configured secure-random algorithm is unavailable
+     * @throws RuntimeException         if AES or the configured secure-random algorithm is unavailable
      * @throws IllegalArgumentException if the key, hexadecimal input, or ciphertext is invalid
      */
     public static String AES_decode(String data, String key) {
@@ -289,7 +289,7 @@ public class Cryptography {
      * @param data the plaintext to encrypt
      * @param key  the encryption key
      * @return the encrypted hex string
-     * @throws RuntimeException if DES or the configured secure-random algorithm is unavailable
+     * @throws RuntimeException         if DES or the configured secure-random algorithm is unavailable
      * @throws IllegalArgumentException if the key or input is invalid
      */
     public static String DES_encode(String data, String key) {
@@ -306,7 +306,7 @@ public class Cryptography {
      * @param data the encrypted hex string
      * @param key  the decryption key
      * @return the decrypted plaintext
-     * @throws RuntimeException if DES or the configured secure-random algorithm is unavailable
+     * @throws RuntimeException         if DES or the configured secure-random algorithm is unavailable
      * @throws IllegalArgumentException if the key, hexadecimal input, or ciphertext is invalid
      */
     public static String DES_decode(String data, String key) {
@@ -324,7 +324,7 @@ public class Cryptography {
      * @param key  the encryption key bytes
      * @return the encrypted bytes
      * @throws IllegalArgumentException if the key or input is invalid
-     * @throws RuntimeException if Triple DES is unavailable
+     * @throws RuntimeException         if Triple DES is unavailable
      */
     public static byte[] tripleDES_encode(String data, byte[] key) {
         Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.ENCRYPT_MODE);
@@ -341,7 +341,7 @@ public class Cryptography {
      * @param key  the decryption key bytes
      * @return the decrypted plaintext
      * @throws IllegalArgumentException if the key or ciphertext is invalid
-     * @throws RuntimeException if Triple DES is unavailable
+     * @throws RuntimeException         if Triple DES is unavailable
      */
     public static String tripleDES_decode(byte[] data, byte[] key) {
         Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.DECRYPT_MODE);
@@ -372,7 +372,7 @@ public class Cryptography {
      * @param iterationCount the iteration count for key derivation
      * @return the encrypted bytes, with the GCM nonce prepended
      * @throws IllegalArgumentException if the password, salt, iteration count, or plaintext is invalid
-     * @throws RuntimeException if a required cryptographic algorithm is unavailable
+     * @throws RuntimeException         if a required cryptographic algorithm is unavailable
      */
     public static byte[] PBE_encode(String data, String key, byte[] salt, int iterationCount) {
         validatePbeParameters(salt, iterationCount);
@@ -399,7 +399,7 @@ public class Cryptography {
      * @param iterationCount the iteration count for key derivation
      * @return the decrypted plaintext
      * @throws IllegalArgumentException if the password, salt, iteration count, ciphertext, or tag is invalid
-     * @throws RuntimeException if a required cryptographic algorithm is unavailable
+     * @throws RuntimeException         if a required cryptographic algorithm is unavailable
      */
     public static String PBE_decode(byte[] data, String key, byte[] salt, int iterationCount) {
         validatePbeParameters(salt, iterationCount);
@@ -424,7 +424,7 @@ public class Cryptography {
      * @param iterationCount the positive legacy key-derivation iteration count
      * @return the decrypted plaintext
      * @throws IllegalArgumentException if the password, salt, iteration count, key, or ciphertext is invalid
-     * @throws RuntimeException if the legacy algorithm is unavailable
+     * @throws RuntimeException         if the legacy algorithm is unavailable
      */
     @Deprecated
     public static String PBE_legacy_decode(byte[] data, String key, byte[] salt, int iterationCount) {
@@ -457,7 +457,7 @@ public class Cryptography {
      * @param iterationCount the iteration count
      * @return the derived AES secret key
      * @throws IllegalArgumentException if the password is null or empty or the key specification is invalid
-     * @throws RuntimeException if PBKDF2 with HMAC-SHA-256 is unavailable
+     * @throws RuntimeException         if PBKDF2 with HMAC-SHA-256 is unavailable
      */
     static SecretKeySpec derivePbeKey(String password, byte[] salt, int iterationCount) {
         if (password == null || password.isEmpty())

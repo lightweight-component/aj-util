@@ -52,7 +52,7 @@ public class KeyMgr implements Constant {
      *
      * @return Key pair object
      * @throws IllegalArgumentException if the key size is not 2048, 3072, or 4096 bits
-     * @throws RuntimeException if the requested key-pair algorithm is unavailable
+     * @throws RuntimeException         if the requested key-pair algorithm is unavailable
      */
     public KeyPair generateKeyPair() {
         if (keySize == 2048 || keySize == 3072 || keySize == 4096)
@@ -151,7 +151,7 @@ public class KeyMgr implements Constant {
      * @param key      the Base64- or PEM-encoded key
      * @return the restored public or private key
      * @throws IllegalArgumentException if the key encoding is invalid
-     * @throws RuntimeException if RSA is unavailable
+     * @throws RuntimeException         if RSA is unavailable
      */
     public static Key restoreKey(boolean isPublic, String key) {
         // auto removes the pem
@@ -181,7 +181,7 @@ public class KeyMgr implements Constant {
      * @param key the Base64 or PEM-encoded private key string
      * @return the restored private key
      * @throws IllegalArgumentException if the key encoding is invalid
-     * @throws RuntimeException if RSA is unavailable
+     * @throws RuntimeException         if RSA is unavailable
      */
     public static PrivateKey restorePrivateKey(String key) {
         Key _key = restoreKey(false, key);
@@ -256,7 +256,7 @@ public class KeyMgr implements Constant {
      * @param key       the Base64- or PEM-encoded key
      * @return the cipher result
      * @throws IllegalArgumentException if the key or input is invalid
-     * @throws RuntimeException if RSA is unavailable
+     * @throws RuntimeException         if RSA is unavailable
      */
     static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
         int mode = isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
@@ -346,7 +346,7 @@ public class KeyMgr implements Constant {
      * @param in the stream containing the private key
      * @return the restored private key
      * @throws IllegalArgumentException if the key encoding is invalid
-     * @throws UncheckedIOException if the stream cannot be read
+     * @throws UncheckedIOException     if the stream cannot be read
      */
     public static PrivateKey loadPrivateKey(InputStream in) {
         return loadPrivateKey(in, CommonConstant.UTF8);
@@ -359,7 +359,7 @@ public class KeyMgr implements Constant {
      * @param charset the charset name used to decode the stream
      * @return the restored private key
      * @throws IllegalArgumentException if the key encoding or charset is invalid
-     * @throws UncheckedIOException if the stream cannot be read
+     * @throws UncheckedIOException     if the stream cannot be read
      */
     public static PrivateKey loadPrivateKey(InputStream in, String charset) {
         String privateKey;
@@ -380,7 +380,7 @@ public class KeyMgr implements Constant {
      * @param filePath the path to the file containing the private key
      * @return the loaded private key
      * @throws IllegalArgumentException if the key encoding is invalid
-     * @throws RuntimeException if the file cannot be read
+     * @throws RuntimeException         if the file cannot be read
      */
     public static PrivateKey loadPrivateKey(String filePath) {
         String fileContent = new FileHelper(filePath).getFileContent();

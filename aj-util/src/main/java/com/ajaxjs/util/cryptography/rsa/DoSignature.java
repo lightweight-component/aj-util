@@ -83,9 +83,9 @@ public class DoSignature {
      * Sign the data.
      *
      * @return The signature in bytes.
-     * @throws IllegalStateException if the algorithm, data, or private key is missing
+     * @throws IllegalStateException    if the algorithm, data, or private key is missing
      * @throws IllegalArgumentException if the private key is invalid
-     * @throws RuntimeException if the algorithm is unavailable or signing fails
+     * @throws RuntimeException         if the algorithm is unavailable or signing fails
      */
     public byte[] sign() {
         validateState();
@@ -125,9 +125,9 @@ public class DoSignature {
      * Sign the data then returns it as Base64 string.
      *
      * @return The signature in Base64 string.
-     * @throws IllegalStateException if the algorithm, data, or private key is missing
+     * @throws IllegalStateException    if the algorithm, data, or private key is missing
      * @throws IllegalArgumentException if the private key is invalid
-     * @throws RuntimeException if the algorithm is unavailable or signing fails
+     * @throws RuntimeException         if the algorithm is unavailable or signing fails
      */
     public String signToString() {
         return new Base64Utils(sign()).encodeAsString();
