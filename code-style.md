@@ -50,6 +50,23 @@
 
 ## `return` 所在的行，上一行应该有一个空行
 
+## 添加必要的注释
+
+生成的方法或者函数，如非低价值的，应该加上必要的注释，包括入参出参等。
+
+注释风格不用写在一行
+
+```
+/** Resolves a stored relationship into its current SVG geometry. */
+```
+
+应该是
+
+```
+/** 
+ * Resolves a stored relationship into its current SVG geometry. 
+ */
+```
 
 # 注释
 
@@ -91,7 +108,6 @@ private static final String URL_PARAM_FTP_USERNAME = "ftp.username";
 ```
 转换为：
 
-
 ```java
 /**
  * Defines the file dir.
@@ -103,6 +119,7 @@ private static final String fileDir = ConfigConstants.getFileDir();
  */
 private static final String URL_PARAM_FTP_USERNAME = "ftp.username";
 ```
+
 
 
 # 单元测试
