@@ -8,10 +8,11 @@ tags:
 layout: layouts/aj-util.njk
 ---
 
-
 # HashHelper Tutorial
 
-`HashHelper` is a utility class for cryptographic hash operations, supporting various hash algorithms (MD5, SHA-1, SHA-256) and HMAC operations. It provides methods for generating hash values from strings and byte arrays, with support for hexadecimal and Base64 output formats.
+`HashHelper` is a utility class for cryptographic hash operations, supporting various hash algorithms (MD5, SHA-1,
+SHA-256) and HMAC operations. It provides methods for generating hash values from strings and byte arrays, with support
+for hexadecimal and Base64 output formats.
 
 ### Main Features
 
@@ -33,7 +34,6 @@ HashHelper helper = new HashHelper("MD5", "Hello World".getBytes());
 HashHelper helper = new HashHelper("SHA-256", "Hello World");
 ```
 
-
 #### 2. Basic Hash Calculation
 
 ```java
@@ -47,7 +47,6 @@ String hexHash = new HashHelper("SHA-256", "Hello World").hashAsStr();
 String base64Hash = new HashHelper("SHA-1", "Hello World").hashAsBase64();
 String base64HashNoPadding = new HashHelper("SHA-1", "Hello World").hashAsBase64(true);
 ```
-
 
 #### 3. HMAC Calculation
 
@@ -68,7 +67,6 @@ String hmacBase64 = new HashHelper("HmacSHA1", "Hello World")
     .hashAsBase64();
 ```
 
-
 #### 4. Chainable Calls
 
 Thanks to the `@Accessors(chain = true)` annotation, chainable calls are supported:
@@ -78,7 +76,6 @@ String result = new HashHelper("HmacSHA256", "Hello World")
     .setKey("my-secret-key")
     .hashAsBase64(true);
 ```
-
 
 #### 5. Static Convenience Methods
 
@@ -99,7 +96,6 @@ HashHelper hmacMd5 = HashHelper.getHmacMD5("Hello World", "secret-key");
 String hmacSha256Base64 = HashHelper.getHmacSHA256("Hello World", "secret-key", false);
 ```
 
-
 #### 6. File MD5 Calculation
 
 ```java
@@ -113,7 +109,6 @@ byte[] fileBytes = Files.readAllBytes(Paths.get("example.txt"));
 String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 ```
 
-
 ### Constants Definition
 
 - `MD5`: MD5 hash algorithm constant
@@ -124,7 +119,8 @@ String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 
 ### Notes
 
-1. Always set or persist an HMAC key. Calling `getMac()` without a key generates an internal random key that is not returned, so the result cannot be reproduced for later verification.
+1. Always set or persist an HMAC key. Calling `getMac()` without a key generates an internal random key that is not
+   returned, so the result cannot be reproduced for later verification.
 2. All hash results are returned as lowercase hexadecimal strings by default
 3. Base64 encoding includes padding characters by default, controllable via parameters
 4. Large file processing uses chunked reading to avoid memory overflow

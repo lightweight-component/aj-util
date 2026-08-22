@@ -88,7 +88,8 @@ Object primitiveResult = Methods.execute(
 );
 ```
 
-To invoke a non-public method, resolve it explicitly with `findDeclaredMethodByTypes(...)` and pass the resulting `Method`
+To invoke a non-public method, resolve it explicitly with `findDeclaredMethodByTypes(...)` and pass the
+resulting `Method`
 to `execute(instance, method, parameters)`. This makes the visibility change explicit:
 
 ```java

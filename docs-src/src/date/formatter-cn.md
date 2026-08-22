@@ -9,7 +9,9 @@ layout: layouts/aj-util-cn.njk
 ---
 
 # 日期格式化
-新版推荐使用`DateTimeFormatter`替代`SimpleDateFormat`，使之线程安全与 API 清晰。同时`DateTimeFormatter.ofPattern()`实例有一定开销，尤其是自定义模式（如 "yyyy-MM-dd HH:mm:ss"），于是我们可以缓存 DateTimeFormatter 实例的方式来优化。
+
+新版推荐使用`DateTimeFormatter`替代`SimpleDateFormat`，使之线程安全与 API 清晰。同时`DateTimeFormatter.ofPattern()`
+实例有一定开销，尤其是自定义模式（如 "yyyy-MM-dd HH:mm:ss"），于是我们可以缓存 DateTimeFormatter 实例的方式来优化。
 
 Formatter 用法如下：
 
@@ -17,9 +19,11 @@ Formatter 用法如下：
 new Formatter(TemporalAccessor temporal).format();
 new Formatter(TemporalAccessor temporal).format(String format)
 ```
+
 接口`TemporalAccessor`实现都是常见的那些日期类型，于是我们在构造器传入即可，然后指定日期格式的字符串。
 
 # 工具函数
+
 主要是`now()`返回当前时间字符串的工具函数。
 
 ```java
@@ -79,4 +83,5 @@ public static String newISO8601Date() {
     return Formatter.ISO8601_FORMATTER.format(Instant.now());
 }
 ```
+
 另外还包括一个字符串转日期的函数，其主要使用正则来匹配是否日期字符串然后进行转换。

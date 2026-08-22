@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-FileHelper</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  文件读写、复制、移动、删除和目录操作方法" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 文件操作,I/O,Java" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
-        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
-        <script>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AJ Utils-FileHelper</title>
+    <meta name="description"
+          content="Small Java utilities with many useful functions.  文件读写、复制、移动、删除和目录操作方法"/>
+    <meta name="keywords"
+          content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 文件操作,I/O,Java"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"/>
+    <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css"/>
+    <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+    <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+    <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+    <script>
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -23,106 +27,110 @@
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
-        </script>
-    </head>
-    <body>
-        <nav>
-            <div>
-                <div class="links">
-                    <a href="/cn">🏠 首页</a>
-                    | ⚙️ 源码:
-                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                  
-                    | 🚀<a href="">英语版本</a>
-                </div>
-                <h1>
-                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
-                    AJ Utils
-                </h1>
-                <h3>小型、干净、简单的 Java 工具库
-                </h3>
-            </div>
-        </nav>
-        <div>
-            <menu>
-                
-                <ul>
-                    <li class="selected">
-                        <a href="/cn">首页</a>
-                    </li>
-                </ul>
-                <h3>Common 常用模块</h3>
-                <ul>
-                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
-                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
-                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
-                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                </ul>
-                <h3>Date 日期处理</h3>
-                <ul>
-                    <li><a href="/date/intro-cn/">简介</a></li>
-                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
-                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
-                </ul>
-                <h3>Reflection 反射</h3>
-                <ul>
-                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
-                    <li><a href="/reflect/Types-cn/">Types</a></li>
-                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
-                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
-                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
-                </ul>
 
-                <h3>Input/Output 输入/输出</h3>
-                <ul>
-                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
-                    <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
-                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
-                </ul>
+    </script>
+</head>
+<body>
+<nav>
+    <div>
+        <div class="links">
+            <a href="/cn">🏠 首页</a>
+            | ⚙️ 源码:
+            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank"
+                                                                                                     href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
 
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
-                </ul>
+            | 🚀<a href="">英语版本</a>
+        </div>
+        <h1>
+            <img src="https://framework.ajaxjs.com/aj-logo/logo.png"
+                 style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
+            AJ Utils
+        </h1>
+        <h3>小型、干净、简单的 Java 工具库
+        </h3>
+    </div>
+</nav>
+<div>
+    <menu>
 
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/intro-cn/">简介</a></li>
-                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
-                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
-                </ul>
-                <h3>其他</h3>
-               <ul>
-                <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
-                <li><a href="/misc/contact-cn/">联系</a></li>
-               </ul>
-            </menu>
-            <article class="aj-text chinese">
-                <h2>FileHelper 使用教程</h2>
-<p>FileHelper 是一个文件操作工具类，提供了读取、写入、复制、移动、删除和操作文件及目录的方法。该类使用 Java NIO Path 和 Files API 实现高效的文件操作，所有方法在发生 IO 错误时都会抛出 UncheckedIOException。</p>
-<h3>主要功能特性</h3>
-<ol>
-<li><strong>多种构造方式</strong>：支持 Path、File、String 路径创建实例</li>
-<li><strong>文件读写操作</strong>：支持文本和字节内容的读取与写入</li>
-<li><strong>文件管理操作</strong>：复制、移动、删除、创建目录</li>
-<li><strong>目录操作</strong>：列出目录内容、获取文件大小</li>
-<li><strong>文件分片处理</strong>：支持大文件分片和合并</li>
-<li><strong>链式调用</strong>：支持方法链式调用</li>
-</ol>
-<h2>基本使用方法</h2>
-<h3>1. 创建实例</h3>
-<pre><code class="language-java">// 通过路径字符串创建
+        <ul>
+            <li class="selected">
+                <a href="/cn">首页</a>
+            </li>
+        </ul>
+        <h3>Common 常用模块</h3>
+        <ul>
+            <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+            <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
+            <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+            <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+            <li><a href="/common/MapTool-cn/">MapTool</a></li>
+            <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+            <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+            <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+            <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+            <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+            <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+            <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+            <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+        </ul>
+        <h3>Date 日期处理</h3>
+        <ul>
+            <li><a href="/date/intro-cn/">简介</a></li>
+            <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+            <li><a href="/date/formatter-cn/">日期格式化</a></li>
+        </ul>
+        <h3>Reflection 反射</h3>
+        <ul>
+            <li><a href="/reflect/Methods-cn/">Methods</a></li>
+            <li><a href="/reflect/Types-cn/">Types</a></li>
+            <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+            <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+            <li><a href="/reflect/Fields-cn/">Fields</a></li>
+        </ul>
+
+        <h3>Input/Output 输入/输出</h3>
+        <ul>
+            <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+            <li><a href="/io/Resources-cn/">Resources</a></li>
+            <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+            <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+        </ul>
+
+        <h3>HTTP 请求</h3>
+        <ul>
+            <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
+        </ul>
+
+        <h3>加密/解密</h3>
+        <ul>
+            <li><a href="/cryptography/intro-cn/">简介</a></li>
+            <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+            <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+            <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+        </ul>
+        <h3>其他</h3>
+        <ul>
+            <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
+            <li><a href="/misc/contact-cn/">联系</a></li>
+        </ul>
+    </menu>
+    <article class="aj-text chinese">
+        <h2>FileHelper 使用教程</h2>
+        <p>FileHelper 是一个文件操作工具类，提供了读取、写入、复制、移动、删除和操作文件及目录的方法。该类使用 Java NIO Path 和
+            Files API 实现高效的文件操作，所有方法在发生 IO 错误时都会抛出 UncheckedIOException。</p>
+        <h3>主要功能特性</h3>
+        <ol>
+            <li><strong>多种构造方式</strong>：支持 Path、File、String 路径创建实例</li>
+            <li><strong>文件读写操作</strong>：支持文本和字节内容的读取与写入</li>
+            <li><strong>文件管理操作</strong>：复制、移动、删除、创建目录</li>
+            <li><strong>目录操作</strong>：列出目录内容、获取文件大小</li>
+            <li><strong>文件分片处理</strong>：支持大文件分片和合并</li>
+            <li><strong>链式调用</strong>：支持方法链式调用</li>
+        </ol>
+        <h2>基本使用方法</h2>
+        <h3>1. 创建实例</h3>
+        <pre><code class="language-java">// 通过路径字符串创建
 FileHelper helper1 = new FileHelper(&quot;path/to/file.txt&quot;);
 
 // 通过 Path 对象创建
@@ -133,23 +141,23 @@ FileHelper helper2 = new FileHelper(path);
 File file = new File(&quot;path/to/file.txt&quot;);
 FileHelper helper3 = new FileHelper(file);
 </code></pre>
-<h3>2. 文件读取</h3>
-<pre><code class="language-java">// 读取文件文本内容
+        <h3>2. 文件读取</h3>
+        <pre><code class="language-java">// 读取文件文本内容
 String content = new FileHelper(&quot;example.txt&quot;).getFileContent();
 
 // 读取文件字节内容
 byte[] bytes = new FileHelper(&quot;example.txt&quot;).readFileBytes();
 </code></pre>
-<h3>3. 文件写入</h3>
-<pre><code class="language-java">// 写入字符串内容到文件
+        <h3>3. 文件写入</h3>
+        <pre><code class="language-java">// 写入字符串内容到文件
 new FileHelper(&quot;output.txt&quot;).writeFileContent(&quot;Hello World&quot;);
 </code></pre>
-<h3>4. 文件删除</h3>
-<pre><code class="language-java">// 删除文件或目录（递归删除目录）
+        <h3>4. 文件删除</h3>
+        <pre><code class="language-java">// 删除文件或目录（递归删除目录）
 new FileHelper(&quot;file-or-directory&quot;).delete();
 </code></pre>
-<h3>5. 目录操作</h3>
-<pre><code class="language-java">// 列出目录内容
+        <h3>5. 目录操作</h3>
+        <pre><code class="language-java">// 列出目录内容
 List&lt;String&gt; contents = new FileHelper(&quot;directory&quot;).listDirectoryContents();
 
 // 创建目录（支持多级目录）
@@ -158,8 +166,8 @@ new FileHelper(&quot;new/directory/path&quot;).createDirectory();
 // 获取单个路径的元数据大小（不是目录内容的递归总大小）
 long size = new FileHelper(&quot;file-or-directory&quot;).getFileSize();
 </code></pre>
-<h3>6. 文件复制和移动</h3>
-<pre><code class="language-java">// 复制文件或目录
+        <h3>6. 文件复制和移动</h3>
+        <pre><code class="language-java">// 复制文件或目录
 new FileHelper(&quot;source.txt&quot;)
     .setTarget(&quot;destination.txt&quot;)
     .copyTo();
@@ -169,45 +177,45 @@ new FileHelper(&quot;old-location.txt&quot;)
     .setTarget(&quot;new-location.txt&quot;)
     .moveTo();
 </code></pre>
-<h3>7. 文件分片处理</h3>
-<pre><code class="language-java">// 将文件分片（每片1MB）
+        <h3>7. 文件分片处理</h3>
+        <pre><code class="language-java">// 将文件分片（每片1MB）
 new FileHelper(&quot;large-file.zip&quot;).chunkFile(1024 * 1024);
 
 // 合并分片文件
 Path[] chunks = {Paths.get(&quot;file-1&quot;), Paths.get(&quot;file-2&quot;)};
 new FileHelper(&quot;merged-file&quot;).mergeFile(chunks);
 </code></pre>
-<h2>链式调用示例</h2>
-<pre><code class="language-java">// 链式调用示例
+        <h2>链式调用示例</h2>
+        <pre><code class="language-java">// 链式调用示例
 FileHelper helper = new FileHelper(&quot;input.txt&quot;);
 helper.setTarget(&quot;backup.txt&quot;).copyTo();
 helper.setTarget(&quot;moved.txt&quot;).moveTo();
 </code></pre>
-<h2>异常处理</h2>
-<p>所有 IO 操作都会在出错时抛出 UncheckedIOException，可以使用 try-catch 进行处理：</p>
-<pre><code class="language-java">try {
+        <h2>异常处理</h2>
+        <p>所有 IO 操作都会在出错时抛出 UncheckedIOException，可以使用 try-catch 进行处理：</p>
+        <pre><code class="language-java">try {
     String content = new FileHelper(&quot;nonexistent.txt&quot;).getFileContent();
 } catch (UncheckedIOException e) {
     System.err.println(&quot;文件操作失败: &quot; + e.getMessage());
 }
 </code></pre>
-<h2>注意事项</h2>
-<ol>
-<li>复制和移动操作前必须设置目标路径，否则抛出 <code>IllegalStateException</code>。</li>
-<li>目录复制拒绝符号链接，也拒绝将目标放在源目录树内部。</li>
-<li>分片和合并会循环传输直到所有字节完成；分片失败会清理本次创建的块，合并成功前不会发布目标文件。</li>
-<li>递归删除失败会明确抛出异常，不会静默留下只删除了一部分的目录树。</li>
-</ol>
+        <h2>注意事项</h2>
+        <ol>
+            <li>复制和移动操作前必须设置目标路径，否则抛出 <code>IllegalStateException</code>。</li>
+            <li>目录复制拒绝符号链接，也拒绝将目标放在源目录树内部。</li>
+            <li>分片和合并会循环传输直到所有字节完成；分片失败会清理本次创建的块，合并成功前不会发布目标文件。</li>
+            <li>递归删除失败会明确抛出异常，不会静默留下只删除了一部分的目录树。</li>
+        </ol>
 
-            </article>
-        </div>
+    </article>
+</div>
 
-       <footer>
-            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
-            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
-            <br />
-            <br />
-            Copyright © 2025 Frank Cheung. All rights reserved.
-        </footer>
-    </body>
+<footer>
+    AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+    frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+    <br/>
+    <br/>
+    Copyright © 2025 Frank Cheung. All rights reserved.
+</footer>
+</body>
 </html>

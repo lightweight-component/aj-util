@@ -34,4 +34,5 @@ String hex = BytesHelper.bytesToHexStr(new byte[]{0x1A, 0x2B});
 byte[] bytes = BytesHelper.parseHexStr2Byte("1A2B");
 ```
 
-空字符串返回空字节数组。输入长度必须为偶数，且所有字符都必须是合法的十六进制字符，否则抛出 `IllegalArgumentException`；奇数长度输入不会再被静默截断。
+空字符串返回空字节数组。输入长度必须为偶数，且所有字符都必须是合法的十六进制字符，否则抛出 `IllegalArgumentException`
+；奇数长度输入不会再被静默截断。

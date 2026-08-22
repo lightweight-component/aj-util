@@ -9,6 +9,7 @@ layout: layouts/aj-util-cn.njk
 ---
 
 # RSA 加密解密
+
 RSA 非对称加密，事情比较多，可以分解为下面的子任务：
 
 - 签名，封装在`com.ajaxjs.util.cryptography.rsa.DoSignature`完成
@@ -17,7 +18,9 @@ RSA 非对称加密，事情比较多，可以分解为下面的子任务：
 - 本身的 RSA 加密解密
 
 下面分别进行介绍。
+
 ## 签名
+
 入参包括算法、输入数据及私钥，执行`sign()`返回签名。涉及的类型如下：
 
 - 输入数据，可以是`byte[]`或字符串
@@ -39,6 +42,7 @@ assertEquals(new Base64Utils(helloWorlds).encodeAsString(), result);
 私钥由 `KeyMgr` 生成。RSA 密钥长度仅允许 2048、3072 或 4096 位，最低为 2048 位。
 
 ## 校验签名
+
 入参包括算法、输入数据、签名数据及公钥，执行`verify()`返回签名。涉及的类型如下：
 
 - 输入数据，可以是`byte[]`或字符串
@@ -60,7 +64,9 @@ assertTrue(verified);
 公私钥对可通过 `KeyMgr` 生成。签名和验签会在调用 JCA 前检查输入、签名及密钥状态是否完整。
 
 ## RSA 加密解密
+
 没什么好说的了，直接上 API 例子。
+
 ```java
 // 生成公钥私钥
 KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
@@ -95,8 +101,12 @@ String sign = new DoSignature(Constant.SHA256_RSA).setPrivateKeyStr(privateKey).
 // 验证签名
 assertTrue(new DoVerify(Constant.SHA256_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
 ```
+
 ## 密钥管理
-关于密钥的一些工具方法在`KeyMgr`，包括公钥和私钥的。一般开源的都喜欢把`KeyPair`封装为 Map，而笔者觉得直接使用`KeyPair`本身就可以了，如果不太满足，则增加某些方法。例如`getPublicKeyBytes()`、`getPublicKeyStr()`、`getPublicToPem()`，相比使用 Map 更加清晰。
+
+关于密钥的一些工具方法在`KeyMgr`，包括公钥和私钥的。一般开源的都喜欢把`KeyPair`封装为 Map，而笔者觉得直接使用`KeyPair`
+本身就可以了，如果不太满足，则增加某些方法。例如`getPublicKeyBytes()`、`getPublicKeyStr()`、`getPublicToPem()`，相比使用 Map
+更加清晰。
 
 不要把私钥写入日志或异常消息。无效私钥异常只返回经过脱敏的说明。
 

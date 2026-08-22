@@ -11,11 +11,13 @@ layout: layouts/aj-util.njk
 
 # BoxLogger Tutorial
 
-This tutorial provides an overview of the `BoxLogger` class, which is part of the `lightweight-component/aj-util` library. The `BoxLogger` class provides utilities for creating boxed log messages with proper formatting and alignment.
+This tutorial provides an overview of the `BoxLogger` class, which is part of the `lightweight-component/aj-util`
+library. The `BoxLogger` class provides utilities for creating boxed log messages with proper formatting and alignment.
 
 ## Introduction
 
-The `BoxLogger` class contains static methods for creating visually formatted log messages in boxes, with support for ANSI colors and proper handling of wide characters (like CJK).
+The `BoxLogger` class contains static methods for creating visually formatted log messages in boxes, with support for
+ANSI colors and proper handling of wide characters (like CJK).
 
 ## Main Features
 
@@ -53,6 +55,7 @@ The `BoxLogger` class contains static methods for creating visually formatted lo
 ## Usage Examples
 
 ### Create Boxed Log
+
 ```java
 System.out.println(BoxLogger.boxLine('┌', '─', '┐', " LOG START "));
 System.out.println(BoxLogger.boxContent("User: ", "张三"));
@@ -60,11 +63,13 @@ System.out.println(BoxLogger.boxLine('└', '─', '┘', " LOG END "));
 ```
 
 ### ANSI Colors
+
 ```java
 System.out.println(BoxLogger.ANSI_RED + "Error!" + BoxLogger.ANSI_RESET);
 ```
 
 ### String Utilities
+
 ```java
 String repeated = BoxLogger.repeat('-', 10); // "----------"
 String truncated = BoxLogger.truncate("This is a long string", 10); // "This is..."
@@ -80,4 +85,5 @@ int width = BoxLogger.getDisplayWidth("中文"); // 4
 
 ## Conclusion
 
-The `BoxLogger` class provides useful utilities for creating visually formatted log messages, especially useful for CLI applications or debugging output.
+The `BoxLogger` class provides useful utilities for creating visually formatted log messages, especially useful for CLI
+applications or debugging output.

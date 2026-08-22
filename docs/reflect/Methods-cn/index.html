@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Methods</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  通过反射查找和调用 Java 方法" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 反射,方法调用,Java" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
-        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
-        <script>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AJ Utils-Methods</title>
+    <meta name="description" content="Small Java utilities with many useful functions.  通过反射查找和调用 Java 方法"/>
+    <meta name="keywords"
+          content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 反射,方法调用,Java"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"/>
+    <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css"/>
+    <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+    <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+    <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+    <script>
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -23,112 +26,116 @@
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
-        </script>
-    </head>
-    <body>
-        <nav>
-            <div>
-                <div class="links">
-                    <a href="/cn">🏠 首页</a>
-                    | ⚙️ 源码:
-                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                  
-                    | 🚀<a href="">英语版本</a>
-                </div>
-                <h1>
-                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
-                    AJ Utils
-                </h1>
-                <h3>小型、干净、简单的 Java 工具库
-                </h3>
-            </div>
-        </nav>
-        <div>
-            <menu>
-                
-                <ul>
-                    <li class="selected">
-                        <a href="/cn">首页</a>
-                    </li>
-                </ul>
-                <h3>Common 常用模块</h3>
-                <ul>
-                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
-                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
-                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
-                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                </ul>
-                <h3>Date 日期处理</h3>
-                <ul>
-                    <li><a href="/date/intro-cn/">简介</a></li>
-                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
-                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
-                </ul>
-                <h3>Reflection 反射</h3>
-                <ul>
-                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
-                    <li><a href="/reflect/Types-cn/">Types</a></li>
-                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
-                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
-                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
-                </ul>
 
-                <h3>Input/Output 输入/输出</h3>
-                <ul>
-                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
-                    <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
-                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
-                </ul>
+    </script>
+</head>
+<body>
+<nav>
+    <div>
+        <div class="links">
+            <a href="/cn">🏠 首页</a>
+            | ⚙️ 源码:
+            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank"
+                                                                                                     href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
 
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
-                </ul>
+            | 🚀<a href="">英语版本</a>
+        </div>
+        <h1>
+            <img src="https://framework.ajaxjs.com/aj-logo/logo.png"
+                 style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
+            AJ Utils
+        </h1>
+        <h3>小型、干净、简单的 Java 工具库
+        </h3>
+    </div>
+</nav>
+<div>
+    <menu>
 
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/intro-cn/">简介</a></li>
-                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
-                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
-                </ul>
-                <h3>其他</h3>
-               <ul>
-                <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
-                <li><a href="/misc/contact-cn/">联系</a></li>
-               </ul>
-            </menu>
-            <article class="aj-text chinese">
-                <h1>Methods</h1>
-<p><code>Methods</code> 用于在指定类或对象上查找并调用方法。</p>
-<h2>声明方法查找</h2>
-<p><code>findDeclaredMethodByTypes(String, Class&lt;?&gt;...)</code> 从指定类开始沿父类向上查找，但不包含 <code>Object</code>。它可以返回
-private 等非 public 声明，并将找到的方法设为可访问。该入口按精确参数类型查找，找不到时返回 <code>null</code>。</p>
-<pre><code class="language-java">Methods methods = new Methods(MyService.class);
+        <ul>
+            <li class="selected">
+                <a href="/cn">首页</a>
+            </li>
+        </ul>
+        <h3>Common 常用模块</h3>
+        <ul>
+            <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+            <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
+            <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+            <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+            <li><a href="/common/MapTool-cn/">MapTool</a></li>
+            <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+            <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+            <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+            <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+            <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+            <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+            <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+            <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+        </ul>
+        <h3>Date 日期处理</h3>
+        <ul>
+            <li><a href="/date/intro-cn/">简介</a></li>
+            <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+            <li><a href="/date/formatter-cn/">日期格式化</a></li>
+        </ul>
+        <h3>Reflection 反射</h3>
+        <ul>
+            <li><a href="/reflect/Methods-cn/">Methods</a></li>
+            <li><a href="/reflect/Types-cn/">Types</a></li>
+            <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+            <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+            <li><a href="/reflect/Fields-cn/">Fields</a></li>
+        </ul>
+
+        <h3>Input/Output 输入/输出</h3>
+        <ul>
+            <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+            <li><a href="/io/Resources-cn/">Resources</a></li>
+            <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+            <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+        </ul>
+
+        <h3>HTTP 请求</h3>
+        <ul>
+            <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
+        </ul>
+
+        <h3>加密/解密</h3>
+        <ul>
+            <li><a href="/cryptography/intro-cn/">简介</a></li>
+            <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+            <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+            <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+        </ul>
+        <h3>其他</h3>
+        <ul>
+            <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
+            <li><a href="/misc/contact-cn/">联系</a></li>
+        </ul>
+    </menu>
+    <article class="aj-text chinese">
+        <h1>Methods</h1>
+        <p><code>Methods</code> 用于在指定类或对象上查找并调用方法。</p>
+        <h2>声明方法查找</h2>
+        <p><code>findDeclaredMethodByTypes(String, Class&lt;?&gt;...)</code> 从指定类开始沿父类向上查找，但不包含 <code>Object</code>。它可以返回
+            private 等非 public 声明，并将找到的方法设为可访问。该入口按精确参数类型查找，找不到时返回 <code>null</code>。
+        </p>
+        <pre><code class="language-java">Methods methods = new Methods(MyService.class);
 Method method = methods.findDeclaredMethodByTypes(&quot;handle&quot;, String.class);
 </code></pre>
-<p><code>findDeclaredMethod(String, Object...)</code> 会把每个参数值转换成精确运行时类型。它不进行父类、接口或
-基本类型与包装类型的兼容匹配。参数值为 <code>null</code> 时无法推断精确类型，因此返回 <code>null</code>；调用方已知
-null 参数的声明类型时，应使用 <code>findDeclaredMethodByTypes(...)</code>。</p>
-<h2>兼容 public 方法查找</h2>
-<p><code>findCompatibleMethod(String, Object...)</code> 搜索 public 方法，包括继承的方法。它支持：</p>
-<ul>
-<li>精确运行时类型；</li>
-<li>父类参数和递归继承的接口参数；</li>
-<li><code>int</code>/<code>Integer</code> 等基本类型与包装类型配对；</li>
-<li>非基本类型参数的 <code>null</code> 值。</li>
-</ul>
-<pre><code class="language-java">interface Parent {}
+        <p><code>findDeclaredMethod(String, Object...)</code> 会把每个参数值转换成精确运行时类型。它不进行父类、接口或
+            基本类型与包装类型的兼容匹配。参数值为 <code>null</code> 时无法推断精确类型，因此返回 <code>null</code>；调用方已知
+            null 参数的声明类型时，应使用 <code>findDeclaredMethodByTypes(...)</code>。</p>
+        <h2>兼容 public 方法查找</h2>
+        <p><code>findCompatibleMethod(String, Object...)</code> 搜索 public 方法，包括继承的方法。它支持：</p>
+        <ul>
+            <li>精确运行时类型；</li>
+            <li>父类参数和递归继承的接口参数；</li>
+            <li><code>int</code>/<code>Integer</code> 等基本类型与包装类型配对；</li>
+            <li>非基本类型参数的 <code>null</code> 值。</li>
+        </ul>
+        <pre><code class="language-java">interface Parent {}
 interface Child extends Parent {}
 
 class ChildImpl implements Child {}
@@ -139,25 +146,26 @@ class Target {
 Method method =
         new Methods(Target.class).findCompatibleMethod(&quot;accept&quot;, new ChildImpl());
 </code></pre>
-<p>方法会选择类型层次距离最小的候选项。如果互不相关的重载得到相同分数，当前实现会选择反射返回的
-第一个方法；可能产生重载歧义时，应显式传入参数类型。当前不支持基本数值类型扩宽和可变参数展开。</p>
-<h2>精确 public 方法查找</h2>
-<p><code>findPublicExactMethod(String, Object[])</code> 按每个实参的精确运行时类型查找 public 方法。参数中包含
-<code>null</code> 时无法推断精确类型，因此返回 <code>null</code>；调用方随后可使用支持引用类型 <code>null</code> 参数的
-<code>findCompatibleMethod(...)</code>。</p>
-<p><code>findPublicExactMethodByTypes(String, Class&lt;?&gt;[])</code> 接收显式精确类型，适合运行时值是包装类型、声明
-参数却是基本类型的情况：</p>
-<pre><code class="language-java">Method setter = new Methods(Target.class)
+        <p>方法会选择类型层次距离最小的候选项。如果互不相关的重载得到相同分数，当前实现会选择反射返回的
+            第一个方法；可能产生重载歧义时，应显式传入参数类型。当前不支持基本数值类型扩宽和可变参数展开。</p>
+        <h2>精确 public 方法查找</h2>
+        <p><code>findPublicExactMethod(String, Object[])</code> 按每个实参的精确运行时类型查找 public 方法。参数中包含
+            <code>null</code> 时无法推断精确类型，因此返回 <code>null</code>；调用方随后可使用支持引用类型
+            <code>null</code> 参数的
+            <code>findCompatibleMethod(...)</code>。</p>
+        <p><code>findPublicExactMethodByTypes(String, Class&lt;?&gt;[])</code> 接收显式精确类型，适合运行时值是包装类型、声明
+            参数却是基本类型的情况：</p>
+        <pre><code class="language-java">Method setter = new Methods(Target.class)
         .findPublicExactMethodByTypes(&quot;setAge&quot;, new Class&lt;?&gt;[]{int.class});
 </code></pre>
-<p>两个入口都使用 <code>Class.getMethod</code>，因此只搜索 public 方法，包括继承的类方法和接口方法。显式类型
-数组包含 <code>null</code> 元素时会抛出 <code>IllegalArgumentException</code>。</p>
-<h2>调用方法</h2>
-<p>按方法名调用的 <code>execute(instance, methodName, parameters)</code> 会先尝试精确 public 方法查找，找不到
-时再回退到兼容 public 方法查找。最终仍找不到时抛出 <code>IllegalArgumentException</code>。带 <code>Class&lt;?&gt;[]</code>
-参数的重载按调用者给出的类型执行精确 public 方法查找，例如可以明确区分 <code>int.class</code> 与
-<code>Integer.class</code>。</p>
-<pre><code class="language-java">Object result = Methods.execute(service, &quot;handle&quot;, new Object[]{&quot;value&quot;});
+        <p>两个入口都使用 <code>Class.getMethod</code>，因此只搜索 public 方法，包括继承的类方法和接口方法。显式类型
+            数组包含 <code>null</code> 元素时会抛出 <code>IllegalArgumentException</code>。</p>
+        <h2>调用方法</h2>
+        <p>按方法名调用的 <code>execute(instance, methodName, parameters)</code> 会先尝试精确 public 方法查找，找不到
+            时再回退到兼容 public 方法查找。最终仍找不到时抛出 <code>IllegalArgumentException</code>。带 <code>Class&lt;?&gt;[]</code>
+            参数的重载按调用者给出的类型执行精确 public 方法查找，例如可以明确区分 <code>int.class</code> 与
+            <code>Integer.class</code>。</p>
+        <pre><code class="language-java">Object result = Methods.execute(service, &quot;handle&quot;, new Object[]{&quot;value&quot;});
 
 Object primitiveResult = Methods.execute(
         service,
@@ -166,28 +174,29 @@ Object primitiveResult = Methods.execute(
         new Object[]{Integer.valueOf(18)}
 );
 </code></pre>
-<p>需要调用非 public 方法时，应先通过 <code>findDeclaredMethodByTypes(...)</code> 显式取得 <code>Method</code>，再调用
-<code>execute(instance, method, parameters)</code>，使访问范围变化清晰可见：</p>
-<pre><code class="language-java">Method privateMethod = new Methods(service)
+        <p>需要调用非 public 方法时，应先通过 <code>findDeclaredMethodByTypes(...)</code> 显式取得 <code>Method</code>，再调用
+            <code>execute(instance, method, parameters)</code>，使访问范围变化清晰可见：</p>
+        <pre><code class="language-java">Method privateMethod = new Methods(service)
         .findDeclaredMethodByTypes(&quot;privateHandle&quot;, String.class);
 Object privateResult = Methods.execute(service, privateMethod, new Object[]{&quot;value&quot;});
 </code></pre>
-<p>目标方法正常返回 <code>null</code> 时仍返回 <code>null</code>。目标方法抛出的异常会从 <code>InvocationTargetException</code>
-中解包并继续向上传播。</p>
-<p><code>executeStatic(Method, Object[])</code> 对 null <code>Method</code> 抛出 <code>IllegalArgumentException</code>，只接受静态方法，
-并使用 null 反射接收者执行。目标方法异常会像普通调用一样解包并继续抛出。<code>executeDefault(...)</code> 是
-面向 Java 8 的接口默认方法辅助入口；它对旧版 <code>MethodHandles.Lookup</code> 的访问在较新的模块化 JDK 上
-可能无法工作。</p>
+        <p>目标方法正常返回 <code>null</code> 时仍返回 <code>null</code>。目标方法抛出的异常会从 <code>InvocationTargetException</code>
+            中解包并继续向上传播。</p>
+        <p><code>executeStatic(Method, Object[])</code> 对 null <code>Method</code> 抛出
+            <code>IllegalArgumentException</code>，只接受静态方法，
+            并使用 null 反射接收者执行。目标方法异常会像普通调用一样解包并继续抛出。<code>executeDefault(...)</code> 是
+            面向 Java 8 的接口默认方法辅助入口；它对旧版 <code>MethodHandles.Lookup</code> 的访问在较新的模块化 JDK 上
+            可能无法工作。</p>
 
-            </article>
-        </div>
+    </article>
+</div>
 
-       <footer>
-            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
-            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
-            <br />
-            <br />
-            Copyright © 2025 Frank Cheung. All rights reserved.
-        </footer>
-    </body>
+<footer>
+    AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+    frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+    <br/>
+    <br/>
+    Copyright © 2025 Frank Cheung. All rights reserved.
+</footer>
+</body>
 </html>

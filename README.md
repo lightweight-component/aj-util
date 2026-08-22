@@ -1,65 +1,47 @@
-<h1 align="center">AJ Utilities</h1>
-<h3 align="center">A Lightweight Java OOP Utils Library.</h3>
+<h1 align="center">AJ-Utils</h1>
+<div style="text-align: center;">
+<p align="center">
 
-<div align="center" style="text-align: center;">
-
-[![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
-![Java Version](https://img.shields.io/badge/Java-8-blue)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.3.6-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
-![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
-[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lightweight-component/aj-util)
-![GitHub repo size](https://img.shields.io/github/repo-size/lightweight-component/aj-util)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-util)
-[![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
-[![中文](https://img.shields.io/badge/lang-中文-red)](./README.zh-CN.md)
+<a href="https://img.shields.io/badge/Java-8-blue"><img src="https://img.shields.io/badge/Java-8-blue" alt="Java Version"></a>
+<a href="http://www.apache.org/licenses/LICENSE-2.0.txt"><img src="https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&amp;style=flat" alt="License"></a>
+<a href="https://github.com/lightweight-component/aj-util"><img src="https://img.shields.io/github/languages/code-size/lightweight-component/aj-util" alt="GitHub code size in bytes"></a>
+<a href="https://github.com/lightweight-component/aj-util"><img src="https://img.shields.io/github/repo-size/lightweight-component/aj-util" alt="GitHub repo size"></a>
+<a href="mailto:frank@ajaxjs.com"><img src="https://img.shields.io/badge/Contact--me-Email-orange.svg" alt="Email"></a>
+<a href="./README.zh-CN.md"><img src="https://img.shields.io/badge/lang-%E4%B8%AD%E6%96%87-red" alt="Chinese"></a>
 
 </div>
 
 <hr />
 
-This is a Java toolkit that truly embraces Object-Oriented Programming (OOP). Unlike other libraries that rely heavily on static methods, this toolkit requires you to instantiate objects before invoking utility methods.
+A collection of lightweight Java 8 utility libraries, covering everyday development needs as well as standalone
+components for FTP, S3-compatible object storage, QR codes, and cryptography.
 
-By utilizing overloaded constructors, it automatically adapts to and converts various input parameters. This approach not only handles complex scenarios with ease but also results in a cleaner API design and more concise, DRY (Don't Repeat Yourself) code.
+## Highlights
 
-Furthermore, this library is designed to be lightweight with minimal dependencies. The JAR file is only about 170KB in size and includes the following modules:
+- **Java 8 compatible**: Every component targets Java 8 and later runtimes.
+- **Clear, understandable, and simple**: Lightweight design with straightforward APIs and implementations that are easy
+  to read, use, and maintain.
+- **Quality-focused**: Well-commented code, documentation, and unit tests support dependable integration and future
+  maintenance.
+- **Modular**: Include only the components you need and avoid unnecessary dependencies.
 
-| Class/Package Module | Detail Description                                                                     | Memo                                          |
-|----------------------|----------------------------------------------------------------------------------------|-----------------------------------------------|
-| BytesHelper          | Byte array utility class                                                               |                                               |
-| CollUtils            | Collection utility class                                                               |                                               |
-| ConvertBasicValue    | Attempts to convert target type, note that not all types can be converted              |                                               |
-| DateHelper           | Date utility class                                                                     |                                               |
-| EncodeTools          | String URL/Base64 encoder                                                              |                                               |
-| MessageDigestHelper  | MD5/SHA1/SHA256/384/512 encryption utility class                                       |                                               |
-| ObjectHelper         | A helper for Java Object                                                               |                                               |
-| HTTP Request         | A Small HTTP Request Component                                                         |                                               |
-| RandomTools          | Random Numbers and Strings                                                             |                                               |
-| RegExpUtils          | Regular expression utility class                                                       |                                               |
-| StrUtil              | String utility class                                                                   |                                               |
-| JsonUtil             | Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List | Jackson is the only library that dependencies |
-| XmlHelper            | XML processing utility class                                                           |                                               |
-| Cryptography         | AES/RSA encryption and decryption package                                              |                                               |
-| IO                   | File, resource, stream utility package                                                 |                                               |
-| Reflection           | Reflection utility package                                                             |                                               |
+## Projects
 
-## Source code
+| Project                              | Maven ArtifactId  | Description                                                                                                                     | Documentation                         |
+|--------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
+| [aj-util](./aj-util)                 | `ajaxjs-util`     | General-purpose Java utilities in an OOP-oriented style, including strings, collections, dates, JSON, XML, I/O, and reflection. | [README](./aj-util/README.md)         |
+| [aj-ftp](./aj-ftp)                   | `aj-ftp`          | Lightweight FTP client with upload, download, and progress tracking.                                                            | [README](./aj-ftp/README.md)          |
+| [aj-s3client](./aj-s3client)         | `aj-s3client`     | Lightweight client for S3-compatible object storage.                                                                            | [README](./aj-s3client/README.md)     |
+| [aj-qrcode](./aj-qrcode)             | `aj-qrcode`       | Lightweight QR code generation component with PNG, SVG, and other output formats.                                               | [README](./aj-qrcode/README.md)       |
+| [aj-cryptography](./aj-cryptography) | `aj-cryptography` | Cryptography utilities supporting AES, DES, PBE, RSA, and more.                                                                 | [README](./aj-cryptography/README.md) |
+| [aj-http](./aj-http)                 | `aj-net`          | Simple HTTP request component.                                                                                                  | [README](./aj-http/README.md)         |
 
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
+## Source Code
 
-## Link
+- [GitHub](https://github.com/lightweight-component/aj-util)
+- [GitCode](https://gitcode.com/lightweight-component/aj-util)
+- [Gitee](https://gitee.com/lightweight-components/aj-util)
 
-[Tutorials](https://aj-util.ajaxjs.com) | [Tutorials(Chinese)](https://framework.ajaxjs.com/aj-util/cn/) | [DeepWiki Tutorials](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+## License
 
-## Install
-
-Runs on Java 8+. Maven:
-
-```xml
-
-<dependency>
-    <groupId>com.ajaxjs</groupId>
-    <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.6</version>
-</dependency>
-```
+This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).

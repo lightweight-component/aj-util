@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-HashHelper</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  MD5、SHA-1、SHA-256 哈希和 HMAC 操作的方法" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 加密,哈希,Java" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
-        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
-        <script>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AJ Utils-HashHelper</title>
+    <meta name="description"
+          content="Small Java utilities with many useful functions.  MD5、SHA-1、SHA-256 哈希和 HMAC 操作的方法"/>
+    <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 加密,哈希,Java"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"/>
+    <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css"/>
+    <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+    <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+    <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+    <script>
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -23,112 +26,116 @@
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
-        </script>
-    </head>
-    <body>
-        <nav>
-            <div>
-                <div class="links">
-                    <a href="/cn">🏠 首页</a>
-                    | ⚙️ 源码:
-                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                  
-                    | 🚀<a href="">英语版本</a>
-                </div>
-                <h1>
-                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
-                    AJ Utils
-                </h1>
-                <h3>小型、干净、简单的 Java 工具库
-                </h3>
-            </div>
-        </nav>
-        <div>
-            <menu>
-                
-                <ul>
-                    <li class="selected">
-                        <a href="/cn">首页</a>
-                    </li>
-                </ul>
-                <h3>Common 常用模块</h3>
-                <ul>
-                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
-                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
-                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
-                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                </ul>
-                <h3>Date 日期处理</h3>
-                <ul>
-                    <li><a href="/date/intro-cn/">简介</a></li>
-                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
-                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
-                </ul>
-                <h3>Reflection 反射</h3>
-                <ul>
-                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
-                    <li><a href="/reflect/Types-cn/">Types</a></li>
-                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
-                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
-                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
-                </ul>
 
-                <h3>Input/Output 输入/输出</h3>
-                <ul>
-                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
-                    <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
-                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
-                </ul>
+    </script>
+</head>
+<body>
+<nav>
+    <div>
+        <div class="links">
+            <a href="/cn">🏠 首页</a>
+            | ⚙️ 源码:
+            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank"
+                                                                                                     href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
 
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
-                </ul>
+            | 🚀<a href="">英语版本</a>
+        </div>
+        <h1>
+            <img src="https://framework.ajaxjs.com/aj-logo/logo.png"
+                 style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
+            AJ Utils
+        </h1>
+        <h3>小型、干净、简单的 Java 工具库
+        </h3>
+    </div>
+</nav>
+<div>
+    <menu>
 
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/intro-cn/">简介</a></li>
-                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
-                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
-                </ul>
-                <h3>其他</h3>
-               <ul>
-                <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
-                <li><a href="/misc/contact-cn/">联系</a></li>
-               </ul>
-            </menu>
-            <article class="aj-text chinese">
-                <h1>HashHelper 使用教程</h1>
-<p><code>HashHelper</code> 是一个用于密码学哈希操作的工具类，支持多种哈希算法（MD5、SHA-1、SHA-256）和 HMAC 操作。它提供了从字符串和字节数组生成哈希值的方法，并支持十六进制和 Base64 输出格式。</p>
-<h3>主要功能特性</h3>
-<ol>
-<li><strong>支持多种哈希算法</strong>: MD5, SHA-1, SHA-256</li>
-<li><strong>支持 HMAC 消息认证码</strong>: HmacMD5, HmacSHA1, HmacSHA256</li>
-<li><strong>多种输出格式</strong>: 十六进制字符串、Base64 编码</li>
-<li><strong>链式调用 API 设计</strong></li>
-<li><strong>文件 MD5 计算</strong>: 支持大文件分块处理</li>
-</ol>
-<h3>基本使用方法</h3>
-<h4>1. 创建实例</h4>
-<pre><code class="language-java">// 使用指定算法和字节数组创建实例
+        <ul>
+            <li class="selected">
+                <a href="/cn">首页</a>
+            </li>
+        </ul>
+        <h3>Common 常用模块</h3>
+        <ul>
+            <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+            <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
+            <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+            <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+            <li><a href="/common/MapTool-cn/">MapTool</a></li>
+            <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+            <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+            <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+            <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+            <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+            <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+            <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+            <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+        </ul>
+        <h3>Date 日期处理</h3>
+        <ul>
+            <li><a href="/date/intro-cn/">简介</a></li>
+            <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+            <li><a href="/date/formatter-cn/">日期格式化</a></li>
+        </ul>
+        <h3>Reflection 反射</h3>
+        <ul>
+            <li><a href="/reflect/Methods-cn/">Methods</a></li>
+            <li><a href="/reflect/Types-cn/">Types</a></li>
+            <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+            <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+            <li><a href="/reflect/Fields-cn/">Fields</a></li>
+        </ul>
+
+        <h3>Input/Output 输入/输出</h3>
+        <ul>
+            <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+            <li><a href="/io/Resources-cn/">Resources</a></li>
+            <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+            <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+        </ul>
+
+        <h3>HTTP 请求</h3>
+        <ul>
+            <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
+        </ul>
+
+        <h3>加密/解密</h3>
+        <ul>
+            <li><a href="/cryptography/intro-cn/">简介</a></li>
+            <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+            <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+            <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+        </ul>
+        <h3>其他</h3>
+        <ul>
+            <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
+            <li><a href="/misc/contact-cn/">联系</a></li>
+        </ul>
+    </menu>
+    <article class="aj-text chinese">
+        <h1>HashHelper 使用教程</h1>
+        <p><code>HashHelper</code> 是一个用于密码学哈希操作的工具类，支持多种哈希算法（MD5、SHA-1、SHA-256）和 HMAC
+            操作。它提供了从字符串和字节数组生成哈希值的方法，并支持十六进制和 Base64 输出格式。</p>
+        <h3>主要功能特性</h3>
+        <ol>
+            <li><strong>支持多种哈希算法</strong>: MD5, SHA-1, SHA-256</li>
+            <li><strong>支持 HMAC 消息认证码</strong>: HmacMD5, HmacSHA1, HmacSHA256</li>
+            <li><strong>多种输出格式</strong>: 十六进制字符串、Base64 编码</li>
+            <li><strong>链式调用 API 设计</strong></li>
+            <li><strong>文件 MD5 计算</strong>: 支持大文件分块处理</li>
+        </ol>
+        <h3>基本使用方法</h3>
+        <h4>1. 创建实例</h4>
+        <pre><code class="language-java">// 使用指定算法和字节数组创建实例
 HashHelper helper = new HashHelper(&quot;MD5&quot;, &quot;Hello World&quot;.getBytes());
 
 // 使用指定算法和字符串创建实例（自动转为 UTF-8 字节）
 HashHelper helper = new HashHelper(&quot;SHA-256&quot;, &quot;Hello World&quot;);
 </code></pre>
-<h4>2. 基本哈希计算</h4>
-<pre><code class="language-java">// 获取字节数组形式的哈希值
+        <h4>2. 基本哈希计算</h4>
+        <pre><code class="language-java">// 获取字节数组形式的哈希值
 byte[] hashBytes = new HashHelper(&quot;MD5&quot;, &quot;Hello World&quot;).hash();
 
 // 获取十六进制字符串形式的哈希值（小写）
@@ -138,8 +145,8 @@ String hexHash = new HashHelper(&quot;SHA-256&quot;, &quot;Hello World&quot;).ha
 String base64Hash = new HashHelper(&quot;SHA-1&quot;, &quot;Hello World&quot;).hashAsBase64();
 String base64HashNoPadding = new HashHelper(&quot;SHA-1&quot;, &quot;Hello World&quot;).hashAsBase64(true);
 </code></pre>
-<h4>3. HMAC 计算</h4>
-<pre><code class="language-java">// 设置密钥并计算 HMAC
+        <h4>3. HMAC 计算</h4>
+        <pre><code class="language-java">// 设置密钥并计算 HMAC
 byte[] hmacBytes = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
     .setKey(&quot;secret-key&quot;)
     .hash();
@@ -154,14 +161,14 @@ String hmacBase64 = new HashHelper(&quot;HmacSHA1&quot;, &quot;Hello World&quot;
     .setKey(&quot;secret-key&quot;)
     .hashAsBase64();
 </code></pre>
-<h4>4. 链式调用</h4>
-<p>由于使用了 <code>@Accessors(chain = true)</code> 注解，可以进行链式调用：</p>
-<pre><code class="language-java">String result = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
+        <h4>4. 链式调用</h4>
+        <p>由于使用了 <code>@Accessors(chain = true)</code> 注解，可以进行链式调用：</p>
+        <pre><code class="language-java">String result = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
     .setKey(&quot;my-secret-key&quot;)
     .hashAsBase64(true);
 </code></pre>
-<h4>5. 静态便捷方法</h4>
-<pre><code class="language-java">// MD5 哈希（最常用）
+        <h4>5. 静态便捷方法</h4>
+        <pre><code class="language-java">// MD5 哈希（最常用）
 String md5Hash = HashHelper.md5(&quot;Hello World&quot;);
 
 // SHA-1 哈希
@@ -176,8 +183,8 @@ HashHelper hmacMd5 = HashHelper.getHmacMD5(&quot;Hello World&quot;, &quot;secret
 // HMAC-SHA256 返回 Base64
 String hmacSha256Base64 = HashHelper.getHmacSHA256(&quot;Hello World&quot;, &quot;secret-key&quot;, false);
 </code></pre>
-<h4>6. 文件 MD5 计算</h4>
-<pre><code class="language-java">// 从输入流计算文件 MD5
+        <h4>6. 文件 MD5 计算</h4>
+        <pre><code class="language-java">// 从输入流计算文件 MD5
 try (InputStream inputStream = new FileInputStream(&quot;example.txt&quot;)) {
     String fileMd5 = HashHelper.calcFileMD5(inputStream);
 }
@@ -186,31 +193,32 @@ try (InputStream inputStream = new FileInputStream(&quot;example.txt&quot;)) {
 byte[] fileBytes = Files.readAllBytes(Paths.get(&quot;example.txt&quot;));
 String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 </code></pre>
-<h3>常量定义</h3>
-<ul>
-<li>MD5: MD5 哈希算法常量</li>
-<li>SHA1: SHA-1 哈希算法常量</li>
-<li>SHA256: SHA-256 哈希算法常量</li>
-<li>HMAC_SHA1: HMAC-SHA1 算法常量</li>
-<li>HMAC_SHA256: HMAC-SHA256 算法常量</li>
-</ul>
-<h3>注意事项</h3>
-<ol>
-<li>HMAC 应明确设置或持久化密钥。未设置密钥直接调用 <code>getMac()</code> 会生成一个不会返回的内部随机密钥，结果无法在之后复现和验证。</li>
-<li>所有哈希结果默认以小写十六进制字符串返回</li>
-<li>Base64 编码默认包含填充字符，可通过参数控制</li>
-<li>大文件处理采用分块读取方式，避免内存溢出</li>
-</ol>
+        <h3>常量定义</h3>
+        <ul>
+            <li>MD5: MD5 哈希算法常量</li>
+            <li>SHA1: SHA-1 哈希算法常量</li>
+            <li>SHA256: SHA-256 哈希算法常量</li>
+            <li>HMAC_SHA1: HMAC-SHA1 算法常量</li>
+            <li>HMAC_SHA256: HMAC-SHA256 算法常量</li>
+        </ul>
+        <h3>注意事项</h3>
+        <ol>
+            <li>HMAC 应明确设置或持久化密钥。未设置密钥直接调用 <code>getMac()</code> 会生成一个不会返回的内部随机密钥，结果无法在之后复现和验证。
+            </li>
+            <li>所有哈希结果默认以小写十六进制字符串返回</li>
+            <li>Base64 编码默认包含填充字符，可通过参数控制</li>
+            <li>大文件处理采用分块读取方式，避免内存溢出</li>
+        </ol>
 
-            </article>
-        </div>
+    </article>
+</div>
 
-       <footer>
-            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
-            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
-            <br />
-            <br />
-            Copyright © 2025 Frank Cheung. All rights reserved.
-        </footer>
-    </body>
+<footer>
+    AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+    frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+    <br/>
+    <br/>
+    Copyright © 2025 Frank Cheung. All rights reserved.
+</footer>
+</body>
 </html>

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Date Formatting</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Date Formatting" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Date Formatting" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
-        <script>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AJ Utils-Date Formatting</title>
+    <meta name="description" content="Small Java utilities with many useful functions. Date Formatting"/>
+    <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Date Formatting"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css"/>
+    <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+    <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+    <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+    <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
 
@@ -27,101 +27,108 @@
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
-        </script>
-    </head>
-    <body>
-        <nav>
-            <div>
-                <div class="links">
-                    <a href="/">🏠 Home</a>
-                    | ⚙️ Source:
-                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/cn">Chinese Version</a>
-                </div>
-                <h1>
-                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
-                    AJ Utils
-                </h1>
-                <h3>Small Java Utils Library</h3>
-            </div>
-        </nav>
-        <div>
-            <menu>
-                
-                <ul>
-                    <li class="selected">
-                        <a href="/">Home</a>
-                    </li>
-                </ul>
-                <h3>Common</h3>
-                <ul>
-                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
-                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
-                    <li><a href="/common/MapTool/">MapTool</a></li>
-                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
-                    <li><a href="/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
-                    <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
-                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                </ul>
-                <h3>Date Handing</h3>
-                <ul>
-                    <li><a href="/date/intro/">Introduction</a></li>
-                    <li><a href="/date/convert/">Date Converter</a></li>
-                    <li><a href="/date/formatter/">Date Formatter</a></li>
-                </ul>
-                <h3>Reflection</h3>
-                <ul>
-                    <li><a href="/reflect/Methods/">Methods</a></li>
-                    <li><a href="/reflect/Types/">Types</a></li>
-                    <li><a href="/reflect/Clazz/">Clazz</a></li>
-                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
-                    <li><a href="/reflect/Fields/">Fields</a></li>
-                </ul>
 
-                <h3>IO</h3>
-                <ul>
-                    <li><a href="/io/FileHelper/">FileHelper</a></li>
-                    <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
-                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
-                </ul>
+    </script>
+</head>
+<body>
+<nav>
+    <div>
+        <div class="links">
+            <a href="/">🏠 Home</a>
+            | ⚙️ Source:
+            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank"
+                                                                                                     href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+            | 🚀 <a href="/cn">Chinese Version</a>
+        </div>
+        <h1>
+            <img src="https://framework.ajaxjs.com/aj-logo/logo.png"
+                 style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
+            AJ Utils
+        </h1>
+        <h3>Small Java Utils Library</h3>
+    </div>
+</nav>
+<div>
+    <menu>
 
-                <h3>HTTP Request</h3>
-                <ul>
-                    <li><a href="/http_request/Base/">HTTP Request</a></li>
-                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                </ul>
-    
-               <h3>Cryptography</h3>
-               <ul>
-                <li><a href="/cryptography/intro/">Introduction</a></li>
-                <li><a href="/cryptography/flow/">Basic Flow</a></li>
-                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
-                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
-               </ul>
-               <h3>Misc.</h3>
-               <ul>
-                <li><a href="/misc/jackson3/">Working with Jackson3</a></li>
-                <li><a href="/misc/contact/">Contact</a></li>
-               </ul>
-            </menu>
-            <article class="aj-text">
-                <h1>Date Formatting</h1>
-<p>The new version recommends using <code>DateTimeFormatter</code> instead of <code>SimpleDateFormat</code> to achieve thread safety and a clearer API. Since <code>DateTimeFormatter.ofPattern()</code> instantiation has certain overhead, especially for custom patterns (such as &quot;yyyy-MM-dd HH:mm:ss&quot;), we can optimize by caching <code>DateTimeFormatter</code> instances.</p>
-<p>Formatter usage is as follows:</p>
-<pre><code class="language-java">new Formatter(TemporalAccessor temporal).format();
+        <ul>
+            <li class="selected">
+                <a href="/">Home</a>
+            </li>
+        </ul>
+        <h3>Common</h3>
+        <ul>
+            <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+            <li><a href="/common/Base64Helper/">Base64Utils</a></li>
+            <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+            <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+            <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
+            <li><a href="/common/MapTool/">MapTool</a></li>
+            <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+            <li><a href="/common/RandomTools/">RandomTools</a></li>
+            <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+            <li><a href="/common/StrUtil/">StrUtil</a></li>
+            <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+            <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+            <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+        </ul>
+        <h3>Date Handing</h3>
+        <ul>
+            <li><a href="/date/intro/">Introduction</a></li>
+            <li><a href="/date/convert/">Date Converter</a></li>
+            <li><a href="/date/formatter/">Date Formatter</a></li>
+        </ul>
+        <h3>Reflection</h3>
+        <ul>
+            <li><a href="/reflect/Methods/">Methods</a></li>
+            <li><a href="/reflect/Types/">Types</a></li>
+            <li><a href="/reflect/Clazz/">Clazz</a></li>
+            <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+            <li><a href="/reflect/Fields/">Fields</a></li>
+        </ul>
+
+        <h3>IO</h3>
+        <ul>
+            <li><a href="/io/FileHelper/">FileHelper</a></li>
+            <li><a href="/io/Resources/">Resources</a></li>
+            <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
+            <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+        </ul>
+
+        <h3>HTTP Request</h3>
+        <ul>
+            <li><a href="/http_request/Base/">HTTP Request</a></li>
+            <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+        </ul>
+
+        <h3>Cryptography</h3>
+        <ul>
+            <li><a href="/cryptography/intro/">Introduction</a></li>
+            <li><a href="/cryptography/flow/">Basic Flow</a></li>
+            <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+            <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+        </ul>
+        <h3>Misc.</h3>
+        <ul>
+            <li><a href="/misc/jackson3/">Working with Jackson3</a></li>
+            <li><a href="/misc/contact/">Contact</a></li>
+        </ul>
+    </menu>
+    <article class="aj-text">
+        <h1>Date Formatting</h1>
+        <p>The new version recommends using <code>DateTimeFormatter</code> instead of <code>SimpleDateFormat</code> to
+            achieve thread safety and a clearer API. Since <code>DateTimeFormatter.ofPattern()</code> instantiation has
+            certain overhead, especially for custom patterns (such as &quot;yyyy-MM-dd HH:mm:ss&quot;), we can optimize
+            by caching <code>DateTimeFormatter</code> instances.</p>
+        <p>Formatter usage is as follows:</p>
+        <pre><code class="language-java">new Formatter(TemporalAccessor temporal).format();
 new Formatter(TemporalAccessor temporal).format(String format)
 </code></pre>
-<p>The <code>TemporalAccessor</code> interface is implemented by common date types, so we can pass them in the constructor and then specify the date format string.</p>
-<h1>Utility Functions</h1>
-<p>Mainly utility functions for <code>now()</code> that return the current time as a string.</p>
-<pre><code class="language-java">/**
+        <p>The <code>TemporalAccessor</code> interface is implemented by common date types, so we can pass them in the
+            constructor and then specify the date format string.</p>
+        <h1>Utility Functions</h1>
+        <p>Mainly utility functions for <code>now()</code> that return the current time as a string.</p>
+        <pre><code class="language-java">/**
  * Obtain current time by specified format.
  *
  * @param formatter The formatter object
@@ -177,17 +184,18 @@ public static String newISO8601Date() {
     return Formatter.ISO8601_FORMATTER.format(Instant.now());
 }
 </code></pre>
-<p>Additionally, there is a function for converting strings to dates, which mainly uses regular expressions to match whether the string is a date string and then performs the conversion.</p>
+        <p>Additionally, there is a function for converting strings to dates, which mainly uses regular expressions to
+            match whether the string is a date string and then performs the conversion.</p>
 
-            </article>
-        </div>
+    </article>
+</div>
 
-       <footer>
-            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
-            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
-            <br />
-            <br />
-            Copyright © 2025 Frank Cheung. All rights reserved.
-        </footer>
-    </body>
+<footer>
+    AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+    frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+    <br/>
+    <br/>
+    Copyright © 2025 Frank Cheung. All rights reserved.
+</footer>
+</body>
 </html>

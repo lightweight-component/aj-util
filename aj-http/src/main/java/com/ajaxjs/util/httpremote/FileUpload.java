@@ -36,9 +36,9 @@ public class FileUpload {
     private static final String TPL =
             "--%s\r\n" +
                     "Content-Disposition: form-data;name=\"%s\";filename=\"%s\"\r\n" +
-            "Content-Type:%s\r\n\r\n" +
-            "%s\r\n" + // data
-            "--%s--\r\n";
+                    "Content-Type:%s\r\n\r\n" +
+                    "%s\r\n" + // data
+                    "--%s--\r\n";
 
     /**
      * 以POST方法上传文件

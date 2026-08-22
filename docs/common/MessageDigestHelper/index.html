@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-HashHelper</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Methods for MD5, SHA-1, SHA-256 hashing and HMAC operations" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, cryptography,hash,Java" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
-        <script>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AJ Utils-HashHelper</title>
+    <meta name="description"
+          content="Small Java utilities with many useful functions. Methods for MD5, SHA-1, SHA-256 hashing and HMAC operations"/>
+    <meta name="keywords"
+          content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, cryptography,hash,Java"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css"/>
+    <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+    <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+    <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+    <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
 
@@ -27,111 +29,116 @@
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
-        </script>
-    </head>
-    <body>
-        <nav>
-            <div>
-                <div class="links">
-                    <a href="/">🏠 Home</a>
-                    | ⚙️ Source:
-                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/cn">Chinese Version</a>
-                </div>
-                <h1>
-                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
-                    AJ Utils
-                </h1>
-                <h3>Small Java Utils Library</h3>
-            </div>
-        </nav>
-        <div>
-            <menu>
-                
-                <ul>
-                    <li class="selected">
-                        <a href="/">Home</a>
-                    </li>
-                </ul>
-                <h3>Common</h3>
-                <ul>
-                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
-                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
-                    <li><a href="/common/MapTool/">MapTool</a></li>
-                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
-                    <li><a href="/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
-                    <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
-                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                </ul>
-                <h3>Date Handing</h3>
-                <ul>
-                    <li><a href="/date/intro/">Introduction</a></li>
-                    <li><a href="/date/convert/">Date Converter</a></li>
-                    <li><a href="/date/formatter/">Date Formatter</a></li>
-                </ul>
-                <h3>Reflection</h3>
-                <ul>
-                    <li><a href="/reflect/Methods/">Methods</a></li>
-                    <li><a href="/reflect/Types/">Types</a></li>
-                    <li><a href="/reflect/Clazz/">Clazz</a></li>
-                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
-                    <li><a href="/reflect/Fields/">Fields</a></li>
-                </ul>
 
-                <h3>IO</h3>
-                <ul>
-                    <li><a href="/io/FileHelper/">FileHelper</a></li>
-                    <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
-                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
-                </ul>
+    </script>
+</head>
+<body>
+<nav>
+    <div>
+        <div class="links">
+            <a href="/">🏠 Home</a>
+            | ⚙️ Source:
+            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank"
+                                                                                                     href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+            | 🚀 <a href="/cn">Chinese Version</a>
+        </div>
+        <h1>
+            <img src="https://framework.ajaxjs.com/aj-logo/logo.png"
+                 style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
+            AJ Utils
+        </h1>
+        <h3>Small Java Utils Library</h3>
+    </div>
+</nav>
+<div>
+    <menu>
 
-                <h3>HTTP Request</h3>
-                <ul>
-                    <li><a href="/http_request/Base/">HTTP Request</a></li>
-                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                </ul>
-    
-               <h3>Cryptography</h3>
-               <ul>
-                <li><a href="/cryptography/intro/">Introduction</a></li>
-                <li><a href="/cryptography/flow/">Basic Flow</a></li>
-                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
-                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
-               </ul>
-               <h3>Misc.</h3>
-               <ul>
-                <li><a href="/misc/jackson3/">Working with Jackson3</a></li>
-                <li><a href="/misc/contact/">Contact</a></li>
-               </ul>
-            </menu>
-            <article class="aj-text">
-                <h1>HashHelper Tutorial</h1>
-<p><code>HashHelper</code> is a utility class for cryptographic hash operations, supporting various hash algorithms (MD5, SHA-1, SHA-256) and HMAC operations. It provides methods for generating hash values from strings and byte arrays, with support for hexadecimal and Base64 output formats.</p>
-<h3>Main Features</h3>
-<ol>
-<li><strong>Multiple Hash Algorithms Support</strong>: MD5, SHA-1, SHA-256</li>
-<li><strong>HMAC Message Authentication Code Support</strong>: HmacMD5, HmacSHA1, HmacSHA256</li>
-<li><strong>Multiple Output Formats</strong>: Hexadecimal strings, Base64 encoding</li>
-<li><strong>Chainable API Design</strong></li>
-<li><strong>File MD5 Calculation</strong>: Supports efficient processing of large files</li>
-</ol>
-<h3>Basic Usage</h3>
-<h4>1. Creating Instances</h4>
-<pre><code class="language-java">// Create instance with specified algorithm and byte array
+        <ul>
+            <li class="selected">
+                <a href="/">Home</a>
+            </li>
+        </ul>
+        <h3>Common</h3>
+        <ul>
+            <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+            <li><a href="/common/Base64Helper/">Base64Utils</a></li>
+            <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+            <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+            <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
+            <li><a href="/common/MapTool/">MapTool</a></li>
+            <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+            <li><a href="/common/RandomTools/">RandomTools</a></li>
+            <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+            <li><a href="/common/StrUtil/">StrUtil</a></li>
+            <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+            <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+            <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+        </ul>
+        <h3>Date Handing</h3>
+        <ul>
+            <li><a href="/date/intro/">Introduction</a></li>
+            <li><a href="/date/convert/">Date Converter</a></li>
+            <li><a href="/date/formatter/">Date Formatter</a></li>
+        </ul>
+        <h3>Reflection</h3>
+        <ul>
+            <li><a href="/reflect/Methods/">Methods</a></li>
+            <li><a href="/reflect/Types/">Types</a></li>
+            <li><a href="/reflect/Clazz/">Clazz</a></li>
+            <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+            <li><a href="/reflect/Fields/">Fields</a></li>
+        </ul>
+
+        <h3>IO</h3>
+        <ul>
+            <li><a href="/io/FileHelper/">FileHelper</a></li>
+            <li><a href="/io/Resources/">Resources</a></li>
+            <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
+            <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+        </ul>
+
+        <h3>HTTP Request</h3>
+        <ul>
+            <li><a href="/http_request/Base/">HTTP Request</a></li>
+            <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+        </ul>
+
+        <h3>Cryptography</h3>
+        <ul>
+            <li><a href="/cryptography/intro/">Introduction</a></li>
+            <li><a href="/cryptography/flow/">Basic Flow</a></li>
+            <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+            <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+        </ul>
+        <h3>Misc.</h3>
+        <ul>
+            <li><a href="/misc/jackson3/">Working with Jackson3</a></li>
+            <li><a href="/misc/contact/">Contact</a></li>
+        </ul>
+    </menu>
+    <article class="aj-text">
+        <h1>HashHelper Tutorial</h1>
+        <p><code>HashHelper</code> is a utility class for cryptographic hash operations, supporting various hash
+            algorithms (MD5, SHA-1, SHA-256) and HMAC operations. It provides methods for generating hash values from
+            strings and byte arrays, with support for hexadecimal and Base64 output formats.</p>
+        <h3>Main Features</h3>
+        <ol>
+            <li><strong>Multiple Hash Algorithms Support</strong>: MD5, SHA-1, SHA-256</li>
+            <li><strong>HMAC Message Authentication Code Support</strong>: HmacMD5, HmacSHA1, HmacSHA256</li>
+            <li><strong>Multiple Output Formats</strong>: Hexadecimal strings, Base64 encoding</li>
+            <li><strong>Chainable API Design</strong></li>
+            <li><strong>File MD5 Calculation</strong>: Supports efficient processing of large files</li>
+        </ol>
+        <h3>Basic Usage</h3>
+        <h4>1. Creating Instances</h4>
+        <pre><code class="language-java">// Create instance with specified algorithm and byte array
 HashHelper helper = new HashHelper(&quot;MD5&quot;, &quot;Hello World&quot;.getBytes());
 
 // Create instance with specified algorithm and string (automatically converted to UTF-8 bytes)
 HashHelper helper = new HashHelper(&quot;SHA-256&quot;, &quot;Hello World&quot;);
 </code></pre>
-<h4>2. Basic Hash Calculation</h4>
-<pre><code class="language-java">// Get hash value as byte array
+        <h4>2. Basic Hash Calculation</h4>
+        <pre><code class="language-java">// Get hash value as byte array
 byte[] hashBytes = new HashHelper(&quot;MD5&quot;, &quot;Hello World&quot;).hash();
 
 // Get hash value as hexadecimal string (lowercase)
@@ -141,8 +148,8 @@ String hexHash = new HashHelper(&quot;SHA-256&quot;, &quot;Hello World&quot;).ha
 String base64Hash = new HashHelper(&quot;SHA-1&quot;, &quot;Hello World&quot;).hashAsBase64();
 String base64HashNoPadding = new HashHelper(&quot;SHA-1&quot;, &quot;Hello World&quot;).hashAsBase64(true);
 </code></pre>
-<h4>3. HMAC Calculation</h4>
-<pre><code class="language-java">// Set key and calculate HMAC
+        <h4>3. HMAC Calculation</h4>
+        <pre><code class="language-java">// Set key and calculate HMAC
 byte[] hmacBytes = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
     .setKey(&quot;secret-key&quot;)
     .hash();
@@ -157,14 +164,14 @@ String hmacBase64 = new HashHelper(&quot;HmacSHA1&quot;, &quot;Hello World&quot;
     .setKey(&quot;secret-key&quot;)
     .hashAsBase64();
 </code></pre>
-<h4>4. Chainable Calls</h4>
-<p>Thanks to the <code>@Accessors(chain = true)</code> annotation, chainable calls are supported:</p>
-<pre><code class="language-java">String result = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
+        <h4>4. Chainable Calls</h4>
+        <p>Thanks to the <code>@Accessors(chain = true)</code> annotation, chainable calls are supported:</p>
+        <pre><code class="language-java">String result = new HashHelper(&quot;HmacSHA256&quot;, &quot;Hello World&quot;)
     .setKey(&quot;my-secret-key&quot;)
     .hashAsBase64(true);
 </code></pre>
-<h4>5. Static Convenience Methods</h4>
-<pre><code class="language-java">// MD5 hash (most commonly used)
+        <h4>5. Static Convenience Methods</h4>
+        <pre><code class="language-java">// MD5 hash (most commonly used)
 String md5Hash = HashHelper.md5(&quot;Hello World&quot;);
 
 // SHA-1 hash
@@ -179,8 +186,8 @@ HashHelper hmacMd5 = HashHelper.getHmacMD5(&quot;Hello World&quot;, &quot;secret
 // HMAC-SHA256 returning Base64
 String hmacSha256Base64 = HashHelper.getHmacSHA256(&quot;Hello World&quot;, &quot;secret-key&quot;, false);
 </code></pre>
-<h4>6. File MD5 Calculation</h4>
-<pre><code class="language-java">// Calculate file MD5 from input stream
+        <h4>6. File MD5 Calculation</h4>
+        <pre><code class="language-java">// Calculate file MD5 from input stream
 try (InputStream inputStream = new FileInputStream(&quot;example.txt&quot;)) {
     String fileMd5 = HashHelper.calcFileMD5(inputStream);
 }
@@ -189,31 +196,33 @@ try (InputStream inputStream = new FileInputStream(&quot;example.txt&quot;)) {
 byte[] fileBytes = Files.readAllBytes(Paths.get(&quot;example.txt&quot;));
 String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 </code></pre>
-<h3>Constants Definition</h3>
-<ul>
-<li><code>MD5</code>: MD5 hash algorithm constant</li>
-<li><code>SHA1</code>: SHA-1 hash algorithm constant</li>
-<li><code>SHA256</code>: SHA-256 hash algorithm constant</li>
-<li><code>HMAC_SHA1</code>: HMAC-SHA1 algorithm constant</li>
-<li><code>HMAC_SHA256</code>: HMAC-SHA256 algorithm constant</li>
-</ul>
-<h3>Notes</h3>
-<ol>
-<li>Always set or persist an HMAC key. Calling <code>getMac()</code> without a key generates an internal random key that is not returned, so the result cannot be reproduced for later verification.</li>
-<li>All hash results are returned as lowercase hexadecimal strings by default</li>
-<li>Base64 encoding includes padding characters by default, controllable via parameters</li>
-<li>Large file processing uses chunked reading to avoid memory overflow</li>
-</ol>
+        <h3>Constants Definition</h3>
+        <ul>
+            <li><code>MD5</code>: MD5 hash algorithm constant</li>
+            <li><code>SHA1</code>: SHA-1 hash algorithm constant</li>
+            <li><code>SHA256</code>: SHA-256 hash algorithm constant</li>
+            <li><code>HMAC_SHA1</code>: HMAC-SHA1 algorithm constant</li>
+            <li><code>HMAC_SHA256</code>: HMAC-SHA256 algorithm constant</li>
+        </ul>
+        <h3>Notes</h3>
+        <ol>
+            <li>Always set or persist an HMAC key. Calling <code>getMac()</code> without a key generates an internal
+                random key that is not returned, so the result cannot be reproduced for later verification.
+            </li>
+            <li>All hash results are returned as lowercase hexadecimal strings by default</li>
+            <li>Base64 encoding includes padding characters by default, controllable via parameters</li>
+            <li>Large file processing uses chunked reading to avoid memory overflow</li>
+        </ol>
 
-            </article>
-        </div>
+    </article>
+</div>
 
-       <footer>
-            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
-            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
-            <br />
-            <br />
-            Copyright © 2025 Frank Cheung. All rights reserved.
-        </footer>
-    </body>
+<footer>
+    AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+    frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+    <br/>
+    <br/>
+    Copyright © 2025 Frank Cheung. All rights reserved.
+</footer>
+</body>
 </html>

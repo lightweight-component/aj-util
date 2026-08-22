@@ -8,14 +8,14 @@ tags:
 layout: layouts/aj-util.njk
 ---
 
-
 # DataReader Tutorial
 
 `DataReader` reads text or binary data from input streams such as files, network sockets, and in-memory buffers.
 
 ## Main Features
 
-1. **Multiple Data Reading Methods**: Supports various reading methods including byte streams, text lines, and complete strings
+1. **Multiple Data Reading Methods**: Supports various reading methods including byte streams, text lines, and complete
+   strings
 2. **Character Encoding Support**: Character encoding can be specified, defaults to UTF-8
 3. **Streaming Processing**: Supports chunked processing of large files to avoid memory overflow
 4. **Functional Programming**: Uses functional interfaces to process read data
@@ -33,7 +33,6 @@ DataReader reader = new DataReader(inputStream);
 DataReader readerWithEncoding = new DataReader(inputStream, StandardCharsets.UTF_8);
 ```
 
-
 ### 2. Reading Byte Data
 
 ```java
@@ -50,7 +49,6 @@ reader.readStreamAsBytes(8192, (readSize, buffer) -> {
 
 `bufferSize` must be greater than zero. Zero and negative values throw `IllegalArgumentException`.
 
-
 ### 3. Reading Text Lines
 
 ```java
@@ -64,7 +62,6 @@ reader.readAsLineString(line -> {
 });
 ```
 
-
 ### 4. Reading Complete String
 
 ```java
@@ -75,7 +72,6 @@ DataReader reader = new DataReader(inputStream);
 String content = reader.readAsString();
 System.out.println("File content: " + content);
 ```
-
 
 ### 5. Reading Byte Array
 
@@ -88,18 +84,18 @@ byte[] bytes = reader.readAsBytes();
 System.out.println("Byte array length: " + bytes.length);
 ```
 
-
-
 ### Notes
 
 1. The `readStreamAsBytes` method automatically closes the input stream when reading is complete
 2. All methods throw `UncheckedIOException` when IO errors occur
 3. For large file processing, it's recommended to use the `readStreamAsBytes` method for chunked processing
-4. `readAsString` currently does not preserve line separators. Use `readAsBytes` with an explicit charset when exact text layout matters.
+4. `readAsString` currently does not preserve line separators. Use `readAsBytes` with an explicit charset when exact
+   text layout matters.
 
 # DataWriter Tutorial
 
-DataWriter is a writer class for writing data to an output stream. It supports writing raw byte data to destinations such as files, sockets, or buffers, and provides buffering functionality to improve write efficiency.
+DataWriter is a writer class for writing data to an output stream. It supports writing raw byte data to destinations
+such as files, sockets, or buffers, and provides buffering functionality to improve write efficiency.
 
 ## Main Features
 
@@ -118,7 +114,6 @@ OutputStream outputStream = new FileOutputStream("output.txt");
 DataWriter writer = new DataWriter(outputStream);
 ```
 
-
 ### 2. Copying Data from Input Stream
 
 ```java
@@ -132,7 +127,6 @@ writer.write(inputStream); // Copies data and closes inputStream
 outputStream.close();
 ```
 
-
 ### 3. Writing Byte Arrays
 
 ```java
@@ -144,7 +138,6 @@ DataWriter writer = new DataWriter(outputStream);
 writer.write(data);
 outputStream.close();
 ```
-
 
 ### 4. Writing Specified Range of Byte Array
 
@@ -159,9 +152,6 @@ writer.write(data, 2, 5); // Write "llo W"
 outputStream.close();
 ```
 
-
-
-
 ## Configuration Options
 
 ```java
@@ -171,10 +161,10 @@ DataWriter writer = new DataWriter(outputStream);
 writer.setBuffered(false);
 ```
 
-
 ## Notes
 
-1. DataWriter does not automatically close output streams. `write(InputStream)` currently closes the input stream through `DataReader`, so do not reuse it afterward.
+1. DataWriter does not automatically close output streams. `write(InputStream)` currently closes the input stream
+   through `DataReader`, so do not reuse it afterward.
 2. Buffering is enabled by default, disabling buffering will give a warning prompt
 3. All methods throw `UncheckedIOException` when IO errors occur
 4. When both offset and length are 0, the `write(byte[], int, int)` method writes the entire byte array

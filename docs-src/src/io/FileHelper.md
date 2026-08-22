@@ -8,10 +8,11 @@ tags:
 layout: layouts/aj-util.njk
 ---
 
-
 # FileHelper Tutorial
 
-FileHelper is a file operation utility class that provides methods for reading, writing, copying, moving, deleting, and manipulating files and directories. This class uses Java NIO Path and Files API for efficient file operations, and all methods throw UncheckedIOException for IO errors.
+FileHelper is a file operation utility class that provides methods for reading, writing, copying, moving, deleting, and
+manipulating files and directories. This class uses Java NIO Path and Files API for efficient file operations, and all
+methods throw UncheckedIOException for IO errors.
 
 ## Main Features
 
@@ -39,7 +40,6 @@ File file = new File("path/to/file.txt");
 FileHelper helper3 = new FileHelper(file);
 ```
 
-
 ### 2. File Reading
 
 ```java
@@ -50,7 +50,6 @@ String content = new FileHelper("example.txt").getFileContent();
 byte[] bytes = new FileHelper("example.txt").readFileBytes();
 ```
 
-
 ### 3. File Writing
 
 ```java
@@ -58,14 +57,12 @@ byte[] bytes = new FileHelper("example.txt").readFileBytes();
 new FileHelper("output.txt").writeFileContent("Hello World");
 ```
 
-
 ### 4. File Deletion
 
 ```java
 // Delete file or directory (recursively delete directories)
 new FileHelper("file-or-directory").delete();
 ```
-
 
 ### 5. Directory Operations
 
@@ -79,7 +76,6 @@ new FileHelper("new/directory/path").createDirectory();
 // Get one path's metadata size (not recursive directory content size)
 long size = new FileHelper("file-or-directory").getFileSize();
 ```
-
 
 ### 6. File Copying and Moving
 
@@ -95,7 +91,6 @@ new FileHelper("old-location.txt")
     .moveTo();
 ```
 
-
 ### 7. File Chunking Operations
 
 ```java
@@ -107,7 +102,6 @@ Path[] chunks = {Paths.get("file-1"), Paths.get("file-2")};
 new FileHelper("merged-file").mergeFile(chunks);
 ```
 
-
 ## Chainable Call Example
 
 ```java
@@ -116,7 +110,6 @@ FileHelper helper = new FileHelper("input.txt");
 helper.setTarget("backup.txt").copyTo();
 helper.setTarget("moved.txt").moveTo();
 ```
-
 
 ## Exception Handling
 
@@ -130,10 +123,10 @@ try {
 }
 ```
 
-
 ### Notes
 
 1. A target path must be set before copy and move operations; otherwise `IllegalStateException` is thrown.
 2. Directory copies reject symbolic links and targets located inside the source tree.
-3. Chunking and merging loop until every byte is transferred. Failed chunking cleans files created by that attempt, and merging publishes its destination only after success.
+3. Chunking and merging loop until every byte is transferred. Failed chunking cleans files created by that attempt, and
+   merging publishes its destination only after success.
 4. Recursive deletion reports failures instead of silently leaving a partially deleted tree.

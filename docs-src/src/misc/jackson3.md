@@ -8,11 +8,15 @@ layout: layouts/aj-util.njk
 
 # Working with Jackson 3
 
-`aj-util` ships with the Jackson JSON library by default, currently at version 2.x, which works well with Java 8. However, as JDK 11/17 becomes more popular, upgrading to Jackson 3.x is necessary. `aj-util` supports newer versions of Jackson and provides a unified interface for JSON utility functions. This article will show you how to use Jackson 3 with `aj-util`.
+`aj-util` ships with the Jackson JSON library by default, currently at version 2.x, which works well with Java 8.
+However, as JDK 11/17 becomes more popular, upgrading to Jackson 3.x is necessary. `aj-util` supports newer versions of
+Jackson and provides a unified interface for JSON utility functions. This article will show you how to use Jackson 3
+with `aj-util`.
 
 ### Step 1: Exclude Jackson 2 Dependencies
 
-First, exclude the Jackson 2 dependencies and add the Jackson 3 dependencies. If you're using Spring, you can omit this step because the Spring framework already includes Jackson 3.
+First, exclude the Jackson 2 dependencies and add the Jackson 3 dependencies. If you're using Spring, you can omit this
+step because the Spring framework already includes Jackson 3.
 
 ```xml
 <dependency>
@@ -33,11 +37,13 @@ First, exclude the Jackson 2 dependencies and add the Jackson 3 dependencies. If
 </dependency>
 ```
 
-Since the Maven scope of the old Jackson library is `provided`, you don't actually have to exclude the dependencies mentioned above. However, the next step is necessary.
+Since the Maven scope of the old Jackson library is `provided`, you don't actually have to exclude the dependencies
+mentioned above. However, the next step is necessary.
 
 ### Step 2: Configure Java SPI
 
-Create a file named `com.ajaxjs.util.json.JsonEngineProvider` under the folder `src/main/resources/META-INF/services`. This is a Java SPI configuration file.
+Create a file named `com.ajaxjs.util.json.JsonEngineProvider` under the folder `src/main/resources/META-INF/services`.
+This is a Java SPI configuration file.
 
 The content of this file should be:
 
@@ -58,7 +64,8 @@ With that, you have finished configuring `aj-util` to work with Jackson 3.
 
 ### Optional: Exclude Unnecessary Libraries
 
-Optionally, you can also exclude libraries such as SLF4j, Logback, JUnit, and Jakarta Servlet if they are not needed in your project.
+Optionally, you can also exclude libraries such as SLF4j, Logback, JUnit, and Jakarta Servlet if they are not needed in
+your project.
 
 ```xml
 <exclusion>

@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 # JsonUtil 教程
 
-本教程提供了 `JsonUtil` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`JsonUtil` 类为 Java 应用程序中的 JSON 数据处理提供了实用工具方法。
+本教程提供了 `JsonUtil` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`JsonUtil` 类为 Java 应用程序中的
+JSON 数据处理提供了实用工具方法。
 
 ## 简介
 
@@ -63,6 +64,7 @@ layout: layouts/aj-util-cn.njk
 ## 使用示例
 
 ### 基本序列化
+
 ```java
 User user = new User("John", 30);
 String json = JsonUtil.toJson(user); 
@@ -78,12 +80,14 @@ String prettyJson = JsonUtil.toJsonPretty(user);
 ```
 
 ### 基本反序列化
+
 ```java
 String json = "{\"name\":\"John\",\"age\":30}";
 User user = JsonUtil.fromJson(json, User.class);
 ```
 
 ### Map 转换
+
 ```java
 Map<String, Object> map = new HashMap<>();
 map.put("name", "John");
@@ -94,6 +98,7 @@ Map<String, Object> map2 = JsonUtil.json2map(json);
 ```
 
 ### List 转换
+
 ```java
 String jsonArray = "[{\"name\":\"John\"}, {\"name\":\"Alice\"}]";
 List<User> users = JsonUtil.json2list(jsonArray, User.class);
@@ -102,6 +107,7 @@ List<User> users = JsonUtil.json2list(jsonArray, User.class);
 ## 配置
 
 `JsonUtil` 类预配置了：
+
 - Java 8 日期/时间支持
 - 严格的重复检测
 - 亚洲/上海时区

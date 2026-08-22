@@ -10,6 +10,7 @@ tags:
   - Batch Download
 layout: layouts/aj-util.njk
 ---
+
 # Response Handler Utility
 
 Provides methods for processing HTTP responses in various formats.

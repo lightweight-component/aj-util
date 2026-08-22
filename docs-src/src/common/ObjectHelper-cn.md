@@ -8,6 +8,7 @@ tags:
   - 克隆
 layout: layouts/aj-util-cn.njk
 ---
+
 # ObjectHelper 使用教程
 
 `ObjectHelper` 是一个对象工具类，提供了处理 Java 对象、集合、映射和各种数据结构的通用工具方法。
@@ -22,6 +23,7 @@ layout: layouts/aj-util-cn.njk
 ### 文本检查方法
 
 #### 1. hasText 方法
+
 检查给定字符串是否有实际文本内容：
 
 ```java
@@ -32,8 +34,8 @@ boolean result3 = ObjectHelper.hasText("");          // false
 boolean result4 = ObjectHelper.hasText(null);        // false
 ```
 
-
 #### 2. isEmptyText 方法
+
 检查给定字符串是否为空或仅包含空白字符：
 
 ```java
@@ -44,10 +46,10 @@ boolean result3 = ObjectHelper.isEmptyText("");      // true
 boolean result4 = ObjectHelper.isEmptyText(null);    // true
 ```
 
-
 ### 空值检查方法
 
 #### 1. 数组空值检查
+
 ```java
 // 检查数组是否为空
 String[] array1 = null;
@@ -59,8 +61,8 @@ boolean result2 = ObjectHelper.isEmpty(array2); // true
 boolean result3 = ObjectHelper.isEmpty(array3); // false
 ```
 
-
 #### 2. 集合空值检查
+
 ```java
 // 检查集合是否为空
 List<String> list1 = null;
@@ -72,8 +74,8 @@ boolean result2 = ObjectHelper.isEmpty(list2); // true
 boolean result3 = ObjectHelper.isEmpty(list3); // false
 ```
 
-
 #### 3. 映射空值检查
+
 ```java
 // 检查映射是否为空
 Map<String, String> map1 = null;
@@ -86,10 +88,10 @@ boolean result2 = ObjectHelper.isEmpty(map2); // true
 boolean result3 = ObjectHelper.isEmpty(map3); // false
 ```
 
-
 ### 集合创建方法
 
 #### 1. 创建映射
+
 ```java
 // 创建单键值对映射
 Map<String, String> map1 = ObjectHelper.mapOf("key1", "value1");
@@ -107,8 +109,8 @@ Map<String, String> map4 = ObjectHelper.mapOf(10); // 优化容量的HashMap
 `getInitialCapacity(int)` 使用不会溢出的容量计算。负数会触发 `IllegalArgumentException`；超过
 `HashMap` 实用上限的容量会饱和为 `1 << 30`。
 
-
 #### 2. 创建列表
+
 ```java
 // 创建不可变列表
 List<String> list1 = ObjectHelper.listOf("item1");
@@ -116,8 +118,8 @@ List<String> list2 = ObjectHelper.listOf("item1", "item2", "item3");
 List<String> list3 = ObjectHelper.listOf(); // 空列表
 ```
 
-
 #### 3. 创建集合
+
 ```java
 // 创建不可变集合
 Set<String> set1 = ObjectHelper.setOf("item1");
@@ -127,7 +129,6 @@ Set<String> set3 = ObjectHelper.setOf(); // 空集合
 // 自动去重
 Set<String> set4 = ObjectHelper.setOf("item1", "item1", "item2"); // 只包含"item1"和"item2"
 ```
-
 
 ### 常量
 

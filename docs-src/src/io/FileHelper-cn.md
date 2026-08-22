@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 ## FileHelper 使用教程
 
-FileHelper 是一个文件操作工具类，提供了读取、写入、复制、移动、删除和操作文件及目录的方法。该类使用 Java NIO Path 和 Files API 实现高效的文件操作，所有方法在发生 IO 错误时都会抛出 UncheckedIOException。
+FileHelper 是一个文件操作工具类，提供了读取、写入、复制、移动、删除和操作文件及目录的方法。该类使用 Java NIO Path 和 Files API
+实现高效的文件操作，所有方法在发生 IO 错误时都会抛出 UncheckedIOException。
 
 ### 主要功能特性
 
@@ -38,7 +39,6 @@ File file = new File("path/to/file.txt");
 FileHelper helper3 = new FileHelper(file);
 ```
 
-
 ### 2. 文件读取
 
 ```java
@@ -49,7 +49,6 @@ String content = new FileHelper("example.txt").getFileContent();
 byte[] bytes = new FileHelper("example.txt").readFileBytes();
 ```
 
-
 ### 3. 文件写入
 
 ```java
@@ -57,14 +56,12 @@ byte[] bytes = new FileHelper("example.txt").readFileBytes();
 new FileHelper("output.txt").writeFileContent("Hello World");
 ```
 
-
 ### 4. 文件删除
 
 ```java
 // 删除文件或目录（递归删除目录）
 new FileHelper("file-or-directory").delete();
 ```
-
 
 ### 5. 目录操作
 
@@ -78,7 +75,6 @@ new FileHelper("new/directory/path").createDirectory();
 // 获取单个路径的元数据大小（不是目录内容的递归总大小）
 long size = new FileHelper("file-or-directory").getFileSize();
 ```
-
 
 ### 6. 文件复制和移动
 
@@ -94,7 +90,6 @@ new FileHelper("old-location.txt")
     .moveTo();
 ```
 
-
 ### 7. 文件分片处理
 
 ```java
@@ -106,7 +101,6 @@ Path[] chunks = {Paths.get("file-1"), Paths.get("file-2")};
 new FileHelper("merged-file").mergeFile(chunks);
 ```
 
-
 ## 链式调用示例
 
 ```java
@@ -115,7 +109,6 @@ FileHelper helper = new FileHelper("input.txt");
 helper.setTarget("backup.txt").copyTo();
 helper.setTarget("moved.txt").moveTo();
 ```
-
 
 ## 异常处理
 
@@ -128,7 +121,6 @@ try {
     System.err.println("文件操作失败: " + e.getMessage());
 }
 ```
-
 
 ## 注意事项
 

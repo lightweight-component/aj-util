@@ -1,12 +1,9 @@
 <h1 align="center">AJ-Utils</h1>
-<h3 align="center">小型的 Java 面向对象编程工具包</h3>
+<h3 align="center">小型的 Java 编程工具包</h3>
 
 <div style="text-align: center;">
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
 ![Java Version](https://img.shields.io/badge/Java-8-blue)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.3.6-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
-![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lightweight-component/aj-util)
 ![GitHub repo size](https://img.shields.io/github/repo-size/lightweight-component/aj-util)
@@ -18,50 +15,32 @@
 
 <hr />
 
-这是一个主打“面向对象（OOP）”的 Java 工具包。与其他工具包不同，它没有较多的 static 静态方法，而是要先建立对象实例，才能调用工具方法。
-实例化的同时通过重载构造器参数以适应不同的入参情形，作自动转换。这样的作法不仅可以驾驭复杂的情形，而且可以使得 API
-风格更清晰，代码更精简且避免重复。
+一个面向 Java 8 的轻量级工具库集合，提供日常开发常用的通用能力，以及 FTP、S3 对象存储、二维码和密码学等独立组件。
 
-另外改库主打“轻量级”、依赖少。该库的 JAR 文件大小约为 170KB，并包含了以下模块：
+## 特点
 
-| 类/包模块               | 详细描述                                      | 备注              |
-|---------------------|-------------------------------------------|-----------------|
-| BytesHelper         | 字节数组工具类                                   |                 |
-| CollUtils           | 集合工具类                                     |                 |
-| ConvertBasicValue   | 尝试将目标类型进行转换，注意并非所有类型都可以转换                 |                 |
-| DateHelper          | 日期工具类                                     |                 |
-| EncodeTools         | URL/Base64 编码工具                           |                 |
-| MessageDigestHelper | MD5/SHA1/SHA256/384/512 加密工具类             |                 |
-| ObjectHelper        | Java 对象辅助工具                               |                 |
-| HTTP Request        | 一个小型 HTTP 请求组件                            |                 |
-| RandomTools         | 随机数和随机字符串生成工具                             |                 |
-| RegExpUtils         | 正则表达式工具类                                  |                 |
-| StrUtil             | 字符串工具类                                    |                 |
-| JsonUtil            | Jackson 库的封装：JSON、Map、Bean 和 List 之间的转换方法 | Jackson 是唯一的依赖库 |
-| XmlHelper           | XML 处理工具类                                 |                 |
-| Cryptography        | AES/RSA 加密解密包                             |                 |
-| IO                  | 文件、资源、流操作工具包                              |                 |
-| Reflection          | 反射工具包                                     |                 |
+- **Java 8 兼容**：各组件均以 Java 8 及以上运行环境为目标。
+- **清晰、易懂、简单**：保持轻量设计，API 与实现尽量直观，方便阅读、使用与维护。
+- **重视质量**：提供良好的代码注释、文档和单元测试，为集成与后续演进提供保障。
+- **模块化使用**：按需引入相应组件，避免不必要的依赖。
 
-## 源码
+## 项目列表
 
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
+| 项目                                   | Maven ArtifactId  | 简介                                                   | 文档                                    |
+|--------------------------------------|-------------------|------------------------------------------------------|---------------------------------------|
+| [aj-util](./aj-util)                 | `ajaxjs-util`     | 基于 OOP 风格的通用 Java 工具库，涵盖字符串、集合、日期、JSON、XML、IO、反射等能力。 | [README](./aj-util/README.md)         |
+| [aj-ftp](./aj-ftp)                   | `aj-ftp`          | 轻量级 FTP 客户端，支持上传、下载与进度追踪。                            | [README](./aj-ftp/README.md)          |
+| [aj-s3client](./aj-s3client)         | `aj-s3client`     | 轻量级 S3 兼容对象存储客户端。                                    | [README](./aj-s3client/README.md)     |
+| [aj-qrcode](./aj-qrcode)             | `aj-qrcode`       | 轻量级二维码生成组件，支持 PNG、SVG 等输出。                           | [README](./aj-qrcode/README.md)       |
+| [aj-cryptography](./aj-cryptography) | `aj-cryptography` | AES、DES、PBE、RSA 等加密与解密能力。                            | [README](./aj-cryptography/README.md) |
+| [aj-http](./aj-http)                 | `aj-net`          | 简洁的 HTTP 请求组件。                                       | [README](./aj-http/README.md)         |
 
-## 链接
+## 源代码
 
-- [教程](https://aj-util.ajaxjs.com/)
-- [DeepWiki 教程](https://deepwiki.com/lightweight-component/aj-util)
-- [Java 文档](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+- [GitHub](https://github.com/lightweight-component/aj-util)
+- [GitCode](https://gitcode.com/lightweight-component/aj-util)
+- [Gitee](https://gitee.com/lightweight-components/aj-util)
 
-## 安装
+## 许可证
 
-运行环境：Java 8 及以上版本。
-
-```xml
-
-<dependency>
-    <groupId>com.ajaxjs</groupId>
-    <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.6</version>
-</dependency>
-```
+本项目采用 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt) 开源许可证。

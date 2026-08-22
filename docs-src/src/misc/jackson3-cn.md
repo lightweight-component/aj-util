@@ -8,11 +8,14 @@ layout: layouts/aj-util.njk
 
 # 使用 Jackson 3
 
-`aj-util` 默认集成了 Jackson 2.x 版本的 JSON 库，它与 Java 8 配合良好。然而，随着 JDK 11/17 的普及，升级到 Jackson 3.x 变得很有必要。`aj-util` 支持新版本的 Jackson，并提供了一个统一的 JSON 工具函数接口。本文将向您展示如何在 `aj-util` 中使用 Jackson 3。
+`aj-util` 默认集成了 Jackson 2.x 版本的 JSON 库，它与 Java 8 配合良好。然而，随着 JDK 11/17 的普及，升级到 Jackson 3.x
+变得很有必要。`aj-util` 支持新版本的 Jackson，并提供了一个统一的 JSON 工具函数接口。本文将向您展示如何在 `aj-util` 中使用
+Jackson 3。
 
 ### 第一步：排除 Jackson 2 依赖
 
-首先，排除 Jackson 2 的依赖并添加 Jackson 3 的依赖。如果您使用的是 Spring，可以跳过此步骤，因为 Spring 框架已经包含了 Jackson 3。
+首先，排除 Jackson 2 的依赖并添加 Jackson 3 的依赖。如果您使用的是 Spring，可以跳过此步骤，因为 Spring 框架已经包含了
+Jackson 3。
 
 ```xml
 <dependency>
@@ -37,7 +40,8 @@ layout: layouts/aj-util.njk
 
 ### 第二步：配置 Java SPI
 
-在 `src/main/resources/META-INF/services` 目录下创建一个名为 `com.ajaxjs.util.json.JsonEngineProvider` 的文件。这是一个 Java SPI 配置文件。
+在 `src/main/resources/META-INF/services` 目录下创建一个名为 `com.ajaxjs.util.json.JsonEngineProvider` 的文件。这是一个
+Java SPI 配置文件。
 
 该文件的内容应为：
 

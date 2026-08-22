@@ -9,19 +9,20 @@
 - Tests: `aj-util/src/test/java`
 - Documentation: `docs-src/src`
 
-The Jackson dependencies are declared with `provided` scope. Code that uses `JsonUtil` must ensure compatible Jackson databind and JSR-310 modules are available at runtime.
+The Jackson dependencies are declared with `provided` scope. Code that uses `JsonUtil` must ensure compatible Jackson
+databind and JSR-310 modules are available at runtime.
 
 ## Package routing
 
-| Area | Source | Documentation |
-|---|---|---|
-| Core string, bytes, map, XML, URL, conversion, JSON | `com/ajaxjs/util/*.java` | `docs-src/src/common` |
-| Date and time | `com/ajaxjs/util/date` | `docs-src/src/date` |
-| Reflection | `com/ajaxjs/util/reflect` | `docs-src/src/reflect` |
-| Streams, files, resources, ZIP, commands | `com/ajaxjs/util/io` | `docs-src/src/io` |
-| Symmetric crypto, certificates, RSA | `com/ajaxjs/util/cryptography` | `docs-src/src/cryptography` |
-| HTTP client helpers | `com/ajaxjs/util/httpremote` | `docs-src/src/http_request` |
-| Logging helpers | `com/ajaxjs/util/log` | related source and tests |
+| Area                                                | Source                         | Documentation               |
+|-----------------------------------------------------|--------------------------------|-----------------------------|
+| Core string, bytes, map, XML, URL, conversion, JSON | `com/ajaxjs/util/*.java`       | `docs-src/src/common`       |
+| Date and time                                       | `com/ajaxjs/util/date`         | `docs-src/src/date`         |
+| Reflection                                          | `com/ajaxjs/util/reflect`      | `docs-src/src/reflect`      |
+| Streams, files, resources, ZIP, commands            | `com/ajaxjs/util/io`           | `docs-src/src/io`           |
+| Symmetric crypto, certificates, RSA                 | `com/ajaxjs/util/cryptography` | `docs-src/src/cryptography` |
+| HTTP client helpers                                 | `com/ajaxjs/util/httpremote`   | `docs-src/src/http_request` |
+| Logging helpers                                     | `com/ajaxjs/util/log`          | related source and tests    |
 
 ## Primary classes
 

@@ -3,10 +3,8 @@
 
 <div align="center" style="text-align: center;">
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
+
 ![Java Version](https://img.shields.io/badge/Java-8-blue)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.3.6-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
-![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lightweight-component/aj-util)
 ![GitHub repo size](https://img.shields.io/github/repo-size/lightweight-component/aj-util)
@@ -18,11 +16,15 @@
 
 <hr />
 
-This is a Java toolkit that truly embraces Object-Oriented Programming (OOP). Unlike other libraries that rely heavily on static methods, this toolkit requires you to instantiate objects before invoking utility methods.
+This is a Java toolkit that truly embraces Object-Oriented Programming (OOP). Unlike other libraries that rely heavily
+on static methods, this toolkit requires you to instantiate objects before invoking utility methods.
 
-By utilizing overloaded constructors, it automatically adapts to and converts various input parameters. This approach not only handles complex scenarios with ease but also results in a cleaner API design and more concise, DRY (Don't Repeat Yourself) code.
+By utilizing overloaded constructors, it automatically adapts to and converts various input parameters. This approach
+not only handles complex scenarios with ease but also results in a cleaner API design and more concise, DRY (Don't
+Repeat Yourself) code.
 
-Furthermore, this library is designed to be lightweight with minimal dependencies. The JAR file is only about 170KB in size and includes the following modules:
+Furthermore, this library is designed to be lightweight with minimal dependencies. The JAR file is only about 170KB in
+size and includes the following modules:
 
 | Class/Package Module | Detail Description                                                                     | Memo                                          |
 |----------------------|----------------------------------------------------------------------------------------|-----------------------------------------------|

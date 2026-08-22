@@ -11,7 +11,9 @@ layout: layouts/aj-util-cn.njk
 # AES/DES 加密解密
 
 ## AES
+
 对称加密多基于`javax.crypto`包进行封装，封装在类`com.ajaxjs.util.cryptography`中。先看看 AES 的，
+
 ```java
 final String key = "abc";
 final String word = "123";
@@ -22,7 +24,9 @@ void testAES() {
     assertEquals(word, Cryptography.AES_decode(encWord, key));
 }
 ```
+
 `Cryptography.AES_encode()` 等静态方法是对已配置 `Cryptography` 实例的便捷封装，其底层流程等价于：
+
 ```java
 public static String AES_encode(String data, String key) {
     Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
@@ -32,10 +36,13 @@ public static String AES_encode(String data, String key) {
     return cryptography.doCipherAsHexStr();
 }
 ```
+
 静态方法只是调用上的便利，不会改变算法本身及其密钥要求。
 
 ## DES/TripleDES
+
 DES 和 Triple DES 的 API 形式类似，但它们属于旧算法。新应用应优先使用带认证的 AES-GCM。
+
 ```java
 @Test
 void testDES() {
@@ -58,8 +65,12 @@ void test3DES() {
     assertEquals(word, Cryptography.tripleDES_decode(encoded, keyBytes));
 }
 ```
+
 ## PBE
-当前口令加密 API 使用 `PBKDF2WithHmacSHA256` 派生 AES 密钥，并通过 AES-GCM 加密。盐值至少需要 16 字节，迭代次数至少为 100,000。
+
+当前口令加密 API 使用 `PBKDF2WithHmacSHA256` 派生 AES 密钥，并通过 AES-GCM 加密。盐值至少需要 16 字节，迭代次数至少为
+100,000。
+
 ```java
 byte[] salt = Cryptography.initSalt();
 int iterations = Cryptography.MIN_PBE_ITERATIONS;

@@ -122,8 +122,8 @@
 ### 低优先级
 
 6. `DataReader.readStreamAsBytes()` 把同一个复用缓冲区交给回调。回调若异步处理或保存数组引用，
-    后续读取会覆盖之前的数据。
-    修复方案：在契约中明确数组只在回调期间有效，或提供交付独立 byte[] 的安全重载。
+   后续读取会覆盖之前的数据。
+   修复方案：在契约中明确数组只在回调期间有效，或提供交付独立 byte[] 的安全重载。
 
 ## `com.ajaxjs.util.date`
 
@@ -221,34 +221,34 @@
    `@EqualsAndHashCode(onlyExplicitlyIncluded = true)` 明确选择真正构成身份的字段。
 
 10. `KeyMgr.action()` 一次把全部数据传给 RSA `Cipher.doFinal()`，超过单个 RSA block 的输入会直接
-   失败，但 API 没有预检或说明长度限制。
-   修复方案：RSA 只用于封装随机对称密钥并提供混合加密 API；至少应按 key/padding 预检最大长度并
-   给出明确错误。
+    失败，但 API 没有预检或说明长度限制。
+    修复方案：RSA 只用于封装随机对称密钥并提供混合加密 API；至少应按 key/padding 预检最大长度并
+    给出明确错误。
 
 11. `CertificateUtils.getCert()` 只解析 X.509 证书并检查有效期，没有验证证书链、信任锚、签名、
-   Key Usage、吊销状态、主机名或预期主体。调用者可能误以为返回的证书已经可信。
-   修复方案：把解析和信任验证拆成两个 API；验证入口基于显式 `TrustAnchor` 和
-   `CertPathValidator`，具体协议再校验主体及用途。
+    Key Usage、吊销状态、主机名或预期主体。调用者可能误以为返回的证书已经可信。
+    修复方案：把解析和信任验证拆成两个 API；验证入口基于显式 `TrustAnchor` 和
+    `CertPathValidator`，具体协议再校验主体及用途。
 
 12. `CertificateUtils.deserializeToCerts()` 对远端 Map 结构进行多次未经校验的强制转换。响应结构
-   缺失或类型变化时仍会产生难以定位的 `ClassCastException` 或空指针。
-   修复方案：逐层校验 `data`、`encrypt_certificate` 及其字段类型，在异常中包含字段路径但不包含
-   完整密文或密钥。
+    缺失或类型变化时仍会产生难以定位的 `ClassCastException` 或空指针。
+    修复方案：逐层校验 `data`、`encrypt_certificate` 及其字段类型，在异常中包含字段路径但不包含
+    完整密文或密钥。
 
 13. `CertificateUtils.getCert(InputStream)` 会关闭调用方传入的流。虽然当前 JavaDoc 已说明，但这与
-   常见的“谁创建谁关闭”约定不同，复用流的调用方容易意外失败。
-   修复方案：增加不关闭调用方流的解析入口；原方法为兼容保留现有行为。
+    常见的“谁创建谁关闭”约定不同，复用流的调用方容易意外失败。
+    修复方案：增加不关闭调用方流的解析入口；原方法为兼容保留现有行为。
 
 14. `DoSignature` 和 `DoVerify` 完全接受调用方提供的算法字符串，没有安全算法白名单，新代码仍可
-   选择 MD5withRSA 等弱算法。
-   修复方案：增加推荐算法枚举或受限工厂，默认允许 SHA-256/384/512 with RSA 及 RSA-PSS；原始
-   字符串构造器只作为高级兼容入口。
+    选择 MD5withRSA 等弱算法。
+    修复方案：增加推荐算法枚举或受限工厂，默认允许 SHA-256/384/512 with RSA 及 RSA-PSS；原始
+    字符串构造器只作为高级兼容入口。
 
 ### 低优先级
 
 15. `DoVerify.verify()` 对普通签名不匹配返回 `false`，但部分 provider 遇到畸形签名字节时会抛出
-   `SignatureException` 并被包装成 `RuntimeException`。调用者难以稳定区分“不匹配”和“格式损坏”。
-   修复方案：定义并测试统一契约，明确畸形签名应返回 `false` 还是抛出专用参数异常。
+    `SignatureException` 并被包装成 `RuntimeException`。调用者难以稳定区分“不匹配”和“格式损坏”。
+    修复方案：定义并测试统一契约，明确畸形签名应返回 `false` 还是抛出专用参数异常。
 
 ## `com.ajaxjs.util.reflect`
 

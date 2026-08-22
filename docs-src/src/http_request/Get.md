@@ -59,6 +59,7 @@ Map<String, Object> json = Post.api("https://api.example.com/data", ObjectHelper
 ResponseEntity uploadResp = Post.multiPOST("https://api.example.com/upload", 
     ObjectHelper.mapOf("file", new File("document.pdf")));
 ```
+
 # DELETE Request Utility
 
 Provides methods for making HTTP DELETE requests.
@@ -77,6 +78,7 @@ ResponseEntity response = Delete.del("https://api.example.com/resource/123");
 // DELETE API returning JSON
 Map<String, Object> json = Delete.api("https://api.example.com/resource/123");
 ```
+
 # HEAD Request Utility
 
 Provides methods for making HTTP HEAD requests and checking resources.

@@ -8,7 +8,8 @@ tags:
 layout: layouts/aj-util-cn.njk
 ---
 
-HTTP客户端系统在aj-http模块内提供了一个全面的HTTP通信层。它提供了两种互补的编程范式来发起HTTP请求：一种是使用动态代理的声明式基于注解的API，另一种是用于直接编程控制的命令式基于类的API。这两种方法都抽象了Java的`HttpURLConnection`，同时提供了自动JSON/表单编码、可配置超时、自定义头部和结构化响应处理等功能。
+HTTP客户端系统在aj-http模块内提供了一个全面的HTTP通信层。它提供了两种互补的编程范式来发起HTTP请求：一种是使用动态代理的声明式基于注解的API，另一种是用于直接编程控制的命令式基于类的API。这两种方法都抽象了Java的`HttpURLConnection`
+，同时提供了自动JSON/表单编码、可配置超时、自定义头部和结构化响应处理等功能。
 
 本文档提供了HTTP客户端架构和两种API风格的概述。有关实现细节，请参见：
 
@@ -18,7 +19,8 @@ HTTP客户端系统在aj-http模块内提供了一个全面的HTTP通信层。�
 - 连接初始化和头部：请求配置
 - 响应解析和错误处理：响应处理
 - 文件上传和下载：文件操作
-- 
+-
+
 # Get 类使用教程
 
 Get 类是 HTTP GET 请求的实现类，用于从服务器获取资源。它扩展了基础的 Request 类，提供了多种便捷的方法来与 API 交互并以不同格式获取数据。
@@ -46,7 +48,6 @@ Get getRequest = new Get("https://api.example.com/data", conn -> {
 });
 ```
 
-
 #### 2. 获取文本响应
 
 ```java
@@ -58,7 +59,6 @@ String response = Get.text("https://api.example.com/data", conn -> {
     conn.setRequestProperty("Accept", "text/plain");
 });
 ```
-
 
 #### 3. 获取 JSON 响应
 
@@ -75,7 +75,6 @@ Map<String, Object> jsonResponse = Get.api("https://api.example.com/data", conn 
 });
 ```
 
-
 #### 4. 映射 JSON 响应到 Java 对象
 
 ```java
@@ -91,7 +90,6 @@ MyDataClass data = Get.api("https://api.example.com/data", MyDataClass.class, co
 });
 ```
 
-
 #### 5. 获取 XML 响应
 
 ```java
@@ -100,7 +98,6 @@ Map<String, String> xmlResponse = Get.apiXml("https://api.example.com/data.xml",
     conn.setRequestProperty("Accept", "application/xml");
 });
 ```
-
 
 ### 参数说明
 
@@ -146,7 +143,6 @@ Post postRequest = new Post("https://api.example.com/data",
                            });
 ```
 
-
 #### 2. 发送 JSON API 请求
 
 ```java
@@ -161,7 +157,6 @@ Map<String, Object> response = Post.api("https://api.example.com/data",
                                            conn.setRequestProperty("Custom-Header", "value");
                                        });
 ```
-
 
 ### 构造函数说明
 

@@ -10,11 +10,13 @@ layout: layouts/aj-util.njk
 
 # MapTool Tutorial
 
-This tutorial provides an overview of the `MapTool` class, which is part of the `lightweight-component/aj-util` library. The `MapTool` class provides utility methods for working with Map data structures in Java applications.
+This tutorial provides an overview of the `MapTool` class, which is part of the `lightweight-component/aj-util` library.
+The `MapTool` class provides utility methods for working with Map data structures in Java applications.
 
 ## Introduction
 
-The `MapTool` class contains static methods for common Map operations such as conversion, joining, and XML serialization/deserialization.
+The `MapTool` class contains static methods for common Map operations such as conversion, joining, and XML
+serialization/deserialization.
 
 ## Main Features
 
@@ -40,7 +42,8 @@ Four overloaded methods for joining Map entries into strings:
 Two methods for converting to Maps:
 
 1. `toMap(String[] pairs, Function<String, Object> fn)` - Convert array of key=value strings to Map
-2. `toMap(String[] columns, String[] values, Function<String, Object> fn)` - Convert parallel key and value arrays to Map
+2. `toMap(String[] columns, String[] values, Function<String, Object> fn)` - Convert parallel key and value arrays to
+   Map
 
 ### 3. `getValue()`
 
@@ -70,6 +73,7 @@ collections, arrays, and objects remain shared references.
 ## Usage Examples
 
 ### Joining Map Entries
+
 ```java
 Map<String, String> map = new HashMap<>();
 map.put("name", "John");
@@ -79,14 +83,17 @@ String joined = MapTool.join(map); // "name=John&age=30"
 ```
 
 ### Converting to Map
+
 ```java
 String[] pairs = {"name=John", "age=30"};
 Map<String, Object> map = MapTool.toMap(pairs, Integer::parseInt);
 ```
 
-Only the first `=` separates the key and value, so values such as JWTs and signatures are preserved. A pair ending in `=` produces an empty-string value.
+Only the first `=` separates the key and value, so values such as JWTs and signatures are preserved. A pair ending
+in `=` produces an empty-string value.
 
 ### XML Conversion
+
 ```java
 Map<String, String> data = new HashMap<>();
 data.put("name", "John");
@@ -101,4 +108,5 @@ Map<String, String> map = MapTool.xmlToMap(xml);
 
 ## Conclusion
 
-The `MapTool` class provides comprehensive utility methods for working with Map data structures, including joining, conversion, and XML serialization/deserialization.
+The `MapTool` class provides comprehensive utility methods for working with Map data structures, including joining,
+conversion, and XML serialization/deserialization.
