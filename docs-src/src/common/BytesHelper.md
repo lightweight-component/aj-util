@@ -34,4 +34,5 @@ The output uses uppercase hexadecimal characters.
 byte[] bytes = BytesHelper.parseHexStr2Byte("1A2B");
 ```
 
-An empty string returns an empty byte array. Input must contain an even number of characters, and every character must be hexadecimal; otherwise `IllegalArgumentException` is thrown. Odd-length input is never silently truncated.
+An empty string returns an empty byte array. Input must contain an even number of characters, and every character must
+be hexadecimal; otherwise `IllegalArgumentException` is thrown. Odd-length input is never silently truncated.

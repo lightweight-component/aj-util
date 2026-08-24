@@ -31,7 +31,8 @@ Choose cases relevant to the change:
 - truncated/corrupt streams, symlinks, ZIP traversal, and oversized archives;
 - invalid keys, missing signing state, weak parameters, and redacted error messages.
 
-Use the existing test naming and JUnit style in the neighboring package. Run the focused test, then `mvn -pl aj-util test`.
+Use the existing test naming and JUnit style in the neighboring package. Run the focused test,
+then `mvn -pl aj-util test`.
 
 ## Documentation synchronization
 
@@ -45,4 +46,5 @@ When behavior or validation changes:
 
 ## Completion report
 
-Report changed files, behavior now guaranteed, tests executed and results, and any compatibility decisions or remaining risks. If tests could not run, include the exact reason.
+Report changed files, behavior now guaranteed, tests executed and results, and any compatibility decisions or remaining
+risks. If tests could not run, include the exact reason.

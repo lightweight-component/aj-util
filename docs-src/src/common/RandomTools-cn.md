@@ -7,6 +7,7 @@ tags:
   - Java
 layout: layouts/aj-util-cn.njk
 ---
+
 # RandomTools 使用教程
 
 RandomTools 是一个用于生成各种类型随机值的工具类，包括数字、字符串和 UUID（支持版本 7）。
@@ -21,14 +22,15 @@ RandomTools 是一个用于生成各种类型随机值的工具类，包括数�
 ### 数字随机数生成
 
 #### 1. 生成六位数字
+
 ```java
 // 生成六位随机数字（100000-999999）
 int number = RandomTools.generateNumber();
 System.out.println(number); // 例如：456789
 ```
 
-
 #### 2. 生成指定位数的数字
+
 ```java
 // 生成指定位数的随机数字
 int threeDigit = RandomTools.generateNumber(3); // 100-999
@@ -40,10 +42,10 @@ System.out.println(fourDigit);  // 例如：3456
 
 位数只能是 1 到 9，其他值会抛出 `IllegalArgumentException`。
 
-
 ### 字符串随机数生成
 
 #### 1. 生成六位随机字符串
+
 ```java
 // 生成六位字母数字随机字符串
 String randomStr = RandomTools.generateRandomString();
@@ -52,8 +54,8 @@ System.out.println(randomStr); // 例如：aB3xY9
 
 字符串长度必须大于零。这些字符串使用 `ThreadLocalRandom`，不应作为密码、令牌或其他加密秘密。
 
-
 #### 2. 生成指定长度的随机字符串
+
 ```java
 // 生成指定长度的随机字符串
 String shortStr = RandomTools.generateRandomString(3);
@@ -63,33 +65,32 @@ System.out.println(shortStr); // 例如：Xy2
 System.out.println(longStr);  // 例如：AbC3dE5fGh
 ```
 
-
 ### UUID 生成
 
 #### 1. 生成 UUIDv7
+
 ```java
 // 生成 UUID 版本 7（时间有序）
 UUID uuid = RandomTools.uuid();
 System.out.println(uuid); // 版本字段为 7
 ```
 
-
 #### 2. 生成无连字符的 UUIDv7 字符串
+
 ```java
 // 生成无连字符的 UUID 字符串
 String uuidStr = RandomTools.uuidStr();
 System.out.println(uuidStr); // 例如：550e8400e29b41d4a716446655440000
 ```
 
-
 #### 3. 查看 UUID 的时间戳
+
 ```java
 // 获取 UUIDv7 中的时间戳信息
 String uuidString = RandomTools.uuidStr();
 Date timestamp = RandomTools.showTime(uuidString);
 System.out.println(timestamp); // 例如：Wed Oct 25 14:30:45 CST 2023
 ```
-
 
 ### 常量说明
 

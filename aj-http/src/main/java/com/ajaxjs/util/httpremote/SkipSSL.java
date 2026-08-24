@@ -46,7 +46,7 @@ public class SkipSSL {
     /**
      * Creates an SSL socket factory with certificate validation disabled.
      * Can optionally include client certificates for mutual TLS authentication.
-     * 
+     *
      * @param kms array of key managers containing client certificates, or null to use no client certificates
      * @return an SSLSocketFactory that accepts all server certificates, or null if an error occurs
      */
@@ -73,7 +73,7 @@ public class SkipSSL {
     /**
      * Creates a secure connection with a client certificate from an input stream.
      * Loads a PKCS12 certificate from the given input stream and initializes a key manager.
-     * 
+     *
      * @param in  input stream containing the PKCS12 certificate
      * @param pwd password for the certificate
      * @return array of key managers initialized with the certificate, or null if an error occurs
@@ -90,7 +90,8 @@ public class SkipSSL {
             kmf.init(ks, pwd.toCharArray());
 
             return kmf.getKeyManagers();
-        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | UnrecoverableKeyException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException |
+                 UnrecoverableKeyException e) {
             log.warn("Creating certificate-based secure connection", e);
             return null;
         }
@@ -98,7 +99,7 @@ public class SkipSSL {
 
     /**
      * Creates a secure connection with a client certificate from a file path.
-     * 
+     *
      * @param path file path to the PKCS12 certificate
      * @param pwd  password for the certificate
      * @return array of key managers initialized with the certificate, or null if an error occurs
@@ -134,7 +135,7 @@ public class SkipSSL {
     /**
      * Disables SSL certificate validation for a specific HTTPS connection.
      * Sets a custom SSL socket factory and hostname verifier that accepts all certificates.
-     * 
+     *
      * @param conn the HTTPS connection to configure
      */
     public static void setSSL_Ignore(HttpsURLConnection conn) {

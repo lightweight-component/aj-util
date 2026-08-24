@@ -5,7 +5,8 @@ description: Use and maintain the aj-util Java 8 utility library. Trigger for qu
 
 # AJ Util
 
-Use the repository's current source as the authority for API signatures and behavior. Treat documentation as guidance that may lag behind the implementation.
+Use the repository's current source as the authority for API signatures and behavior. Treat documentation as guidance
+that may lag behind the implementation.
 
 ## Locate the project
 
@@ -14,7 +15,8 @@ Use the repository's current source as the authority for API signatures and beha
 3. Read the matching English and Chinese pages under `docs-src/src` when changing public behavior or examples.
 4. Read nearby tests under `aj-util/src/test/java`; add a regression test for every bug fix.
 
-If the skill is installed globally and no aj-util checkout is open, use [references/modules.md](references/modules.md) for package navigation and ask for the project or dependency version when exact behavior matters.
+If the skill is installed globally and no aj-util checkout is open, use [references/modules.md](references/modules.md)
+for package navigation and ask for the project or dependency version when exact behavior matters.
 
 ## Choose the relevant guidance
 
@@ -30,8 +32,10 @@ Load only the reference relevant to the task. For cross-package reviews or broad
 2. Preserve Java 8 language and runtime compatibility. Do not introduce APIs added after Java 8.
 3. Prefer focused fixes that preserve public signatures unless the user explicitly authorizes an API change.
 4. Validate arguments at public boundaries and use explicit, actionable exceptions.
-5. Preserve causes when translating exceptions, but never include keys, credentials, full XML payloads, tokens, or plaintext secrets in messages or logs.
-6. Add boundary tests: null/empty input, zero, first and last positions, malformed data, repeated delimiters, and security payloads as applicable.
+5. Preserve causes when translating exceptions, but never include keys, credentials, full XML payloads, tokens, or
+   plaintext secrets in messages or logs.
+6. Add boundary tests: null/empty input, zero, first and last positions, malformed data, repeated delimiters, and
+   security payloads as applicable.
 7. Run the narrow test first, then the module suite:
 
 ```bash
@@ -48,7 +52,9 @@ When public behavior changes, update both language variants in the same change:
 - English: `name.md`
 - Chinese: `name-cn.md`
 
-Keep examples compilable against the current source. Document validation rules, exception behavior, charset/time-zone semantics, overlap behavior, and security limitations where relevant. Do not translate class names, method names, Maven coordinates, or code identifiers.
+Keep examples compilable against the current source. Document validation rules, exception behavior, charset/time-zone
+semantics, overlap behavior, and security limitations where relevant. Do not translate class names, method names, Maven
+coordinates, or code identifiers.
 
 When reviewing source comments, verify each statement against the method body and its callers. Distinguish
 `null` returns from thrown exceptions, configured precision from actual clock resolution, security controls
@@ -57,4 +63,7 @@ key derivation. Change comments and documentation only when the task does not au
 
 ## Review code
 
-Prioritize correctness and security over style. Trace callers before reporting a defect. For each confirmed issue, provide the triggering input, observed behavior, intended behavior, impact, and a minimal repair plan. Pay special attention to parser boundaries, resource ownership, integer overflow, class/interface traversal, time-zone transitions, archive traversal/bombs, cryptographic defaults, and sensitive-data leakage.
+Prioritize correctness and security over style. Trace callers before reporting a defect. For each confirmed issue,
+provide the triggering input, observed behavior, intended behavior, impact, and a minimal repair plan. Pay special
+attention to parser boundaries, resource ownership, integer overflow, class/interface traversal, time-zone transitions,
+archive traversal/bombs, cryptographic defaults, and sensitive-data leakage.

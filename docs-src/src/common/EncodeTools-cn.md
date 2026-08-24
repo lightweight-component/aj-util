@@ -7,9 +7,11 @@ tags:
   - 工具类
 layout: layouts/aj-util-cn.njk
 ---
+
 # UrlEncode 使用教程
 
-UrlEncode 是一个 URL 编码和解码的工具类，提供了对 URL 进行编码和解码的方法，处理 URL 中的中文字符，并能将查询字符串解析为 Map。
+UrlEncode 是一个 URL 编码和解码的工具类，提供了对 URL 进行编码和解码的方法，处理 URL 中的中文字符，并能将查询字符串解析为
+Map。
 
 ### 主要功能特性
 
@@ -30,7 +32,6 @@ UrlEncode encoder = new UrlEncode("Hello World");
 UrlEncode encoder = new UrlEncode("Hello World", StandardCharsets.UTF_8);
 ```
 
-
 #### 2. URL 编码
 
 ```java
@@ -47,7 +48,6 @@ String safeEncoded = new UrlEncode("Hello*World~Test").encodeSafe();
 // 输出: Hello%2AWorld%7ETest
 ```
 
-
 #### 3. URL 解码
 
 ```java
@@ -55,7 +55,6 @@ String safeEncoded = new UrlEncode("Hello*World~Test").encodeSafe();
 String decoded = new UrlEncode("Hello%20World").decode();
 // 输出: Hello World
 ```
-
 
 #### 4. 链式调用
 
@@ -67,7 +66,6 @@ String result = new UrlEncode("Hello World")
     .encodeQuery();
 ```
 
-
 ### 静态工具方法
 
 #### 1. 中文字符处理
@@ -77,7 +75,6 @@ String result = new UrlEncode("Hello World")
 String chineseStr = "你好世界";
 String processed = UrlEncode.urlChinese(chineseStr);
 ```
-
 
 #### 2. 查询字符串转 Map
 
@@ -92,9 +89,8 @@ Map<String, String> paramMap = UrlEncode.parseStringToMap(queryString);
 // city -> 北京
 ```
 
-解析器支持只有一个参数的查询串，例如 `a=b`。每个字段只在第一个 `=` 处分隔，因此包含额外 `=` 的 Base64、JWT 和签名值不会被截断。键和值默认按 UTF-8 做 URL 解码。
-
-
+解析器支持只有一个参数的查询串，例如 `a=b`。每个字段只在第一个 `=` 处分隔，因此包含额外 `=` 的 Base64、JWT 和签名值不会被截断。键和值默认按
+UTF-8 做 URL 解码。
 
 ### 注意事项
 

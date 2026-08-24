@@ -10,11 +10,13 @@ layout: layouts/aj-util.njk
 
 # JsonUtil Tutorial
 
-This tutorial provides an overview of the `JsonUtil` class, which is part of the `lightweight-component/aj-util` library. The `JsonUtil` class provides utility methods for working with JSON data in Java applications.
+This tutorial provides an overview of the `JsonUtil` class, which is part of the `lightweight-component/aj-util`
+library. The `JsonUtil` class provides utility methods for working with JSON data in Java applications.
 
 ## Introduction
 
-The `JsonUtil` class contains static methods for common JSON operations using Jackson library, including conversion between JSON strings, Java objects, Maps, and Lists.
+The `JsonUtil` class contains static methods for common JSON operations using Jackson library, including conversion
+between JSON strings, Java objects, Maps, and Lists.
 
 ## Main Features
 
@@ -63,6 +65,7 @@ The `JsonUtil` class contains static methods for common JSON operations using Ja
 ## Usage Examples
 
 ### Basic Serialization
+
 ```java
 User user = new User("John", 30);
 String json = JsonUtil.toJson(user); 
@@ -78,12 +81,14 @@ String prettyJson = JsonUtil.toJsonPretty(user);
 ```
 
 ### Basic Deserialization
+
 ```java
 String json = "{\"name\":\"John\",\"age\":30}";
 User user = JsonUtil.fromJson(json, User.class);
 ```
 
 ### Map Conversion
+
 ```java
 Map<String, Object> map = new HashMap<>();
 map.put("name", "John");
@@ -94,6 +99,7 @@ Map<String, Object> map2 = JsonUtil.json2map(json);
 ```
 
 ### List Conversion
+
 ```java
 String jsonArray = "[{\"name\":\"John\"}, {\"name\":\"Alice\"}]";
 List<User> users = JsonUtil.json2list(jsonArray, User.class);
@@ -102,6 +108,7 @@ List<User> users = JsonUtil.json2list(jsonArray, User.class);
 ## Configuration
 
 The `JsonUtil` class is pre-configured with:
+
 - Java 8 date/time support
 - Strict duplicate detection
 - Asia/Shanghai timezone
@@ -109,4 +116,5 @@ The `JsonUtil` class is pre-configured with:
 
 ## Conclusion
 
-The `JsonUtil` class provides comprehensive utility methods for working with JSON data, making it easier to serialize, deserialize, and convert between JSON and Java objects.
+The `JsonUtil` class provides comprehensive utility methods for working with JSON data, making it easier to serialize,
+deserialize, and convert between JSON and Java objects.

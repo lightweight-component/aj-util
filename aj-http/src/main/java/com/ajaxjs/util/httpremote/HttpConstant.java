@@ -10,43 +10,69 @@ import java.util.function.Consumer;
  * and functional utilities for HTTP connection configuration.
  */
 public interface HttpConstant {
-    /** HTTP GET method name */
+    /**
+     * HTTP GET method name
+     */
     String GET = "GET";
 
-    /** HTTP POST method name */
+    /**
+     * HTTP POST method name
+     */
     String POST = "POST";
 
-    /** HTTP PUT method name */
+    /**
+     * HTTP PUT method name
+     */
     String PUT = "PUT";
 
-    /** HTTP DELETE method name */
+    /**
+     * HTTP DELETE method name
+     */
     String DELETE = "DELETE";
 
-    /** Content-Type header field name */
+    /**
+     * Content-Type header field name
+     */
     String CONTENT_TYPE = "Content-Type";
 
-    /** JSON content type */
+    /**
+     * JSON content type
+     */
     String CONTENT_TYPE_JSON = "application/json";
-    
-    /** XML content type */
+
+    /**
+     * XML content type
+     */
     String CONTENT_TYPE_XML = "application/xml";
 
-    /** JSON content type with UTF-8 charset */
+    /**
+     * JSON content type with UTF-8 charset
+     */
     String CONTENT_TYPE_JSON_UTF8 = CONTENT_TYPE_JSON + ";charset=utf-8";
 
-    /** Form data content type */
+    /**
+     * Form data content type
+     */
     String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 
-    /** Form data content type with UTF-8 charset */
+    /**
+     * Form data content type with UTF-8 charset
+     */
     String CONTENT_TYPE_FORM_UTF8 = CONTENT_TYPE_FORM + ";charset=utf-8";
 
-    /** Multipart form data content type for file uploads */
+    /**
+     * Multipart form data content type for file uploads
+     */
     String CONTENT_TYPE_FORM_UPLOAD = "multipart/form-data";
-    
-    /** Generic binary file content type */
+
+    /**
+     * Generic binary file content type
+     */
     String FILE_TYPE = "application/octet-stream";
-    
-    /** Authorization header field name */
+
+    /**
+     * Authorization header field name
+     */
     String AUTHORIZATION = "Authorization";
 
     /**

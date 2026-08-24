@@ -10,11 +10,13 @@ layout: layouts/aj-util.njk
 
 # ZipHelper Tutorial
 
-This tutorial provides an overview of the `ZipHelper` class, which is part of the `lightweight-component/aj-util` library. The `ZipHelper` class provides utility methods for ZIP compression and decompression operations.
+This tutorial provides an overview of the `ZipHelper` class, which is part of the `lightweight-component/aj-util`
+library. The `ZipHelper` class provides utility methods for ZIP compression and decompression operations.
 
 ## Introduction
 
-The `ZipHelper` class contains static methods for working with ZIP files, including compression, decompression, and file type detection.
+The `ZipHelper` class contains static methods for working with ZIP files, including compression, decompression, and file
+type detection.
 
 ## Main Features
 
@@ -48,19 +50,23 @@ The `ZipHelper` class contains static methods for working with ZIP files, includ
 ## Usage Examples
 
 ### Decompression
+
 ```java
 ZipHelper.unzip("C:/extracted", "C:/archive.zip");
 ```
 
-Extraction uses conservative default limits. Use the overload with `ExtractionLimits` when trusted archives require different limits.
+Extraction uses conservative default limits. Use the overload with `ExtractionLimits` when trusted archives require
+different limits.
 
 ### File Compression
+
 ```java
 File[] files = {new File("file1.txt"), new File("file2.txt")};
 ZipHelper.zipFile(files, "archive.zip", false); // Use DEFLATED compression
 ```
 
 ### Directory Compression
+
 ```java
 ZipHelper.zipDirectory("C:/data", "backup.zip", true); // Use STORED (no compression)
 ```
@@ -68,6 +74,7 @@ ZipHelper.zipDirectory("C:/data", "backup.zip", true); // Use STORED (no compres
 Directory compression does not follow symbolic links. The destination ZIP must be outside the source directory.
 
 ### ZIP File Detection
+
 ```java
 boolean isZip = ZipHelper.isZipFile("unknown.zip");
 ```
@@ -75,6 +82,7 @@ boolean isZip = ZipHelper.isZipFile("unknown.zip");
 Missing files, directories, and malformed archives return `false`.
 
 ### Directory Creation
+
 ```java
 ZipHelper.initFolder("C:/new/path/file.txt"); // Creates C:/new/path if needed
 ```
@@ -82,13 +90,16 @@ ZipHelper.initFolder("C:/new/path/file.txt"); // Creates C:/new/path if needed
 ## Compression Methods
 
 The class supports two compression methods:
+
 1. `DEFLATED` (default) - Standard ZIP compression
 2. `STORED` - No compression, files are stored as-is
 
 ## Error Handling
 
-I/O failures are reported as `UncheckedIOException`; invalid arguments use `IllegalArgumentException`. Compression is written to a temporary file and published only after the archive is complete.
+I/O failures are reported as `UncheckedIOException`; invalid arguments use `IllegalArgumentException`. Compression is
+written to a temporary file and published only after the archive is complete.
 
 ## Conclusion
 
-The `ZipHelper` class provides comprehensive utility methods for working with ZIP files, making compression and decompression operations more convenient in Java applications.
+The `ZipHelper` class provides comprehensive utility methods for working with ZIP files, making compression and
+decompression operations more convenient in Java applications.

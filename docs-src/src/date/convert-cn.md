@@ -8,7 +8,8 @@ layout: layouts/aj-util-cn.njk
 
 # 日期类型转换
 
-`DateTypeConvert` 可转换传统 `Date`、`Calendar`、SQL 日期类型、毫秒时间戳以及 Java 8 的 `java.time` 类型。凡是涉及本地日期时间的转换，都应明确传入 `ZoneId`。
+`DateTypeConvert` 可转换传统 `Date`、`Calendar`、SQL 日期类型、毫秒时间戳以及 Java 8 的 `java.time`
+类型。凡是涉及本地日期时间的转换，都应明确传入 `ZoneId`。
 
 ```java
 Instant instant = Instant.now();

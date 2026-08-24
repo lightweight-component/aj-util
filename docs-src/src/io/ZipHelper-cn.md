@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 # ZipHelper 教程
 
-本教程提供了 `ZipHelper` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`ZipHelper` 类为 ZIP 压缩和解压缩操作提供了实用工具方法。
+本教程提供了 `ZipHelper` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`ZipHelper` 类为 ZIP
+压缩和解压缩操作提供了实用工具方法。
 
 ## 简介
 
@@ -48,6 +49,7 @@ layout: layouts/aj-util-cn.njk
 ## 使用示例
 
 ### 解压缩
+
 ```java
 ZipHelper.unzip("C:/extracted", "C:/archive.zip");
 ```
@@ -55,12 +57,14 @@ ZipHelper.unzip("C:/extracted", "C:/archive.zip");
 默认解压使用保守的安全限制。可信 ZIP 确实需要更大配额时，可使用带 `ExtractionLimits` 的重载。
 
 ### 文件压缩
+
 ```java
 File[] files = {new File("file1.txt"), new File("file2.txt")};
 ZipHelper.zipFile(files, "archive.zip", false); // 使用 DEFLATED 压缩
 ```
 
 ### 目录压缩
+
 ```java
 ZipHelper.zipDirectory("C:/data", "backup.zip", true); // 使用 STORED（无压缩）
 ```
@@ -68,6 +72,7 @@ ZipHelper.zipDirectory("C:/data", "backup.zip", true); // 使用 STORED（无压
 目录压缩不会跟随符号链接，目标 ZIP 也不能位于源目录内部。
 
 ### ZIP 文件检测
+
 ```java
 boolean isZip = ZipHelper.isZipFile("unknown.zip");
 ```
@@ -76,6 +81,7 @@ boolean isZip = ZipHelper.isZipFile("unknown.zip");
 返回 `false`。
 
 ### 目录创建
+
 ```java
 ZipHelper.initFolder("C:/new/path/file.txt"); // 如果需要则创建 C:/new/path
 ```
@@ -83,6 +89,7 @@ ZipHelper.initFolder("C:/new/path/file.txt"); // 如果需要则创建 C:/new/pa
 ## 压缩方法
 
 该类支持两种压缩方法：
+
 1. `DEFLATED`（默认） - 标准 ZIP 压缩
 2. `STORED` - 无压缩，文件按原样存储
 

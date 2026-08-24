@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-RSA 加密解密</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  RsaCrypto" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, RSA 加密解密" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
-        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
-        <script>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AJ Utils-RSA 加密解密</title>
+    <meta name="description" content="Small Java utilities with many useful functions.  RsaCrypto"/>
+    <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, RSA 加密解密"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"/>
+    <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css"/>
+    <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+    <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+    <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+    <script>
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -23,109 +25,113 @@
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
-        </script>
-    </head>
-    <body>
-        <nav>
-            <div>
-                <div class="links">
-                    <a href="/cn">🏠 首页</a>
-                    | ⚙️ 源码:
-                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                  
-                    | 🚀<a href="">英语版本</a>
-                </div>
-                <h1>
-                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
-                    AJ Utils
-                </h1>
-                <h3>小型、干净、简单的 Java 工具库
-                </h3>
-            </div>
-        </nav>
-        <div>
-            <menu>
-                
-                <ul>
-                    <li class="selected">
-                        <a href="/cn">首页</a>
-                    </li>
-                </ul>
-                <h3>Common 常用模块</h3>
-                <ul>
-                    <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
-                    <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
-                    <li><a href="/common/MapTool-cn/">MapTool</a></li>
-                    <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
-                    <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
-                    <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
-                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
-                    <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
-                </ul>
-                <h3>Date 日期处理</h3>
-                <ul>
-                    <li><a href="/date/intro-cn/">简介</a></li>
-                    <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
-                    <li><a href="/date/formatter-cn/">日期格式化</a></li>
-                </ul>
-                <h3>Reflection 反射</h3>
-                <ul>
-                    <li><a href="/reflect/Methods-cn/">Methods</a></li>
-                    <li><a href="/reflect/Types-cn/">Types</a></li>
-                    <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
-                    <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
-                    <li><a href="/reflect/Fields-cn/">Fields</a></li>
-                </ul>
 
-                <h3>Input/Output 输入/输出</h3>
-                <ul>
-                    <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
-                    <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
-                    <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
-                </ul>
+    </script>
+</head>
+<body>
+<nav>
+    <div>
+        <div class="links">
+            <a href="/cn">🏠 首页</a>
+            | ⚙️ 源码:
+            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank"
+                                                                                                     href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
 
-                <h3>HTTP 请求</h3>
-                <ul>
-                    <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
-                </ul>
+            | 🚀<a href="">英语版本</a>
+        </div>
+        <h1>
+            <img src="https://framework.ajaxjs.com/aj-logo/logo.png"
+                 style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
+            AJ Utils
+        </h1>
+        <h3>小型、干净、简单的 Java 工具库
+        </h3>
+    </div>
+</nav>
+<div>
+    <menu>
 
-                <h3>加密/解密</h3>
-                <ul>
-                    <li><a href="/cryptography/intro-cn/">简介</a></li>
-                    <li><a href="/cryptography/flow-cn/">基本流程</a></li>
-                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
-                </ul>
-                <h3>其他</h3>
-               <ul>
-                <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
-                <li><a href="/misc/contact-cn/">联系</a></li>
-               </ul>
-            </menu>
-            <article class="aj-text chinese">
-                <h1>RSA 加密解密</h1>
-<p>RSA 非对称加密，事情比较多，可以分解为下面的子任务：</p>
-<ul>
-<li>签名，封装在<code>com.ajaxjs.util.cryptography.rsa.DoSignature</code>完成</li>
-<li>校验签名，封装在<code>com.ajaxjs.util.cryptography.rsa.DoVerify</code>完成</li>
-<li>密钥管理，封装在<code>com.ajaxjs.util.cryptography.rsa.KeyMgr</code>完成</li>
-<li>本身的 RSA 加密解密</li>
-</ul>
-<p>下面分别进行介绍。</p>
-<h2>签名</h2>
-<p>入参包括算法、输入数据及私钥，执行<code>sign()</code>返回签名。涉及的类型如下：</p>
-<ul>
-<li>输入数据，可以是<code>byte[]</code>或字符串</li>
-<li>私钥，可以是 PrivateKey 对象或者字符串，字符串的话会经过<code>KeyMgr.restoreKey</code>还原为 PrivateKey 对象</li>
-<li>返回的签名数据，是<code>byte[]</code>，可以调用<code>signToString()</code>返回 base64 编码的字符串</li>
-</ul>
-<pre><code class="language-java">// 生成公钥私钥
+        <ul>
+            <li class="selected">
+                <a href="/cn">首页</a>
+            </li>
+        </ul>
+        <h3>Common 常用模块</h3>
+        <ul>
+            <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
+            <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
+            <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+            <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+            <li><a href="/common/MapTool-cn/">MapTool</a></li>
+            <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
+            <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
+            <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
+            <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
+            <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
+            <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
+            <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+            <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
+        </ul>
+        <h3>Date 日期处理</h3>
+        <ul>
+            <li><a href="/date/intro-cn/">简介</a></li>
+            <li><a href="/date/convert-cn/">万能日期类型转换</a></li>
+            <li><a href="/date/formatter-cn/">日期格式化</a></li>
+        </ul>
+        <h3>Reflection 反射</h3>
+        <ul>
+            <li><a href="/reflect/Methods-cn/">Methods</a></li>
+            <li><a href="/reflect/Types-cn/">Types</a></li>
+            <li><a href="/reflect/Clazz-cn/">Clazz</a></li>
+            <li><a href="/reflect/NewInstance-cn/">NewInstance</a></li>
+            <li><a href="/reflect/Fields-cn/">Fields</a></li>
+        </ul>
+
+        <h3>Input/Output 输入/输出</h3>
+        <ul>
+            <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
+            <li><a href="/io/Resources-cn/">Resources</a></li>
+            <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+            <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+        </ul>
+
+        <h3>HTTP 请求</h3>
+        <ul>
+            <li><a href="/http_request/Base-cn/">HTTP 请求</a></li>
+        </ul>
+
+        <h3>加密/解密</h3>
+        <ul>
+            <li><a href="/cryptography/intro-cn/">简介</a></li>
+            <li><a href="/cryptography/flow-cn/">基本流程</a></li>
+            <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
+            <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+        </ul>
+        <h3>其他</h3>
+        <ul>
+            <li><a href="/misc/jackson3-cn/">升级到 Jackson3</a></li>
+            <li><a href="/misc/contact-cn/">联系</a></li>
+        </ul>
+    </menu>
+    <article class="aj-text chinese">
+        <h1>RSA 加密解密</h1>
+        <p>RSA 非对称加密，事情比较多，可以分解为下面的子任务：</p>
+        <ul>
+            <li>签名，封装在<code>com.ajaxjs.util.cryptography.rsa.DoSignature</code>完成</li>
+            <li>校验签名，封装在<code>com.ajaxjs.util.cryptography.rsa.DoVerify</code>完成</li>
+            <li>密钥管理，封装在<code>com.ajaxjs.util.cryptography.rsa.KeyMgr</code>完成</li>
+            <li>本身的 RSA 加密解密</li>
+        </ul>
+        <p>下面分别进行介绍。</p>
+        <h2>签名</h2>
+        <p>入参包括算法、输入数据及私钥，执行<code>sign()</code>返回签名。涉及的类型如下：</p>
+        <ul>
+            <li>输入数据，可以是<code>byte[]</code>或字符串</li>
+            <li>私钥，可以是 PrivateKey 对象或者字符串，字符串的话会经过<code>KeyMgr.restoreKey</code>还原为 PrivateKey 对象
+            </li>
+            <li>返回的签名数据，是<code>byte[]</code>，可以调用<code>signToString()</code>返回 base64 编码的字符串</li>
+        </ul>
+        <pre><code class="language-java">// 生成公钥私钥
 KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
 keyMgr.generateKeyPair();
 String privateKey = keyMgr.getPrivateKeyStr();
@@ -135,16 +141,17 @@ String result = new DoSignature(Constant.SHA256_RSA).setStrData(&quot;hello worl
 
 assertEquals(new Base64Utils(helloWorlds).encodeAsString(), result);
 </code></pre>
-<p>私钥由 <code>KeyMgr</code> 生成。RSA 密钥长度仅允许 2048、3072 或 4096 位，最低为 2048 位。</p>
-<h2>校验签名</h2>
-<p>入参包括算法、输入数据、签名数据及公钥，执行<code>verify()</code>返回签名。涉及的类型如下：</p>
-<ul>
-<li>输入数据，可以是<code>byte[]</code>或字符串</li>
-<li>签名数据，可以是<code>byte[]</code>或 Base64 字符串</li>
-<li>公钥，可以是 PublicKey 对象或者字符串，字符串的话会经过<code>KeyMgr.restoreKey</code>还原为 PublicKey 对象</li>
-<li>返的签名是否合法，是<code>boolean</code></li>
-</ul>
-<pre><code class="language-java">// 生成公钥私钥
+        <p>私钥由 <code>KeyMgr</code> 生成。RSA 密钥长度仅允许 2048、3072 或 4096 位，最低为 2048 位。</p>
+        <h2>校验签名</h2>
+        <p>入参包括算法、输入数据、签名数据及公钥，执行<code>verify()</code>返回签名。涉及的类型如下：</p>
+        <ul>
+            <li>输入数据，可以是<code>byte[]</code>或字符串</li>
+            <li>签名数据，可以是<code>byte[]</code>或 Base64 字符串</li>
+            <li>公钥，可以是 PublicKey 对象或者字符串，字符串的话会经过<code>KeyMgr.restoreKey</code>还原为 PublicKey 对象
+            </li>
+            <li>返的签名是否合法，是<code>boolean</code></li>
+        </ul>
+        <pre><code class="language-java">// 生成公钥私钥
 KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
 keyMgr.generateKeyPair();
 String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
@@ -153,10 +160,10 @@ boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData(&quot;hello worl
 
 assertTrue(verified);
 </code></pre>
-<p>公私钥对可通过 <code>KeyMgr</code> 生成。签名和验签会在调用 JCA 前检查输入、签名及密钥状态是否完整。</p>
-<h2>RSA 加密解密</h2>
-<p>没什么好说的了，直接上 API 例子。</p>
-<pre><code class="language-java">// 生成公钥私钥
+        <p>公私钥对可通过 <code>KeyMgr</code> 生成。签名和验签会在调用 JCA 前检查输入、签名及密钥状态是否完整。</p>
+        <h2>RSA 加密解密</h2>
+        <p>没什么好说的了，直接上 API 例子。</p>
+        <pre><code class="language-java">// 生成公钥私钥
 KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
 keyMgr.generateKeyPair();
 String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
@@ -189,20 +196,22 @@ String sign = new DoSignature(Constant.SHA256_RSA).setPrivateKeyStr(privateKey).
 // 验证签名
 assertTrue(new DoVerify(Constant.SHA256_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
 </code></pre>
-<h2>密钥管理</h2>
-<p>关于密钥的一些工具方法在<code>KeyMgr</code>，包括公钥和私钥的。一般开源的都喜欢把<code>KeyPair</code>封装为 Map，而笔者觉得直接使用<code>KeyPair</code>本身就可以了，如果不太满足，则增加某些方法。例如<code>getPublicKeyBytes()</code>、<code>getPublicKeyStr()</code>、<code>getPublicToPem()</code>，相比使用 Map 更加清晰。</p>
-<p>不要把私钥写入日志或异常消息。无效私钥异常只返回经过脱敏的说明。</p>
-<p>另外对于密钥本身还可以加密解密，安全性更高。</p>
+        <h2>密钥管理</h2>
+        <p>关于密钥的一些工具方法在<code>KeyMgr</code>，包括公钥和私钥的。一般开源的都喜欢把<code>KeyPair</code>封装为
+            Map，而笔者觉得直接使用<code>KeyPair</code>本身就可以了，如果不太满足，则增加某些方法。例如<code>getPublicKeyBytes()</code>、<code>getPublicKeyStr()</code>、<code>getPublicToPem()</code>，相比使用
+            Map 更加清晰。</p>
+        <p>不要把私钥写入日志或异常消息。无效私钥异常只返回经过脱敏的说明。</p>
+        <p>另外对于密钥本身还可以加密解密，安全性更高。</p>
 
-            </article>
-        </div>
+    </article>
+</div>
 
-       <footer>
-            AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
-            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
-            <br />
-            <br />
-            Copyright © 2025 Frank Cheung. All rights reserved.
-        </footer>
-    </body>
+<footer>
+    AJ-Util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+    frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+    <br/>
+    <br/>
+    Copyright © 2025 Frank Cheung. All rights reserved.
+</footer>
+</body>
 </html>

@@ -107,7 +107,8 @@ Retrieves the first actual type argument of a class's superclass and converts it
 * **Parameters:**
     * `clz`: The class to retrieve the actual type argument from.
 * **Returns:** The first actual type argument as a `Class`.
-* **Throws:** `IllegalArgumentException` if `clz` has no parameterized superclass or its first type argument cannot be resolved to a `Class`.
+* **Throws:** `IllegalArgumentException` if `clz` has no parameterized superclass or its first type argument cannot be
+  resolved to a `Class`.
 
 **Example:**
 

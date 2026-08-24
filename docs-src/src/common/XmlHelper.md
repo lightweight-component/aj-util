@@ -106,4 +106,5 @@ Map<String, String> attributes = XmlHelper.nodeAsMap("path/to/xml/file.xml", "/r
 // attributes will contain the attributes of the <element> node
 ```
 
-`getNodeAttribute(Node, String)` returns `null` when the node has no attribute map or when the requested attribute is absent.
+`getNodeAttribute(Node, String)` returns `null` when the node has no attribute map or when the requested attribute is
+absent.

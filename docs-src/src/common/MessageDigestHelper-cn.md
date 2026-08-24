@@ -8,10 +8,10 @@ tags:
 layout: layouts/aj-util-cn.njk
 ---
 
-
 # HashHelper 使用教程
 
-`HashHelper` 是一个用于密码学哈希操作的工具类，支持多种哈希算法（MD5、SHA-1、SHA-256）和 HMAC 操作。它提供了从字符串和字节数组生成哈希值的方法，并支持十六进制和 Base64 输出格式。
+`HashHelper` 是一个用于密码学哈希操作的工具类，支持多种哈希算法（MD5、SHA-1、SHA-256）和 HMAC
+操作。它提供了从字符串和字节数组生成哈希值的方法，并支持十六进制和 Base64 输出格式。
 
 ### 主要功能特性
 
@@ -33,7 +33,6 @@ HashHelper helper = new HashHelper("MD5", "Hello World".getBytes());
 HashHelper helper = new HashHelper("SHA-256", "Hello World");
 ```
 
-
 #### 2. 基本哈希计算
 
 ```java
@@ -47,7 +46,6 @@ String hexHash = new HashHelper("SHA-256", "Hello World").hashAsStr();
 String base64Hash = new HashHelper("SHA-1", "Hello World").hashAsBase64();
 String base64HashNoPadding = new HashHelper("SHA-1", "Hello World").hashAsBase64(true);
 ```
-
 
 #### 3. HMAC 计算
 
@@ -68,7 +66,6 @@ String hmacBase64 = new HashHelper("HmacSHA1", "Hello World")
     .hashAsBase64();
 ```
 
-
 #### 4. 链式调用
 
 由于使用了 `@Accessors(chain = true)` 注解，可以进行链式调用：
@@ -78,7 +75,6 @@ String result = new HashHelper("HmacSHA256", "Hello World")
     .setKey("my-secret-key")
     .hashAsBase64(true);
 ```
-
 
 #### 5. 静态便捷方法
 
@@ -99,7 +95,6 @@ HashHelper hmacMd5 = HashHelper.getHmacMD5("Hello World", "secret-key");
 String hmacSha256Base64 = HashHelper.getHmacSHA256("Hello World", "secret-key", false);
 ```
 
-
 #### 6. 文件 MD5 计算
 
 ```java
@@ -112,7 +107,6 @@ try (InputStream inputStream = new FileInputStream("example.txt")) {
 byte[] fileBytes = Files.readAllBytes(Paths.get("example.txt"));
 String fileMd5 = HashHelper.calcFileMD5(fileBytes);
 ```
-
 
 ### 常量定义
 

@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-Clazz</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Class loading and hierarchy inspection utilities" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, reflection,class loading,Java" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
-        <script>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AJ Utils-Clazz</title>
+    <meta name="description"
+          content="Small Java utilities with many useful functions. Class loading and hierarchy inspection utilities"/>
+    <meta name="keywords"
+          content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, reflection,class loading,Java"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css"/>
+    <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+    <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+    <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+    <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
 
@@ -27,133 +29,147 @@
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
-        </script>
-    </head>
-    <body>
-        <nav>
-            <div>
-                <div class="links">
-                    <a href="/">🏠 Home</a>
-                    | ⚙️ Source:
-                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/cn">Chinese Version</a>
-                </div>
-                <h1>
-                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
-                    AJ Utils
-                </h1>
-                <h3>Small Java Utils Library</h3>
-            </div>
-        </nav>
-        <div>
-            <menu>
-                
-                <ul>
-                    <li class="selected">
-                        <a href="/">Home</a>
-                    </li>
-                </ul>
-                <h3>Common</h3>
-                <ul>
-                    <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
-                    <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
-                    <li><a href="/common/MapTool/">MapTool</a></li>
-                    <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
-                    <li><a href="/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
-                    <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
-                    <li><a href="/common/XmlHelper/">XmlHelper</a></li>
-                </ul>
-                <h3>Date Handing</h3>
-                <ul>
-                    <li><a href="/date/intro/">Introduction</a></li>
-                    <li><a href="/date/convert/">Date Converter</a></li>
-                    <li><a href="/date/formatter/">Date Formatter</a></li>
-                </ul>
-                <h3>Reflection</h3>
-                <ul>
-                    <li><a href="/reflect/Methods/">Methods</a></li>
-                    <li><a href="/reflect/Types/">Types</a></li>
-                    <li><a href="/reflect/Clazz/">Clazz</a></li>
-                    <li><a href="/reflect/NewInstance/">NewInstance</a></li>
-                    <li><a href="/reflect/Fields/">Fields</a></li>
-                </ul>
 
-                <h3>IO</h3>
-                <ul>
-                    <li><a href="/io/FileHelper/">FileHelper</a></li>
-                    <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
-                    <li><a href="/io/ZipHelper/">ZipHelper</a></li>
-                </ul>
+    </script>
+</head>
+<body>
+<nav>
+    <div>
+        <div class="links">
+            <a href="/">🏠 Home</a>
+            | ⚙️ Source:
+            <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank"
+                                                                                                     href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+            | 🚀 <a href="/cn">Chinese Version</a>
+        </div>
+        <h1>
+            <img src="https://framework.ajaxjs.com/aj-logo/logo.png"
+                 style="vertical-align: middle;height: 45px;margin-bottom: 6px;"/>
+            AJ Utils
+        </h1>
+        <h3>Small Java Utils Library</h3>
+    </div>
+</nav>
+<div>
+    <menu>
 
-                <h3>HTTP Request</h3>
-                <ul>
-                    <li><a href="/http_request/Base/">HTTP Request</a></li>
-                    <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
-                </ul>
-    
-               <h3>Cryptography</h3>
-               <ul>
-                <li><a href="/cryptography/intro/">Introduction</a></li>
-                <li><a href="/cryptography/flow/">Basic Flow</a></li>
-                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
-                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
-               </ul>
-               <h3>Misc.</h3>
-               <ul>
-                <li><a href="/misc/jackson3/">Working with Jackson3</a></li>
-                <li><a href="/misc/contact/">Contact</a></li>
-               </ul>
-            </menu>
-            <article class="aj-text">
-                <h1>Clazz</h1>
-<p><code>Clazz</code> contains class-loading and type-hierarchy helpers. Object construction is provided separately by
-<code>NewInstance</code>.</p>
-<h2>Loading classes</h2>
-<p><code>getClassByName(String)</code> loads a class by its fully qualified name and throws <code>RuntimeException</code> if it cannot be
-found. The original <code>ClassNotFoundException</code> is retained as the cause. The typed overload also verifies assignability:</p>
-<pre><code class="language-java">Class&lt;CharSequence&gt; type =
+        <ul>
+            <li class="selected">
+                <a href="/">Home</a>
+            </li>
+        </ul>
+        <h3>Common</h3>
+        <ul>
+            <li><a href="/common/JsonUtil/">JsonUtil</a></li>
+            <li><a href="/common/Base64Helper/">Base64Utils</a></li>
+            <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+            <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+            <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
+            <li><a href="/common/MapTool/">MapTool</a></li>
+            <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
+            <li><a href="/common/RandomTools/">RandomTools</a></li>
+            <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
+            <li><a href="/common/StrUtil/">StrUtil</a></li>
+            <li><a href="/common/BoxLogger/">BoxLogger</a></li>
+            <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+            <li><a href="/common/XmlHelper/">XmlHelper</a></li>
+        </ul>
+        <h3>Date Handing</h3>
+        <ul>
+            <li><a href="/date/intro/">Introduction</a></li>
+            <li><a href="/date/convert/">Date Converter</a></li>
+            <li><a href="/date/formatter/">Date Formatter</a></li>
+        </ul>
+        <h3>Reflection</h3>
+        <ul>
+            <li><a href="/reflect/Methods/">Methods</a></li>
+            <li><a href="/reflect/Types/">Types</a></li>
+            <li><a href="/reflect/Clazz/">Clazz</a></li>
+            <li><a href="/reflect/NewInstance/">NewInstance</a></li>
+            <li><a href="/reflect/Fields/">Fields</a></li>
+        </ul>
+
+        <h3>IO</h3>
+        <ul>
+            <li><a href="/io/FileHelper/">FileHelper</a></li>
+            <li><a href="/io/Resources/">Resources</a></li>
+            <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
+            <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+        </ul>
+
+        <h3>HTTP Request</h3>
+        <ul>
+            <li><a href="/http_request/Base/">HTTP Request</a></li>
+            <li><a href="/http_request/advanced-usage/">Advanced Usage</a></li>
+        </ul>
+
+        <h3>Cryptography</h3>
+        <ul>
+            <li><a href="/cryptography/intro/">Introduction</a></li>
+            <li><a href="/cryptography/flow/">Basic Flow</a></li>
+            <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
+            <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+        </ul>
+        <h3>Misc.</h3>
+        <ul>
+            <li><a href="/misc/jackson3/">Working with Jackson3</a></li>
+            <li><a href="/misc/contact/">Contact</a></li>
+        </ul>
+    </menu>
+    <article class="aj-text">
+        <h1>Clazz</h1>
+        <p><code>Clazz</code> contains class-loading and type-hierarchy helpers. Object construction is provided
+            separately by
+            <code>NewInstance</code>.</p>
+        <h2>Loading classes</h2>
+        <p><code>getClassByName(String)</code> loads a class by its fully qualified name and throws <code>RuntimeException</code>
+            if it cannot be
+            found. The original <code>ClassNotFoundException</code> is retained as the cause. The typed overload also
+            verifies assignability:</p>
+        <pre><code class="language-java">Class&lt;CharSequence&gt; type =
         Clazz.getClassByName(&quot;java.lang.String&quot;, CharSequence.class);
 
 // Throws ClassCastException: String is not a Number.
 Clazz.getClassByName(&quot;java.lang.String&quot;, Number.class);
 </code></pre>
-<p>Passing a <code>null</code> target type throws <code>IllegalArgumentException</code>.</p>
-<h2>Converting arguments to classes</h2>
-<p><code>args2class(Object[])</code> returns the runtime class of each argument. A <code>null</code> or empty array produces <code>null</code>.
-An individual <code>null</code> element causes <code>IllegalArgumentException</code> identifying its index; use an explicit <code>Class&lt;?&gt;[]</code>
-when a parameter value is <code>null</code>.</p>
-<pre><code class="language-java">Class&lt;?&gt;[] types = Clazz.args2class(new Object[]{&quot;text&quot;, 1});
+        <p>Passing a <code>null</code> target type throws <code>IllegalArgumentException</code>.</p>
+        <h2>Converting arguments to classes</h2>
+        <p><code>args2class(Object[])</code> returns the runtime class of each argument. A <code>null</code> or empty
+            array produces <code>null</code>.
+            An individual <code>null</code> element causes <code>IllegalArgumentException</code> identifying its index;
+            use an explicit <code>Class&lt;?&gt;[]</code>
+            when a parameter value is <code>null</code>.</p>
+        <pre><code class="language-java">Class&lt;?&gt;[] types = Clazz.args2class(new Object[]{&quot;text&quot;, 1});
 // [String.class, Integer.class]
 </code></pre>
-<h2>Inspecting interfaces and superclasses</h2>
-<p><code>getDeclaredInterface(Class&lt;?&gt;)</code> returns every interface implemented by the class and its superclasses. Parent
-interfaces are traversed recursively. A <code>Set&lt;Class&lt;?&gt;&gt;</code> prevents duplicates in diamond-shaped interface graphs.</p>
-<p><code>getAllSuperClass(Class&lt;?&gt;)</code> returns the superclass chain, excluding the input class and <code>Object</code>. It is safe to
-call with an interface type and returns an empty array in that case.</p>
-<pre><code class="language-java">Class&lt;?&gt;[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
+        <h2>Inspecting interfaces and superclasses</h2>
+        <p><code>getDeclaredInterface(Class&lt;?&gt;)</code> returns every interface implemented by the class and its
+            superclasses. Parent
+            interfaces are traversed recursively. A <code>Set&lt;Class&lt;?&gt;&gt;</code> prevents duplicates in
+            diamond-shaped interface graphs.</p>
+        <p><code>getAllSuperClass(Class&lt;?&gt;)</code> returns the superclass chain, excluding the input class and
+            <code>Object</code>. It is safe to
+            call with an interface type and returns an empty array in that case.</p>
+        <pre><code class="language-java">Class&lt;?&gt;[] interfaces = Clazz.getDeclaredInterface(ArrayList.class);
 Class&lt;?&gt;[] parents = Clazz.getAllSuperClass(ArrayList.class);
 </code></pre>
-<p><code>getClassByInterface(Type)</code> delegates directly to <code>Types.type2class(Type)</code> instead of parsing the display value
-returned by <code>Type.toString()</code>. It therefore follows the same rules for classes, parameterized types, type variables,
-wildcards, and generic arrays. A type without one unique resolution causes <code>IllegalArgumentException</code>.</p>
-<p>Both hierarchy methods reject a null class with <code>IllegalArgumentException</code>.</p>
+        <p><code>getClassByInterface(Type)</code> delegates directly to <code>Types.type2class(Type)</code> instead of
+            parsing the display value
+            returned by <code>Type.toString()</code>. It therefore follows the same rules for classes, parameterized
+            types, type variables,
+            wildcards, and generic arrays. A type without one unique resolution causes
+            <code>IllegalArgumentException</code>.</p>
+        <p>Both hierarchy methods reject a null class with <code>IllegalArgumentException</code>.</p>
 
-            </article>
-        </div>
+    </article>
+</div>
 
-       <footer>
-            AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
-            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
-            <br />
-            <br />
-            Copyright © 2025 Frank Cheung. All rights reserved.
-        </footer>
-    </body>
+<footer>
+    AJ-Util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+    frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+    <br/>
+    <br/>
+    Copyright © 2025 Frank Cheung. All rights reserved.
+</footer>
+</body>
 </html>

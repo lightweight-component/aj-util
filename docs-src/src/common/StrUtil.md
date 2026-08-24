@@ -11,7 +11,8 @@ layout: layouts/aj-util.njk
 
 # StrUtil Tutorial
 
-This tutorial provides an overview of the `StrUtil` class, which is part of the `lightweight-component/aj-util` library. The `StrUtil` class provides utility methods for string manipulation in Java applications.
+This tutorial provides an overview of the `StrUtil` class, which is part of the `lightweight-component/aj-util` library.
+The `StrUtil` class provides utility methods for string manipulation in Java applications.
 
 ## Introduction
 
@@ -46,12 +47,14 @@ as its cause.
 ### 4. Utilities
 
 1. `charCount(String str, String _char)` - Count occurrences, including overlapping matches
-2. `leftPad(String str, int len, String padding)` - Pad to exactly `len` characters without changing whitespace already in `str`
+2. `leftPad(String str, int len, String padding)` - Pad to exactly `len` characters without changing whitespace already
+   in `str`
 3. `isWordOneOfThem(String word, String[] arr)` - Check string in array
 
 ## Usage Examples
 
 ### Templating
+
 ```java
 Map<String, Object> values = new HashMap<>();
 values.put("name", "John");
@@ -60,16 +63,19 @@ String tpl = StrUtil.simpleTpl("Name: ${name}", values);
 ```
 
 ### Counting and padding
+
 ```java
 int count = StrUtil.charCount("aaa", "aa"); // 2: overlapping matches are counted
 String padded = StrUtil.leftPad("a b", 6, "$"); // "$$$a b"
 ```
 
 ### Joining
+
 ```java
 String joined = StrUtil.join(Arrays.asList("a", "b", "c"), ","); // "a,b,c"
 ```
 
 ## Conclusion
 
-The `StrUtil` class provides comprehensive utility methods for string manipulation, making common string operations more convenient in Java applications.
+The `StrUtil` class provides comprehensive utility methods for string manipulation, making common string operations more
+convenient in Java applications.

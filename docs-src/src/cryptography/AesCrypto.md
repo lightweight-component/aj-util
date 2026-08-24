@@ -7,10 +7,13 @@ tags:
   - AesCrypto
 layout: layouts/aj-util.njk
 ---
+
 # AES/DES Encryption and Decryption
 
 ## AES
-Symmetric encryption is mostly encapsulated based on the `javax.crypto` package, encapsulated in the class `com.ajaxjs.util.cryptography`. Let's first look at AES:
+
+Symmetric encryption is mostly encapsulated based on the `javax.crypto` package, encapsulated in the
+class `com.ajaxjs.util.cryptography`. Let's first look at AES:
 
 ```java
 final String key = "abc";
@@ -23,8 +26,8 @@ void testAES() {
 }
 ```
 
-
-The convenience methods such as `Cryptography.AES_encode()` delegate to a configured `Cryptography` instance. The underlying flow is equivalent to:
+The convenience methods such as `Cryptography.AES_encode()` delegate to a configured `Cryptography` instance. The
+underlying flow is equivalent to:
 
 ```java
 public static String AES_encode(String data, String key) {
@@ -36,11 +39,12 @@ public static String AES_encode(String data, String key) {
 }
 ```
 
-
 The static methods are convenience wrappers; they do not change the cryptographic operation or key requirements.
 
 ## DES/TripleDES
-DES and Triple DES follow a similar API shape, but they are legacy algorithms. Prefer authenticated AES-GCM for new applications.
+
+DES and Triple DES follow a similar API shape, but they are legacy algorithms. Prefer authenticated AES-GCM for new
+applications.
 
 ```java
 @Test
@@ -67,7 +71,9 @@ void test3DES() {
 ```
 
 ## PBE
-The current password-based encryption API derives an AES key with `PBKDF2WithHmacSHA256` and encrypts with AES-GCM. It requires a salt of at least 16 bytes and at least 100,000 iterations.
+
+The current password-based encryption API derives an AES key with `PBKDF2WithHmacSHA256` and encrypts with AES-GCM. It
+requires a salt of at least 16 bytes and at least 100,000 iterations.
 
 ```java
 byte[] salt = Cryptography.initSalt();
@@ -77,4 +83,5 @@ byte[] encData = Cryptography.PBE_encode(word, key, salt, iterations);
 assertEquals(word, Cryptography.PBE_decode(encData, key, salt, iterations));
 ```
 
-`PBE_legacy_decode` exists only for decrypting data produced by the former `PBEWithMD5AndDES` implementation; do not use the legacy algorithm for new ciphertext.
+`PBE_legacy_decode` exists only for decrypting data produced by the former `PBEWithMD5AndDES` implementation; do not use
+the legacy algorithm for new ciphertext.

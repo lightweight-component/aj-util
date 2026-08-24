@@ -7,11 +7,17 @@ tags:
   - Base API
 layout: layouts/aj-util.njk
 ---
+
 # HTTP Request Base Tutorial
 
-The HTTP Client System provides a comprehensive HTTP communication layer within the aj-http module. It offers two complementary programming paradigms for making HTTP requests: a declarative annotation-based API using dynamic proxies, and an imperative class-based API for direct programmatic control. Both approaches abstract Java's `HttpURLConnection` while providing features like automatic JSON/form encoding, configurable timeouts, custom headers, and structured response handling.
+The HTTP Client System provides a comprehensive HTTP communication layer within the aj-http module. It offers two
+complementary programming paradigms for making HTTP requests: a declarative annotation-based API using dynamic proxies,
+and an imperative class-based API for direct programmatic control. Both approaches abstract Java's `HttpURLConnection`
+while providing features like automatic JSON/form encoding, configurable timeouts, custom headers, and structured
+response handling.
 
-This document provides an overview of the HTTP client architecture and the two API styles. For implementation details, see:
+This document provides an overview of the HTTP client architecture and the two API styles. For implementation details,
+see:
 
 - Base request lifecycle: Base Request Framework
 - Concrete HTTP method classes: HTTP Methods
@@ -20,11 +26,11 @@ This document provides an overview of the HTTP client architecture and the two A
 - Response parsing and error handling: Response Processing
 - File uploads and downloads: File Operations
 
-
-
 # Get Class Tutorial
 
-The `Get` class is an HTTP GET request implementation used to retrieve resources from a server. It extends the base `Request` class and provides various convenient methods for API interaction and data retrieval in different formats.
+The `Get` class is an HTTP GET request implementation used to retrieve resources from a server. It extends the
+base `Request` class and provides various convenient methods for API interaction and data retrieval in different
+formats.
 
 ### Main Features
 
@@ -49,7 +55,6 @@ Get getRequest = new Get("https://api.example.com/data", conn -> {
 });
 ```
 
-
 #### 2. Retrieving Text Response
 
 ```java
@@ -61,7 +66,6 @@ String response = Get.text("https://api.example.com/data", conn -> {
     conn.setRequestProperty("Accept", "text/plain");
 });
 ```
-
 
 #### 3. Retrieving JSON Response
 
@@ -78,7 +82,6 @@ Map<String, Object> jsonResponse = Get.api("https://api.example.com/data", conn 
 });
 ```
 
-
 #### 4. Mapping JSON Response to Java Object
 
 ```java
@@ -94,7 +97,6 @@ MyDataClass data = Get.api("https://api.example.com/data", MyDataClass.class, co
 });
 ```
 
-
 #### 5. Retrieving XML Response
 
 ```java
@@ -103,7 +105,6 @@ Map<String, String> xmlResponse = Get.apiXml("https://api.example.com/data.xml",
     conn.setRequestProperty("Accept", "application/xml");
 });
 ```
-
 
 ### Parameter Descriptions
 
@@ -119,11 +120,10 @@ Map<String, String> xmlResponse = Get.apiXml("https://api.example.com/data.xml",
 3. JSON responses can be automatically mapped to Java objects, object fields need to match JSON keys
 4. XML responses are parsed into simple key-value pair Map
 
-
-
 # Post Class Tutorial
 
-The `Post` class is an HTTP POST request implementation that extends the `BasePost` class, used for sending HTTP POST requests with various content types and data formats.
+The `Post` class is an HTTP POST request implementation that extends the `BasePost` class, used for sending HTTP POST
+requests with various content types and data formats.
 
 ### Main Features
 
@@ -151,7 +151,6 @@ Post postRequest = new Post("https://api.example.com/data",
                            });
 ```
 
-
 #### 2. Sending JSON API Requests
 
 ```java
@@ -167,14 +166,15 @@ Map<String, Object> response = Post.api("https://api.example.com/data",
                                        });
 ```
 
-
 ### Constructor Descriptions
 
 - `Post(HttpMethod method, String url)`: Creates a request with specified HTTP method and URL
 - `Post(String url, Object data, String contentType)`: Creates a request with URL, data, and content type
-- `Post(String url, Object data, String contentType, Consumer<HttpURLConnection> initConnection)`: Fully configured constructor
+- `Post(String url, Object data, String contentType, Consumer<HttpURLConnection> initConnection)`: Fully configured
+  constructor
 
 ### Static Methods
 
 - `api(String url, Object data)`: Sends a JSON format POST request and returns parsed Map
-- `api(String url, Object data, Consumer<HttpURLConnection> initConnection)`: JSON POST request with custom connection configuration
+- `api(String url, Object data, Consumer<HttpURLConnection> initConnection)`: JSON POST request with custom connection
+  configuration

@@ -10,7 +10,8 @@ layout: layouts/aj-util-cn.njk
 
 # MapTool 教程
 
-本教程提供了 `MapTool` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`MapTool` 类为 Java 应用程序中的 Map 数据结构提供了实用工具方法。
+本教程提供了 `MapTool` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`MapTool` 类为 Java 应用程序中的 Map
+数据结构提供了实用工具方法。
 
 ## 简介
 
@@ -70,6 +71,7 @@ layout: layouts/aj-util-cn.njk
 ## 使用示例
 
 ### 连接 Map 条目
+
 ```java
 Map<String, String> map = new HashMap<>();
 map.put("name", "John");
@@ -79,6 +81,7 @@ String joined = MapTool.join(map); // "name=John&age=30"
 ```
 
 ### 转换为 Map
+
 ```java
 String[] pairs = {"name=John", "age=30"};
 Map<String, Object> map = MapTool.toMap(pairs, Integer::parseInt);
@@ -87,6 +90,7 @@ Map<String, Object> map = MapTool.toMap(pairs, Integer::parseInt);
 只有第一个 `=` 用于分隔键和值，因此 JWT、Base64 和签名等包含 `=` 的值会被完整保留；以 `=` 结尾的键值对会得到空字符串值。
 
 ### XML 转换
+
 ```java
 Map<String, String> data = new HashMap<>();
 data.put("name", "John");

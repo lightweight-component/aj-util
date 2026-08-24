@@ -10,7 +10,8 @@ layout: layouts/aj-util.njk
 
 # UrlEncode Tutorial
 
-UrlEncode is a URL encoding and decoding utility class that provides methods for encoding and decoding URLs, handling Chinese characters in URLs, and parsing query strings into Maps.
+UrlEncode is a URL encoding and decoding utility class that provides methods for encoding and decoding URLs, handling
+Chinese characters in URLs, and parsing query strings into Maps.
 
 ### Main Features
 
@@ -31,7 +32,6 @@ UrlEncode encoder = new UrlEncode("Hello World");
 UrlEncode encoder = new UrlEncode("Hello World", StandardCharsets.UTF_8);
 ```
 
-
 #### 2. URL Encoding
 
 ```java
@@ -48,7 +48,6 @@ String safeEncoded = new UrlEncode("Hello*World~Test").encodeSafe();
 // Output: Hello%2AWorld%7ETest
 ```
 
-
 #### 3. URL Decoding
 
 ```java
@@ -56,7 +55,6 @@ String safeEncoded = new UrlEncode("Hello*World~Test").encodeSafe();
 String decoded = new UrlEncode("Hello%20World").decode();
 // Output: Hello World
 ```
-
 
 #### 4. Chainable Calls
 
@@ -68,7 +66,6 @@ String result = new UrlEncode("Hello World")
     .encodeQuery();
 ```
 
-
 ### Static Utility Methods
 
 #### 1. Chinese Character Processing
@@ -78,7 +75,6 @@ String result = new UrlEncode("Hello World")
 String chineseStr = "你好世界";
 String processed = UrlEncode.urlChinese(chineseStr);
 ```
-
 
 #### 2. Query String to Map Conversion
 
@@ -93,7 +89,8 @@ Map<String, String> paramMap = UrlEncode.parseStringToMap(queryString);
 // city -> 北京
 ```
 
-The parser accepts a single pair such as `a=b`. It splits each field at the first `=` only, preserving Base64, JWT, and signature values that contain additional `=` characters. Keys and values are URL-decoded with UTF-8 by default.
+The parser accepts a single pair such as `a=b`. It splits each field at the first `=` only, preserving Base64, JWT, and
+signature values that contain additional `=` characters. Keys and values are URL-decoded with UTF-8 by default.
 
 ### Notes
 

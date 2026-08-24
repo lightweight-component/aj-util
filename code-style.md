@@ -5,6 +5,7 @@
 ## 单行 if/for/while 可以不用尖括号
 
 例如：
+
 ```js
   if (readonly.value) {
     return;
@@ -23,6 +24,7 @@
 ## if/for/while 语块之间有一个空行
 
 例如：
+
 ```javascript
   if (readonly.value) 
     return;
@@ -100,27 +102,26 @@ private static final Set<String> illegalFileStrList;
 /**
  * Defines the file dir.
  */
-private static final String fileDir = ConfigConstants.getFileDir();
+private static final String fileDir=ConfigConstants.getFileDir();
 /**
  * Defines the url param ftp username.
  */
-private static final String URL_PARAM_FTP_USERNAME = "ftp.username";
+private static final String URL_PARAM_FTP_USERNAME="ftp.username";
 ```
+
 转换为：
 
 ```java
 /**
  * Defines the file dir.
  */
-private static final String fileDir = ConfigConstants.getFileDir();
+private static final String fileDir=ConfigConstants.getFileDir();
 
 /**
  * Defines the url param ftp username.
  */
-private static final String URL_PARAM_FTP_USERNAME = "ftp.username";
+private static final String URL_PARAM_FTP_USERNAME="ftp.username";
 ```
-
-
 
 # 单元测试
 

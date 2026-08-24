@@ -8,9 +8,11 @@ tags:
   - cloning
 layout: layouts/aj-util.njk
 ---
+
 # ObjectHelper Tutorial
 
-`ObjectHelper` is an object utility class that provides common utility methods for working with Java objects, collections, maps, and various data structures.
+`ObjectHelper` is an object utility class that provides common utility methods for working with Java objects,
+collections, maps, and various data structures.
 
 ### Main Features
 
@@ -22,6 +24,7 @@ layout: layouts/aj-util.njk
 ### Text Checking Methods
 
 #### 1. hasText Method
+
 Checks if the given string has actual text content:
 
 ```java
@@ -32,8 +35,8 @@ boolean result3 = ObjectHelper.hasText("");          // false
 boolean result4 = ObjectHelper.hasText(null);        // false
 ```
 
-
 #### 2. isEmptyText Method
+
 Checks if the given string is empty or contains only whitespace:
 
 ```java
@@ -44,10 +47,10 @@ boolean result3 = ObjectHelper.isEmptyText("");      // true
 boolean result4 = ObjectHelper.isEmptyText(null);    // true
 ```
 
-
 ### Emptiness Checking Methods
 
 #### 1. Array Emptiness Check
+
 ```java
 // Check if array is empty
 String[] array1 = null;
@@ -59,8 +62,8 @@ boolean result2 = ObjectHelper.isEmpty(array2); // true
 boolean result3 = ObjectHelper.isEmpty(array3); // false
 ```
 
-
 #### 2. Collection Emptiness Check
+
 ```java
 // Check if collection is empty
 List<String> list1 = null;
@@ -72,8 +75,8 @@ boolean result2 = ObjectHelper.isEmpty(list2); // true
 boolean result3 = ObjectHelper.isEmpty(list3); // false
 ```
 
-
 #### 3. Map Emptiness Check
+
 ```java
 // Check if map is empty
 Map<String, String> map1 = null;
@@ -86,10 +89,10 @@ boolean result2 = ObjectHelper.isEmpty(map2); // true
 boolean result3 = ObjectHelper.isEmpty(map3); // false
 ```
 
-
 ### Collection Creation Methods
 
 #### 1. Creating Maps
+
 ```java
 // Create single key-value pair map
 Map<String, String> map1 = ObjectHelper.mapOf("key1", "value1");
@@ -107,8 +110,8 @@ Map<String, String> map4 = ObjectHelper.mapOf(10); // HashMap with optimized cap
 `getInitialCapacity(int)` uses overflow-safe capacity calculation. Negative sizes cause
 `IllegalArgumentException`; capacities exceeding the practical `HashMap` limit saturate at `1 << 30`.
 
-
 #### 2. Creating Lists
+
 ```java
 // Create immutable list
 List<String> list1 = ObjectHelper.listOf("item1");
@@ -116,8 +119,8 @@ List<String> list2 = ObjectHelper.listOf("item1", "item2", "item3");
 List<String> list3 = ObjectHelper.listOf(); // Empty list
 ```
 
-
 #### 3. Creating Sets
+
 ```java
 // Create immutable set
 Set<String> set1 = ObjectHelper.setOf("item1");
@@ -127,7 +130,6 @@ Set<String> set3 = ObjectHelper.setOf(); // Empty set
 // Automatic deduplication
 Set<String> set4 = ObjectHelper.setOf("item1", "item1", "item2"); // Contains only "item1" and "item2"
 ```
-
 
 ### Constants
 

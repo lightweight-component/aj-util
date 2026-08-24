@@ -32,7 +32,6 @@ DataReader reader = new DataReader(inputStream);
 DataReader readerWithEncoding = new DataReader(inputStream, StandardCharsets.UTF_8);
 ```
 
-
 ### 2. 读取字节数据
 
 ```java
@@ -49,7 +48,6 @@ reader.readStreamAsBytes(8192, (readSize, buffer) -> {
 
 `bufferSize` 必须大于零；传入零或负数会抛出 `IllegalArgumentException`。
 
-
 ### 3. 读取文本行
 
 ```java
@@ -63,7 +61,6 @@ reader.readAsLineString(line -> {
 });
 ```
 
-
 ### 4. 读取完整字符串
 
 ```java
@@ -74,7 +71,6 @@ DataReader reader = new DataReader(inputStream);
 String content = reader.readAsString();
 System.out.println("文件内容: " + content);
 ```
-
 
 ### 5. 读取字节数组
 
@@ -93,7 +89,6 @@ System.out.println("字节数组长度: " + bytes.length);
 2. 所有方法在发生 IO 错误时都会抛出 `UncheckedIOException`
 3. 对于大文件处理，推荐使用 readStreamAsBytes 方法进行分块处理
 4. `readAsString` 当前不会保留行分隔符；需要精确保留文本布局时，请使用 `readAsBytes` 后按明确字符集转换。
-
 
 # DataWriter 使用教程
 
@@ -116,7 +111,6 @@ OutputStream outputStream = new FileOutputStream("output.txt");
 DataWriter writer = new DataWriter(outputStream);
 ```
 
-
 ### 2. 从输入流复制数据
 
 ```java
@@ -130,7 +124,6 @@ writer.write(inputStream); // 复制数据并关闭 inputStream
 outputStream.close();
 ```
 
-
 ### 3. 写入字节数组
 
 ```java
@@ -142,7 +135,6 @@ DataWriter writer = new DataWriter(outputStream);
 writer.write(data);
 outputStream.close();
 ```
-
 
 ### 4. 写入字节数组指定范围
 
@@ -157,8 +149,6 @@ writer.write(data, 2, 5); // 写入 "llo W"
 outputStream.close();
 ```
 
-
-
 ## 配置选项
 
 ```java
@@ -167,7 +157,6 @@ OutputStream outputStream = new FileOutputStream("output.txt");
 DataWriter writer = new DataWriter(outputStream);
 writer.setBuffered(false);
 ```
-
 
 ### 注意事项
 

@@ -11,7 +11,8 @@ layout: layouts/aj-util-cn.njk
 
 # StrUtil 教程
 
-本教程提供了 `StrUtil` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`StrUtil` 类为 Java 应用程序中的字符串操作提供了实用工具方法。
+本教程提供了 `StrUtil` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`StrUtil` 类为 Java
+应用程序中的字符串操作提供了实用工具方法。
 
 ## 简介
 
@@ -51,6 +52,7 @@ getter 执行失败时，抛出的 `RuntimeException` 会指出属性名并保�
 ## 使用示例
 
 ### 模板
+
 ```java
 Map<String, Object> values = new HashMap<>();
 values.put("name", "John");
@@ -59,12 +61,14 @@ String tpl = StrUtil.simpleTpl("Name: ${name}", values);
 ```
 
 ### 计数与填充
+
 ```java
 int count = StrUtil.charCount("aaa", "aa"); // 2，重叠匹配也会计数
 String padded = StrUtil.leftPad("a b", 6, "$"); // "$$$a b"
 ```
 
 ### 连接
+
 ```java
 String joined = StrUtil.join(Arrays.asList("a", "b", "c"), ","); // "a,b,c"
 ```

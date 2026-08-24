@@ -11,7 +11,8 @@ layout: layouts/aj-util-cn.njk
 
 # BoxLogger 教程
 
-本教程提供了 `BoxLogger` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`BoxLogger` 类为创建带格式和对齐的盒状日志消息提供了实用工具。
+本教程提供了 `BoxLogger` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`BoxLogger`
+类为创建带格式和对齐的盒状日志消息提供了实用工具。
 
 ## 简介
 
@@ -53,6 +54,7 @@ layout: layouts/aj-util-cn.njk
 ## 使用示例
 
 ### 创建盒状日志
+
 ```java
 System.out.println(BoxLogger.boxLine('┌', '─', '┐', " 日志开始 "));
 System.out.println(BoxLogger.boxContent("用户: ", "张三"));
@@ -60,11 +62,13 @@ System.out.println(BoxLogger.boxLine('└', '─', '┘', " 日志结束 "));
 ```
 
 ### ANSI 颜色
+
 ```java
 System.out.println(BoxLogger.ANSI_RED + "错误!" + BoxLogger.ANSI_RESET);
 ```
 
 ### 字符串实用工具
+
 ```java
 String repeated = BoxLogger.repeat('-', 10); // "----------"
 String truncated = BoxLogger.truncate("这是一个长字符串", 10); // "这是一个..."

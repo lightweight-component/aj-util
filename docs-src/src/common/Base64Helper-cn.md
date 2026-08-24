@@ -11,7 +11,8 @@ layout: layouts/aj-util-cn.njk
 
 # Base64Utils 教程
 
-本教程提供了 `Base64Utils` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`Base64Utils` 类为 Base64 编码和解码操作提供了流畅的接口。
+本教程提供了 `Base64Utils` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`Base64Utils` 类为 Base64
+编码和解码操作提供了流畅的接口。
 
 ## 简介
 
@@ -47,27 +48,32 @@ layout: layouts/aj-util-cn.njk
 ## 使用示例
 
 ### 基本编码
+
 ```java
 String encoded = new Base64Utils("Hello World").encodeAsString();
 String decoded = new Base64Utils(encoded).decodeAsString();
 ```
 
 ### URL-Safe 编码
+
 ```java
 String encoded = new Base64Utils("data to encode").setUrlSafe(true).encodeAsString();
 ```
 
 ### 无填充
+
 ```java
 String encoded = new Base64Utils("data").setWithoutPadding(true).encodeAsString();
 ```
 
 ### 自定义字符集
+
 ```java
 String encoded = new Base64Utils("数据", StandardCharsets.UTF_16).encodeAsString();
 ```
 
 ### 字节数组处理
+
 ```java
 byte[] data = {1, 2, 3, 4};
 byte[] encoded = new Base64Utils(data).encode();

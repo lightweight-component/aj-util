@@ -5,9 +5,12 @@ tags:
   - Date Formatting
 layout: layouts/aj-util.njk
 ---
+
 # Date Formatting
 
-The new version recommends using `DateTimeFormatter` instead of `SimpleDateFormat` to achieve thread safety and a clearer API. Since `DateTimeFormatter.ofPattern()` instantiation has certain overhead, especially for custom patterns (such as "yyyy-MM-dd HH:mm:ss"), we can optimize by caching `DateTimeFormatter` instances.
+The new version recommends using `DateTimeFormatter` instead of `SimpleDateFormat` to achieve thread safety and a
+clearer API. Since `DateTimeFormatter.ofPattern()` instantiation has certain overhead, especially for custom patterns (
+such as "yyyy-MM-dd HH:mm:ss"), we can optimize by caching `DateTimeFormatter` instances.
 
 Formatter usage is as follows:
 
@@ -16,8 +19,8 @@ new Formatter(TemporalAccessor temporal).format();
 new Formatter(TemporalAccessor temporal).format(String format)
 ```
 
-
-The `TemporalAccessor` interface is implemented by common date types, so we can pass them in the constructor and then specify the date format string.
+The `TemporalAccessor` interface is implemented by common date types, so we can pass them in the constructor and then
+specify the date format string.
 
 # Utility Functions
 
@@ -81,5 +84,5 @@ public static String newISO8601Date() {
 }
 ```
 
-
-Additionally, there is a function for converting strings to dates, which mainly uses regular expressions to match whether the string is a date string and then performs the conversion.
+Additionally, there is a function for converting strings to dates, which mainly uses regular expressions to match
+whether the string is a date string and then performs the conversion.

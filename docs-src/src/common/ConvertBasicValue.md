@@ -62,7 +62,8 @@ handles:
 * **Date/time:** Converts supported legacy and Java 8 date types through `DateTypeConvert`.
 * **BigDecimal:** Converts the object to a BigDecimal if the value is a String or Number.
 * **Array:** Converts the object to an array using the `toArray()` method.
-* **Enum:** Converts a name or integer ordinal to the corresponding enum constant. Ordinal conversion returns the enum value, not its numeric ordinal.
+* **Enum:** Converts a name or integer ordinal to the corresponding enum constant. Ordinal conversion returns the enum
+  value, not its numeric ordinal.
 
 ### 3. `toBoolean(Object value)`
 
@@ -131,7 +132,8 @@ assertEquals(0.0, ConvertBasicValue.object2double(null), 0.0001);
 assertEquals(3.14, ConvertBasicValue.object2double("3.14"), 0.0001);
 ```
 
-`toJavaValue(String)` recognizes booleans, `null`, integers, longs, and decimal values, including negative decimals such as `-3.14`.
+`toJavaValue(String)` recognizes booleans, `null`, integers, longs, and decimal values, including negative decimals such
+as `-3.14`.
 
 ## Unit Test Examples
 

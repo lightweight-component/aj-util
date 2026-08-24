@@ -3,9 +3,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
 
-
 # A small, clean Java cryptography library with AES/DES/PBE/RSA.
-
 
 ## Source code
 
