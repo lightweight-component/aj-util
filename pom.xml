@@ -10,10 +10,12 @@
     <modules>
         <module>aj-parent</module>
         <module>aj-util</module>
-        <!--        <module>aj-http</module>-->
-        <!--        <module>aj-cryptography</module>-->
-        <module>aj-ftp</module>
-        <module>aj-s3client</module>
-        <module>aj-qrcode</module>
+
+<!--        <module>aj-http</module>-->
+<!--        <module>aj-cryptography</module>-->
+<!--        <module>aj-json</module>-->
+<!--        <module>aj-ftp</module>-->
+<!--        <module>aj-s3client</module>-->
+<!--        <module>aj-qrcode</module>-->
     </modules>
 </project>
