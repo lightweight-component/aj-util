@@ -5,15 +5,23 @@
     <parent>
         <groupId>com.ajaxjs</groupId>
         <artifactId>ajaxjs-parent</artifactId>
-        <version>1.35</version>
+        <version>1.36</version>
         <relativePath/>
     </parent>
 
     <artifactId>aj-json</artifactId>
     <name>aj-json</name>
-    <version>1.5</version>
-    <description>Small JSON parser and serializer</description>
+    <version>1.6</version>
+    <description>A small JSON parser and serializer</description>
     <packaging>jar</packaging>
 
-    <url>https://framework.ajaxjs.com/docs/aj/?section=json</url>
+    <url>https://github.com/lightweight-component/aj-util/tree/main/aj-json</url>
+    <scm>
+        <url>https://github.com/lightweight-component/aj-util/tree/main/aj-json</url>
+        <connection>scm:git:https://github.com/lightweight-component/aj-util.git</connection>
+    </scm>
+    <issueManagement>
+        <system>Github Issues</system>
+        <url>https://github.com/lightweight-component/aj-util/issues</url>
+    </issueManagement>
 </project>

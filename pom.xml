@@ -10,7 +10,6 @@
     <modules>
         <module>aj-parent</module>
         <module>aj-util</module>
-
 <!--        <module>aj-http</module>-->
 <!--        <module>aj-cryptography</module>-->
 <!--        <module>aj-json</module>-->

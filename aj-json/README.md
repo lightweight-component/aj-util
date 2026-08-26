@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/aj-json?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/aj-json)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.5-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/aj-json)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.6-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/aj-json)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-json)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
@@ -25,7 +25,7 @@ Requires Java 1.8+, Maven Snippets:
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>aj-json</artifactId>
-    <version>1.5</version>
+    <version>1.6</version>
 </dependency>
 ```
 

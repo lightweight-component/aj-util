@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/aj-qrcode?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/aj-qrcode)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.3-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/aj-qrcode)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.4-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/aj-qrcode)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lightweight-component/aj-qrcode)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Email](https://img.shields.io/badge/Contact--me-Email-orange.svg)](mailto:frank@ajaxjs.com)
@@ -45,7 +45,7 @@ Tutorial(For Chinese): https://zhangxin.blog.csdn.net/article/details/139821806.
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>aj-qrcode</artifactId>
-    <version>1.3</version>
+    <version>1.4</version>
 </dependency>
 ```
 
