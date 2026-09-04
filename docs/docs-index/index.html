@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <title>AJ Utils-JsonUtil</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for JSON conversion between JSON, Map, Bean, and List" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, JSON,serialization,Java" />
+        <title>AJ Utils-AJ Utilities</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Small Java Utils Library with many powerful components" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, AJ Utilities,Java Utils,Documentation" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
@@ -112,96 +112,113 @@
                </ul>
             </menu>
             <article class="aj-text">
-                <h1>JsonUtil Tutorial</h1>
-<p>This tutorial provides an overview of the <code>JsonUtil</code> class, which is part of the <code>lightweight-component/aj-util</code>
-library. The <code>JsonUtil</code> class provides utility methods for working with JSON data in Java applications.</p>
-<h2>Introduction</h2>
-<p>The <code>JsonUtil</code> class contains static methods for common JSON operations using Jackson library, including conversion
-between JSON strings, Java objects, Maps, and Lists.</p>
-<h2>Main Features</h2>
-<ul>
-<li>Convert Java objects to JSON strings (pretty or compact)</li>
-<li>Parse JSON strings into Java objects</li>
-<li>Convert between JSON and Maps/Lists</li>
-<li>Type-safe JSON processing</li>
-<li>Java 8 date/time support</li>
-<li>Strict duplicate detection</li>
-<li>Lazily initialized, safely published shared <code>JsonEngine</code></li>
-</ul>
-<h2>Methods</h2>
-<h3>1. Serialization (to JSON)</h3>
-<ol>
-<li><code>toJson(Object obj)</code> - Convert object to JSON string</li>
-<li><code>toJsonPretty(Object obj)</code> - Convert object to pretty-printed JSON</li>
-</ol>
-<h3>2. Deserialization (from JSON)</h3>
-<ol>
-<li><code>fromJson(String jsonStr, Class&lt;T&gt; valueType)</code> - Parse JSON to specified type</li>
-</ol>
-<h3>3. JSON ↔ Map Conversion</h3>
-<ol>
-<li><code>json2map(String jsonStr)</code> - JSON to Map&lt;String, Object&gt;</li>
-<li><code>json2map(String jsonStr, Class&lt;T&gt; clazz)</code> - JSON to Map with typed values</li>
-<li><code>json2sortMap(String jsonStr, Class&lt;T&gt; clazz)</code> - JSON to LinkedHashMap preserving order</li>
-<li><code>json2StrMap(String jsonStr)</code> - JSON to Map&lt;String, String&gt;</li>
-</ol>
-<h3>4. JSON ↔ List Conversion</h3>
-<ol>
-<li><code>json2list(String jsonArrayStr, Class&lt;T&gt; clazz)</code> - JSON array to List<T></li>
-<li><code>json2mapList(String jsonArrayStr)</code> - JSON array to List<Map></li>
-</ol>
-<h3>5. Object Conversion</h3>
-<ol>
-<li><code>convertValue(Object obj, Class&lt;T&gt; clazz)</code> - Convert object types</li>
-<li><code>pojo2map(Object obj)</code> - Convert POJO to Map</li>
-<li><code>pojo2map(Object obj, Class&lt;T&gt; clazz)</code> - Convert POJO to typed Map</li>
-<li><code>map2pojo(Map&lt;String, Object&gt; map, Class&lt;T&gt; clazz)</code> - Convert Map to POJO</li>
-</ol>
-<h3>6. JSON Tree Model</h3>
-<ol>
-<li><code>json2Node(String jsonStr)</code> - Parse JSON to JsonNode tree</li>
-</ol>
-<h2>Usage Examples</h2>
-<h3>Basic Serialization</h3>
-<pre><code class="language-java">User user = new User(&quot;John&quot;, 30);
-String json = JsonUtil.toJson(user); 
-// {&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}
-
-String prettyJson = JsonUtil.toJsonPretty(user);
-/*
-{
-  &quot;name&quot; : &quot;John&quot;,
-  &quot;age&quot; : 30
-}
-*/
+                <h1>AJ Utilities</h1>
+<p>Small Java Utils Library with many powerful components. The size of jar is around 90kb. It contains the following
+modules:</p>
+<table>
+<thead>
+<tr>
+<th>Class/Package Module</th>
+<th>Detail Description</th>
+<th>Memo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BytesHelper</td>
+<td>Byte array utility class</td>
+<td></td>
+</tr>
+<tr>
+<td>CollUtils</td>
+<td>Collection utility class</td>
+<td></td>
+</tr>
+<tr>
+<td>ConvertBasicValue</td>
+<td>Attempts to convert target type, note that not all types can be converted</td>
+<td></td>
+</tr>
+<tr>
+<td>DateHelper</td>
+<td>Date utility class</td>
+<td></td>
+</tr>
+<tr>
+<td>UrlEncode</td>
+<td>String URL/Base64 encoder</td>
+<td></td>
+</tr>
+<tr>
+<td>HashHelper</td>
+<td>MD5/SHA1/SHA256/384/512 encryption utility class</td>
+<td></td>
+</tr>
+<tr>
+<td>ObjectHelper</td>
+<td>A helper for Java Object</td>
+<td></td>
+</tr>
+<tr>
+<td>HTTP Request</td>
+<td>A Small HTTP Request Component</td>
+<td></td>
+</tr>
+<tr>
+<td>RandomTools</td>
+<td>Random Numbers and Strings</td>
+<td></td>
+</tr>
+<tr>
+<td>RegExpUtils</td>
+<td>Regular expression utility class</td>
+<td></td>
+</tr>
+<tr>
+<td>StrUtil</td>
+<td>String utility class</td>
+<td></td>
+</tr>
+<tr>
+<td>JsonUtil</td>
+<td>Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List</td>
+<td>Jackson is only library that dependencies</td>
+</tr>
+<tr>
+<td>XmlHelper</td>
+<td>XML processing utility class</td>
+<td></td>
+</tr>
+<tr>
+<td>Cryptography</td>
+<td>AES/RSA encryption and decryption package</td>
+<td></td>
+</tr>
+<tr>
+<td>IO</td>
+<td>File, resource, stream utility package</td>
+<td></td>
+</tr>
+<tr>
+<td>Reflection</td>
+<td>Reflection utility package</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>Source code</h2>
+<p><a href="https://github.com/lightweight-component/aj-util">Github</a> | <a href="https://gitcode.com/lightweight-component/aj-util">GitCode</a></p>
+<h2>Links</h2>
+<p><a href="https://aj-util.ajaxjs.com">User Manual</a> | <a href="https://deepwiki.com/lightweight-component/aj-util">Ask DeepWiki</a> | <a href="https://javadoc.io/doc/com.ajaxjs/ajaxjs-util">Java Documents</a></p>
+<h2>Install</h2>
+<p>Runs on Java 8+. Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;ajaxjs-util&lt;/artifactId&gt;
+    &lt;version&gt;1.3.4&lt;/version&gt;
+&lt;/dependency&gt;
 </code></pre>
-<h3>Basic Deserialization</h3>
-<pre><code class="language-java">String json = &quot;{\&quot;name\&quot;:\&quot;John\&quot;,\&quot;age\&quot;:30}&quot;;
-User user = JsonUtil.fromJson(json, User.class);
-</code></pre>
-<h3>Map Conversion</h3>
-<pre><code class="language-java">Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
-map.put(&quot;name&quot;, &quot;John&quot;);
-map.put(&quot;age&quot;, 30);
-
-String json = JsonUtil.toJson(map);
-Map&lt;String, Object&gt; map2 = JsonUtil.json2map(json);
-</code></pre>
-<h3>List Conversion</h3>
-<pre><code class="language-java">String jsonArray = &quot;[{\&quot;name\&quot;:\&quot;John\&quot;}, {\&quot;name\&quot;:\&quot;Alice\&quot;}]&quot;;
-List&lt;User&gt; users = JsonUtil.json2list(jsonArray, User.class);
-</code></pre>
-<h2>Configuration</h2>
-<p>The <code>JsonUtil</code> class is pre-configured with:</p>
-<ul>
-<li>Java 8 date/time support</li>
-<li>Strict duplicate detection</li>
-<li>Asia/Shanghai timezone</li>
-<li>Default ObjectMapper instance</li>
-</ul>
-<h2>Conclusion</h2>
-<p>The <code>JsonUtil</code> class provides comprehensive utility methods for working with JSON data, making it easier to serialize,
-deserialize, and convert between JSON and Java objects.</p>
+<p><a href="https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util"><img src="https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release" alt="Maven Central"></a></p>
 
             </article>
         </div>
