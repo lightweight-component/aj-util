@@ -215,13 +215,14 @@ public class XmlHelper {
      */
     public static String getNodeAttribute(Node node, String attrName) {
         NamedNodeMap attrs = node.getAttributes();
+
         if (attrs == null)
             return null;
 
         for (int i = 0; i < attrs.getLength(); i++) {
             Attr attr = (Attr) attrs.item(i);
 
-            if (attr.getNodeName().equals(attrName))
+            if (attrName.equalsIgnoreCase(attr.getNodeName()))
                 return attr.getValue();
         }
 
