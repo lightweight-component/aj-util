@@ -1,9 +1,19 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Date;
-import java.util.Random;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -73,10 +83,11 @@ public class RandomTools {
             throw new IllegalArgumentException("The string length must be greater than zero.");
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(length);
+        int strLength = STR.length();
 
         for (int i = 0; i < length; i++) {
-            int number = random.nextInt(62);
+            int number = random.nextInt(strLength);
             sb.append(STR.charAt(number));
         }
 
@@ -84,58 +95,51 @@ public class RandomTools {
     }
 
     /**
-     * SecureRandom instance for cryptographic-strength random number generation.
-     * Used for UUID generation where security is important.
+     * Shared cryptographically strong random number generator.
+     * <p>
+     * This instance may be reused by other utility classes that require
+     * cryptographically strong random values.
      */
     public static final SecureRandom RANDOM = new SecureRandom();
 
     /**
-     * Plain Random instance for non-cryptographic random number generation.
-     */
-    public static final Random SIMPLE_RANDOM = new Random();
-
-    /**
-     * Generate a UUID version 7 (UUIDv7) using timestamp-based generation.
-     * UUIDv7 provides time-ordered UUIDs with better locality than random UUIDs.
+     * Generates a UUIDv7 string.
+     * <p>
+     * The UUID contains a 48-bit Unix timestamp in milliseconds
+     * followed by random bits, as defined by RFC 9562.
      *
-     * @return UUIDv7 instance
+     * @param withHyphen whether the UUID string contains hyphens
+     * @return UUIDv7 string, 36 characters with hyphens or 32 characters without hyphens.
      */
-    public static UUID uuid() {
-        byte[] value = randomBytes();
-        ByteBuffer buf = ByteBuffer.wrap(value);
-        long high = buf.getLong();
-        long low = buf.getLong();
+    public static String uuidV7(boolean withHyphen) {
+        byte[] value = new byte[16];
+        RANDOM.nextBytes(value);
 
-        return new UUID(high, low);
-    }
+        long timestamp = System.currentTimeMillis();
 
-    /**
-     * Generate a UUIDv7 string without a hyphen.
-     *
-     * @return UUIDv7 string without hyphen.
-     */
-    public static String uuidStr() {
-        return uuid().toString().replace(CommonConstant.HYPHEN_STR, CommonConstant.EMPTY_STRING);
-    }
+        value[0] = (byte) (timestamp >>> 40);
+        value[1] = (byte) (timestamp >>> 32);
+        value[2] = (byte) (timestamp >>> 24);
+        value[3] = (byte) (timestamp >>> 16);
+        value[4] = (byte) (timestamp >>> 8);
+        value[5] = (byte) timestamp;
 
-    /**
-     * Generate random bytes for UUIDv7 generation.
-     *
-     * @return Random bytes
-     */
-    private static byte[] randomBytes() {
-        byte[] value = new byte[16]; // random bytes
-        SIMPLE_RANDOM.nextBytes(value);
-
-        ByteBuffer timestamp = ByteBuffer.allocate(Long.BYTES);// current timestamp in ms
-        timestamp.putLong(System.currentTimeMillis());
-        System.arraycopy(timestamp.array(), 2, value, 0, 6);// timestamp
-
-        // version and variant
         value[6] = (byte) ((value[6] & 0x0F) | 0x70);
         value[8] = (byte) ((value[8] & 0x3F) | 0x80);
 
-        return value;
+        ByteBuffer buf = ByteBuffer.wrap(value);
+        String uuid = new UUID(buf.getLong(), buf.getLong()).toString();
+
+        return withHyphen ? uuid : uuid.replace(CommonConstant.HYPHEN_STR, CommonConstant.EMPTY_STRING);
+    }
+
+    /**
+     * Generate a UUIDv7 string without hyphen.
+     *
+     * @return UUIDv7 string without hyphens, 32 characters long.
+     */
+    public static String uuidV7() {
+        return uuidV7(false);
     }
 
     /**
@@ -145,8 +149,22 @@ public class RandomTools {
      * @return Date
      */
     public static Date showTime(String uuidStr) {
-        long msb = UUID.fromString(uuidStr).getMostSignificantBits();
-        long timestamp = (msb >>> 16) & 0xFFFFFFFFFFFFL;
+        Objects.requireNonNull(uuidStr, "uuidStr");
+
+        if (uuidStr.length() == 32) {
+            uuidStr = uuidStr.substring(0, 8) + "-"
+                    + uuidStr.substring(8, 12) + "-"
+                    + uuidStr.substring(12, 16) + "-"
+                    + uuidStr.substring(16, 20) + "-"
+                    + uuidStr.substring(20);
+        }
+
+        UUID uuid = UUID.fromString(uuidStr);
+
+        if (uuid.version() != 7)
+            throw new IllegalArgumentException("Not a UUIDv7: " + uuidStr);
+
+        long timestamp = (uuid.getMostSignificantBits() >>> 16) & 0xFFFFFFFFFFFFL;
 
         return new Date(timestamp);
     }

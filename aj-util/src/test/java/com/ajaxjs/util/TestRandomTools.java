@@ -25,15 +25,6 @@ class TestRandomTools {
     }
 
     @Test
-    void testUUIDv7() {
-        java.util.UUID uuid = RandomTools.uuid();
-
-        assertEquals(7, uuid.version());
-        assertEquals(2, uuid.variant());
-        assertEquals(32, RandomTools.uuidStr().length());
-    }
-
-    @Test
     void testShowTime() {
         assertEquals(1761535878850L, RandomTools.showTime("019a23b8-66c2-7297-83ae-a1f17a1c23ac").getTime());
     }

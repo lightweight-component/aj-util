@@ -138,7 +138,7 @@ public final class SignBuilder {
                 + "\n" + canonicalHeaders.getNames()
                 + "\n" + contentSha256;
         String stringToSign = ALGORITHM + "\n" + date + "\n" + scopeValue + "\n"
-                + HashHelper.getSHA256(canonicalRequestString);
+                + HashHelper.sha256(canonicalRequestString);
         byte[] kSecret = (AUTH_TAG + awsCredentials.getSecretKey()).getBytes(StandardCharsets.UTF_8);
         byte[] kDate = S3SigV4Utils.hmacSha256(kSecret, scope.getDateWithoutTimestamp());
         byte[] kRegion = S3SigV4Utils.hmacSha256(kDate, scope.getRegion());

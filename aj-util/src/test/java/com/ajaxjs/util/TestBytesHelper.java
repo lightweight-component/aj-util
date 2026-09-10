@@ -8,7 +8,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import static com.ajaxjs.util.BytesHelper.bytesToHexStr;
+import static com.ajaxjs.util.BytesHelper.bytesToHex;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestBytesHelper {
@@ -81,17 +81,17 @@ class TestBytesHelper {
     }
 
     @Test
-    void testParseHexStr2Byte() {
-        byte[] bs = BytesHelper.parseHexStr2Byte("1A2B3C");
+    void testHexToBytes() {
+        byte[] bs = BytesHelper.hexToBytes("1A2B3C");
         assertNotNull(bs);
         assertArrayEquals(new byte[]{0x1A, 0x2B, 0x3C}, bs);
     }
 
     @Test
     void parseHexRejectsOddLengthAndReturnsEmptyArrayForEmptyInput() {
-        assertArrayEquals(new byte[0], BytesHelper.parseHexStr2Byte(""));
-        assertThrows(IllegalArgumentException.class, () -> BytesHelper.parseHexStr2Byte("ABC"));
-        assertThrows(IllegalArgumentException.class, () -> BytesHelper.parseHexStr2Byte("0G"));
+        assertArrayEquals(new byte[0], BytesHelper.hexToBytes(""));
+        assertThrows(IllegalArgumentException.class, () -> BytesHelper.hexToBytes("ABC"));
+        assertThrows(IllegalArgumentException.class, () -> BytesHelper.hexToBytes("0G"));
     }
 
     /**
@@ -99,9 +99,9 @@ class TestBytesHelper {
      * Verifies that the method correctly converts a standard byte array to its hexadecimal string representation.
      */
     @Test
-    void testBytesToHexStr_StandardCase() {
+    void testBytesToHex_StandardCase() {
         byte[] input = new byte[]{0x1A, 0x2B, 0x3C};
-        String result = bytesToHexStr(input);
+        String result = bytesToHex(input);
         assertEquals("1A2B3C", result);
     }
 
@@ -110,9 +110,9 @@ class TestBytesHelper {
      * Verifies that the method correctly converts an array of zero bytes to the appropriate hexadecimal string.
      */
     @Test
-    void testBytesToHexStr_AllZeros() {
+    void testBytesToHex_AllZeros() {
         byte[] input = new byte[]{0x00, 0x00, 0x00};
-        String result = bytesToHexStr(input);
+        String result = bytesToHex(input);
         assertEquals("000000", result);
     }
 
@@ -121,9 +121,9 @@ class TestBytesHelper {
      * Verifies that the method correctly handles bytes where the high bit is set (negative values in Java).
      */
     @Test
-    void testBytesToHexStr_HighBitSet() {
+    void testBytesToHex_HighBitSet() {
         byte[] input = new byte[]{(byte) 0x80, (byte) 0xFF};
-        String result = bytesToHexStr(input);
+        String result = bytesToHex(input);
         assertEquals("80FF", result);
     }
 
@@ -132,9 +132,9 @@ class TestBytesHelper {
      * Verifies that the method returns an empty string when given an empty byte array.
      */
     @Test
-    void testBytesToHexStr_EmptyArray() {
+    void testBytesToHex_EmptyArray() {
         byte[] input = new byte[0];
-        String result = bytesToHexStr(input);
+        String result = bytesToHex(input);
         assertEquals("", result);
     }
 
@@ -144,10 +144,10 @@ class TestBytesHelper {
      */
     @Test
     void testBytesToHexStr_SingleBytes() {
-        assertEquals("00", bytesToHexStr(new byte[]{0x00}));
-        assertEquals("FF", bytesToHexStr(new byte[]{(byte) 0xFF}));
-        assertEquals("7F", bytesToHexStr(new byte[]{0x7F}));
-        assertEquals("80", bytesToHexStr(new byte[]{(byte) 0x80}));
+        assertEquals("00", bytesToHex(new byte[]{0x00}));
+        assertEquals("FF", bytesToHex(new byte[]{(byte) 0xFF}));
+        assertEquals("7F", bytesToHex(new byte[]{0x7F}));
+        assertEquals("80", bytesToHex(new byte[]{(byte) 0x80}));
     }
 
     /**
@@ -155,13 +155,13 @@ class TestBytesHelper {
      * Verifies that the method correctly converts a longer byte array without errors.
      */
     @Test
-    void testBytesToHexStr_LongArray() {
+    void testBytesToHex_LongArray() {
         byte[] input = new byte[100];
         for (int i = 0; i < input.length; i++) {
             input[i] = (byte) i;
         }
 
-        String result = bytesToHexStr(input);
+        String result = bytesToHex(input);
         assertEquals(200, result.length()); // Each byte should produce 2 hex chars
 
         // Verify first few values

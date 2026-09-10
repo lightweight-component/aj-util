@@ -1,4 +1,4 @@
-package com.ajaxjs.util.httpremote;
+package com.ajaxjs.util.httpremote.model;
 
 import java.net.HttpURLConnection;
 import java.util.function.BiConsumer;
@@ -10,26 +10,6 @@ import java.util.function.Consumer;
  * and functional utilities for HTTP connection configuration.
  */
 public interface HttpConstant {
-    /**
-     * HTTP GET method name
-     */
-    String GET = "GET";
-
-    /**
-     * HTTP POST method name
-     */
-    String POST = "POST";
-
-    /**
-     * HTTP PUT method name
-     */
-    String PUT = "PUT";
-
-    /**
-     * HTTP DELETE method name
-     */
-    String DELETE = "DELETE";
-
     /**
      * Content-Type header field name
      */
@@ -74,45 +54,6 @@ public interface HttpConstant {
      * Authorization header field name
      */
     String AUTHORIZATION = "Authorization";
-
-    /**
-     * Enumeration of HTTP methods supported by the client.
-     * Includes all standard HTTP methods.
-     */
-    enum HttpMethod {
-        /**
-         * GET method.
-         */
-        GET,
-        /**
-         * POST method.
-         */
-        POST,
-        /**
-         * PUT method.
-         */
-        PUT,
-        /**
-         * DELETE method.
-         */
-        DELETE,
-        /**
-         * HEAD method.
-         */
-        HEAD,
-        /**
-         * OPTIONS method.
-         */
-        OPTIONS,
-        /**
-         * TRACE method.
-         */
-        TRACE,
-        /**
-         * CONNECT method.
-         */
-        CONNECT
-    }
 
     /**
      * Empty connection initializer that does nothing.

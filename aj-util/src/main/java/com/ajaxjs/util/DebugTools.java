@@ -57,7 +57,7 @@ public class DebugTools {
     static {
         if (!isChinaTimeZone()) {
             System.err.println("当前 JVM 非中国大陆时区");
-            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+//            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         }
 
         /*

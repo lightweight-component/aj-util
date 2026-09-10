@@ -79,6 +79,7 @@
 - 如果已经有注释则保留，如果没有则加入。不需要统一语言，如果原来是中文的就保留中文，原来是英文的就保留英文
 - 注释要求符合 JavaDoc 注释规范，包括方法的描述、入参、出参、异常、返回值等。如果已经有的注释，保持不变，缺少的则补充
 - 对于`@Override`注解的方法，一般不需要加注释。如果该方法有高价值，那么应该加入新的注释
+- 每个 Java 包里面应该有`package-info.java`，说明该包的大体作用
 - 最后运行 javadoc，根据其日志，修复错误或警告的注释
 - 形成 skill 并保存，让 AI 学习如何使用这个库
 
@@ -138,3 +139,6 @@ private static final String URL_PARAM_FTP_USERNAME="ftp.username";
 - 所有测试类的名称都要以`Test`开头，例如`TestQrCode`
 - 所有测试类不加 public 关键字（类和方法），默认 default 即可
 
+# 代码质量要求
+
+- 秉持代码 DRY（Don't repeat yourself）的原则，检查一下代码有没有明显重复的逻辑，整理出来

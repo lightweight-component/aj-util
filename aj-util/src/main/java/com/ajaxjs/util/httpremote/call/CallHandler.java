@@ -2,11 +2,12 @@ package com.ajaxjs.util.httpremote.call;
 
 import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.UrlHelper;
-import com.ajaxjs.util.httpremote.HttpConstant;
+import com.ajaxjs.util.UrlCodec;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
 import com.ajaxjs.util.httpremote.Post;
 import com.ajaxjs.util.httpremote.Put;
-import com.ajaxjs.util.httpremote.Request;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Request;
 import com.ajaxjs.util.httpremote.call.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +52,7 @@ public class CallHandler implements InvocationHandler {
             GET get = method.getAnnotation(GET.class);
             String url = getUrl(rootUrl, get.value(), method, args);
 
-            request = new Request(HttpConstant.HttpMethod.GET, url);
+            request = new Request(HttpMethod.GET, url);
 
             Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, get.initConnection());
             request.init(init);
@@ -94,7 +95,7 @@ public class CallHandler implements InvocationHandler {
         } else if (method.isAnnotationPresent(DELETE.class)) {
             DELETE delete = method.getAnnotation(DELETE.class);
             String url = getUrl(rootUrl, delete.value(), method, args);
-            request = new Request(HttpConstant.HttpMethod.DELETE, url);
+            request = new Request(HttpMethod.DELETE, url);
 
             Consumer<HttpURLConnection> init = getInitConnection(initClzByClz, delete.initConnection());
             request.init(init);
@@ -157,7 +158,7 @@ public class CallHandler implements InvocationHandler {
         if (CommonConstant.EMPTY_STRING.equals(valueOnMethod))
             url = rootUrl;
         else
-            url = UrlHelper.concatUrl(rootUrl, valueOnMethod);
+            url = UrlCodec.concatUrl(rootUrl, valueOnMethod);
 
         if (url.contains("{") && url.contains("}")) { // deal with path variables
             Parameter[] parameters = method.getParameters();

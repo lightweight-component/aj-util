@@ -1,10 +1,9 @@
 package com.ajaxjs.s3client.factory;
 
-
 import com.ajaxjs.s3client.BaseS3ClientSigV2;
 import com.ajaxjs.util.HashHelper;
 import com.ajaxjs.util.date.DateTools;
-import com.ajaxjs.util.httpremote.Response;
+import com.ajaxjs.util.httpremote.model.Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

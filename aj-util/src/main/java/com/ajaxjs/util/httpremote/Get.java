@@ -1,5 +1,7 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Request;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;

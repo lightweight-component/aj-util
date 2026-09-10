@@ -1,12 +1,11 @@
 package com.ajaxjs.s3client;
 
-
 import com.ajaxjs.s3client.factory.AliyunOSS;
 import com.ajaxjs.s3client.factory.NeteaseOSS;
 import com.ajaxjs.util.HashHelper;
-import com.ajaxjs.util.httpremote.HttpConstant;
 import com.ajaxjs.util.httpremote.Put;
-import com.ajaxjs.util.httpremote.Response;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.Response;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -77,7 +76,7 @@ class TestFactory {
 
         File file = new File(("D:\\code\\aj\\aj-business\\aj-base\\src\\test\\resources\\img.png"));
         byte[] content = readBytes(file);
-        String contentMD5 = HashHelper.calcFileMD5(content);
+        String contentMD5 = HashHelper.md5(content);
 
         String contentType = "application/octet-stream";
         String date = "Wed, 28 Oct 2021 15:00:00 GMT";
@@ -93,7 +92,7 @@ class TestFactory {
 
         Response result = new Put(url, content, HttpConstant.FILE_TYPE, conn -> {  // 执行 PUT 请求上传文件
             conn.setRequestProperty("Date", date); // 设置请求头 Date
-            conn.setRequestProperty("Authorization", authorizationHeader); // 设置请求头 Authorization
+            conn.setRequestProperty(HttpConstant.AUTHORIZATION, authorizationHeader); // 设置请求头 Authorization
         }).getResp();
 
         System.out.println(result);

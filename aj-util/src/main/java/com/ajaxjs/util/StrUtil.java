@@ -31,57 +31,6 @@ import java.util.regex.Pattern;
  * including URL concatenation, template substitution, joining arrays, and string padding.
  */
 public class StrUtil {
-    /**
-     * 统计文本中某个字符串出现的次数
-     * <p>
-     * 支持重叠匹配，例如 {@code charCount("aaa", "aa")} 返回 2。
-     * 空匹配串返回 0。
-     *
-     * @param str   输入的字符串
-     * @param _char 待统计的字符串
-     * @return 出现次数
-     */
-    public static int charCount(String str, String _char) {
-        if (_char.isEmpty())
-            return 0;
-
-        int count = 0, index = 0;
-
-        while ((index = str.indexOf(_char, index)) >= 0) {
-            count++;
-            index++;
-        }
-
-        return count;
-    }
-
-    /**
-     * 字符串左填充方法
-     * <p>
-     * 例如: leftPad("12345", 10, "@")，输出："@@@@@12345"
-     *
-     * @param str   待填充字符串
-     * @param len   总长度
-     * @param _char 填充字符
-     * @return 左填充后的字符串
-     */
-    public static String leftPad(String str, int len, String _char) {
-        if (str.length() >= len)
-            return str;
-        if (_char == null || _char.isEmpty())
-            throw new IllegalArgumentException("Padding string must not be null or empty.");
-
-        int paddingLength = len - str.length();
-        StringBuilder result = new StringBuilder(len);
-        while (result.length() < paddingLength)
-            result.append(_char);
-
-        if (result.length() > paddingLength)
-            result.setLength(paddingLength);
-
-        return result.append(str).toString();
-    }
-
     private static final Pattern TPL_PATTERN = Pattern.compile("\\$\\{\\w+}");
 
     /**
@@ -264,32 +213,5 @@ public class StrUtil {
         }
 
         return sb.toString();
-    }
-
-    /**
-     * 判断一个字符串是否属于指定的字符串数组中
-     *
-     * @param word 待判断字符串
-     * @param arr  指定字符串数组
-     * @return 如果字符串属于数组中，则返回 true；否则返回 false
-     */
-    public static boolean isWordOneOfThem(String word, String[] arr) {
-        for (String str : arr) {
-            if (word.equals(str))
-                return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断一个字符串是否属于指定的字符串列表中
-     *
-     * @param word 待判断字符串
-     * @param list 指定字符串列表
-     * @return 如果字符串属于列表中，则返回 true；否则返回 false
-     */
-    public static boolean isWordOneOfThem(String word, List<String> list) {
-        return isWordOneOfThem(word, list.toArray(new String[0]));
     }
 }

@@ -1,9 +1,9 @@
 package com.ajaxjs.s3client.factory;
 
-
 import com.ajaxjs.s3client.util.S3SigV4Utils;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.httpremote.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class Scaleway extends CloudflareR2 {
         String contentSha256 = S3SigV4Utils.calcFileSHA256(fileBytes);
         Map<String, String> acl = ObjectHelper.mapOf("x-amz-acl", ACL_PUBLIC_READ);
 
-        String signature = initSignatureBuilder(now, contentSha256, acl).getS3Signature(getCanonicalRequest(HttpConstant.PUT, url), contentSha256);
+        String signature = initSignatureBuilder(now, contentSha256, acl).getS3Signature(getCanonicalRequest(HttpMethod.PUT.toString(), url), contentSha256);
 
         return check(putBinary(url, fileBytes, setRequestHead(now, signature, contentSha256, acl)));
     }

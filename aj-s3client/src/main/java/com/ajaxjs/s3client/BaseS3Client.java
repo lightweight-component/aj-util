@@ -1,9 +1,9 @@
 package com.ajaxjs.s3client;
 
 import com.ajaxjs.s3client.util.URLEncoding;
-import com.ajaxjs.util.httpremote.HttpConstant;
 import com.ajaxjs.util.httpremote.Put;
-import com.ajaxjs.util.httpremote.Response;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.Response;
 import lombok.Data;
 
 import java.net.HttpURLConnection;
@@ -20,11 +20,6 @@ public abstract class BaseS3Client implements S3Client {
      * HTTP Date header name.
      */
     public static final String DATE = "Date";
-
-    /**
-     * HTTP Authorization header name.
-     */
-    public static final String AUTHORIZATION = "Authorization";
 
     /**
      * HTTPS URI scheme prefix.

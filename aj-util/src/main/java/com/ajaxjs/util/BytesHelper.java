@@ -1,31 +1,16 @@
 package com.ajaxjs.util;
 
-import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * 字节数组工具类
  */
 public class BytesHelper {
     /**
-     * 合并两个字节数组
-     *
-     * @param a 数组a
-     * @param b 数组b
-     * @return 新合并的数组
-     */
-    public static byte[] concat(byte[] a, byte[] b) {
-        byte[] c = new byte[a.length + b.length];
-        System.arraycopy(a, 0, c, 0, a.length);
-        System.arraycopy(b, 0, c, a.length, b.length);
-
-        return c;
-    }
-
-    /**
      * Lookup table used to convert a nibble to its uppercase hex character.
      */
     @SuppressWarnings("SpellCheckingInspection")
-    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     /**
      * byte[] 转化为 16 进制字符串输出
@@ -33,8 +18,9 @@ public class BytesHelper {
      * @param bytes 字节数组
      * @return 16 进制字符串
      */
-    public static String bytesToHexStr(byte[] bytes) {
-        byte[] hexChars = new byte[bytes.length * 2];
+    public static String bytesToHex(byte[] bytes) {
+        Objects.requireNonNull(bytes, "bytes");
+        char[] hexChars = new char[bytes.length * 2];
 
         for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
@@ -43,7 +29,7 @@ public class BytesHelper {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
 
-        return new String(hexChars, StandardCharsets.UTF_8);
+        return new String(hexChars);
     }
 
     /**
@@ -52,7 +38,9 @@ public class BytesHelper {
      * @param hexStr 16进制字符串
      * @return 二进制数组
      */
-    public static byte[] parseHexStr2Byte(String hexStr) {
+    public static byte[] hexToBytes(String hexStr) {
+        Objects.requireNonNull(hexStr, "hexStr");
+
         if (hexStr.isEmpty())
             return new byte[0];
 

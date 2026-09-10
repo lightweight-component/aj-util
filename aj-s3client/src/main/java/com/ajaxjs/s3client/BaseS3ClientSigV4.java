@@ -4,6 +4,7 @@ import com.ajaxjs.s3client.signer_v4.AwsCredentials;
 import com.ajaxjs.s3client.signer_v4.CanonicalRequest;
 import com.ajaxjs.s3client.signer_v4.SignBuilder;
 import com.ajaxjs.util.HashHelper;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
 
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -18,7 +19,7 @@ public abstract class BaseS3ClientSigV4 extends BaseS3Client {
     /**
      * 空字符串的 SHA-256 哈希值，用于某些的操作
      */
-    public final static String EMPTY_SHA256 = HashHelper.getSHA256("");
+    public final static String EMPTY_SHA256 = HashHelper.sha256("");
 
     /**
      * Initializes a signer with the required SigV4 headers.
@@ -101,7 +102,7 @@ public abstract class BaseS3ClientSigV4 extends BaseS3Client {
         return conn -> {
             conn.setRequestProperty("x-amz-date", date); // 设置请求头 Date
             conn.setRequestProperty("x-amz-content-sha256", hash); // 设置请求头
-            conn.setRequestProperty(AUTHORIZATION, signature); // 设置请求头 Authorization
+            conn.setRequestProperty(HttpConstant.AUTHORIZATION, signature); // 设置请求头 Authorization
 
             if (isSetHost()) {
                 String host = getConfig().getEndPoint().replaceAll("http(s?)://", "");

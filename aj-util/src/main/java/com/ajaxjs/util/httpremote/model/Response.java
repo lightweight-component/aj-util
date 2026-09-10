@@ -1,4 +1,4 @@
-package com.ajaxjs.util.httpremote;
+package com.ajaxjs.util.httpremote.model;
 
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.MapTool;

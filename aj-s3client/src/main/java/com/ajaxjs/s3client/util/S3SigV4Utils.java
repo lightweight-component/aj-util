@@ -67,6 +67,6 @@ public abstract class S3SigV4Utils {
         if (data == null)
             throw new IllegalArgumentException("Digest bytes are required.");
 
-        return BytesHelper.bytesToHexStr(data).toLowerCase(java.util.Locale.ROOT);
+        return BytesHelper.bytesToHex(data).toLowerCase(java.util.Locale.ROOT);
     }
 }

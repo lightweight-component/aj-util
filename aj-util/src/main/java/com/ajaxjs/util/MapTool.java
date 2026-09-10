@@ -1,18 +1,3 @@
-/**
- * Copyright sp42 frank@ajaxjs.com
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.ajaxjs.util;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -192,20 +176,7 @@ public class MapTool {
         return as(map, arr -> ConvertBasicValue.toJavaValue(arr[0]));
     }
 
-    /**
-     * 浅复制 Map。返回新的 HashMap，但 key、value 及嵌套对象仍与原 Map 共享引用。
-     *
-     * @param map 需要克隆的映射表
-     * @param <T> 键的类型
-     * @param <K> 值的类型
-     * @return 克隆后的映射表
-     */
-    public static <T, K> Map<T, K> shallowCopy(Map<T, K> map) {
-        return new HashMap<>(map);
-    }
-
-    private static final Pattern XML_ELEMENT_NAME =
-            Pattern.compile("[:_\\p{L}][:_\\p{L}\\p{N}\\p{M}.-]*");
+    private static final Pattern XML_ELEMENT_NAME = Pattern.compile("[:_\\p{L}][:_\\p{L}\\p{N}\\p{M}.-]*");
 
     /**
      * 将给定的对象转换为 XML 格式的字符串
@@ -290,50 +261,51 @@ public class MapTool {
         }
     }
 
-
     /**
-     * 将嵌套的 Map 扁平化为单层 Map。
-     * 键使用点号 '.' 连接，表示原始结构中的路径。
+     * Flattens a nested Map into a single-level Map.
+     * <p>
+     * Nested keys are joined with '.'.
+     * Empty maps are preserved as values.
+     * Circular references are rejected.
      *
-     * @param nestedMap 原始的嵌套 Map (可能包含 Map 或其他对象)
-     * @return 扁平化后的 Map，键为路径字符串 (如 "a.b.c")，值为原始叶子节点的值。
+     * @param nestedMap the nested map
+     * @return flattened map
      */
     public static Map<String, Object> flatten(Map<?, ?> nestedMap) {
-        Map<String, Object> flatMap = new HashMap<>();
-        if (nestedMap != null)  // 处理 null 输入
-            flattenHelper(nestedMap, "", flatMap);
+        Map<String, Object> result = new LinkedHashMap<>();
 
-        return flatMap;
+        if (nestedMap == null)
+            return result;
+
+        Set<Map<?, ?>> visiting = Collections.newSetFromMap(new IdentityHashMap<>());
+        flatten(nestedMap, "", result, visiting);
+
+        return result;
     }
 
-    /**
-     * 递归辅助方法，用于执行实际的扁平化操作。
-     *
-     * @param currentMap 当前正在处理的 Map 层级。
-     * @param prefix     到达当前层级的键路径前缀 (不以点结尾)。
-     * @param result     存放扁平化结果的 Map。
-     */
-    private static void flattenHelper(Map<?, ?> currentMap, String prefix, Map<String, Object> result) {
-        for (Map.Entry<?, ?> entry : currentMap.entrySet()) {
-            Object rawKey = entry.getKey();// 安全地获取键和值，处理 null 键的情况
-            Object value = entry.getValue();
+    private static void flatten(Map<?, ?> current, String prefix, Map<String, Object> result, Set<Map<?, ?>> visiting) {
+        if (!visiting.add(current))
+            throw new IllegalArgumentException("Circular Map reference detected at: " + prefix);
 
-            String keyPart;   // 决定当前键部分的字符串表示
-            if (rawKey == null)
-                keyPart = "null"; // 或者可以选择跳过 null 键，或抛出异常
-            else
-                keyPart = rawKey.toString();
+        try {
+            for (Map.Entry<?, ?> entry : current.entrySet()) {
+                String key = String.valueOf(entry.getKey());
+                String escapedKey = key.replace("\\", "\\\\").replace(".", "\\.");
+                String path = prefix.isEmpty() ? escapedKey : prefix + "." + escapedKey;
+                Object value = entry.getValue();
 
-            String path;// 构造到当前项的完整路径
-            if (prefix.isEmpty())
-                path = keyPart; // 根级别的键
-            else
-                path = prefix + "." + keyPart; // 嵌套级别的键路径
+                if (value instanceof Map) {
+                    Map<?, ?> child = (Map<?, ?>) value;
 
-            if (value instanceof Map) // 检查值是否为 Map 并且非 null，如果是则递归展开
-                flattenHelper((Map<?, ?>) value, path, result);// 递归调用，传递新的路径作为前缀
-            else
-                result.put(path, value);// 如果值不是 Map 或者是 null，将其添加到结果中
+                    if (child.isEmpty())
+                        result.put(path, child);
+                    else
+                        flatten(child, path, result, visiting);
+                } else
+                    result.put(path, value);
+            }
+        } finally {
+            visiting.remove(current);
         }
     }
 }

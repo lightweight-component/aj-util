@@ -133,20 +133,6 @@ class TestMapTool {
         assertEquals("", parsed.get("empty"));
     }
 
-    @Test
-    void testShallowCopy() {
-        Map<String, Object> child = new HashMap<>();
-        child.put("value", "before");
-        Map<String, Object> originalMap = new HashMap<>();
-        originalMap.put("child", child);
-        Map<String, Object> clonedMap = MapTool.shallowCopy(originalMap);
-
-        assertNotSame(originalMap, clonedMap);
-        assertSame(originalMap.get("child"), clonedMap.get("child"));
-
-        child.put("value", "after");
-        assertEquals("after", ((Map<?, ?>) clonedMap.get("child")).get("value"));
-    }
 
     @Test
     void mapToXmlPreservesValueWhitespace() {

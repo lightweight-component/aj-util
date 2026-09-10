@@ -7,7 +7,8 @@ import com.ajaxjs.s3client.signer_v4.*;
 import com.ajaxjs.s3client.util.S3SigV4Utils;
 import com.ajaxjs.s3client.util.URLEncoding;
 import com.ajaxjs.util.HashHelper;
-import com.ajaxjs.util.httpremote.Response;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.Response;
 import org.junit.jupiter.api.Test;
 
 import java.net.HttpURLConnection;
@@ -47,7 +48,7 @@ class TestS3Core {
         config.setRemark("NOS");
         NeteaseOSS netease = new NeteaseOSS();
         netease.setConfig(config);
-        assertEquals("NOS access:" + HashHelper.getHmacSHA256("payload", "secret", false),
+        assertEquals("NOS access:" + HashHelper.hmacSHA256("payload", "secret", false),
                 netease.getAuthSignature("payload"));
     }
 
@@ -242,7 +243,7 @@ class TestS3Core {
         HeaderConnection connection = new HeaderConnection(null);
         client.setRequestHead(now, "payload").accept(connection);
         assertEquals(now, connection.getRequestProperty(BaseS3Client.DATE));
-        assertTrue(connection.getRequestProperty(BaseS3Client.AUTHORIZATION).startsWith("OSS access:"));
+        assertTrue(connection.getRequestProperty(HttpConstant.AUTHORIZATION).startsWith("OSS access:"));
     }
 
     @Test
@@ -263,7 +264,7 @@ class TestS3Core {
         HeaderConnection connection = new HeaderConnection(null);
         client.setRequestHead("date", "signature", "hash", extra).accept(connection);
         assertEquals("date", connection.getRequestProperty("x-amz-date"));
-        assertEquals("signature", connection.getRequestProperty(BaseS3Client.AUTHORIZATION));
+        assertEquals("signature", connection.getRequestProperty(HttpConstant.AUTHORIZATION));
         assertEquals("private", connection.getRequestProperty("x-amz-acl"));
     }
 

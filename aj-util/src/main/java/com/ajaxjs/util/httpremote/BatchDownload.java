@@ -11,6 +11,9 @@
 package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.RegExpUtils;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Request;
 import com.ajaxjs.util.io.DataWriter;
 import com.ajaxjs.util.io.FileHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -85,9 +88,9 @@ public class BatchDownload {
 
         try {
             if (newFileNameFn == null)
-                newFileName = download(HttpConstant.HttpMethod.GET, url, null, saveFolder, null);
+                newFileName = download(HttpMethod.GET, url, null, saveFolder, null);
             else
-                newFileName = download(HttpConstant.HttpMethod.GET, url, null, saveFolder, newFileNameFn.get());
+                newFileName = download(HttpMethod.GET, url, null, saveFolder, newFileNameFn.get());
 
             fileNames[i] = getFileNameFromPath(newFileName);
         } finally {
@@ -134,7 +137,7 @@ public class BatchDownload {
      * @param newFileName optional new name for the downloaded file
      * @return the absolute path of the downloaded file
      */
-    public static String download(HttpConstant.HttpMethod method, String url, Consumer<HttpURLConnection> fn, String saveDir, String newFileName) {
+    public static String download(HttpMethod method, String url, Consumer<HttpURLConnection> fn, String saveDir, String newFileName) {
         Request get = new Request(method, url);
 
         Consumer<HttpURLConnection> init = conn -> {

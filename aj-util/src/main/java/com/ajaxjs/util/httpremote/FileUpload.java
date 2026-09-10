@@ -1,5 +1,8 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
@@ -79,7 +82,7 @@ public class FileUpload {
         if (url == null || url.trim().isEmpty())
             throw new IllegalArgumentException("URL must not be null or empty.");
 
-        Post post = new Post(HttpConstant.HttpMethod.POST, url);
+        Post post = new Post(HttpMethod.POST, url);
         Consumer<HttpURLConnection> multipart =
                 conn -> conn.setRequestProperty(HttpConstant.CONTENT_TYPE, "multipart/form-data; boundary=" + boundary);
         post.init(fn == null ? multipart : fn.andThen(multipart));

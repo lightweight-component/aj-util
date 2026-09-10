@@ -246,7 +246,7 @@ public class Cryptography {
      * @throws RuntimeException         if the configured transformation is unavailable
      */
     public String doCipherAsHexStr() {
-        return BytesHelper.bytesToHexStr(doCipher());
+        return BytesHelper.bytesToHex(doCipher());
     }
 
     /**
@@ -278,7 +278,7 @@ public class Cryptography {
     public static String AES_decode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.AES, Cipher.DECRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setData(BytesHelper.parseHexStr2Byte(data));
+        cryptography.setData(BytesHelper.hexToBytes(data));
 
         return cryptography.doCipherAsStr();
     }
@@ -312,7 +312,7 @@ public class Cryptography {
     public static String DES_decode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.DES, Cipher.DECRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setData(BytesHelper.parseHexStr2Byte(data));
+        cryptography.setData(BytesHelper.hexToBytes(data));
 
         return cryptography.doCipherAsStr();
     }

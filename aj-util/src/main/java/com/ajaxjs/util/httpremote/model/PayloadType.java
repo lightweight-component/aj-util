@@ -1,7 +1,7 @@
 package com.ajaxjs.util.httpremote.model;
 
 /**
- * How data is sent to the server.
+ * How data is sent to the server via HTTP body.
  */
 public enum PayloadType {
     /**

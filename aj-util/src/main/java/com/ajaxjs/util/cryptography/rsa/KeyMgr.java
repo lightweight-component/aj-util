@@ -214,7 +214,7 @@ public class KeyMgr implements Constant {
      */
     public static String privateKeyToPem(String encoded) {
         return "-----BEGIN PRIVATE KEY-----\n" +
-                Base64Utils.formatBase64String(encoded) +
+                Base64Utils.formatPemBase64(encoded) +
                 "\n-----END PRIVATE KEY-----";
     }
 
@@ -241,7 +241,7 @@ public class KeyMgr implements Constant {
      */
     public static String publicKeyToPem(String encoded) {
         return "-----BEGIN PUBLIC KEY-----\n" +
-                Base64Utils.formatBase64String(encoded) +
+                Base64Utils.formatPemBase64(encoded) +
                 "\n-----END PUBLIC KEY-----";
     }
 

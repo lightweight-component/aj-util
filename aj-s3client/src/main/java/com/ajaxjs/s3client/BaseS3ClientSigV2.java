@@ -1,11 +1,10 @@
 package com.ajaxjs.s3client;
 
-
 import com.ajaxjs.util.date.DateTools;
 import com.ajaxjs.util.httpremote.Delete;
 import com.ajaxjs.util.httpremote.Get;
-import com.ajaxjs.util.httpremote.HttpConstant;
 import com.ajaxjs.util.httpremote.Put;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -179,7 +178,7 @@ public abstract class BaseS3ClientSigV2 extends BaseS3Client {
     public Consumer<HttpURLConnection> setRequestHead(String now, String data) {
         return conn -> {
             conn.addRequestProperty(DATE, now);
-            conn.addRequestProperty(AUTHORIZATION, getAuthSignature(data));   // 设置请求授权头和日期头
+            conn.addRequestProperty(HttpConstant.AUTHORIZATION, getAuthSignature(data));   // 设置请求授权头和日期头
         };
     }
 

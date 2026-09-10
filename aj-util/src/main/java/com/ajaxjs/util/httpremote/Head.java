@@ -1,5 +1,8 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Request;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -50,10 +53,8 @@ public class Head extends Request {
      */
     @Override
     public HttpURLConnection init(Consumer<HttpURLConnection> initConnection) {
-        Consumer<HttpURLConnection> beforeInit = conn -> {
-            // Must set too false to prevent automatic redirect to Location URL
-            conn.setInstanceFollowRedirects(false);
-        };
+        // Must set too false to prevent automatic redirect to Location URL
+        Consumer<HttpURLConnection> beforeInit = conn -> conn.setInstanceFollowRedirects(false);
 
         return super.init(initConnection == null ? beforeInit : beforeInit.andThen(initConnection));
     }
@@ -150,8 +151,6 @@ public class Head extends Request {
      * @return a connection initializer setting the {@code Authorization} header
      */
     public static Consumer<HttpURLConnection> setBearerToken(String token) {
-        return conn -> {
-            conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
-        };
+        return conn -> conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
     }
 }

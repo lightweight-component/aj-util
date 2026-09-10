@@ -78,7 +78,7 @@ public class ObjectHelper {
      * @return {@code true} if the array is {@code null} or of zero lengths
      */
     public static boolean isEmpty(Object[] array) {
-        return (array == null || array.length == 0);
+        return array == null || array.length == 0;
     }
 
     /**
@@ -106,7 +106,7 @@ public class ObjectHelper {
     /**
      * An empty, immutable Map. Useful as a default or sentinel value when no parameters are needed.
      */
-    public static final Map<String, Object> EMPTY_PARAMS_MAP = Collections.unmodifiableMap(new HashMap<>());
+    public static final Map<String, Object> EMPTY_PARAMS_MAP = Collections.emptyMap();
 
     /**
      * Creates a new HashMap with a single key-value pair.
@@ -118,7 +118,7 @@ public class ObjectHelper {
      * @return the newly created HashMap
      */
     public static <K, V> Map<K, V> mapOf(K k1, V v1) {
-        Map<K, V> map = new HashMap<>();
+        Map<K, V> map = mapOf(1);
         map.put(k1, v1);
 
         return map;
@@ -136,7 +136,7 @@ public class ObjectHelper {
      * @return the newly created HashMap
      */
     public static <K, V> Map<K, V> mapOf(K k1, V v1, K k2, V v2) {
-        Map<K, V> map = new HashMap<>();
+        Map<K, V> map = mapOf(2);
         map.put(k1, v1);
         map.put(k2, v2);
 
@@ -171,27 +171,23 @@ public class ObjectHelper {
     public static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
     /**
-     * Creates a HashMap with a specified expected number of entries.
-     * The initial capacity and load factor are calculated to minimize resizing.
+     * Calculates the initial capacity for a HashMap based on the expected size.
      *
-     * @param expectedSize the expected number of entries in the map
-     * @return a new HashMap with optimal initial capacity and load factor
+     * @param expectedSize the expected number of entries
+     * @return the recommended initial capacity
      * @throws IllegalArgumentException if expectedSize is negative
      */
-
     public static int getInitialCapacity(int expectedSize) {
         if (expectedSize < 0)
             throw new IllegalArgumentException("Expected size must not be negative.");
 
-        final int maximumCapacity = 1 << 30;
-        long requiredCapacity = ((long) expectedSize * 4 + 2) / 3;
+        if (expectedSize < 3)
+            return expectedSize + 1;
 
-        if (requiredCapacity <= 16)
-            return 16;
-        if (requiredCapacity >= maximumCapacity)
-            return maximumCapacity;
+        if (expectedSize < (1 << 30))
+            return (int) (expectedSize / 0.75f + 1.0f);
 
-        return (int) (Long.highestOneBit(requiredCapacity - 1) << 1);
+        return Integer.MAX_VALUE;
     }
 
     /**
@@ -204,12 +200,11 @@ public class ObjectHelper {
      * @return a new HashMap with optimal initial capacity
      */
     public static <K, V> Map<K, V> mapOf(int expectedSize) {
-        return new HashMap<>(getInitialCapacity(expectedSize), DEFAULT_LOAD_FACTOR);// Create and return the HashMap with the calculated initial capacity and default load factor
+        return new HashMap<>(getInitialCapacity(expectedSize), DEFAULT_LOAD_FACTOR);
     }
 
     /**
      * Input multiple elements and returns a list of those elements.
-     * Just like `List.of()` in Java 9.
      *
      * @param arr The elements
      * @param <T> The type of the elements
@@ -217,7 +212,9 @@ public class ObjectHelper {
      */
     @SafeVarargs
     public static <T> List<T> listOf(T... arr) {
-        return Collections.unmodifiableList(Arrays.asList(arr));
+        Objects.requireNonNull(arr, "arr");
+
+        return Collections.unmodifiableList(new ArrayList<>(Arrays.asList(arr)));
     }
 
     /**
@@ -228,14 +225,13 @@ public class ObjectHelper {
      * @param elements the elements to include in the set
      * @param <T>      the element type
      * @return an immutable Set containing the specified elements
-     * @throws IllegalArgumentException if null elements are provided
+     * @throws NullPointerException     if the elements array is null
+     * @throws IllegalArgumentException if any element is null
      */
     @SafeVarargs
     public static <T> Set<T> setOf(T... elements) {
-        if (elements == null)
-            throw new IllegalArgumentException("Elements array cannot be null");
-
-        Set<T> set = new HashSet<>();
+        Objects.requireNonNull(elements, "elements");
+        Set<T> set = new HashSet<>(getInitialCapacity(elements.length));
 
         for (T element : elements) {
             if (element == null)
@@ -245,5 +241,23 @@ public class ObjectHelper {
         }
 
         return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * 合并两个字节数组
+     *
+     * @param a 数组a
+     * @param b 数组b
+     * @return 新合并的数组
+     */
+    public static byte[] concat(byte[] a, byte[] b) {
+        Objects.requireNonNull(a, "a");
+        Objects.requireNonNull(b, "b");
+
+        byte[] c = new byte[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+
+        return c;
     }
 }

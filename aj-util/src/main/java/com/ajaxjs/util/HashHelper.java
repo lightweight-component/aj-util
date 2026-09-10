@@ -1,19 +1,26 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util;
 
 import com.ajaxjs.util.io.DataReader;
-import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Utility class for cryptographic hash operations, supporting various hash algorithms
@@ -22,8 +29,6 @@ import java.security.NoSuchAlgorithmException;
  * with options for hexadecimal and Base64 output formats.
  */
 @Slf4j
-@Data
-@Accessors(chain = true)
 public class HashHelper {
     /**
      * The name of the hash algorithm to use (e.g., "MD5", "SHA-1", "SHA-256").
@@ -33,7 +38,7 @@ public class HashHelper {
     /**
      * The input data to hash.
      */
-    private byte[] input;
+    private final byte[] input;
 
     /**
      * Creates a new HashHelper instance with the specified algorithm and byte array input.
@@ -42,8 +47,8 @@ public class HashHelper {
      * @param input         the input data to hash
      */
     public HashHelper(String algorithmName, byte[] input) {
-        this.algorithmName = algorithmName;
-        this.input = input;
+        this.algorithmName = Objects.requireNonNull(algorithmName, "algorithmName");
+        this.input = Objects.requireNonNull(input, "input");
     }
 
     /**
@@ -61,7 +66,6 @@ public class HashHelper {
      * Gets the message digest using the specified algorithm.
      *
      * @return the message digest as a byte array
-     * @throws RuntimeException if the specified algorithm is not available
      */
     public byte[] getMessageDigest() {
         MessageDigest md;
@@ -70,7 +74,7 @@ public class HashHelper {
             md = MessageDigest.getInstance(algorithmName);
         } catch (NoSuchAlgorithmException e) {
             log.warn("No Such Algorithm: {}", algorithmName, e);
-            throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
+            throw new IllegalStateException("No Such Algorithm: " + algorithmName, e);
         }
 
         return md.digest(input);
@@ -88,7 +92,9 @@ public class HashHelper {
      * @return this HashHelper instance for method chaining
      */
     public HashHelper setKey(String key) {
+        Objects.requireNonNull(key, "key");
         this.key = new StringBytes(key).getUTF8_Bytes();
+
         return this;
     }
 
@@ -99,49 +105,46 @@ public class HashHelper {
      * @return this HashHelper instance for method chaining
      */
     public HashHelper setKeyBase64(String key) {
+        Objects.requireNonNull(key, "key");
         this.key = new Base64Utils(key).decode();
+
         return this;
     }
 
     /**
      * Gets the Message Authentication Code (MAC) value using the specified algorithm.
-     * If no key is set, a random key is generated.
      *
      * @return the generated MAC value as a byte array
-     * @throws RuntimeException if the algorithm is not supported or the key is invalid
+     * @throws IllegalStateException if no HMAC key has been set
+     *                               or the algorithm is not supported
+     * @throws IllegalArgumentException if the HMAC key is invalid
      */
     public byte[] getMac() {
-        SecretKey sk;
-
-        try {
-            if (key == null)
-                sk = KeyGenerator.getInstance(algorithmName).generateKey();
-            else
-                sk = new SecretKeySpec(key, algorithmName);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
-        }
+        if (key == null)
+            throw new IllegalStateException("HMAC key is required.");
 
         try {
             Mac mac = Mac.getInstance(algorithmName);
-            mac.init(sk);
+            mac.init(new SecretKeySpec(key, algorithmName));
 
             return mac.doFinal(input);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("No Such Algorithm: " + algorithmName, e);
+            throw new IllegalStateException("No Such Algorithm: " + algorithmName, e);
         } catch (InvalidKeyException e) {
-            throw new RuntimeException("Invalid Key.", e);
+            throw new IllegalArgumentException("Invalid HMAC key.", e);
         }
     }
 
     /**
-     * Performs the hash operation based on the current configuration.
-     * Uses MessageDigest if no key is set, or HMAC if a key is set.
+     * Performs the hash or HMAC operation based on the configured algorithm.
+     * <p>
+     * Algorithms whose names start with {@code Hmac} are processed as HMAC;
+     * other algorithms are processed using {@link MessageDigest}.
      *
-     * @return the hash value as a byte array
+     * @return the hash or MAC value as a byte array
      */
     public byte[] hash() {
-        return key == null ? getMessageDigest() : getMac();
+        return algorithmName.startsWith("Hmac") ? getMac() : getMessageDigest();
     }
 
     /**
@@ -150,7 +153,7 @@ public class HashHelper {
      * @return the hash value as a lowercase hexadecimal string
      */
     public String hashAsStr() {
-        return BytesHelper.bytesToHexStr(hash()).toLowerCase();
+        return BytesHelper.bytesToHex(hash()).toLowerCase(Locale.ROOT);
     }
 
     /**
@@ -180,7 +183,7 @@ public class HashHelper {
     /**
      * Constant for SHA-1 hash algorithm.
      */
-    public static final String SHA1 = "SHA1";
+    public static final String SHA1 = "SHA-1";
 
     /**
      * Constant for SHA-256 hash algorithm.
@@ -199,12 +202,45 @@ public class HashHelper {
     }
 
     /**
+     * Calculates the MD5 hash of a file from an input stream.
+     * The file is processed in chunks to handle large files efficiently.
+     * This method does not close the input stream.
+     *
+     * @param in the input stream containing the file data
+     * @return the MD5 hash value as a lowercase hexadecimal string
+     * @throws RuntimeException if MD5 algorithm is not available
+     */
+    public static String md5(InputStream in) {
+        Objects.requireNonNull(in, "in");
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance(MD5);
+            new DataReader(in).readStreamAsBytes(8192, (readSize, buffer) -> digest.update(buffer, 0, readSize));
+
+            return BytesHelper.bytesToHex(digest.digest()).toLowerCase(Locale.ROOT);
+        } catch (NoSuchAlgorithmException e) {
+            log.warn("No Such Algorithm: MD5", e);
+            throw new RuntimeException("No Such Algorithm: MD5", e);
+        }
+    }
+
+    /**
+     * Calculates the MD5 hash of a byte array.
+     *
+     * @param bytes the input byte array
+     * @return the MD5 hash value as a lowercase hexadecimal string
+     */
+    public static String md5(byte[] bytes) {
+        return new HashHelper(MD5, bytes).hashAsStr();
+    }
+
+    /**
      * Generates an SHA-1 hash value for a string.
      *
      * @param str the input string
      * @return the SHA-1 hash value as a lowercase hexadecimal string
      */
-    public static String getSHA1(String str) {
+    public static String sha1(String str) {
         return new HashHelper(SHA1, str).hashAsStr();
     }
 
@@ -214,20 +250,14 @@ public class HashHelper {
      * @param str the input string
      * @return the SHA-256 hash value as a lowercase hexadecimal string
      */
-    public static String getSHA256(String str) {
+    public static String sha256(String str) {
         return new HashHelper(SHA256, str).hashAsStr();
     }
 
     /**
-     * Creates a HashHelper configured for HMAC-MD5 operations with the specified input and key.
-     *
-     * @param str the input string
-     * @param key the secret key
-     * @return a HashHelper instance configured for HMAC-MD5 operations
+     * Constant for HMAC-MD5 message authentication code algorithm.
      */
-    public static HashHelper getHmacMD5(String str, String key) {
-        return new HashHelper("HmacMD5", str).setKey(key);
-    }
+    public static final String HMAC_MD5 = "HmacMD5";
 
     /**
      * Constant for HMAC-SHA1 message authentication code algorithm.
@@ -239,6 +269,34 @@ public class HashHelper {
      */
     public static final String HMAC_SHA256 = "HmacSHA256";
 
+    static String hmac(String algorithmName, String str, String key, boolean isWithoutPadding) {
+        return new HashHelper(algorithmName, str).setKey(key).hashAsBase64(isWithoutPadding);
+    }
+
+    /**
+     * Creates a HashHelper configured for HMAC-MD5 operations with the specified input and key.
+     *
+     * @param str              the input string
+     * @param key              the secret key
+     * @param isWithoutPadding whether to omit padding in the Base64 output
+     * @return the HMAC-MD5 value as a Base64 encoded string
+     */
+    public static String hmacMD5(String str, String key, boolean isWithoutPadding) {
+        return hmac(HMAC_MD5, str, key, isWithoutPadding);
+    }
+
+    /**
+     * Generates an HMAC-SHA1 hash value for a string and returns it as a Base64 encoded string.
+     *
+     * @param str              the input string
+     * @param key              the secret key
+     * @param isWithoutPadding whether to omit padding in the Base64 output
+     * @return the HMAC-SHA1 hash value as a Base64 encoded string
+     */
+    public static String hmacSHA1(String str, String key, boolean isWithoutPadding) {
+        return hmac(HMAC_SHA1, str, key, isWithoutPadding);
+    }
+
     /**
      * Generates an HMAC-SHA256 hash value for a string and returns it as a Base64 encoded string.
      *
@@ -247,37 +305,7 @@ public class HashHelper {
      * @param isWithoutPadding whether to omit padding in the Base64 output
      * @return the HMAC-SHA256 hash value as a Base64 encoded string
      */
-    public static String getHmacSHA256(String str, String key, boolean isWithoutPadding) {
-        return new HashHelper(HMAC_SHA256, str).setKey(key).hashAsBase64(isWithoutPadding);
-    }
-
-    /**
-     * Calculates the MD5 hash of a file from an input stream.
-     * The file is processed in chunks to handle large files efficiently.
-     *
-     * @param in the input stream containing the file data
-     * @return the MD5 hash value as a lowercase hexadecimal string
-     * @throws RuntimeException if MD5 algorithm is not available
-     */
-    public static String calcFileMD5(InputStream in) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            new DataReader(in).readStreamAsBytes(8192, (readSize, buffer) -> digest.update(buffer, 0, readSize));
-
-            return BytesHelper.bytesToHexStr(digest.digest()).toLowerCase();
-        } catch (NoSuchAlgorithmException e) {
-            log.warn("No Such Algorithm: MD5", e);
-            throw new RuntimeException("No Such Algorithm: MD5", e);
-        }
-    }
-
-    /**
-     * Calculates the MD5 hash of a byte array.
-     *
-     * @param bytes the byte array containing the file data
-     * @return the MD5 hash value as a lowercase hexadecimal string
-     */
-    public static String calcFileMD5(byte[] bytes) {
-        return calcFileMD5(new ByteArrayInputStream(bytes));
+    public static String hmacSHA256(String str, String key, boolean isWithoutPadding) {
+        return hmac(HMAC_SHA256, str, key, isWithoutPadding);
     }
 }

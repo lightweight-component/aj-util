@@ -3,7 +3,7 @@ package com.ajaxjs.s3client;
 import com.ajaxjs.s3client.factory.AliyunOSS;
 import com.ajaxjs.s3client.factory.NeteaseOSS;
 import com.ajaxjs.util.HashHelper;
-import com.ajaxjs.util.httpremote.Response;
+import com.ajaxjs.util.httpremote.model.Response;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +39,7 @@ class TestAjUtil136Migration {
         client.setConfig(config);
 
         assertEquals(
-                "NOS access:" + HashHelper.getHmacSHA256("payload", "secret", false),
+                "NOS access:" + HashHelper.hmacSHA256("payload", "secret", false),
                 client.getAuthSignature("payload")
         );
     }
