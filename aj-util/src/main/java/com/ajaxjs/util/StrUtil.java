@@ -125,22 +125,6 @@ public class StrUtil {
     }
 
     /**
-     * 将列表中的元素使用指定的分隔符连接成一个字符串，并返回连接后的字符串
-     *
-     * @param <T>  数组类型
-     * @param list 任何类型的列表
-     * @param str  字符串类型的分隔符
-     * @return 连接后的字符串
-     */
-    public static <T> String joinAnyList(List<T> list, String str) {
-        Object[] objectArray = list.toArray();
-        @SuppressWarnings("unchecked")
-        T[] array = Arrays.copyOf(objectArray, objectArray.length, (Class<? extends T[]>) objectArray.getClass());
-
-        return join(array, str);
-    }
-
-    /**
      * 将数组中的元素使用指定的分隔符连接成一个字符串，并返回连接后的字符串
      *
      * @param <T> 数组类型
@@ -150,6 +134,7 @@ public class StrUtil {
      */
     public static <T> String join(T[] arr, String str) {
         StringBuilder sb = new StringBuilder();
+
 
         for (int i = 0, len = arr.length; i < len; i++) {
             String s = arr[i] == null ? CommonConstant.EMPTY_STRING : arr[i].toString();
