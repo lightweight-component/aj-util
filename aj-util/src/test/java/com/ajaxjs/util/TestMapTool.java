@@ -6,12 +6,55 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-import static com.ajaxjs.util.MapTool.as;
 import static com.ajaxjs.util.MapTool.join;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestMapTool {
+    /**
+     * 判断 Map 非空，然后根据 key 获取 value，若 value 非空则作为参数传入函数接口
+     *
+     * @param map 输入的 Map
+     * @param key map的键
+     * @param s   如果过非空，那么接着要做什么？在这个回调函数中处理。传入的参数就是 map.get(key)的值
+     * @param <T> 返回 value 的类型
+     */
+    public static <T> void getValue(Map<String, T> map, String key, Consumer<T> s) {
+        if (map != null) {
+            T value = map.get(key);
+
+            if (value != null)
+                s.accept(value);
+        }
+    }
+
+    /**
+     * 万能 Map 转换器，为了泛型的转换而设的一个方法，怎么转换在 fn 中处理
+     *
+     * @param map 原始 Map，key 必须为 String 类型
+     * @param fn  转换函数
+     * @param <K> Key 的类型
+     * @param <T> 返回 value 的类型
+     * @return 转换后的 map
+     */
+    public static <T, K> Map<String, T> as(Map<String, K> map, Function<K, T> fn) {
+        Map<String, T> _map = new HashMap<>();
+        map.forEach((k, v) -> _map.put(k, v == null ? null : fn.apply(v)));
+
+        return _map;
+    }
+
+    /**
+     * 将给定的 map 转换为 Map&lt;String, Object&gt; 类型的结果
+     *
+     * @param map 要转换的 map，包含 String 和 String[] 类型的键值对
+     * @return 转换后的 Map&lt;String, Object&gt; 类型的结果
+     */
+    public static Map<String, Object> as(Map<String, String[]> map) {
+        return as(map, arr -> ConvertBasicValue.toJavaValue(arr[0]));
+    }
     final Map<String, Object> map = new HashMap<String, Object>() {
         private static final long serialVersionUID = 1L;
 
@@ -62,17 +105,6 @@ class TestMapTool {
         }, v -> ConvertBasicValue.toJavaValue(v.toString())).get("bar"));
     }
 
-    final static Map<String, Object> userWithoutChild = new HashMap<String, Object>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("id", 1L);
-            put("name", "Jack");
-            put("age", 30);
-            put("directField", "directField22");
-        }
-    };
-
     public static class MapMock {
         static final boolean s = true;
         public final static Map<String, Object> user = new HashMap<String, Object>() {
@@ -91,7 +123,7 @@ class TestMapTool {
 
     @Test
     void testMap2Bean() {
-        TestCaseUserBean user = JsonUtil.map2pojo(userWithoutChild, TestCaseUserBean.class);// 直接转
+        TestCaseUserBean user = JsonUtil.map2pojo(TestXmlHelper.userWithoutChild, TestCaseUserBean.class);// 直接转
         assertNotNull(user);
         assertEquals(user.getName(), "Jack");
         assertEquals("directField22", user.directField);
@@ -117,42 +149,6 @@ class TestMapTool {
 //		assertNotNull(user);
 //	}
 
-    @Test
-    void testXml() {
-        String xml = MapTool.mapToXml(userWithoutChild);
-        assertEquals(xml, MapTool.mapToXml(Objects.requireNonNull(MapTool.xmlToMap(xml))));
-    }
-
-    @Test
-    void mapToXmlSupportsNullValues() {
-        Map<String, Object> values = new HashMap<>();
-        values.put("empty", null);
-
-        Map<String, String> parsed = MapTool.xmlToMap(MapTool.mapToXml(values));
-        assertNotNull(parsed);
-        assertEquals("", parsed.get("empty"));
-    }
-
-
-    @Test
-    void mapToXmlPreservesValueWhitespace() {
-        Map<String, Object> values = new HashMap<>();
-        values.put("text", "  keep me  ");
-
-        assertEquals("  keep me  ", Objects.requireNonNull(MapTool.xmlToMap(MapTool.mapToXml(values))).get("text"));
-    }
-
-    @Test
-    void mapToXmlRejectsInvalidElementNamesWithTheKey() {
-        for (String key : Arrays.asList("", "1name", "has space")) {
-            Map<String, Object> values = new HashMap<>();
-            values.put(key, "value");
-
-            IllegalArgumentException error =
-                    assertThrows(IllegalArgumentException.class, () -> MapTool.mapToXml(values));
-            assertTrue(error.getMessage().contains(key));
-        }
-    }
 
     @Test
     void testFlatten() {

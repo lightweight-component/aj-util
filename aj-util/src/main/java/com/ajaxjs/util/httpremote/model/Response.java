@@ -3,6 +3,7 @@ package com.ajaxjs.util.httpremote.model;
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.MapTool;
 import com.ajaxjs.util.ObjectHelper;
+import com.ajaxjs.util.XmlHelper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -135,7 +136,7 @@ public class Response {
      * @return a map representation of the XML content, or null if response is empty
      */
     public Map<String, String> responseAsXML() {
-        return ObjectHelper.hasText(responseText) ? MapTool.xmlToMap(responseText) : null;
+        return ObjectHelper.hasText(responseText) ? XmlHelper.xmlToMap(responseText) : null;
     }
 
     /**

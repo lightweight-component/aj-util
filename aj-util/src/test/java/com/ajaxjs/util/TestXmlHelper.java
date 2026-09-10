@@ -5,8 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+import static com.ajaxjs.util.XmlHelper.mapToXml;
+import static com.ajaxjs.util.XmlHelper.xmlToMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestXmlHelper {
@@ -41,7 +45,7 @@ class TestXmlHelper {
                 + "<root><value>&xxe;</value></root>";
 
         assertThrows(RuntimeException.class, () -> XmlHelper.getRoot(xml));
-        assertNull(MapTool.xmlToMap(xml));
+        assertNull(xmlToMap(xml));
     }
 
     @Test
@@ -51,7 +55,7 @@ class TestXmlHelper {
 
         RuntimeException rootError = assertThrows(RuntimeException.class, () -> XmlHelper.getRoot(invalidXml));
         RuntimeException parseError = assertThrows(RuntimeException.class,
-                () -> XmlHelper.parseXML(invalidXml, (node, nodes) -> {
+                () -> XmlHelper.parseXML(invalidXml, (node) -> {
                 }));
 
         assertFalse(rootError.getMessage().contains(secret));
@@ -111,4 +115,39 @@ class TestXmlHelper {
 //        // 验证 consumerMock 被正确调用
 //        verify(consumerMock, times(1)).accept(any(Node.class), any(NodeList.class));
 //    }
+
+    final static Map<String, Object> userWithoutChild = new HashMap<String, Object>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            put("id", 1L);
+            put("name", "Jack");
+            put("age", 30);
+            put("directField", "directField22");
+        }
+    };
+
+    @Test
+    void testXml() {
+        String xml = mapToXml(userWithoutChild);
+        assertEquals(xml, mapToXml(Objects.requireNonNull(xmlToMap(xml))));
+    }
+
+    @Test
+    void mapToXmlSupportsNullValues() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("empty", null);
+
+        Map<String, String> parsed = xmlToMap(mapToXml(values));
+        assertNotNull(parsed);
+        assertEquals("", parsed.get("empty"));
+    }
+
+    @Test
+    void mapToXmlPreservesValueWhitespace() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("text", "  keep me  ");
+
+        assertEquals("  keep me  ", Objects.requireNonNull(xmlToMap(mapToXml(values))).get("text"));
+    }
 }

@@ -7,7 +7,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
@@ -16,14 +19,12 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
  * Map Conversion Utility - Provides comprehensive map manipulation operations including
- * joining maps to strings, converting between different map formats, XML serialization,
- * and shallow copying functionality.
+ * joining maps to strings, converting between different map formats, XML serialization.
  */
 @Slf4j
 public class MapTool {
@@ -131,134 +132,6 @@ public class MapTool {
             map.put(column, fn.apply(values[i++]));
 
         return map;
-    }
-
-    /**
-     * 判断 Map 非空，然后根据 key 获取 value，若 value 非空则作为参数传入函数接口
-     *
-     * @param map 输入的 Map
-     * @param key map的键
-     * @param s   如果过非空，那么接着要做什么？在这个回调函数中处理。传入的参数就是 map.get(key)的值
-     * @param <T> 返回 value 的类型
-     */
-    public static <T> void getValue(Map<String, T> map, String key, Consumer<T> s) {
-        if (map != null) {
-            T value = map.get(key);
-
-            if (value != null)
-                s.accept(value);
-        }
-    }
-
-    /**
-     * 万能 Map 转换器，为了泛型的转换而设的一个方法，怎么转换在 fn 中处理
-     *
-     * @param map 原始 Map，key 必须为 String 类型
-     * @param fn  转换函数
-     * @param <K> Key 的类型
-     * @param <T> 返回 value 的类型
-     * @return 转换后的 map
-     */
-    public static <T, K> Map<String, T> as(Map<String, K> map, Function<K, T> fn) {
-        Map<String, T> _map = new HashMap<>();
-        map.forEach((k, v) -> _map.put(k, v == null ? null : fn.apply(v)));
-
-        return _map;
-    }
-
-    /**
-     * 将给定的 map 转换为 Map&lt;String, Object&gt; 类型的结果
-     *
-     * @param map 要转换的 map，包含 String 和 String[] 类型的键值对
-     * @return 转换后的 Map&lt;String, Object&gt; 类型的结果
-     */
-    public static Map<String, Object> as(Map<String, String[]> map) {
-        return as(map, arr -> ConvertBasicValue.toJavaValue(arr[0]));
-    }
-
-    private static final Pattern XML_ELEMENT_NAME = Pattern.compile("[:_\\p{L}][:_\\p{L}\\p{N}\\p{M}.-]*");
-
-    /**
-     * 将给定的对象转换为 XML 格式的字符串
-     *
-     * @param bean 要转换的对象
-     * @return 转换后的XML格式的字符串
-     */
-    public static String beanToXml(Object bean) {
-        return mapToXml(JsonUtil.pojo2map(bean));
-    }
-
-    /**
-     * 将 Map 转换为 XML 格式的字符串
-     *
-     * @param data Map 类型数据
-     * @return XML 格式的字符串
-     * @throws IllegalArgumentException 如果 Map key 不是合法的 XML 元素名
-     */
-    public static String mapToXml(Map<String, ?> data) {
-        Document doc = XmlHelper.initBuilder().newDocument();
-        Element root = doc.createElement("xml");
-        doc.appendChild(root);
-
-        data.forEach((k, v) -> {
-            if (k == null || !XML_ELEMENT_NAME.matcher(k).matches())
-                throw new IllegalArgumentException("Invalid XML element name for map key: " + k);
-
-            String value = v == null ? CommonConstant.EMPTY_STRING : v.toString();
-
-            Element filed = doc.createElement(k);
-            filed.appendChild(doc.createTextNode(value));
-            root.appendChild(filed);
-        });
-
-        try {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, CommonConstant.UTF8);
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-            try (StringWriter writer = new StringWriter()) {
-                transformer.transform(new DOMSource(doc), new StreamResult(writer));
-
-                return writer.getBuffer().toString();
-            }
-        } catch (IOException | TransformerException | TransformerFactoryConfigurationError e) {
-            log.warn("ERROR>>", e);
-        }
-
-        return null;
-    }
-
-    /**
-     * XML 格式字符串转换为 Map
-     *
-     * @param strXML XML 字符串
-     * @return XML 数据转换后的 Map
-     */
-    public static Map<String, String> xmlToMap(String strXML) {
-        if (strXML == null)
-            return null;
-
-        Map<String, String> data = new HashMap<>();
-
-        try (InputStream stream = new ByteArrayInputStream(strXML.getBytes(StandardCharsets.UTF_8))) {
-            Document doc = XmlHelper.initBuilder().parse(stream);
-            doc.getDocumentElement().normalize();
-            NodeList nodeList = doc.getDocumentElement().getChildNodes();
-
-            for (int idx = 0; idx < nodeList.getLength(); ++idx) {
-                Node node = nodeList.item(idx);
-
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    data.put(element.getNodeName(), element.getTextContent());
-                }
-            }
-
-            return data;
-        } catch (IOException | SAXException e) {
-            log.warn("ERROR>>", e);
-            return null;
-        }
     }
 
     /**

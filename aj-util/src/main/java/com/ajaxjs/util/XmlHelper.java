@@ -1,6 +1,5 @@
 package com.ajaxjs.util;
 
-import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
@@ -12,6 +11,12 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -19,12 +24,13 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * XML Processing Utility Class - Provides methods for parsing, manipulating, and querying XML documents.
@@ -36,7 +42,6 @@ import java.util.function.Consumer;
  *
  * @author sp42 frank@ajaxjs.com
  */
-@Slf4j
 public class XmlHelper {
     /**
      * Initializes and returns a DocumentBuilder for XML parsing operations.
@@ -52,10 +57,10 @@ public class XmlHelper {
      * and secure-processing restrictions applied. DTD declarations, external entities,
      * external DTD/schema access, XInclude, and entity-reference expansion are disabled.
      *
-     * @param namespaceAware whether the builder should be namespace aware
+     * @param namespaceAware whether the builder should be namespace-aware
      * @return a configured DocumentBuilder
      */
-    private static DocumentBuilder initBuilder(boolean namespaceAware) {
+    public static DocumentBuilder initBuilder(boolean namespaceAware) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(namespaceAware);
@@ -63,6 +68,9 @@ public class XmlHelper {
             factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
             factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
             factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, CommonConstant.EMPTY_STRING);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, CommonConstant.EMPTY_STRING);
             factory.setXIncludeAware(false);
             factory.setExpandEntityReferences(false);
             factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, CommonConstant.EMPTY_STRING);
@@ -88,78 +96,46 @@ public class XmlHelper {
 
             return builder;
         } catch (ParserConfigurationException | IllegalArgumentException e) {
-            log.warn("Parser Configuration Exception", e);
-            throw new RuntimeException("Parser Configuration Exception", e);
+            throw new IllegalStateException("Unable to initialize secure XML parser.", e);
         }
     }
 
     /**
      * Retrieves a specific node using XPath query.
      *
-     * @param xml   The XML file path
+     * @param xml   The XML content
      * @param xpath The XPath expression to locate nodes
      * @param fn    The consumer function to process each matched Node
      */
     public static void xPath(String xml, String xpath, Consumer<Node> fn) {
+        Objects.requireNonNull(xml, "xPath.xml");
+        Objects.requireNonNull(xpath, "xPath.xpath");
+        Objects.requireNonNull(fn, "xPath.fn");
+
         try {
             XPathExpression expr = XPathFactory.newInstance().newXPath().compile(xpath);
-            NodeList nodes = (NodeList) expr.evaluate(initBuilder(true).parse(xml), XPathConstants.NODESET);
+            NodeList nodes = (NodeList) expr.evaluate(getRoot(xml), XPathConstants.NODESET);
 
             for (int i = 0; i < nodes.getLength(); i++)
                 fn.accept(nodes.item(i));
-        } catch (SAXException | IOException | XPathExpressionException e) {
-            log.warn("Get a node from XML err. XPath: {}", xpath, e);
-            throw new RuntimeException("Get a node from XML err. XPath: " + xpath, e);
+
+        } catch (XPathExpressionException e) {
+            throw new IllegalArgumentException("Invalid XPath expression: " + xpath, e);
         }
     }
 
-    /**
-     * Parses XML content and processes nodes with a consumer function.
-     *
-     * @param xml The XML content to parse
-     * @param fn  The bi-consumer function to process each Node and its NodeList of children
-     */
-    public static void parseXML(String xml, BiConsumer<Node, NodeList> fn) {
-        try (InputStream in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
-            Element el = Objects.requireNonNull(initBuilder()).parse(in).getDocumentElement();
-            NodeList nodeList = el.getChildNodes();
-
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                fn.accept(node, nodeList);
-            }
-        } catch (SAXException | IOException e) {
-            log.warn("Unable to parse XML content.", e);
-            throw new RuntimeException("Unable to parse XML content.", e);
-        }
-    }
-
-    /**
-     * Gets the root element from the given XML string.
-     *
-     * @param xml The XML string content
-     * @return The root Element of the XML document
-     */
-    public static Element getRoot(String xml) {
-        try (InputStream in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
-            return Objects.requireNonNull(initBuilder()).parse(in).getDocumentElement();
-        } catch (SAXException | IOException e) {
-            log.warn("Unable to get the root of XML content.", e);
-            throw new RuntimeException("Unable to get the root of XML content.", e);
-        }
-    }
 
     /**
      * Converts all attributes of a node to a map.
      *
-     * @param xml   The XML file path
+     * @param xml   The XML content
      * @param xpath The XPath expression to locate the node
      * @return A map containing attribute names as keys and attribute values as values
      */
     public static Map<String, String> nodeAsMap(String xml, String xpath) {
         Map<String, String> map = new HashMap<>();
 
-        XmlHelper.xPath(xml, xpath, node -> {
+        xPath(xml, xpath, node -> {
             NamedNodeMap _map = node.getAttributes();
 
             if (_map != null) {
@@ -170,10 +146,39 @@ public class XmlHelper {
             }
         });
 
-        if (map.isEmpty())
-            return null;
-
         return map;
+    }
+
+    /**
+     * Parses XML content and processes nodes with a consumer function.
+     *
+     * @param xml The XML content to parse
+     * @param fn  The bi-consumer function to process each Node
+     */
+    public static void parseXML(String xml, Consumer<Node> fn) {
+        Objects.requireNonNull(xml, "parseXML.xml");
+        Objects.requireNonNull(fn, "parseXML.fn");
+
+        NodeList nodeList = getRoot(xml).getChildNodes();
+
+        for (int i = 0; i < nodeList.getLength(); i++)
+            fn.accept(nodeList.item(i));
+    }
+
+    /**
+     * Gets the root element from the given XML string.
+     *
+     * @param xml The XML string content
+     * @return The root Element of the XML document
+     */
+    public static Element getRoot(String xml) {
+        Objects.requireNonNull(xml, "getRoot.xml");
+
+        try (InputStream in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
+            return initBuilder().parse(in).getDocumentElement();
+        } catch (SAXException | IOException e) {
+            throw new IllegalArgumentException("Invalid XML content.", e);
+        }
     }
 
     /**
@@ -182,8 +187,14 @@ public class XmlHelper {
      * @param node The node object to extract text from
      * @return The inner text content
      */
-    public static String getNodeText(Node node) {
-        DOMImplementationLS lsImpl = (DOMImplementationLS) node.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
+    public static String getInnerXml(Node node) {
+        Objects.requireNonNull(node, "getInnerXml.node");
+        Object feature = node.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
+
+        if (!(feature instanceof DOMImplementationLS))
+            throw new IllegalStateException("DOM Load and Save 3.0 is not supported.");
+
+        DOMImplementationLS lsImpl = (DOMImplementationLS) feature;
         LSSerializer lsSerializer = lsImpl.createLSSerializer();
         DOMConfiguration domConfig = lsSerializer.getDomConfig();
         domConfig.setParameter("xml-declaration", false);
@@ -200,45 +211,95 @@ public class XmlHelper {
      * Gets a specific attribute value from a node.
      *
      * @param node     The node object
-     * @param attrName The name of the attribute to retrieve
+     * @param attrName The name of the attribute to retrieve, it's case-sensitive
      * @return The attribute value, or {@code null} if the node has no attributes or the named attribute is absent
      */
     public static String getNodeAttribute(Node node, String attrName) {
-        NamedNodeMap attrs = node.getAttributes();
+        Objects.requireNonNull(node, "getNodeAttribute.node");
+        Objects.requireNonNull(attrName, "getNodeAttribute.attrName");
 
-        if (attrs == null)
+        NamedNodeMap attributes = node.getAttributes();
+
+        if (attributes == null)
             return null;
 
-        for (int i = 0; i < attrs.getLength(); i++) {
-            Attr attr = (Attr) attrs.item(i);
+        Node attr = attributes.getNamedItem(attrName);
 
-            if (attrName.equalsIgnoreCase(attr.getNodeName()))
-                return attr.getValue();
-        }
+        return attr == null ? null : attr.getNodeValue();
+    }
 
-        return null;
+    private static final Pattern XML_ELEMENT_NAME = Pattern.compile("[_\\p{L}][_\\p{L}\\p{N}\\p{M}.-]*");
+
+    /**
+     * 将给定的对象转换为 XML 格式的字符串
+     *
+     * @param bean 要转换的对象
+     * @return 转换后的XML格式的字符串
+     */
+    public static String beanToXml(Object bean) {
+        Objects.requireNonNull(bean, "beanToXml.bean");
+
+        return mapToXml(JsonUtil.pojo2map(bean));
     }
 
     /**
-     * Gets a specific attribute value from a node.
+     * 将 Map 转换为 XML 格式的字符串
      *
-     * @param el       The node object
-     * @param attrName The name of the attribute to retrieve
-     * @return The attribute value
+     * @param data Map 类型数据
+     * @return XML 格式的字符串
+     * @throws IllegalArgumentException 如果 Map key 不是合法的 XML 元素名
      */
-    public static String getAttribute(Node el, String attrName) {
-        NamedNodeMap attributes = el.getAttributes();
+    public static String mapToXml(Map<String, ?> data) {
+        Objects.requireNonNull(data, "mapToXml.data");
+        Document doc = initBuilder().newDocument();
+        Element root = doc.createElement("xml");
+        doc.appendChild(root);
 
-        if (attributes != null && attributes.getLength() > 0) {
-            Node namedItem = attributes.getNamedItem(attrName);
+        data.forEach((key, value) -> {
+            if (key == null || !XML_ELEMENT_NAME.matcher(key).matches())
+                throw new IllegalArgumentException("Invalid XML element name for map key: " + key);
 
-            if (namedItem != null)
-                return namedItem.getNodeValue();
-            else {
-                log.warn("The attribute: {} is not found", attrName);
-                return null;
+            Element field = doc.createElement(key);
+
+            if (value != null)
+                field.appendChild(doc.createTextNode(value.toString()));
+
+            root.appendChild(field);
+        });
+
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+
+            return writer.toString();
+        } catch (TransformerException e) {
+            throw new IllegalStateException("Unable to convert Map to XML.", e);
+        }
+    }
+
+    /**
+     * XML 格式字符串转换为 Map
+     *
+     * @param xml XML 字符串
+     * @return XML 数据转换后的 Map
+     */
+    public static Map<String, String> xmlToMap(String xml) {
+        Objects.requireNonNull(xml, "xmlToMap.xml");
+        Map<String, String> data = new HashMap<>();
+        NodeList nodes = getRoot(xml).getChildNodes();
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                data.put(element.getNodeName(), element.getTextContent());
             }
-        } else
-            return null;
+        }
+
+        return data;
     }
 }

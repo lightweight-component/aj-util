@@ -3,30 +3,11 @@ package com.ajaxjs.util;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.TimeZone;
-
 /**
  * Debug tools.
  */
 @Slf4j
 public class DebugTools {
-    /**
-     * 打印数组以便测试
-     *
-     * @param arr 数组对象，可以为 null
-     */
-    public static void printArray(Object[] arr) {
-        if (arr == null) {
-            System.err.println("数组为空，null！");
-            return;
-        }
-
-        if (arr.length == 0)
-            System.err.println("数组不为空，但没有一个元素在内");
-
-        log.info(Arrays.toString(arr));
-    }
 
     /**
      * 获取操作系统名称
@@ -69,30 +50,5 @@ public class DebugTools {
         // export AJAXJS_TEST="true"
         if ("true".equals(System.getenv("AJAXJS_TEST")))
             isDebug = true;
-    }
-
-    /**
-     * 是否在运行单元测试
-     */
-    private static Boolean isRunningTest;
-
-    /**
-     * 检测是否在运行单元测试
-     *
-     * @return true=运行单元测试
-     */
-    public static Boolean isRunningTest() {
-        if (isRunningTest == null) {
-            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
-            for (StackTraceElement e : stackTrace) {
-                if (e.toString().lastIndexOf("junit.runners") > -1)
-                    return true;
-            }
-
-            isRunningTest = false;
-        }
-
-        return isRunningTest;
     }
 }
