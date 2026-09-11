@@ -1,32 +1,22 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util;
 
-import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 /**
  * Map Conversion Utility - Provides comprehensive map manipulation operations including
- * joining maps to strings, converting between different map formats, XML serialization.
+ * joining maps to strings, converting between different map formats.
  */
-@Slf4j
 public class MapTool {
     /**
      * Map 转换为 String
@@ -34,7 +24,7 @@ public class MapTool {
      * @param map Map 结构，Key 必须为 String 类型
      * @param div 分隔符
      * @param fn  对 Value 的处理函数，返回类型 T
-     * @param <T> Key 的类型
+     * @param <T> Value 的类型
      * @return Map 序列化字符串
      */
     public static <T> String join(Map<String, T> map, String div, Function<T, String> fn) {
@@ -68,7 +58,7 @@ public class MapTool {
      * @return 拼接后的字符串
      */
     public static <T> String join(Map<String, T> map, String div) {
-        return join(map, div, v -> v == null ? null : v.toString());
+        return join(map, div, v -> v == null ? CommonConstant.EMPTY_STRING : v.toString());
     }
 
     /**
@@ -84,6 +74,7 @@ public class MapTool {
 
     /**
      * String[] 转换为 Map
+     * Null entries are ignored.
      *
      * @param pairs 结对的字符串数组，包含 = 字符分隔 key 和 value
      * @param fn    对 Value 的处理函数，返回类型 Object
@@ -91,20 +82,20 @@ public class MapTool {
      */
     public static Map<String, Object> toMap(String[] pairs, Function<String, Object> fn) {
         if (ObjectHelper.isEmpty(pairs))
-            return null;
+            return new HashMap<>();
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(ObjectHelper.getInitialCapacity(pairs.length));
 
         for (String pair : pairs) {
+            if (pair == null)
+                continue;
+
             if (!pair.contains("="))
-                throw new IllegalArgumentException("没有 = 不能转化为 map");
+                throw new IllegalArgumentException("Pair must contain '=': " + pair);
 
             String[] column = pair.split("=", 2);
+            map.put(column[0], fn == null ? column[1] : fn.apply(column[1]));
 
-            if (column.length >= 2)
-                map.put(column[0], fn == null ? column[1] : fn.apply(column[1]));
-            else
-                map.put(column[0], "");// 没有 等号后面的，那设为空字符串
         }
 
         return map;
@@ -119,19 +110,50 @@ public class MapTool {
      * @return Map 对象
      */
     public static Map<String, Object> toMap(String[] columns, String[] values, Function<String, Object> fn) {
+        Objects.requireNonNull(columns, "toMap.columns");
+        Objects.requireNonNull(values, "toMap.values");
+
         if (ObjectHelper.isEmpty(columns))
-            return null;
+            return new HashMap<>();
 
         if (columns.length != values.length)
-            throw new UnsupportedOperationException("两个数组 size 不一样");
+            throw new IllegalArgumentException("columns and values must have the same length");
 
-        Map<String, Object> map = new HashMap<>();
-        int i = 0;
+        Map<String, Object> map = new HashMap<>(ObjectHelper.getInitialCapacity(columns.length));
 
-        for (String column : columns)
-            map.put(column, fn.apply(values[i++]));
+        for (int i = 0; i < columns.length; i++) {
+            Object value = fn == null ? values[i] : fn.apply(values[i]);
+            map.put(columns[i], value);
+        }
 
         return map;
+    }
+
+    /**
+     * Parses an application/x-www-form-urlencoded query string.
+     * <p>
+     * Duplicate keys are overwritten by later values.
+     *
+     * @param query the string to be a map
+     * @return map
+     */
+    public static Map<String, String> toMap(String query) {
+        Objects.requireNonNull(query, "toMap.query");
+        String[] fields = query.split("&");
+        Map<String, String> res = new HashMap<>(ObjectHelper.getInitialCapacity(fields.length));
+
+        for (String field : fields) {
+            String[] keyValue = field.split("=", 2);
+
+            if (keyValue.length == 2) {
+                String key = new UrlCodec(keyValue[0]).decodeForm();
+                String value = new UrlCodec(keyValue[1]).decodeForm();
+
+                res.put(key, value);
+            }
+        }
+
+        return res;
     }
 
     /**

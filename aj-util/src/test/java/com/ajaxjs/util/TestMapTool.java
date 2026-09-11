@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.ajaxjs.util.MapTool.join;
+import static com.ajaxjs.util.MapTool.toMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestMapTool {
@@ -55,6 +56,7 @@ class TestMapTool {
     public static Map<String, Object> as(Map<String, String[]> map) {
         return as(map, arr -> ConvertBasicValue.toJavaValue(arr[0]));
     }
+
     final Map<String, Object> map = new HashMap<String, Object>() {
         private static final long serialVersionUID = 1L;
 
@@ -137,7 +139,7 @@ class TestMapTool {
 
     }
 
-//	@Test
+    //	@Test
 //	public void testBean2Json() {
 //		TestCaseUserBean user = map2Bean(MapMock.user, TestCaseUserBean.class, true);
 //		String json = beanToJson(user);
@@ -148,7 +150,28 @@ class TestMapTool {
 //		assertEquals(2, user.getLuckyNumbers()[0]);
 //		assertNotNull(user);
 //	}
+    @Test
+    public void testToMap() {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("bar", "baz");
+        assertEquals(expected, toMap("foo&bar=baz"));
+    }
 
+    @Test
+    void testToMapSingleParameter() {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("a", "b");
+
+        assertEquals(expected, toMap("a=b"));
+    }
+
+    @Test
+    void testToMapValueContainingEquals() {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("token", "header.payload=signature==");
+
+        assertEquals(expected, toMap("token=header.payload=signature=="));
+    }
 
     @Test
     void testFlatten() {

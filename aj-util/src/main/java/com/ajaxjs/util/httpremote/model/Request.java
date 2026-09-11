@@ -85,7 +85,7 @@ public class Request implements HttpConstant {
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
         if (contentType.equals(CONTENT_TYPE_JSON)) {
-            Map<String, String> map = UrlCodec.parseStringToMap(data);
+            Map<String, String> map = MapTool.toMap(data);
             String json = JsonUtil.toJson(map);
             this.data = json.getBytes(StandardCharsets.UTF_8);
         } else if (contentType.equals(CONTENT_TYPE_FORM))

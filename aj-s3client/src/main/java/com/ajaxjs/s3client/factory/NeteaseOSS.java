@@ -2,6 +2,7 @@ package com.ajaxjs.s3client.factory;
 
 import com.ajaxjs.s3client.BaseS3ClientSigV2;
 import com.ajaxjs.util.HashHelper;
+import com.ajaxjs.util.StringBytes;
 import com.ajaxjs.util.date.DateTools;
 import com.ajaxjs.util.httpremote.model.HttpConstant;
 import com.ajaxjs.util.httpremote.model.Response;
@@ -35,7 +36,7 @@ public class NeteaseOSS extends BaseS3ClientSigV2 {
             throw new IllegalArgumentException("Object content is required.");
 
         byte[] md5Bytes = new HashHelper(HashHelper.MD5, fileBytes).getMessageDigest();
-        String md5Hex = com.ajaxjs.util.BytesHelper.bytesToHex(md5Bytes).toLowerCase(java.util.Locale.ROOT);
+        String md5Hex = StringBytes.bytesToHex(md5Bytes).toLowerCase(java.util.Locale.ROOT);
         String contentMd5 = Base64.getEncoder().encodeToString(md5Bytes);
         String now = DateTools.nowGMTDate();
         String data = "PUT\n" + contentMd5 + getCanonicalResource(now, bucketName, objectName);

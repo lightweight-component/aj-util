@@ -1,7 +1,6 @@
 package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.Base64Utils;
-import com.ajaxjs.util.BytesHelper;
 import com.ajaxjs.util.RandomTools;
 import com.ajaxjs.util.StringBytes;
 import lombok.Data;
@@ -246,7 +245,7 @@ public class Cryptography {
      * @throws RuntimeException         if the configured transformation is unavailable
      */
     public String doCipherAsHexStr() {
-        return BytesHelper.bytesToHex(doCipher());
+        return StringBytes.bytesToHex(doCipher());
     }
 
     /**
@@ -278,7 +277,7 @@ public class Cryptography {
     public static String AES_decode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.AES, Cipher.DECRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setData(BytesHelper.hexToBytes(data));
+        cryptography.setData(StringBytes.hexToBytes(data));
 
         return cryptography.doCipherAsStr();
     }
@@ -312,7 +311,7 @@ public class Cryptography {
     public static String DES_decode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.DES, Cipher.DECRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setData(BytesHelper.hexToBytes(data));
+        cryptography.setData(StringBytes.hexToBytes(data));
 
         return cryptography.doCipherAsStr();
     }

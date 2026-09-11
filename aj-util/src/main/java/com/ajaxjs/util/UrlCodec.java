@@ -117,33 +117,6 @@ public class UrlCodec {
     }
 
     /**
-     * Parses an application/x-www-form-urlencoded query string.
-     * <p>
-     * Duplicate keys are overwritten by later values.
-     *
-     * @param query the string to be a map
-     * @return map
-     */
-    public static Map<String, String> parseStringToMap(String query) {
-        Objects.requireNonNull(query, "query");
-        String[] fields = query.split("&");
-        Map<String, String> res = new HashMap<>(ObjectHelper.getInitialCapacity(fields.length));
-
-        for (String field : fields) {
-            String[] keyValue = field.split("=", 2);
-
-            if (keyValue.length == 2) {
-                String key = new UrlCodec(keyValue[0]).decodeForm();
-                String value = new UrlCodec(keyValue[1]).decodeForm();
-
-                res.put(key, value);
-            }
-        }
-
-        return res;
-    }
-
-    /**
      * Concatenates two URL parts while ensuring proper formatting.
      * Handles leading and trailing slashes to create a valid URL path.
      * <p>

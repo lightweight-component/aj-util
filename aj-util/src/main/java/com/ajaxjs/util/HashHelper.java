@@ -153,7 +153,7 @@ public class HashHelper {
      * @return the hash value as a lowercase hexadecimal string
      */
     public String hashAsStr() {
-        return BytesHelper.bytesToHex(hash()).toLowerCase(Locale.ROOT);
+        return StringBytes.bytesToHex(hash()).toLowerCase(Locale.ROOT);
     }
 
     /**
@@ -217,7 +217,7 @@ public class HashHelper {
             MessageDigest digest = MessageDigest.getInstance(MD5);
             new DataReader(in).readStreamAsBytes(8192, (readSize, buffer) -> digest.update(buffer, 0, readSize));
 
-            return BytesHelper.bytesToHex(digest.digest()).toLowerCase(Locale.ROOT);
+            return StringBytes.bytesToHex(digest.digest()).toLowerCase(Locale.ROOT);
         } catch (NoSuchAlgorithmException e) {
             log.warn("No Such Algorithm: MD5", e);
             throw new RuntimeException("No Such Algorithm: MD5", e);

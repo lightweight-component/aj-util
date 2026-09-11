@@ -1,3 +1,13 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util;
 
 import org.w3c.dom.*;
@@ -26,9 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -70,11 +78,9 @@ public class XmlHelper {
             factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, CommonConstant.EMPTY_STRING);
-            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, CommonConstant.EMPTY_STRING);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, CommonConstant.EMPTY_STRING);
             factory.setXIncludeAware(false);
             factory.setExpandEntityReferences(false);
-            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, CommonConstant.EMPTY_STRING);
-            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, CommonConstant.EMPTY_STRING);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(new ErrorHandler() {
@@ -118,7 +124,6 @@ public class XmlHelper {
 
             for (int i = 0; i < nodes.getLength(); i++)
                 fn.accept(nodes.item(i));
-
         } catch (XPathExpressionException e) {
             throw new IllegalArgumentException("Invalid XPath expression: " + xpath, e);
         }
@@ -251,6 +256,7 @@ public class XmlHelper {
      */
     public static String mapToXml(Map<String, ?> data) {
         Objects.requireNonNull(data, "mapToXml.data");
+
         Document doc = initBuilder().newDocument();
         Element root = doc.createElement("xml");
         doc.appendChild(root);
@@ -259,18 +265,21 @@ public class XmlHelper {
             if (key == null || !XML_ELEMENT_NAME.matcher(key).matches())
                 throw new IllegalArgumentException("Invalid XML element name for map key: " + key);
 
-            Element field = doc.createElement(key);
-
-            if (value != null)
-                field.appendChild(doc.createTextNode(value.toString()));
-
-            root.appendChild(field);
+            if (value instanceof Iterable) {
+                for (Object item : (Iterable<?>) value)
+                    appendElement(doc, root, key, item);
+            } else
+                appendElement(doc, root, key, value);
         });
 
         try {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            TransformerFactory factory = TransformerFactory.newInstance();
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            Transformer transformer = factory.newTransformer();
             transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
             StringWriter writer = new StringWriter();
             transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
@@ -280,11 +289,19 @@ public class XmlHelper {
         }
     }
 
+    private static void appendElement(Document doc, Element root, String key, Object value) {
+        Element field = doc.createElement(key);
+
+        if (value != null)
+            field.appendChild(doc.createTextNode(value.toString()));
+
+        root.appendChild(field);
+    }
+
     /**
-     * XML 格式字符串转换为 Map
-     *
-     * @param xml XML 字符串
-     * @return XML 数据转换后的 Map
+     * Converts the direct child elements of the XML root into a simple map.
+     * <p>
+     * If duplicate element names exist, later values overwrite earlier ones.
      */
     public static Map<String, String> xmlToMap(String xml) {
         Objects.requireNonNull(xml, "xmlToMap.xml");
@@ -297,6 +314,47 @@ public class XmlHelper {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
                 data.put(element.getNodeName(), element.getTextContent());
+            }
+        }
+
+        return data;
+    }
+
+    /**
+     * Converts the direct child elements of the XML root into a multi-value map.
+     * <p>
+     * A single element is stored as a String.
+     * Repeated elements are stored as a List<String>.
+     */
+    public static Map<String, Object> xmlToMultiValueMap(String xml) {
+        Objects.requireNonNull(xml, "xmlToMultiValueMap.xml");
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        NodeList nodes = getRoot(xml).getChildNodes();
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+
+            Element element = (Element) node;
+            String key = element.getNodeName();
+            String value = element.getTextContent();
+            Object oldValue = data.get(key);
+
+            if (oldValue == null)
+                data.put(key, value);
+            else if (oldValue instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<String> values = (List<String>) oldValue;
+                values.add(value);
+            } else {
+                List<String> values = new ArrayList<>();
+                values.add(oldValue.toString());
+                values.add(value);
+
+                data.put(key, values);
             }
         }
 

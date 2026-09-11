@@ -1,7 +1,7 @@
 package com.ajaxjs.s3client.util;
 
-import com.ajaxjs.util.BytesHelper;
 import com.ajaxjs.util.HashHelper;
+import com.ajaxjs.util.StringBytes;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -67,6 +67,6 @@ public abstract class S3SigV4Utils {
         if (data == null)
             throw new IllegalArgumentException("Digest bytes are required.");
 
-        return BytesHelper.bytesToHex(data).toLowerCase(java.util.Locale.ROOT);
+        return StringBytes.bytesToHex(data).toLowerCase(java.util.Locale.ROOT);
     }
 }
