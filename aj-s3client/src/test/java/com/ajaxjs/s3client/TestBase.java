@@ -1,6 +1,6 @@
 package com.ajaxjs.s3client;
 
-import com.ajaxjs.util.io.Resources;
+import com.ajaxjs.util.io.ResourceHelper;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ class TestBase {
     static Map<String, Object> getConfigFromYml(String configFile) {
         Yaml yaml = new Yaml();
 
-        try (InputStream resourceAsStream = Resources.getResource(configFile)) {
+        try (InputStream resourceAsStream = new ResourceHelper(configFile).getStream()) {
             Map<String, Object> m = yaml.load(resourceAsStream);
 
             return flattenMap(m);  // 将解析后的嵌套Map转换为平铺的 Map，方便使用

@@ -1,7 +1,6 @@
 package com.ajaxjs.util;
 
 import com.ajaxjs.util.date.DateTypeConvert;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;

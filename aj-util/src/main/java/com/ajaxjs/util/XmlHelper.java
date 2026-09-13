@@ -338,7 +338,7 @@ public class XmlHelper {
     }
 
     /**
-     * Pattern used to validate simple XML element names generated from map  keys.
+     * Pattern used to validate simple XML element names generated from map keys.
      *
      * <p>The accepted subset supports Unicode letters, digits and combining
      * marks, together with underscore, hyphen and period. Namespace prefixes

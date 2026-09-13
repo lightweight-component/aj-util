@@ -55,7 +55,7 @@ public class ProgressListener {
         if (in == null || out == null)
             throw new NullPointerException("input and output streams are required");
 
-        byte[] buffer = new byte[8192];
+        byte[] buffer = new byte[CommonConstant.BUFFER_SIZE];
         long total = 0L;
         int res;
 
