@@ -1,7 +1,7 @@
 ---
 title: AJ Utilities
-description: Small Java Utils Library with many powerful components
-date: 2025-01-05
+description: Lightweight, object-oriented utilities for Java 8 and later
+date: 2026-09-13
 tags:
   - AJ Utilities
   - Java Utils
@@ -11,31 +11,24 @@ layout: layouts/aj-util.njk
 
 # AJ Utilities
 
-Small Java Utils Library with many powerful components. The size of jar is around 90kb. It contains the following
-modules:
+AJ Utilities is a lightweight Java 8+ library. Its APIs favour small, focused objects where state or configuration is
+needed, while keeping stateless operations convenient. The project provides source code, Javadoc, and unit tests for
+common application tasks.
 
-| Class/Package Module | Detail Description                                                                     | Memo                                      |
-|----------------------|----------------------------------------------------------------------------------------|-------------------------------------------|
-| BytesHelper          | Byte array utility class                                                               |                                           |
-| CollUtils            | Collection utility class                                                               |                                           |
-| ConvertBasicValue    | Attempts to convert target type, note that not all types can be converted              |                                           |
-| DateHelper           | Date utility class                                                                     |                                           |
-| UrlEncode            | String URL/Base64 encoder                                                              |                                           |
-| HashHelper           | MD5/SHA1/SHA256/384/512 encryption utility class                                       |                                           |
-| ObjectHelper         | A helper for Java Object                                                               |                                           |
-| HTTP Request         | A Small HTTP Request Component                                                         |                                           |
-| RandomTools          | Random Numbers and Strings                                                             |                                           |
-| RegExpUtils          | Regular expression utility class                                                       |                                           |
-| StrUtil              | String utility class                                                                   |                                           |
-| JsonUtil             | Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List | Jackson is only library that dependencies |
-| XmlHelper            | XML processing utility class                                                           |                                           |
-| Cryptography         | AES/RSA encryption and decryption package                                              |                                           |
-| IO                   | File, resource, stream utility package                                                 |                                           |
-| Reflection           | Reflection utility package                                                             |                                           |
+| Area | Main APIs | Description |
+| --- | --- | --- |
+| Encoding and hashes | `Base64Utils`, `StringBytes`, `UrlCodec`, `HashHelper` | Base64, hexadecimal, URL values, message digests, and HMACs. |
+| General utilities | `ConvertBasicValue`, `ObjectHelper`, `MapTool`, `RandomTools`, `StrUtil`, `RegExpUtils` | Type conversion, objects, maps, random values, strings, and regular expressions. |
+| Structured data | `JsonUtil`, `XmlHelper` | JSON conversion through a pluggable engine and secure XML helpers. |
+| Date and time | `DateTools`, `DateTypeConvert`, `Formatter` | Java 8 time formatting, strict parsing, and conversion between legacy and modern types. |
+| I/O | `FileHelper`, `ResourceHelper`, `DataReader`, `DataWriter`, `ZipHelper`, `UnzipHelper` | File, classpath resource, stream, ZIP creation, and protected ZIP extraction operations. |
+| HTTP | `Get`, `Post`, `Put`, `Delete`, `Head`, `Request`, `Response` | Lightweight HTTP requests, uploads, downloads, and annotation-driven calls. |
+| Cryptography | `Cryptography`, `SecretKeyMgr`, `KeyMgr`, `DoSignature`, `DoVerify` | Symmetric ciphers, PBE, RSA key management, signatures, and verification. |
+| Reflection | `Clazz`, `Fields`, `Methods`, `NewInstance`, `Types` | Class loading, member lookup, object construction, and generic type inspection. |
 
 ## Source code
 
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
+[GitHub](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util) | [Gitee](https://gitee.com/lightweight-components/aj-util)
 
 ## Links
 
@@ -49,7 +42,7 @@ Runs on Java 8+. Maven:
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.4</version>
+    <version>1.3.7</version>
 </dependency>
 ```
 

@@ -8,30 +8,28 @@ tags:
 layout: layouts/aj-util-cn.njk
 ---
 
-# Java AES/DES/RSA 加密解密 API
+# 加密与解密
 
-JDK 中蕴含了主流的加密解密 API，包括 AES/DES/3DES/RSA，这些功能主要由`javax.crypto`（JCE, Java Cryptography
-Extension）和`java.security`包提供。其中只有 RSA 属于非对称加密（Asymmetric Encryption），其他都是对称加密（Symmetric
-Encryption），它们之间的异同如下：
+`aj-util` 对 Java 8 的 JCE 与安全 API 做了轻量封装，覆盖对称加密、RSA 密钥管理和数字签名。主要入口为 [Cryptography](Cryptography-cn.md) 与 [RSA、密钥和签名](Rsa-cn.md)。
 
-- 之所以被称为“对称加密”，即无论加密还是解密都是同一一个密钥（key），即为“对称”，反之加密一个密钥、解密另外一个密钥的话，则为“非对称”
-- 对称加密一般执行速度较快，但相对于非对称加密安全性较差；而非对称加密则恰恰相反，安全性较高但执行效率相对差
-- 两者之间没有绝对优劣之分，应视乎场合需求择优选用
+- 对称加密使用同一把密钥加密和解密，适合一般业务数据。
+- RSA 使用公私钥对，通常用于保护较小的对称密钥或做签名，不适合直接加密大内容。
+- 新设计的数据存储或通信协议建议优先使用 AES-GCM 或 PBE 辅助方法；DES、3DES、MD5、SHA-1 仅用于兼容遗留系统。
 
 # 源码
 
 最终的代码在[这里](https://gitcode.com/lightweight-component/aj-util/tree/main/src/main/java/com/ajaxjs/util/cryptography)。
 
-使用方式可以参见[单测](https://gitcode.com/lightweight-component/aj-util/blob/main/src/test/java/com/ajaxjs/util/cryptography/TestCryptography.java)。
+使用方式也可参考模块内的单元测试。
 
 Maven 依赖引用，需要 Java8+
 
 ```xml
 <dependency>
     <groupId>com.ajaxjs</groupId>
-    <artifactId>aj-cryptography</artifactId>
-    <version>1.1</version>
+    <artifactId>ajaxjs-util</artifactId>
+    <version>1.3.7</version>
 </dependency>
 ```
 
-该组件 jar 包体积很小，才 20kb~。只依赖了我自己写的一个工具库。
+该模块兼容 Java 8，密码学 API 没有强制的第三方运行时依赖。

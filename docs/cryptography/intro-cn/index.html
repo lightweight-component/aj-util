@@ -33,7 +33,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                    | 🚀<a href="">英语版本</a>
+                   | 🚀<a href="/">英语版本</a>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -54,17 +54,16 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
+                    <li><a href="/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/common/StringBytes-cn/">StringBytes</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+                    <li><a href="/common/HashHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
                     <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
-                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
@@ -85,9 +84,10 @@
                 <h3>Input/Output 输入/输出</h3>
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
-                    <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/io/DataIO-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/io/UnzipHelper-cn/">UnzipHelper</a></li>
                 </ul>
 
                 <h3>HTTP 请求</h3>
@@ -99,8 +99,8 @@
                 <ul>
                     <li><a href="/cryptography/intro-cn/">简介</a></li>
                     <li><a href="/cryptography/flow-cn/">基本流程</a></li>
-                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+                    <li><a href="/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/cryptography/Rsa-cn/">RSA</a></li>
                 </ul>
                 <h3>其他</h3>
                <ul>
@@ -109,26 +109,24 @@
                </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>Java AES/DES/RSA 加密解密 API</h1>
-<p>JDK 中蕴含了主流的加密解密 API，包括 AES/DES/3DES/RSA，这些功能主要由<code>javax.crypto</code>（JCE, Java Cryptography
-Extension）和<code>java.security</code>包提供。其中只有 RSA 属于非对称加密（Asymmetric Encryption），其他都是对称加密（Symmetric
-Encryption），它们之间的异同如下：</p>
+                <h1>加密与解密</h1>
+<p><code>aj-util</code> 对 Java 8 的 JCE 与安全 API 做了轻量封装，覆盖对称加密、RSA 密钥管理和数字签名。主要入口为 <a href="Cryptography-cn.md">Cryptography</a> 与 <a href="Rsa-cn.md">RSA、密钥和签名</a>。</p>
 <ul>
-<li>之所以被称为“对称加密”，即无论加密还是解密都是同一一个密钥（key），即为“对称”，反之加密一个密钥、解密另外一个密钥的话，则为“非对称”</li>
-<li>对称加密一般执行速度较快，但相对于非对称加密安全性较差；而非对称加密则恰恰相反，安全性较高但执行效率相对差</li>
-<li>两者之间没有绝对优劣之分，应视乎场合需求择优选用</li>
+<li>对称加密使用同一把密钥加密和解密，适合一般业务数据。</li>
+<li>RSA 使用公私钥对，通常用于保护较小的对称密钥或做签名，不适合直接加密大内容。</li>
+<li>新设计的数据存储或通信协议建议优先使用 AES-GCM 或 PBE 辅助方法；DES、3DES、MD5、SHA-1 仅用于兼容遗留系统。</li>
 </ul>
 <h1>源码</h1>
 <p>最终的代码在<a href="https://gitcode.com/lightweight-component/aj-util/tree/main/src/main/java/com/ajaxjs/util/cryptography">这里</a>。</p>
-<p>使用方式可以参见<a href="https://gitcode.com/lightweight-component/aj-util/blob/main/src/test/java/com/ajaxjs/util/cryptography/TestCryptography.java">单测</a>。</p>
+<p>使用方式也可参考模块内的单元测试。</p>
 <p>Maven 依赖引用，需要 Java8+</p>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
-    &lt;artifactId&gt;aj-cryptography&lt;/artifactId&gt;
-    &lt;version&gt;1.1&lt;/version&gt;
+    &lt;artifactId&gt;ajaxjs-util&lt;/artifactId&gt;
+    &lt;version&gt;1.3.7&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
-<p>该组件 jar 包体积很小，才 20kb~。只依赖了我自己写的一个工具库。</p>
+<p>该模块兼容 Java 8，密码学 API 没有强制的第三方运行时依赖。</p>
 
             </article>
         </div>

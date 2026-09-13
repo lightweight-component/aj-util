@@ -56,17 +56,16 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/Base64Utils/">Base64Utils</a></li>
+                    <li><a href="/common/StringBytes/">StringBytes</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
+                    <li><a href="/common/HashHelper/">HashHelper</a></li>
                     <li><a href="/common/MapTool/">MapTool</a></li>
                     <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/common/RandomTools/">RandomTools</a></li>
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
                 </ul>
                 <h3>Date Handing</h3>
@@ -87,9 +86,10 @@
                 <h3>IO</h3>
                 <ul>
                     <li><a href="/io/FileHelper/">FileHelper</a></li>
-                    <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ResourceHelper/">ResourceHelper</a></li>
+                    <li><a href="/io/DataIO/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                    <li><a href="/io/UnzipHelper/">UnzipHelper</a></li>
                 </ul>
 
                 <h3>HTTP Request</h3>
@@ -102,8 +102,8 @@
                <ul>
                 <li><a href="/cryptography/intro/">Introduction</a></li>
                 <li><a href="/cryptography/flow/">Basic Flow</a></li>
-                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
-                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+                <li><a href="/cryptography/Cryptography/">Symmetric encryption</a></li>
+                <li><a href="/cryptography/Rsa/">RSA</a></li>
                </ul>
                <h3>Misc.</h3>
                <ul>
@@ -112,33 +112,25 @@
                </ul>
             </menu>
             <article class="aj-text">
-                <h1>Introduction to Encryption and Decryption Package</h1>
-<h2>Java AES/DES/RSA Encryption and Decryption API</h2>
-<p>The JDK contains mainstream encryption and decryption APIs, including AES/DES/3DES/RSA. These functionalities are mainly
-provided by the <code>javax.crypto</code> (JCE, Java Cryptography Extension) and <code>java.security</code> packages. Among these, only RSA
-belongs to asymmetric encryption (Asymmetric Encryption), while the others are symmetric encryption (Symmetric
-Encryption). The similarities and differences between them are as follows:</p>
+                <h1>Encryption and Decryption</h1>
+<p><code>aj-util</code> wraps Java 8 JCE and security APIs for symmetric encryption, RSA key management, and signatures. The main entry points are <a href="Cryptography.md">Cryptography</a> and <a href="Rsa.md">RSA, keys, and signatures</a>.</p>
 <ul>
-<li>It is called &quot;symmetric encryption&quot; because the same key is used for both encryption and decryption, which is &quot;
-symmetric&quot;. Conversely, if one key is used for encryption and another for decryption, it is &quot;asymmetric&quot;</li>
-<li>Symmetric encryption generally executes faster, but its security is relatively poor compared to asymmetric encryption;
-asymmetric encryption is the opposite, with higher security but relatively poor execution efficiency</li>
-<li>There is no absolute superiority between the two, and the optimal choice should be made according to the occasion
-requirements</li>
+<li>Symmetric encryption uses one shared secret for encryption and decryption. It is appropriate for ordinary data payloads.</li>
+<li>RSA uses a public/private key pair. It is normally used to exchange or protect a small symmetric key, and for signatures—not for large payloads.</li>
+<li>Prefer AES-GCM or the PBE helper for newly designed storage and protocol data. DES, 3DES, MD5, and SHA-1 are retained only for compatibility with legacy systems.</li>
 </ul>
 <h2>Source Code</h2>
 <p>The final code
 is <a href="https://gitcode.com/lightweight-component/aj-util/tree/main/src/main/java/com/ajaxjs/util/cryptography">here</a>.</p>
-<p>Usage can be referenced
-in <a href="https://gitcode.com/lightweight-component/aj-util/blob/main/src/test/java/com/ajaxjs/util/cryptography/TestCryptography.java">unit tests</a>.</p>
+<p>Usage examples are also available in the module unit tests.</p>
 <p>Maven dependency reference, requires Java 8+</p>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
-    &lt;artifactId&gt;aj-cryptography&lt;/artifactId&gt;
-    &lt;version&gt;1.1&lt;/version&gt;
+    &lt;artifactId&gt;ajaxjs-util&lt;/artifactId&gt;
+    &lt;version&gt;1.3.7&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
-<p>The component jar package is very small, only about 20kb. It only depends on a utility library I wrote myself.</p>
+<p>The module is compatible with Java 8 and has no mandatory third-party runtime dependency for its cryptographic APIs.</p>
 
             </article>
         </div>

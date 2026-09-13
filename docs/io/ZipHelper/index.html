@@ -4,8 +4,8 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>AJ Utils-ZipHelper</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for ZIP compression and decompression with security protections" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, compression,decompression,Java" />
+        <meta name="description" content="Small Java utilities with many useful functions. Create ZIP archives from a directory, one file, or multiple files" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
@@ -56,17 +56,16 @@
                 <h3>Common</h3>
                 <ul>
                     <li><a href="/common/JsonUtil/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper/">Base64Utils</a></li>
-                    <li><a href="/common/BytesHelper/">BytesHelper</a></li>
+                    <li><a href="/common/Base64Utils/">Base64Utils</a></li>
+                    <li><a href="/common/StringBytes/">StringBytes</a></li>
                     <li><a href="/common/ConvertBasicValue/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper/">HashHelper</a></li>
+                    <li><a href="/common/HashHelper/">HashHelper</a></li>
                     <li><a href="/common/MapTool/">MapTool</a></li>
                     <li><a href="/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/common/RandomTools/">RandomTools</a></li>
                     <li><a href="/common/RegExpUtils/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger/">BoxLogger</a></li>
-                    <li><a href="/common/EncodeTools/">UrlEncode</a></li>
+                    <li><a href="/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/common/XmlHelper/">XmlHelper</a></li>
                 </ul>
                 <h3>Date Handing</h3>
@@ -87,9 +86,10 @@
                 <h3>IO</h3>
                 <ul>
                     <li><a href="/io/FileHelper/">FileHelper</a></li>
-                    <li><a href="/io/Resources/">Resources</a></li>
-                    <li><a href="/io/StreamHelper/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ResourceHelper/">ResourceHelper</a></li>
+                    <li><a href="/io/DataIO/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper/">ZipHelper</a></li>
+                    <li><a href="/io/UnzipHelper/">UnzipHelper</a></li>
                 </ul>
 
                 <h3>HTTP Request</h3>
@@ -102,8 +102,8 @@
                <ul>
                 <li><a href="/cryptography/intro/">Introduction</a></li>
                 <li><a href="/cryptography/flow/">Basic Flow</a></li>
-                <li><a href="/cryptography/AesCrypto/">AES/DES</a></li>
-                <li><a href="/cryptography/RsaCrypto/">RSA</a></li>
+                <li><a href="/cryptography/Cryptography/">Symmetric encryption</a></li>
+                <li><a href="/cryptography/Rsa/">RSA</a></li>
                </ul>
                <h3>Misc.</h3>
                <ul>
@@ -112,73 +112,29 @@
                </ul>
             </menu>
             <article class="aj-text">
-                <h1>ZipHelper Tutorial</h1>
-<p>This tutorial provides an overview of the <code>ZipHelper</code> class, which is part of the <code>lightweight-component/aj-util</code>
-library. The <code>ZipHelper</code> class provides utility methods for ZIP compression and decompression operations.</p>
-<h2>Introduction</h2>
-<p>The <code>ZipHelper</code> class contains static methods for working with ZIP files, including compression, decompression, and file
-type detection.</p>
-<h2>Main Features</h2>
-<ul>
-<li>ZIP extraction with Zip Slip, symbolic-link, entry-count, size, and compression-ratio protection</li>
-<li>File and directory compression (with STORED or DEFLATED options)</li>
-<li>Recursive directory compression</li>
-<li>ZIP file detection by opening and validating the archive structure, including empty ZIPs</li>
-<li>Buffered CRC32 calculation for STORED entries</li>
-<li>Automatic directory creation</li>
-</ul>
-<h2>Methods</h2>
-<h3>1. Decompression</h3>
-<ol>
-<li><code>unzip(String save, String zipFile)</code> - Decompress ZIP file to target directory</li>
-<li><code>unzip(String save, String zipFile, ExtractionLimits limits)</code> - Decompress with custom resource limits</li>
-<li><code>unzipWithChineseFilename(...)</code> - Read legacy GBK entry names</li>
-</ol>
-<h3>2. Compression</h3>
-<ol>
-<li><code>zipFile(File[] fileContent, String saveZip, boolean useStore)</code> - Compress files to ZIP</li>
-<li><code>zipDirectory(String sourceDir, String saveZip, boolean useStore)</code> - Compress directory to ZIP</li>
-<li><code>zipSingleFile(String sourceFile, String saveZip, boolean useStore)</code> - Compress one file</li>
-</ol>
-<h3>3. Utility Methods</h3>
-<ol>
-<li><code>initFolder(File file)</code> - Ensure parent directories exist for a file</li>
-<li><code>initFolder(String file)</code> - String version of initFolder</li>
-<li><code>isZipFile(String filePath)</code> - Check if file is a valid ZIP file</li>
-</ol>
-<h2>Usage Examples</h2>
-<h3>Decompression</h3>
-<pre><code class="language-java">ZipHelper.unzip(&quot;C:/extracted&quot;, &quot;C:/archive.zip&quot;);
+                <h1>ZipHelper</h1>
+<p><code>ZipHelper</code> creates ZIP archives. Construct it with a directory, a single <code>File</code>, or an array of files, then call
+<code>zip()</code>. ZIP extraction is provided separately by <a href="/io/UnzipHelper/">UnzipHelper</a>.</p>
+<pre><code class="language-java">import com.ajaxjs.util.io.ZipHelper;
+
+ZipHelper backup = new ZipHelper(&quot;C:/data&quot;, &quot;C:/backup.zip&quot;);
+backup.zip();
 </code></pre>
-<p>Extraction uses conservative default limits. Use the overload with <code>ExtractionLimits</code> when trusted archives require
-different limits.</p>
-<h3>File Compression</h3>
-<pre><code class="language-java">File[] files = {new File(&quot;file1.txt&quot;), new File(&quot;file2.txt&quot;)};
-ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // Use DEFLATED compression
+<h2>Sources and compression mode</h2>
+<p>Directory sources are traversed recursively; relative paths and empty directories are preserved. Symbolic links and
+non-regular files are rejected. The destination ZIP must be outside the source directory.</p>
+<pre><code class="language-java">ZipHelper single = new ZipHelper(new File(&quot;report.csv&quot;), &quot;report.zip&quot;);
+single.zip();
+
+ZipHelper files = new ZipHelper(new File[]{new File(&quot;a.txt&quot;), new File(&quot;b.txt&quot;)}, &quot;files.zip&quot;);
+files.setUseStore(true); // STORED: no compression
+files.zip();
 </code></pre>
-<h3>Directory Compression</h3>
-<pre><code class="language-java">ZipHelper.zipDirectory(&quot;C:/data&quot;, &quot;backup.zip&quot;, true); // Use STORED (no compression)
-</code></pre>
-<p>Directory compression does not follow symbolic links. The destination ZIP must be outside the source directory.</p>
-<h3>ZIP File Detection</h3>
-<pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
-</code></pre>
-<p>Missing files, directories, and malformed archives return <code>false</code>.</p>
-<h3>Directory Creation</h3>
-<pre><code class="language-java">ZipHelper.initFolder(&quot;C:/new/path/file.txt&quot;); // Creates C:/new/path if needed
-</code></pre>
-<h2>Compression Methods</h2>
-<p>The class supports two compression methods:</p>
-<ol>
-<li><code>DEFLATED</code> (default) - Standard ZIP compression</li>
-<li><code>STORED</code> - No compression, files are stored as-is</li>
-</ol>
-<h2>Error Handling</h2>
-<p>I/O failures are reported as <code>UncheckedIOException</code>; invalid arguments use <code>IllegalArgumentException</code>. Compression is
-written to a temporary file and published only after the archive is complete.</p>
-<h2>Conclusion</h2>
-<p>The <code>ZipHelper</code> class provides comprehensive utility methods for working with ZIP files, making compression and
-decompression operations more convenient in Java applications.</p>
+<p>The default mode is <code>DEFLATED</code>. <code>setUseStore(true)</code> selects <code>STORED</code>; it calculates each source file's size and CRC32
+before writing, so source files must not change during the operation. Multiple files must have distinct file names,
+because they are stored at the archive root.</p>
+<p>The archive is first written to a temporary sibling file, then replaces the target only after a successful write.
+I/O failures are reported as <code>UncheckedIOException</code>.</p>
 
             </article>
         </div>

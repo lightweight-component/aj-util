@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>AJ Utils-AJ Utilities 简介</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  小型、干净、简单的 Java 工具库，包含多种强大的组件" />
+        <meta name="description" content="Small Java utilities with many useful functions.  面向 Java 8 及以上版本的轻量级、面向对象工具库" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, AJ Utilities,Java 工具库,中文文档" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,7 +33,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                    | 🚀<a href="">英语版本</a>
+                   | 🚀<a href="/">英语版本</a>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -54,17 +54,16 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
+                    <li><a href="/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/common/StringBytes-cn/">StringBytes</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+                    <li><a href="/common/HashHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
                     <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
-                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
@@ -85,9 +84,10 @@
                 <h3>Input/Output 输入/输出</h3>
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
-                    <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/io/DataIO-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/io/UnzipHelper-cn/">UnzipHelper</a></li>
                 </ul>
 
                 <h3>HTTP 请求</h3>
@@ -99,8 +99,8 @@
                 <ul>
                     <li><a href="/cryptography/intro-cn/">简介</a></li>
                     <li><a href="/cryptography/flow-cn/">基本流程</a></li>
-                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+                    <li><a href="/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/cryptography/Rsa-cn/">RSA</a></li>
                 </ul>
                 <h3>其他</h3>
                <ul>
@@ -110,100 +110,60 @@
             </menu>
             <article class="aj-text chinese">
                 <h1>AJ Utilities 简介</h1>
-<p>小型、干净、简单的 Java 工具库。JAR 包体积大小约 60kb。它包含下面的模块。</p>
+<p>轻量级 Java 8+ 工具库。在需要保存配置或状态的场景中，API 采用小而清晰的对象；无状态操作则保持简洁。项目提供源码、Javadoc 与单元测试。</p>
 <table>
 <thead>
 <tr>
-<th>Class/Package 模块</th>
-<th>Detail 说明</th>
-<th>Memo 备注</th>
+<th>领域</th>
+<th>主要 API</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>BytesHelper</td>
-<td>字节数组工具类</td>
-<td></td>
+<td>编码与摘要</td>
+<td><code>Base64Utils</code>、<code>StringBytes</code>、<code>UrlCodec</code>、<code>HashHelper</code></td>
+<td>Base64、十六进制、URL 参数、消息摘要与 HMAC。</td>
 </tr>
 <tr>
-<td>CollUtils</td>
-<td>集合工具类</td>
-<td></td>
+<td>常用工具</td>
+<td><code>ConvertBasicValue</code>、<code>ObjectHelper</code>、<code>MapTool</code>、<code>RandomTools</code>、<code>StrUtil</code>、<code>RegExpUtils</code></td>
+<td>类型转换、对象、Map、随机值、字符串和正则表达式。</td>
 </tr>
 <tr>
-<td>ConvertBasicValue</td>
-<td>尝试转换目标类型，注意并不是所有的类型都可以进行转换</td>
-<td></td>
+<td>结构化数据</td>
+<td><code>JsonUtil</code>、<code>XmlHelper</code></td>
+<td>可替换 JSON 引擎与安全的 XML 工具。</td>
 </tr>
 <tr>
-<td>DateHelper</td>
-<td>日期工具类</td>
-<td></td>
+<td>日期时间</td>
+<td><code>DateTools</code>、<code>DateTypeConvert</code>、<code>Formatter</code></td>
+<td>Java 8 时间格式化、严格解析和新旧日期类型转换。</td>
 </tr>
 <tr>
-<td>UrlEncode</td>
-<td>字符串 URL/Base64 编码、解码</td>
-<td></td>
+<td>I/O</td>
+<td><code>FileHelper</code>、<code>ResourceHelper</code>、<code>DataReader</code>、<code>DataWriter</code>、<code>ZipHelper</code>、<code>UnzipHelper</code></td>
+<td>文件、类路径资源、流、ZIP 压缩和带保护的 ZIP 解压。</td>
 </tr>
 <tr>
-<td>HashHelper</td>
-<td>MD5/SHA1/SHA256/384/512 加密工具类</td>
-<td></td>
+<td>HTTP</td>
+<td><code>Get</code>、<code>Post</code>、<code>Put</code>、<code>Delete</code>、<code>Head</code>、<code>Request</code>、<code>Response</code></td>
+<td>轻量 HTTP 请求、上传、下载和注解式调用。</td>
 </tr>
 <tr>
-<td>ObjectHelper</td>
-<td>Java Object 工具类</td>
-<td></td>
+<td>密码学</td>
+<td><code>Cryptography</code>、<code>SecretKeyMgr</code>、<code>KeyMgr</code>、<code>DoSignature</code>、<code>DoVerify</code></td>
+<td>对称加密、PBE、RSA 密钥管理、签名和验签。</td>
 </tr>
 <tr>
-<td>HTTP Request</td>
-<td>小型的 HTTP 请求工具 Component</td>
-<td></td>
-</tr>
-<tr>
-<td>RandomTools</td>
-<td>随机数或随机字符串工具类</td>
-<td></td>
-</tr>
-<tr>
-<td>RegExpUtils</td>
-<td>正则表达式工具类</td>
-<td></td>
-</tr>
-<tr>
-<td>StrUtil</td>
-<td>字符串工具类</td>
-<td></td>
-</tr>
-<tr>
-<td>JsonUtil</td>
-<td>对 Jackson JSON 库的封装，json、map、bean、list 之间的转换16种方法</td>
-<td>Jackson 是唯一的依赖</td>
-</tr>
-<tr>
-<td>XmlHelper</td>
-<td>XML 处理工具类</td>
-<td></td>
-</tr>
-<tr>
-<td>Cryptography</td>
-<td>AES/RSA 加密解密包</td>
-<td></td>
-</tr>
-<tr>
-<td>IO</td>
-<td>文件、资源、流工具包</td>
-<td></td>
-</tr>
-<tr>
-<td>Reflection</td>
-<td>反射工具包</td>
-<td></td>
+<td>反射</td>
+<td><code>Clazz</code>、<code>Fields</code>、<code>Methods</code>、<code>NewInstance</code>、<code>Types</code></td>
+<td>类加载、成员查找、对象构造与泛型类型检查。</td>
 </tr>
 </tbody>
 </table>
 <h2>源代码</h2>
-<p><a href="https://github.com/lightweight-component/aj-util">Github</a> | <a href="https://gitcode.com/lightweight-component/aj-util">GitCode</a></p>
+<p><a href="https://github.com/lightweight-component/aj-util">GitHub</a> | <a href="https://gitcode.com/lightweight-component/aj-util">GitCode</a> | <a href="https://gitee.com/lightweight-components/aj-util">Gitee</a></p>
 <h2>链接</h2>
 <p><a href="https://aj-util.ajaxjs.com">用户手册</a> |  <a href="https://deepwiki.com/lightweight-component/aj-util">Ask DeepWiki</a> | <a href="https://javadoc.io/doc/com.ajaxjs/ajaxjs-util">Java 文档</a></p>
 <h2>安装</h2>
@@ -211,7 +171,7 @@
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
     &lt;artifactId&gt;ajaxjs-util&lt;/artifactId&gt;
-    &lt;version&gt;1.3.4&lt;/version&gt;
+    &lt;version&gt;1.3.7&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 <p><a href="https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util"><img src="https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release" alt="Maven Central"></a></p>

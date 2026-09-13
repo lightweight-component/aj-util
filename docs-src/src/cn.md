@@ -1,7 +1,7 @@
 ---
 title: AJ Utilities 简介
-description: 小型、干净、简单的 Java 工具库，包含多种强大的组件
-date: 2025-01-05
+description: 面向 Java 8 及以上版本的轻量级、面向对象工具库
+date: 2026-09-13
 tags:
   - AJ Utilities
   - Java 工具库
@@ -11,30 +11,22 @@ layout: layouts/aj-util-cn.njk
 
 # AJ Utilities 简介
 
-小型、干净、简单的 Java 工具库。JAR 包体积大小约 60kb。它包含下面的模块。
+轻量级 Java 8+ 工具库。在需要保存配置或状态的场景中，API 采用小而清晰的对象；无状态操作则保持简洁。项目提供源码、Javadoc 与单元测试。
 
-| Class/Package 模块  | Detail 说明                                         | Memo 备注        |
-|-------------------|---------------------------------------------------|----------------|
-| BytesHelper       | 字节数组工具类                                           |                |
-| CollUtils         | 集合工具类                                             |                |
-| ConvertBasicValue | 尝试转换目标类型，注意并不是所有的类型都可以进行转换                        |                |
-| DateHelper        | 日期工具类                                             |                |
-| UrlEncode         | 字符串 URL/Base64 编码、解码                              |                |
-| HashHelper        | MD5/SHA1/SHA256/384/512 加密工具类                     |                |
-| ObjectHelper      | Java Object 工具类                                   |                |
-| HTTP Request      | 小型的 HTTP 请求工具 Component                           |                |
-| RandomTools       | 随机数或随机字符串工具类                                      |                |
-| RegExpUtils       | 正则表达式工具类                                          |                |
-| StrUtil           | 字符串工具类                                            |                |
-| JsonUtil          | 对 Jackson JSON 库的封装，json、map、bean、list 之间的转换16种方法 | Jackson 是唯一的依赖 |
-| XmlHelper         | XML 处理工具类                                         |                |
-| Cryptography      | AES/RSA 加密解密包                                     |                |
-| IO                | 文件、资源、流工具包                                        |                |
-| Reflection        | 反射工具包                                             |                |
+| 领域 | 主要 API | 说明 |
+| --- | --- | --- |
+| 编码与摘要 | `Base64Utils`、`StringBytes`、`UrlCodec`、`HashHelper` | Base64、十六进制、URL 参数、消息摘要与 HMAC。 |
+| 常用工具 | `ConvertBasicValue`、`ObjectHelper`、`MapTool`、`RandomTools`、`StrUtil`、`RegExpUtils` | 类型转换、对象、Map、随机值、字符串和正则表达式。 |
+| 结构化数据 | `JsonUtil`、`XmlHelper` | 可替换 JSON 引擎与安全的 XML 工具。 |
+| 日期时间 | `DateTools`、`DateTypeConvert`、`Formatter` | Java 8 时间格式化、严格解析和新旧日期类型转换。 |
+| I/O | `FileHelper`、`ResourceHelper`、`DataReader`、`DataWriter`、`ZipHelper`、`UnzipHelper` | 文件、类路径资源、流、ZIP 压缩和带保护的 ZIP 解压。 |
+| HTTP | `Get`、`Post`、`Put`、`Delete`、`Head`、`Request`、`Response` | 轻量 HTTP 请求、上传、下载和注解式调用。 |
+| 密码学 | `Cryptography`、`SecretKeyMgr`、`KeyMgr`、`DoSignature`、`DoVerify` | 对称加密、PBE、RSA 密钥管理、签名和验签。 |
+| 反射 | `Clazz`、`Fields`、`Methods`、`NewInstance`、`Types` | 类加载、成员查找、对象构造与泛型类型检查。 |
 
 ## 源代码
 
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
+[GitHub](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util) | [Gitee](https://gitee.com/lightweight-components/aj-util)
 
 ## 链接
 
@@ -48,7 +40,7 @@ layout: layouts/aj-util-cn.njk
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.4</version>
+    <version>1.3.7</version>
 </dependency>
 ```
 

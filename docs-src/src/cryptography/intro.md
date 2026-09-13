@@ -8,38 +8,29 @@ tags:
 layout: layouts/aj-util.njk
 ---
 
-# Introduction to Encryption and Decryption Package
+# Encryption and Decryption
 
-## Java AES/DES/RSA Encryption and Decryption API
+`aj-util` wraps Java 8 JCE and security APIs for symmetric encryption, RSA key management, and signatures. The main entry points are [Cryptography](Cryptography.md) and [RSA, keys, and signatures](Rsa.md).
 
-The JDK contains mainstream encryption and decryption APIs, including AES/DES/3DES/RSA. These functionalities are mainly
-provided by the `javax.crypto` (JCE, Java Cryptography Extension) and `java.security` packages. Among these, only RSA
-belongs to asymmetric encryption (Asymmetric Encryption), while the others are symmetric encryption (Symmetric
-Encryption). The similarities and differences between them are as follows:
-
-- It is called "symmetric encryption" because the same key is used for both encryption and decryption, which is "
-  symmetric". Conversely, if one key is used for encryption and another for decryption, it is "asymmetric"
-- Symmetric encryption generally executes faster, but its security is relatively poor compared to asymmetric encryption;
-  asymmetric encryption is the opposite, with higher security but relatively poor execution efficiency
-- There is no absolute superiority between the two, and the optimal choice should be made according to the occasion
-  requirements
+- Symmetric encryption uses one shared secret for encryption and decryption. It is appropriate for ordinary data payloads.
+- RSA uses a public/private key pair. It is normally used to exchange or protect a small symmetric key, and for signatures—not for large payloads.
+- Prefer AES-GCM or the PBE helper for newly designed storage and protocol data. DES, 3DES, MD5, and SHA-1 are retained only for compatibility with legacy systems.
 
 ## Source Code
 
 The final code
 is [here](https://gitcode.com/lightweight-component/aj-util/tree/main/src/main/java/com/ajaxjs/util/cryptography).
 
-Usage can be referenced
-in [unit tests](https://gitcode.com/lightweight-component/aj-util/blob/main/src/test/java/com/ajaxjs/util/cryptography/TestCryptography.java).
+Usage examples are also available in the module unit tests.
 
 Maven dependency reference, requires Java 8+
 
 ```xml
 <dependency>
     <groupId>com.ajaxjs</groupId>
-    <artifactId>aj-cryptography</artifactId>
-    <version>1.1</version>
+    <artifactId>ajaxjs-util</artifactId>
+    <version>1.3.7</version>
 </dependency>
 ```
 
-The component jar package is very small, only about 20kb. It only depends on a utility library I wrote myself.
+The module is compatible with Java 8 and has no mandatory third-party runtime dependency for its cryptographic APIs.

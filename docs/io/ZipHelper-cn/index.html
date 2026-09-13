@@ -4,8 +4,8 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>AJ Utils-ZipHelper</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  ZIP 压缩和解压缩实用方法，包含安全防护功能" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 压缩,解压缩,Java" />
+        <meta name="description" content="Small Java utilities with many useful functions.  将目录、单个文件或多个文件打包为 ZIP" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,7 +33,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                    | 🚀<a href="">英语版本</a>
+                   | 🚀<a href="/">英语版本</a>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -54,17 +54,16 @@
                 <h3>Common 常用模块</h3>
                 <ul>
                     <li><a href="/common/JsonUtil-cn/">JsonUtil</a></li>
-                    <li><a href="/common/Base64Helper-cn/">Base64Utils</a></li>
+                    <li><a href="/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/common/StringBytes-cn/">StringBytes</a></li>
                     <li><a href="/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
-                    <li><a href="/common/MessageDigestHelper-cn/">HashHelper</a></li>
+                    <li><a href="/common/HashHelper-cn/">HashHelper</a></li>
                     <li><a href="/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/common/RandomTools-cn/">RandomTools</a></li>
                     <li><a href="/common/RegExpUtils-cn/">RegExpUtils</a></li>
                     <li><a href="/common/StrUtil-cn/">StrUtil</a></li>
-                    <li><a href="/common/BoxLogger-cn/">BoxLogger</a></li>
-                    <li><a href="/common/BytesHelper-cn/">BytesHelper</a></li>
-                    <li><a href="/common/EncodeTools-cn/">UrlEncode</a></li>
+                    <li><a href="/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/common/XmlHelper-cn/">XmlHelper</a></li>
                 </ul>
                 <h3>Date 日期处理</h3>
@@ -85,9 +84,10 @@
                 <h3>Input/Output 输入/输出</h3>
                 <ul>
                     <li><a href="/io/FileHelper-cn/">FileHelper</a></li>
-                    <li><a href="/io/Resources-cn/">Resources</a></li>
-                    <li><a href="/io/StreamHelper-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/io/DataIO-cn/">DataReader/DataWriter</a></li>
                     <li><a href="/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/io/UnzipHelper-cn/">UnzipHelper</a></li>
                 </ul>
 
                 <h3>HTTP 请求</h3>
@@ -99,8 +99,8 @@
                 <ul>
                     <li><a href="/cryptography/intro-cn/">简介</a></li>
                     <li><a href="/cryptography/flow-cn/">基本流程</a></li>
-                    <li><a href="/cryptography/AesCrypto-cn/">AES/DES 加密解密</a></li>
-                    <li><a href="/cryptography/RsaCrypto-cn/">RSA 加密解密</a></li>
+                    <li><a href="/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/cryptography/Rsa-cn/">RSA</a></li>
                 </ul>
                 <h3>其他</h3>
                <ul>
@@ -109,70 +109,24 @@
                </ul>
             </menu>
             <article class="aj-text chinese">
-                <h1>ZipHelper 教程</h1>
-<p>本教程提供了 <code>ZipHelper</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>ZipHelper</code> 类为 ZIP
-压缩和解压缩操作提供了实用工具方法。</p>
-<h2>简介</h2>
-<p><code>ZipHelper</code> 类包含用于处理 ZIP 文件的静态方法，包括压缩、解压缩和文件类型检测。</p>
-<h2>主要特性</h2>
-<ul>
-<li>防护 Zip Slip、符号链接、条目数量、解压大小和压缩比的安全解压</li>
-<li>文件和目录压缩（支持 STORED 或 DEFLATED 选项）</li>
-<li>递归目录压缩</li>
-<li>ZIP 文件检测（魔数检查）</li>
-<li>STORED 条目的缓冲 CRC32 计算</li>
-<li>自动目录创建</li>
-</ul>
-<h2>方法</h2>
-<h3>1. 解压缩</h3>
-<ol>
-<li><code>unzip(String save, String zipFile)</code> - 将 ZIP 文件解压缩到目标目录</li>
-<li><code>unzip(String save, String zipFile, ExtractionLimits limits)</code> - 使用自定义资源限制解压</li>
-<li><code>unzipWithChineseFilename(...)</code> - 读取旧式 GBK 条目名称</li>
-</ol>
-<h3>2. 压缩</h3>
-<ol>
-<li><code>zipFile(File[] fileContent, String saveZip, boolean useStore)</code> - 将文件压缩为 ZIP</li>
-<li><code>zipDirectory(String sourceDir, String saveZip, boolean useStore)</code> - 将目录压缩为 ZIP</li>
-<li><code>zipSingleFile(String sourceFile, String saveZip, boolean useStore)</code> - 压缩单个文件</li>
-</ol>
-<h3>3. 实用方法</h3>
-<ol>
-<li><code>initFolder(File file)</code> - 确保文件的父目录存在</li>
-<li><code>initFolder(String file)</code> - initFolder 的字符串版本</li>
-<li><code>isZipFile(String filePath)</code> - 检查文件是否为有效的 ZIP 文件</li>
-</ol>
-<h2>使用示例</h2>
-<h3>解压缩</h3>
-<pre><code class="language-java">ZipHelper.unzip(&quot;C:/extracted&quot;, &quot;C:/archive.zip&quot;);
+                <h1>ZipHelper</h1>
+<p><code>ZipHelper</code> 用于创建 ZIP 文件。通过目录、单个 <code>File</code> 或 <code>File[]</code> 构造对象后调用 <code>zip()</code>。解压功能由独立的 <a href="/io/UnzipHelper-cn/">UnzipHelper</a> 提供。</p>
+<pre><code class="language-java">import com.ajaxjs.util.io.ZipHelper;
+
+ZipHelper backup = new ZipHelper(&quot;C:/data&quot;, &quot;C:/backup.zip&quot;);
+backup.zip();
 </code></pre>
-<p>默认解压使用保守的安全限制。可信 ZIP 确实需要更大配额时，可使用带 <code>ExtractionLimits</code> 的重载。</p>
-<h3>文件压缩</h3>
-<pre><code class="language-java">File[] files = {new File(&quot;file1.txt&quot;), new File(&quot;file2.txt&quot;)};
-ZipHelper.zipFile(files, &quot;archive.zip&quot;, false); // 使用 DEFLATED 压缩
+<h2>数据源与压缩模式</h2>
+<p>目录会被递归遍历，保留相对路径和空目录；符号链接与非普通文件会被拒绝。目标 ZIP 不能位于源目录内部。</p>
+<pre><code class="language-java">ZipHelper single = new ZipHelper(new File(&quot;report.csv&quot;), &quot;report.zip&quot;);
+single.zip();
+
+ZipHelper files = new ZipHelper(new File[]{new File(&quot;a.txt&quot;), new File(&quot;b.txt&quot;)}, &quot;files.zip&quot;);
+files.setUseStore(true); // STORED：不压缩
+files.zip();
 </code></pre>
-<h3>目录压缩</h3>
-<pre><code class="language-java">ZipHelper.zipDirectory(&quot;C:/data&quot;, &quot;backup.zip&quot;, true); // 使用 STORED（无压缩）
-</code></pre>
-<p>目录压缩不会跟随符号链接，目标 ZIP 也不能位于源目录内部。</p>
-<h3>ZIP 文件检测</h3>
-<pre><code class="language-java">boolean isZip = ZipHelper.isZipFile(&quot;unknown.zip&quot;);
-</code></pre>
-<p>检测通过打开并校验 ZIP 结构完成，因此也支持合法的空 ZIP。文件不存在、路径是目录或压缩包损坏时
-返回 <code>false</code>。</p>
-<h3>目录创建</h3>
-<pre><code class="language-java">ZipHelper.initFolder(&quot;C:/new/path/file.txt&quot;); // 如果需要则创建 C:/new/path
-</code></pre>
-<h2>压缩方法</h2>
-<p>该类支持两种压缩方法：</p>
-<ol>
-<li><code>DEFLATED</code>（默认） - 标准 ZIP 压缩</li>
-<li><code>STORED</code> - 无压缩，文件按原样存储</li>
-</ol>
-<h2>错误处理</h2>
-<p>IO 失败会抛出 <code>UncheckedIOException</code>，参数错误会抛出 <code>IllegalArgumentException</code>。压缩先写入临时文件，完整成功后才发布目标。</p>
-<h2>结论</h2>
-<p><code>ZipHelper</code> 类提供了全面的实用方法，用于处理 ZIP 文件，使 Java 应用程序中的压缩和解压缩操作更加方便。</p>
+<p>默认使用 <code>DEFLATED</code>。调用 <code>setUseStore(true)</code> 后使用 <code>STORED</code> 模式；该模式会先计算文件大小与 CRC32，因此打包过程中源文件不应发生变化。多个文件会放在 ZIP 根目录，文件名必须互不重复。</p>
+<p>生成过程先写入目标文件同目录下的临时文件，成功后再替换目标文件。I/O 失败会抛出 <code>UncheckedIOException</code>。</p>
 
             </article>
         </div>

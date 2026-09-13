@@ -9,7 +9,7 @@ Also give these tutorials in Chinese.
 Write a tutorial for `XmlHelper`, using unit tests as examples where appropriate. Also provide the tutorial in
 Chinese.
 
-Here is a Tutorial for `ConvertBasicValue`. Please write tutorial again for 'BytesHelper' like  `ConvertBasicValue` did.
+This documentation site covers the refactored `ajaxjs-util` APIs. For byte/string conversion, see `StringBytes`; for basic value conversion, see `ConvertBasicValue`.
 
 --------------------
 
