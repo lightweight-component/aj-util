@@ -115,8 +115,8 @@ public class HashHelper {
      * Gets the Message Authentication Code (MAC) value using the specified algorithm.
      *
      * @return the generated MAC value as a byte array
-     * @throws IllegalStateException if no HMAC key has been set
-     *                               or the algorithm is not supported
+     * @throws IllegalStateException    if no HMAC key has been set
+     *                                  or the algorithm is not supported
      * @throws IllegalArgumentException if the HMAC key is invalid
      */
     public byte[] getMac() {
@@ -215,7 +215,8 @@ public class HashHelper {
 
         try {
             MessageDigest digest = MessageDigest.getInstance(MD5);
-            new DataReader(in).readStreamAsBytes(8192, (readSize, buffer) -> digest.update(buffer, 0, readSize));
+            new DataReader(in).readStreamAsBytes(CommonConstant.BUFFER_SIZE,
+                    (readSize, buffer) -> digest.update(buffer, 0, readSize));
 
             return StringBytes.bytesToHex(digest.digest()).toLowerCase(Locale.ROOT);
         } catch (NoSuchAlgorithmException e) {

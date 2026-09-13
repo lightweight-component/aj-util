@@ -1,5 +1,6 @@
 package com.ajaxjs.util.io;
 
+import com.ajaxjs.util.CommonConstant;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,4 +110,16 @@ public class DataWriter {
         }
     }
     */
+
+    public static void write(OutputStream out, InputStream in) {
+        byte[] buffer = new byte[CommonConstant.BUFFER_SIZE];
+        int len;
+
+        try {
+            while ((len = in.read(buffer)) != -1)
+                out.write(buffer, 0, len);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 }

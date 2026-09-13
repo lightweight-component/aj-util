@@ -1,6 +1,6 @@
 package com.ajaxjs.util;
 
-import com.ajaxjs.util.io.Resources;
+import com.ajaxjs.util.io.ResourceHelper;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
@@ -26,7 +26,7 @@ class TestXmlHelper {
         String xpath = "/root/element";
         Map<String, String> expectedMap = ObjectHelper.mapOf("attr1", "value1", "attr2", "value2");
 
-        Map<String, String> result = XmlHelper.nodeAsMap(Resources.getResourcesFromClasspath("test2.xml"), xpath);
+        Map<String, String> result = XmlHelper.nodeAsMap(new ResourceHelper("test2.xml").toString(), xpath);
 
         assertNotNull(result);
         assertEquals(expectedMap, result);
@@ -35,7 +35,7 @@ class TestXmlHelper {
     @Test
     void testNodeAsMapWithInvalidXPath() {
         String xpath = "/root/invalidElement";
-        Map<String, String> result = XmlHelper.nodeAsMap(Resources.getResourcesFromClasspath("test2.xml"), xpath);
+        Map<String, String> result = XmlHelper.nodeAsMap(new ResourceHelper("test2.xml").toString(), xpath);
         assertNull(result);
     }
 

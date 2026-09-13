@@ -1,7 +1,18 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util.io;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import com.ajaxjs.util.CommonConstant;
+import com.ajaxjs.util.ObjectHelper;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -22,9 +33,8 @@ import java.util.stream.Stream;
  * This class uses Java NIO Path and Files API for efficient file operations.
  * All methods throw UncheckedIOException for IO errors, wrapping the checked IOException.
  */
-@Data
+@Getter
 @Slf4j
-@Accessors(chain = true)
 public class FileHelper {
     /**
      * The path to the file or directory.
@@ -37,7 +47,7 @@ public class FileHelper {
      * @param path the path to the file or directory
      */
     public FileHelper(Path path) {
-        this.path = path;
+        this.path = Objects.requireNonNull(path, "FileHelper.path");
     }
 
     /**
@@ -46,7 +56,7 @@ public class FileHelper {
      * @param path the file or directory
      */
     public FileHelper(File path) {
-        this.path = path.toPath();
+        this(Objects.requireNonNull(path, "FileHelper.path").toPath());
     }
 
     /**
@@ -55,7 +65,7 @@ public class FileHelper {
      * @param path the path string to the file or directory
      */
     public FileHelper(String path) {
-        this.path = Paths.get(path);
+        this(Paths.get(Objects.requireNonNull(path, "FileHelper.path")));
     }
 
     /**
@@ -72,7 +82,6 @@ public class FileHelper {
             if (Files.isDirectory(path))
                 throw new IOException("Argument：" + path + " is not a file, it's a folder.");
         } catch (IOException e) {
-            log.error("Read file content error: {}", path, e);
             throw new UncheckedIOException("Read file content error: " + path, e);
         }
 
@@ -86,7 +95,6 @@ public class FileHelper {
 
             return sb.toString();
         } catch (IOException e) {
-            log.error("Error reading file {}", path, e);
             throw new UncheckedIOException("Error reading file " + path, e);
         }
     }
@@ -100,7 +108,6 @@ public class FileHelper {
         try {
             return Files.readAllBytes(path);
         } catch (IOException e) {
-            log.error("Error reading file {}(bytes)", path, e);
             throw new UncheckedIOException("Error reading file " + path + "(bytes)", e);
         }
     }
@@ -112,10 +119,11 @@ public class FileHelper {
      * @throws UncheckedIOException if an error occurs during file writing
      */
     public void writeFileContent(String content) {
+        Objects.requireNonNull(content, "writeFileContent.content");
+
         try {
-            Files.write(path, content.getBytes());
+            Files.write(path, content.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            log.error("Error writing string content to file", e);
             throw new UncheckedIOException("Error writing string content to file", e);
         }
     }
@@ -129,11 +137,15 @@ public class FileHelper {
      * @throws UncheckedIOException if an IO error occurs during deletion
      */
     public void delete() {
+        if (Files.notExists(path, LinkOption.NOFOLLOW_LINKS))
+            return;
+
         try {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
+                    Files.deleteIfExists(file);
+
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -142,12 +154,12 @@ public class FileHelper {
                     if (error != null)
                         throw error;
 
-                    Files.delete(dir);
+                    Files.deleteIfExists(dir);
+
                     return FileVisitResult.CONTINUE;
                 }
             });
         } catch (IOException e) {
-            log.error("Delete failed on: {}", path, e);
             throw new UncheckedIOException("Delete failed on: " + path, e);
         }
     }
@@ -166,7 +178,6 @@ public class FileHelper {
         try (Stream<Path> stream = Files.list(path)) {
             return stream.map(p -> p.getFileName().toString()).collect(Collectors.toList());
         } catch (IOException e) {
-            log.error("List Directory Contents failed, on " + path, e);
             throw new UncheckedIOException("List Directory Contents failed, on " + path, e);
         }
     }
@@ -180,14 +191,13 @@ public class FileHelper {
         try {
             Files.createDirectories(path);
         } catch (IOException e) {
-            log.error("Create directory: " + path + " failed.", e);
             throw new UncheckedIOException("Create directory: " + path + " failed.", e);
         }
     }
 
     /**
      * Gets the file-system metadata size of this single path in bytes.
-     * For a directory this is not the recursive size of its contents.
+     * For a directory, this is not the recursive size of its contents.
      *
      * @return the size in bytes
      * @throws UncheckedIOException if an IO error occurs during size calculation
@@ -198,7 +208,6 @@ public class FileHelper {
 
             return attrs.size();
         } catch (IOException e) {
-            log.error("Get the size of a file or directory failed, on: " + path, e);
             throw new UncheckedIOException("Get the size of a file or directory failed, on: " + path, e);
         }
     }
@@ -215,7 +224,7 @@ public class FileHelper {
      * @return this FileHelper instance for method chaining
      */
     public FileHelper setTarget(File target) {
-        this.target = target.toPath();
+        this.target = Objects.requireNonNull(target, "FileHelper.target").toPath();
         return this;
     }
 
@@ -226,7 +235,7 @@ public class FileHelper {
      * @return this FileHelper instance for method chaining
      */
     public FileHelper setTarget(String target) {
-        this.target = Paths.get(target);
+        this.target = Paths.get(Objects.requireNonNull(target, "FileHelper.target"));
         return this;
     }
 
@@ -256,14 +265,17 @@ public class FileHelper {
             if (Files.isDirectory(source, LinkOption.NOFOLLOW_LINKS)) {
                 Path sourceReal = source.toRealPath();
                 Path resolvedDestination = resolveAgainstRealAncestor(destination);
+
                 if (destination.startsWith(source) || resolvedDestination.startsWith(sourceReal))
                     throw new IllegalArgumentException("Copy target must not be inside the source directory: " + target);
 
                 copyDirectory(sourceReal, destination);
-            } else
-                Files.copy(path, target, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                createParentDirectories(destination);
+
+                Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException e) {
-            log.error("Copy failed, on: " + path, e);
             throw new UncheckedIOException("Copy failed, on: " + path, e);
         }
     }
@@ -283,6 +295,7 @@ public class FileHelper {
                     throw new IOException("Symbolic links are not supported while copying directories: " + dir);
 
                 Files.createDirectories(destination.resolve(source.relativize(dir)));
+
                 return FileVisitResult.CONTINUE;
             }
 
@@ -290,6 +303,7 @@ public class FileHelper {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (attrs.isSymbolicLink() || Files.isSymbolicLink(file))
                     throw new IOException("Symbolic links are not supported while copying directories: " + file);
+
                 if (!attrs.isRegularFile())
                     throw new IOException("Unsupported file type while copying directory: " + file);
 
@@ -319,6 +333,7 @@ public class FileHelper {
             return path;
 
         Path resolved = existing.toRealPath();
+
         for (Path part : missingParts)
             resolved = resolved.resolve(part);
 
@@ -329,7 +344,7 @@ public class FileHelper {
      * Moves a file or directory to another location.
      * <p>
      * This operation renames or moves a file to a target file or directory.
-     * If the target is a directory, the source is moved into that directory.
+     * The target represents the final destination path.
      * Use StandardCopyOption.REPLACE_EXISTING to overwrite
      * files with the same name at the destination.
      * <p>
@@ -339,14 +354,41 @@ public class FileHelper {
      * @throws UncheckedIOException  if an IO error occurs during moving
      */
     public void moveTo() {
-        try {
-            if (target == null)
-                throw new IllegalStateException("Target path not set");
+        if (target == null)
+            throw new IllegalStateException("Target path not set");
 
-            Files.move(path, target, StandardCopyOption.REPLACE_EXISTING);
+        if (Files.isSymbolicLink(path))
+            throw new IllegalArgumentException("Symbolic links are not supported as move sources: " + path);
+
+        try {
+            Path destination = target.toAbsolutePath().normalize();
+            createParentDirectories(destination);
+
+            Files.move(path, destination, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            log.error("Move file failed: " + path, e);
             throw new UncheckedIOException("Move file failed: " + path, e);
+        }
+    }
+
+    /**
+     * Creates all missing parent directories for the specified path.
+     *
+     * <p>The path itself is not created. Only its parent directory hierarchy
+     * is created. If the path has no parent, this method does nothing.</p>
+     *
+     * @param path the file or directory path whose parent directories should be created
+     * @throws NullPointerException if {@code path} is {@code null}
+     * @throws UncheckedIOException if the parent directories cannot be created
+     */
+    public static void createParentDirectories(Path path) {
+        Path parent = path.getParent();
+
+        if (parent != null) {
+            try {
+                Files.createDirectories(parent);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
     }
 
@@ -359,13 +401,14 @@ public class FileHelper {
      * @throws UncheckedIOException     if an IO error occurs during chunking
      */
     public void chunkFile(long chunkSize) {
-        if (Files.notExists(path) || Files.isDirectory(path))
-            throw new IllegalArgumentException("The file doesn't exist or it's a folder, on: " + path);
+        if (Files.notExists(path, LinkOption.NOFOLLOW_LINKS) || Files.isSymbolicLink(path) || !Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS))
+            throw new IllegalArgumentException("The source must be a regular file: " + path);
 
         if (chunkSize < 1)
             throw new IllegalArgumentException("分片大小不能小于1个字节:" + chunkSize);
 
         List<Path> createdChunks = new ArrayList<>();
+
         try {
             long fileSize = Files.size(path); // 原始文件大小
             long numberOfChunk = fileSize % chunkSize == 0 ? fileSize / chunkSize : (fileSize / chunkSize) + 1; // 分片数量
@@ -375,18 +418,12 @@ public class FileHelper {
             try (FileChannel fileChannel = FileChannel.open(path, EnumSet.of(StandardOpenOption.READ))) {
                 for (long i = 0; i < numberOfChunk; i++) {
                     long start = i * chunkSize;
-                    long end = start + chunkSize;
+                    long length = Math.min(chunkSize, fileSize - start);
+                    Path chunkFile = path.resolveSibling(fileName + CommonConstant.HYPHEN_STR + (i + 1));
 
-                    if (end > fileSize)
-                        end = fileSize;
-
-                    Path chunkFile = Paths.get(fileName + "-" + (i + 1));  // 分片文件名称
-
-                    try (FileChannel chunkFileChannel = FileChannel.open(path.resolveSibling(chunkFile),
-                            EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE))) {
-                        Path created = path.resolveSibling(chunkFile);
-                        createdChunks.add(created);
-                        transferFully(fileChannel, start, end - start, chunkFileChannel);
+                    try (FileChannel chunkFileChannel = FileChannel.open(chunkFile, EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE))) {
+                        createdChunks.add(chunkFile);
+                        transferFully(fileChannel, start, length, chunkFileChannel);
                     }
                 }
             }
@@ -399,7 +436,6 @@ public class FileHelper {
                 }
             }
 
-            log.error("Chunk file failed, on: " + path, e);
             throw new UncheckedIOException(e);
         }
     }
@@ -412,8 +448,15 @@ public class FileHelper {
      * @throws UncheckedIOException     if an IO error occurs during merging
      */
     public void mergeFile(Path... chunkFiles) {
-        if (chunkFiles == null || chunkFiles.length == 0)
+        if (ObjectHelper.isEmpty(chunkFiles))
             throw new IllegalArgumentException("分片文件不能为空");
+
+        for (Path chunkFile : chunkFiles) {
+            Objects.requireNonNull(chunkFile, "chunkFiles element");
+
+            if (!Files.isRegularFile(chunkFile, LinkOption.NOFOLLOW_LINKS))
+                throw new IllegalArgumentException("Chunk is not a regular file: " + chunkFile);
+        }
 
         Path destination = path.toAbsolutePath().normalize();
         Path parent = destination.getParent();
@@ -422,10 +465,14 @@ public class FileHelper {
         try {
             if (parent == null)
                 throw new IOException("Merge destination has no parent directory: " + path);
+
+            Files.createDirectories(parent);
+
             if (Files.exists(destination))
                 throw new FileAlreadyExistsException(destination.toString());
 
             temporary = Files.createTempFile(parent, ".aj-merge-", ".tmp");
+
             try (FileChannel fileChannel = FileChannel.open(temporary, EnumSet.of(StandardOpenOption.WRITE))) {
                 for (Path chunkFile : chunkFiles) {
                     try (FileChannel chunkChannel = FileChannel.open(chunkFile, EnumSet.of(StandardOpenOption.READ))) {
@@ -436,7 +483,6 @@ public class FileHelper {
 
             Files.move(temporary, destination);
         } catch (IOException e) {
-            log.error("Merge file failed", e);
             throw new UncheckedIOException("Error merging files", e);
         } finally {
             if (temporary != null) {
@@ -463,21 +509,25 @@ public class FileHelper {
 
         while (remaining > 0) {
             long transferred = source.transferTo(position, remaining, target);
+
             if (transferred > 0) {
                 position += transferred;
                 remaining -= transferred;
                 continue;
             }
 
-            ByteBuffer buffer = ByteBuffer.allocate((int) Math.min(8192, remaining));
+            ByteBuffer buffer = ByteBuffer.allocate((int) Math.min(CommonConstant.BUFFER_SIZE, remaining));
             source.position(position);
             int read = source.read(buffer);
+
             if (read < 0)
                 throw new IOException("Unexpected end of file while transferring data.");
+
             if (read == 0)
                 continue;
 
             buffer.flip();
+
             while (buffer.hasRemaining())
                 target.write(buffer);
 

@@ -41,32 +41,69 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
- * XML Processing Utility Class - Provides methods for parsing, manipulating, and querying XML documents.
- * <a href="https://blog.csdn.net/axman/article/details/420910">...</a>
+ * Utility class for parsing, querying, serializing and converting XML data.
  *
- * <p>This class simplifies common XML operations including XPath queries, DOM parsing,
- * node text extraction, attribute retrieval, and conversion between XML formats.
- * It provides a clean API for working with XML in Java applications.
+ * <p>This class is based on the standard Java DOM, XPath and Transformer APIs
+ * and provides convenience methods for common XML operations, including:</p>
  *
- * @author sp42 frank@ajaxjs.com
+ * <ul>
+ *     <li>secure DOM parser creation</li>
+ *     <li>XPath queries</li>
+ *     <li>root-element parsing</li>
+ *     <li>node attribute access</li>
+ *     <li>inner-XML serialization</li>
+ *     <li>Java bean and map to XML conversion</li>
+ *     <li>XML to simple or multi-value map conversion</li>
+ * </ul>
+ *
+ * <p>The DOM parser created by this class disables DTD declarations,
+ * external entities, external DTD/schema access, XInclude and entity
+ * expansion in order to reduce exposure to XXE and related XML attacks.</p>
+ *
+ * <p>Unless explicitly stated otherwise, XML strings are interpreted as
+ * UTF-8 encoded content.</p>
+ * <p>
+ * Ref: <a href="https://blog.csdn.net/axman/article/details/420910">...</a>
  */
 public class XmlHelper {
     /**
-     * Initializes and returns a DocumentBuilder for XML parsing operations.
+     * Creates a secure, non-namespace-aware {@link DocumentBuilder}.
      *
-     * @return A DocumentBuilder instance for XML transformation and parsing
+     * <p>This is equivalent to:</p>
+     *
+     * <pre>{@code
+     * initBuilder(false)
+     * }</pre>
+     *
+     * @return configured secure document builder
+     * @throws IllegalStateException if a secure XML parser cannot be created
      */
     public static DocumentBuilder initBuilder() {
         return initBuilder(false);
     }
 
     /**
-     * Initializes and returns a DocumentBuilder with the requested namespace awareness
-     * and secure-processing restrictions applied. DTD declarations, external entities,
-     * external DTD/schema access, XInclude, and entity-reference expansion are disabled.
+     * Creates a secure {@link DocumentBuilder}.
      *
-     * @param namespaceAware whether the builder should be namespace-aware
-     * @return a configured DocumentBuilder
+     * <p>The returned parser applies the following restrictions:</p>
+     *
+     * <ul>
+     *     <li>DOCTYPE declarations are disabled</li>
+     *     <li>external general entities are disabled</li>
+     *     <li>external parameter entities are disabled</li>
+     *     <li>external DTD loading is disabled</li>
+     *     <li>external DTD access is disabled</li>
+     *     <li>external schema access is disabled</li>
+     *     <li>XInclude processing is disabled</li>
+     *     <li>entity-reference expansion is disabled</li>
+     *     <li>secure-processing mode is enabled</li>
+     * </ul>
+     *
+     * <p>Parser warnings are ignored, while parsing errors and fatal errors are propagated.</p>
+     *
+     * @param namespaceAware whether namespace processing should be enabled
+     * @return configured secure document builder
+     * @throws IllegalStateException if the parser cannot be configured or created securely
      */
     public static DocumentBuilder initBuilder(boolean namespaceAware) {
         try {
@@ -108,10 +145,22 @@ public class XmlHelper {
 
     /**
      * Retrieves a specific node using XPath query.
+     * Evaluates an XPath expression against the root element of an XML
+     * document and passes each matched node to the supplied consumer.
      *
-     * @param xml   The XML content
-     * @param xpath The XPath expression to locate nodes
-     * @param fn    The consumer function to process each matched Node
+     * <p>The XPath expression is evaluated against the element returned by
+     * {@link #getRoot(String)}, not against the {@link Document} object
+     * itself.</p>
+     *
+     * <p>The current implementation uses a non-namespace-aware parser.
+     * XPath expressions using XML namespace prefixes therefore require
+     * additional namespace handling not provided by this method.</p>
+     *
+     * @param xml   XML content
+     * @param xpath XPath expression
+     * @param fn    consumer invoked for every matching node
+     * @throws NullPointerException     if any argument is {@code null}
+     * @throws IllegalArgumentException if the XML is invalid or the XPath expression cannot be compiled
      */
     public static void xPath(String xml, String xpath, Consumer<Node> fn) {
         Objects.requireNonNull(xml, "xPath.xml");
@@ -129,13 +178,21 @@ public class XmlHelper {
         }
     }
 
-
     /**
-     * Converts all attributes of a node to a map.
+     * Collects the attributes of all nodes matched by the supplied XPath
+     * expression into a map.
      *
-     * @param xml   The XML content
-     * @param xpath The XPath expression to locate the node
-     * @return A map containing attribute names as keys and attribute values as values
+     * <p>Attribute names are used as map keys and attribute values as map
+     * values.</p>
+     * <p>If multiple matched nodes contain attributes with the same name,
+     * values from later matched nodes overwrite earlier values.</p>
+     * <p>Nodes without attributes are ignored.</p>
+     *
+     * @param xml   XML content
+     * @param xpath XPath's expression used to locate nodes
+     * @return map containing attribute names and values; never {@code null}
+     * @throws NullPointerException     if {@code xml} or {@code xpath} is  {@code null}
+     * @throws IllegalArgumentException if the XML or XPath expression is invalid
      */
     public static Map<String, String> nodeAsMap(String xml, String xpath) {
         Map<String, String> map = new HashMap<>();
@@ -155,10 +212,26 @@ public class XmlHelper {
     }
 
     /**
-     * Parses XML content and processes nodes with a consumer function.
+     * Parses XML and passes each direct child node of the root element to
+     * the supplied consumer.
      *
-     * @param xml The XML content to parse
-     * @param fn  The bi-consumer function to process each Node
+     * <p>This method iterates over the complete DOM child-node list.
+     * Therefore the consumer may receive not only element nodes, but also
+     * text nodes, comments, CDATA sections and other DOM node types.</p>
+     *
+     * <p>Whitespace between elements is commonly represented as text nodes.
+     * Callers interested only in elements should check:</p>
+     *
+     * <pre>{@code
+     * if (node.getNodeType() == Node.ELEMENT_NODE) {
+     *     ...
+     * }
+     * }</pre>
+     *
+     * @param xml XML content
+     * @param fn  consumer invoked for every direct child node
+     * @throws NullPointerException     if {@code xml} or {@code fn} is {@code null}
+     * @throws IllegalArgumentException if the XML is invalid
      */
     public static void parseXML(String xml, Consumer<Node> fn) {
         Objects.requireNonNull(xml, "parseXML.xml");
@@ -171,10 +244,15 @@ public class XmlHelper {
     }
 
     /**
-     * Gets the root element from the given XML string.
+     * Parses XML content and returns its document root element.
      *
-     * @param xml The XML string content
-     * @return The root Element of the XML document
+     * <p>The XML string is converted to UTF-8 bytes and parsed using the
+     * secure, non-namespace-aware parser returned by {@link #initBuilder()}.</p>
+     *
+     * @param xml XML document content
+     * @return document root element
+     * @throws NullPointerException     if {@code xml} is {@code null}
+     * @throws IllegalArgumentException if the XML cannot be parsed
      */
     public static Element getRoot(String xml) {
         Objects.requireNonNull(xml, "getRoot.xml");
@@ -187,10 +265,33 @@ public class XmlHelper {
     }
 
     /**
-     * Gets the text content within a node, including nested tags.
+     * Serializes the child nodes of the supplied DOM node and returns its
+     * inner XML.
      *
-     * @param node The node object to extract text from
-     * @return The inner text content
+     * <p>The supplied node itself is not serialized. Only its children are
+     * serialized and concatenated.</p>
+     *
+     * <p>For example, given:</p>
+     *
+     * <pre>{@code
+     * <item>Hello <b>World</b></item>
+     * }</pre>
+     *
+     * <p>the result is conceptually:</p>
+     *
+     * <pre>{@code
+     * Hello <b>World</b>
+     * }</pre>
+     *
+     * <p>This method therefore differs from
+     * {@link Node#getTextContent()}, which returns textual content only and
+     * does not preserve nested XML markup.</p>
+     *
+     * @param node DOM node whose child nodes should be serialized
+     * @return serialized inner XML, or an empty string if the node has no
+     * children
+     * @throws NullPointerException  if {@code node} is {@code null}
+     * @throws IllegalStateException if DOM Load and Save 3.0 serialization is not supported
      */
     public static String getInnerXml(Node node) {
         Objects.requireNonNull(node, "getInnerXml.node");
@@ -213,11 +314,14 @@ public class XmlHelper {
     }
 
     /**
-     * Gets a specific attribute value from a node.
+     * Returns the value of a named attribute from a DOM node.
      *
-     * @param node     The node object
-     * @param attrName The name of the attribute to retrieve, it's case-sensitive
-     * @return The attribute value, or {@code null} if the node has no attributes or the named attribute is absent
+     * <p>Attribute lookup is case-sensitive.</p>
+     *
+     * @param node     DOM node
+     * @param attrName attribute name
+     * @return attribute value, or {@code null} if the node has no attributes or the requested attribute does not exist
+     * @throws NullPointerException if {@code node} or {@code attrName} is {@code null}
      */
     public static String getNodeAttribute(Node node, String attrName) {
         Objects.requireNonNull(node, "getNodeAttribute.node");
@@ -233,13 +337,27 @@ public class XmlHelper {
         return attr == null ? null : attr.getNodeValue();
     }
 
+    /**
+     * Pattern used to validate simple XML element names generated from map  keys.
+     *
+     * <p>The accepted subset supports Unicode letters, digits and combining
+     * marks, together with underscore, hyphen and period. Namespace prefixes
+     * using {@code :} are intentionally not supported.</p>
+     */
     private static final Pattern XML_ELEMENT_NAME = Pattern.compile("[_\\p{L}][_\\p{L}\\p{N}\\p{M}.-]*");
 
     /**
-     * 将给定的对象转换为 XML 格式的字符串
+     * Converts a Java bean into XML.
      *
-     * @param bean 要转换的对象
-     * @return 转换后的XML格式的字符串
+     * <p>The bean is first converted to a map using
+     * {@link JsonUtil#pojo2map(Object)} and the resulting map is then
+     * serialized using {@link #mapToXml(Map)}.</p>
+     *
+     * @param bean bean to serialize
+     * @return XML representation of the bean
+     * @throws NullPointerException     if {@code bean} is {@code null}
+     * @throws IllegalArgumentException if a generated map key is not a valid XML element name
+     * @throws IllegalStateException    if XML serialization fails
      */
     public static String beanToXml(Object bean) {
         Objects.requireNonNull(bean, "beanToXml.bean");
@@ -248,11 +366,50 @@ public class XmlHelper {
     }
 
     /**
-     * 将 Map 转换为 XML 格式的字符串
+     * Converts a map into an XML document.
      *
-     * @param data Map 类型数据
-     * @return XML 格式的字符串
-     * @throws IllegalArgumentException 如果 Map key 不是合法的 XML 元素名
+     * <p>The generated document uses a fixed root element named
+     * {@code <xml>}.</p>
+     *
+     * <p>Each map entry becomes one or more child elements whose name is the
+     * map key:</p>
+     *
+     * <pre>{@code
+     * Map:
+     * name -> Alice
+     *
+     * XML:
+     * <xml>
+     *     <name>Alice</name>
+     * </xml>
+     * }</pre>
+     *
+     * <p>If a value implements {@link Iterable}, one element is generated
+     * for every item:</p>
+     *
+     * <pre>{@code
+     * tags -> ["a", "b"]
+     *
+     * <xml>
+     *     <tags>a</tags>
+     *     <tags>b</tags>
+     * </xml>
+     * }</pre>
+     *
+     * <p>A {@code null} value generates an empty element. Non-null scalar
+     * values are converted using {@link Object#toString()}.</p>
+     *
+     * <p>Map keys are validated using a restricted XML element-name syntax.
+     * Namespace-prefixed names containing {@code :} are not accepted.</p>
+     *
+     * <p>The transformer is configured to disable external DTD and external
+     * stylesheet access.</p>
+     *
+     * @param data map to serialize
+     * @return XML document as a string
+     * @throws NullPointerException     if {@code data} is {@code null}
+     * @throws IllegalArgumentException if a map key is {@code null} or is not a valid XML element name
+     * @throws IllegalStateException    if XML serialization fails
      */
     public static String mapToXml(Map<String, ?> data) {
         Objects.requireNonNull(data, "mapToXml.data");
@@ -289,6 +446,18 @@ public class XmlHelper {
         }
     }
 
+    /**
+     * Appends one element to the supplied XML root element.
+     *
+     * <p>If {@code value} is non-null, its
+     * {@link Object#toString()} representation is stored as a text node.
+     * A {@code null} value produces an empty element.</p>
+     *
+     * @param doc   owning a DOM document
+     * @param root  parent element
+     * @param key   XML element name
+     * @param value value to serialize; may be {@code null}
+     */
     private static void appendElement(Document doc, Element root, String key, Object value) {
         Element field = doc.createElement(key);
 
@@ -299,9 +468,25 @@ public class XmlHelper {
     }
 
     /**
-     * Converts the direct child elements of the XML root into a simple map.
-     * <p>
-     * If duplicate element names exist, later values overwrite earlier ones.
+     * Converts the direct child elements of the XML root element into a simple string map.
+     *
+     * <p>Only direct child nodes of type
+     * {@link Node#ELEMENT_NODE} are processed. Text nodes, comments and other
+     * node types are ignored.</p>
+     *
+     * <p>The element name becomes the map key and
+     * {@link Element#getTextContent()} becomes the value.</p>
+     *
+     * <p>If duplicate child-element names are present, later values overwrite
+     * earlier values.</p>
+     *
+     * <p>For XML containing repeated values that must be preserved, use
+     * {@link #xmlToMultiValueMap(String)} instead.</p>
+     *
+     * @param xml XML content
+     * @return map containing direct child element names and text values
+     * @throws NullPointerException     if {@code xml} is {@code null}
+     * @throws IllegalArgumentException if the XML cannot be parsed
      */
     public static Map<String, String> xmlToMap(String xml) {
         Objects.requireNonNull(xml, "xmlToMap.xml");
@@ -321,10 +506,40 @@ public class XmlHelper {
     }
 
     /**
-     * Converts the direct child elements of the XML root into a multi-value map.
-     * <p>
-     * A single element is stored as a String.
-     * Repeated elements are stored as a List<String>.
+     * Converts the direct child elements of the XML root element into a map
+     * while preserving repeated element names.
+     *
+     * <p>The first occurrence of an element name is stored as a
+     * {@link String}. When the same element name occurs again, the existing
+     * value is promoted to a {@link List} of strings and all subsequent
+     * values are appended to that list.</p>
+     *
+     * <p>For example:</p>
+     *
+     * <pre>{@code
+     * <xml>
+     *     <tag>a</tag>
+     *     <tag>b</tag>
+     *     <name>Alice</name>
+     * </xml>
+     * }</pre>
+     *
+     * <p>produces conceptually:</p>
+     *
+     * <pre>{@code
+     * tag  -> ["a", "b"]
+     * name -> "Alice"
+     * }</pre>
+     *
+     * <p>A {@link LinkedHashMap} is used so that the order of first appearance of element names is preserved.</p>
+     *
+     * <p>Only direct child element nodes are processed. Text nodes, comments
+     * and other DOM node types are ignored.</p>
+     *
+     * @param xml XML content
+     * @return multi-value map containing direct child element values
+     * @throws NullPointerException     if {@code xml} is {@code null}
+     * @throws IllegalArgumentException if the XML cannot be parsed
      */
     public static Map<String, Object> xmlToMultiValueMap(String xml) {
         Objects.requireNonNull(xml, "xmlToMultiValueMap.xml");

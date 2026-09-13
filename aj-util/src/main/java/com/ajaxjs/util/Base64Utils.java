@@ -56,7 +56,7 @@ public class Base64Utils {
      * Creates an instance from a string using the specified charset.
      * <p>
      * The charset is intended for converting raw text before Base64 encoding.
-     * For decoding a Base64 string, use {@link #Base64Utils(String)}, since Base64 text is ASCII-compatible.
+     * For decoding a Base64 string, use {@link #Base64Utils(String)}, since a Base64 text is ASCII-compatible.
      *
      * @param input   the string to encode or decode
      * @param charset the charset to use for string to byte conversion
@@ -71,7 +71,7 @@ public class Base64Utils {
     /**
      * Flag indicating whether to omit padding characters in the encoded output.
      * This option is only relevant for encoding operations.
-     * There two advantages if it's to be true: shorter for strings and without URL encoding for the character '='.
+     * There are two advantages if it's to be true: shorter for strings and without URL encoding for the character '='.
      * For example, in the use of JWT, it's not necessary to use padding characters.
      */
     private boolean withoutPadding = false;

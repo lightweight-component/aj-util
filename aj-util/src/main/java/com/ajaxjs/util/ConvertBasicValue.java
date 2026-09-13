@@ -20,14 +20,8 @@ import java.util.function.Function;
  * <p>Supports conversion between String, Boolean, Integer, Long, Float, Double, BigDecimal,
  * arrays, enums, and date types with robust error handling and logging.
  */
-@Data
 @Slf4j
 public class ConvertBasicValue {
-    /**
-     * 字符串转换为数组时候，所使用的分隔符，默认为 ,
-     */
-    private static String diver = ",";
-
     /**
      * 安全地将对象转换为指定的类类型。
      * <p>
@@ -89,8 +83,6 @@ public class ConvertBasicValue {
                 dc = new DateTypeConvert((LocalDateTime) value);
             else if (value instanceof LocalDate)
                 dc = new DateTypeConvert((LocalDate) value);
-            else
-                log.warn("value: [{}] type:[{}] can not be converted to Date", value, value.getClass().getName());
 
             if (dc == null) {
                 log.warn("DateTypeConvert is null, value: [{}] type:[{}] can not be converted to Date", value, value.getClass().getName());
@@ -133,7 +125,7 @@ public class ConvertBasicValue {
                 ArrayList<String> list = (ArrayList<String>) value;
                 return list.toArray(new String[0]);
             } else if (value instanceof String)
-                return ((String) value).split(diver);// 用于数组的分隔符
+                return ((String) value).split(CommonConstant.delimiter);// 用于数组的分隔符
             else
                 log.warn("value: [{}] type:[{}] can not be converted to {}", value, value.getClass().getName(), clz);
         } else if (clz == int[].class /*|| clz == Integer[].class*/) {
@@ -337,7 +329,7 @@ public class ConvertBasicValue {
      * @return 整形数组
      */
     public static int[] stringArr2intArr(String value) {
-        String[] strArr = value.split(",");
+        String[] strArr = value.split(CommonConstant.delimiter);
 
         return newIntArray(strArr.length, index -> Integer.parseInt(strArr[index].trim()));
     }

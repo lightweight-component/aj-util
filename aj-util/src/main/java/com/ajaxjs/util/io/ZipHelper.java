@@ -1,563 +1,331 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util.io;
 
+import com.ajaxjs.util.CommonConstant;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Objects;
-import java.util.zip.*;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
- * ZIP Compression and Decompression Utility Class
- * <p>
- * This class provides comprehensive functionality for working with ZIP files, including
- * extracting ZIP contents, creating ZIP archives from files and directories,
- * handling Chinese filenames, and utility methods for ZIP file operations.
- * It supports both STORED (uncompressed) and DEFLATED (compressed) modes.
+ * Utility class for creating ZIP archives from a directory, a single file,
+ * or multiple files.
+ *
+ * <p>The source is configured through one of the constructors:</p>
+ *
+ * <ul>
+ *     <li>A directory and all of its regular files</li>
+ *     <li>A single regular file</li>
+ *     <li>Multiple regular files</li>
+ * </ul>
+ *
+ * <p>Directory compression preserves the relative directory structure,
+ * including empty directories. Symbolic links and non-regular files are
+ * rejected.</p>
+ *
+ * <p>The ZIP archive is first written to a temporary file located in the same
+ * directory as the final destination. Once the archive has been written
+ * successfully, the temporary file is moved to the configured destination.
+ * This prevents a partially written archive from replacing an existing ZIP
+ * file if compression fails.</p>
+ *
+ * <p>By default, entries use {@link ZipEntry#DEFLATED} compression.
+ * {@link ZipEntry#STORED} mode can be enabled through
+ * {@link #setUseStore(boolean)}. STORED entries require their size and CRC32
+ * checksum to be calculated before the entry is written.</p>
+ *
+ * <p>Source files should not be modified while compression is in progress,
+ * especially when STORED mode is enabled, because the file is read once to
+ * calculate its CRC32 value and again when its contents are written to the
+ * archive.</p>
+ *
+ * <p>This class wraps I/O failures in {@link UncheckedIOException}.</p>
  */
 @Slf4j
 public class ZipHelper {
     /**
-     * Buffer size used when reading ZIP entries during extraction.
+     * Destination path of the ZIP archive.
      */
-    private static final int EXTRACT_BUFFER_SIZE = 8192;
+    private final String zipFilePath;
 
     /**
-     * Default safety limits applied when extracting ZIP archives.
+     * Source directory to archive.
+     *
+     * <p>When this field is set, all regular files below the directory are
+     * recursively added to the ZIP archive while preserving their relative paths.</p>
      */
-    public static final ExtractionLimits DEFAULT_EXTRACTION_LIMITS = new ExtractionLimits(
-            10_000, 1024L * 1024 * 1024, 10L * 1024 * 1024 * 1024, 100.0
-    );
+    private String sourceDir;
 
     /**
-     * Resource limits applied while extracting a ZIP archive.
+     * Single source file to archive.
      */
-    public static final class ExtractionLimits {
-        /**
-         * Maximum number of entries allowed in a ZIP archive.
-         */
-        private final int maxEntries;
+    private File sourceFile;
 
-        /**
-         * Maximum uncompressed size allowed for a single entry, in bytes.
-         */
-        private final long maxEntrySize;
+    /**
+     * Multiple source files to archive.
+     *
+     * <p>Each file is added to the root of the ZIP archive using
+     * {@link File#getName()} as its entry name. Therefore, all files in this
+     * array must have unique file names.</p>
+     */
+    private File[] sourceFiles;
 
-        /**
-         * Maximum total uncompressed size allowed for the whole archive, in bytes.
-         */
-        private final long maxTotalSize;
+    /**
+     * Whether ZIP entries should use {@link ZipEntry#STORED} instead of
+     * {@link ZipEntry#DEFLATED}.
+     *
+     * <p>The default value is {@code false}, meaning DEFLATED compression is used.</p>
+     *
+     * <p>When enabled, each file's uncompressed size and CRC32 checksum are
+     * calculated before the entry is written.</p>
+     */
+    @Setter
+    private boolean useStore;
 
-        /**
-         * Maximum allowed compression ratio for a single entry.
-         */
-        private final double maxCompressionRatio;
+    /**
+     * Creates a ZIP helper for recursively archiving a directory.
+     *
+     * <p>The contents of {@code sourceDir} are added relative to the source
+     * directory itself. The source directory name is not added as an outer ZIP entry.</p>
+     *
+     * <p>The destination ZIP file must not be located inside the source directory.</p>
+     *
+     * @param sourceDir   source directory to archive
+     * @param zipFilePath destination ZIP file path
+     * @throws NullPointerException if {@code sourceDir} or {@code zipFilePath} is {@code null}
+     */
+    public ZipHelper(String sourceDir, String zipFilePath) {
+        this.sourceDir = Objects.requireNonNull(sourceDir, "ZipHelper.sourceDir");
+        this.zipFilePath = Objects.requireNonNull(zipFilePath, "ZipHelper.zipFilePath");
+    }
 
-        /**
-         * Creates a new set of extraction limits.
-         *
-         * @param maxEntries          the maximum number of entries
-         * @param maxEntrySize        the maximum size of a single entry in bytes
-         * @param maxTotalSize        the maximum total uncompressed size in bytes
-         * @param maxCompressionRatio the maximum compression ratio
-         */
-        public ExtractionLimits(int maxEntries, long maxEntrySize, long maxTotalSize, double maxCompressionRatio) {
-            if (maxEntries <= 0 || maxEntrySize <= 0 || maxTotalSize <= 0 || maxCompressionRatio <= 0)
-                throw new IllegalArgumentException("ZIP extraction limits must be greater than zero.");
+    /**
+     * Creates a ZIP helper for archiving a single file.
+     *
+     * <p>The file is stored at the root of the ZIP archive using its original file name.</p>
+     *
+     * @param file        source file
+     * @param zipFilePath destination ZIP file path
+     * @throws NullPointerException     if {@code file} or {@code zipFilePath} is {@code null}
+     * @throws IllegalArgumentException if the source does not exist or is a directory
+     */
+    public ZipHelper(File file, String zipFilePath) {
+        this.sourceFile = Objects.requireNonNull(file, "ZipHelper.file");
+        this.zipFilePath = Objects.requireNonNull(zipFilePath, "ZipHelper.zipFilePath");
 
-            this.maxEntries = maxEntries;
-            this.maxEntrySize = maxEntrySize;
-            this.maxTotalSize = maxTotalSize;
-            this.maxCompressionRatio = maxCompressionRatio;
+        if (!file.exists() || file.isDirectory())
+            throw new IllegalArgumentException("Source file does not exist or is a directory: " + sourceFile);
+    }
+
+    /**
+     * Creates a ZIP helper for archiving multiple files.
+     *
+     * <p>Each source file is stored at the root of the ZIP archive using
+     * {@link File#getName()} as the ZIP entry name. Consequently, source file
+     * names must be unique even if the files originate from different directories.</p>
+     *
+     * @param files       source files
+     * @param zipFilePath destination ZIP file path
+     * @throws NullPointerException     if {@code files}, {@code zipFilePath}, or any element in
+     *                                  {@code files} is {@code null}
+     * @throws IllegalArgumentException if two source files produce the same ZIP entry name
+     */
+    public ZipHelper(File[] files, String zipFilePath) {
+        this.sourceFiles = Objects.requireNonNull(files, "ZipHelper.files");
+        this.zipFilePath = Objects.requireNonNull(zipFilePath, "ZipHelper.zipFilePath");
+
+        Set<String> names = new HashSet<>();
+
+        for (File file : files) {
+            Objects.requireNonNull(file, "ZipHelper.files element");
+
+            if (!names.add(file.getName()))
+                throw new IllegalArgumentException("Duplicate ZIP entry name: " + file.getName());
         }
     }
 
     /**
-     * Mutable state tracked while extracting a ZIP archive.
-     */
-    private static final class ExtractionState {
-        /**
-         * Number of entries extracted so far.
-         */
-        private int entries;
-
-        /**
-         * Total uncompressed bytes extracted so far.
-         */
-        private long totalSize;
-    }
-
-    /**
-     * 解压文件
+     * Creates the ZIP archive using the configured source.
      *
-     * @param save    解压文件的路径，必须为目录
-     * @param zipFile 输入的解压文件路径，例如 C:/temp/foo.zip 或 c:\\temp\\bar.zip
-     */
-    public static void unzip(String save, String zipFile) {
-        unzip(save, zipFile, DEFAULT_EXTRACTION_LIMITS);
-    }
-
-    /**
-     * Extracts a ZIP archive to the specified directory using the given extraction limits.
+     * <p>For directory sources, the directory is traversed recursively.
+     * Symbolic links are rejected and only regular files are accepted.
+     * Empty directories are preserved as directory entries.</p>
      *
-     * @param save    the extraction destination, must be a directory
-     * @param zipFile the path to the ZIP file
-     * @param limits  the safety limits to apply during extraction
+     * <p>For single-file and multi-file sources, each source file is added to
+     * the root of the archive.</p>
+     *
+     * <p>The generated archive is first written to a temporary file and moved
+     * to the final destination only after the ZIP output stream has been
+     * successfully closed.</p>
+     *
+     * @throws IllegalArgumentException if the source directory is invalid, symbolic, or contains the destination ZIP
+     * @throws IllegalStateException    if no source has been configured
+     * @throws UncheckedIOException     if the source cannot be read or the ZIP archive cannot be created
      */
-    public static void unzip(String save, String zipFile, ExtractionLimits limits) {
-        Objects.requireNonNull(limits, "limits");
-        long start = System.currentTimeMillis();
-        Path root = prepareExtractionRoot(save);
-        ExtractionState state = new ExtractionState();
+    public void zip() {
+        if (sourceDir != null) {
+            Path source = Paths.get(sourceDir).toAbsolutePath().normalize();
 
-        try (ZipFile archive = new ZipFile(zipFile)) {
-            Enumeration<? extends ZipEntry> entries = archive.entries();
+            if (!Files.isDirectory(source, LinkOption.NOFOLLOW_LINKS))
+                throw new IllegalArgumentException("Source directory does not exist or is not a directory: " + sourceDir);
 
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                checkEntryCount(state, limits);
-                Path target = resolveZipEntry(root, entry.getName());
+            if (Files.isSymbolicLink(source))
+                throw new IllegalArgumentException("Symbolic links are not supported as ZIP source directories: " + sourceDir);
 
-                if (entry.isDirectory())
-                    createSecureDirectories(root, target);
-                else {
-                    try (InputStream input = archive.getInputStream(entry)) {
-                        extractEntry(input, root, target, entry, state, limits);
+            try {
+                Path destination = Paths.get(zipFilePath).toAbsolutePath().normalize();
+                Path sourceReal = source.toRealPath();
+
+                if (destination.startsWith(source) || destination.startsWith(sourceReal))
+                    throw new IllegalArgumentException("The destination ZIP must not be inside the source directory: " + zipFilePath);
+
+                writeZip((ZipOutputStream zipOut) -> {
+                    try {
+                        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+                            @Override
+                            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                                if (Files.isSymbolicLink(dir))
+                                    throw new IOException("Symbolic links are not supported in ZIP source directories: " + dir);
+
+                                if (!source.equals(dir)) {
+                                    ZipEntry entry = new ZipEntry(toZipEntryName(source.relativize(dir)) + "/");
+                                    zipOut.putNextEntry(entry);
+                                    zipOut.closeEntry();
+                                }
+
+                                return FileVisitResult.CONTINUE;
+                            }
+
+                            @Override
+                            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                                if (attrs.isSymbolicLink() || Files.isSymbolicLink(file))
+                                    throw new IOException("Symbolic links are not supported in ZIP source directories: " + file);
+                                if (!attrs.isRegularFile())
+                                    throw new IOException("Unsupported ZIP source file type: " + file);
+
+                                addFileToZip(file.toFile(), toZipEntryName(source.relativize(file)), zipOut);
+
+                                return FileVisitResult.CONTINUE;
+                            }
+                        });
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
                     }
-                }
+                });
+            } catch (IOException e) {
+                throw new UncheckedIOException("Unable to access ZIP source directory: " + sourceDir, e);
             }
-        } catch (IOException e) {
-            log.warn("unzip", e);
-            throw new UncheckedIOException(e);
-        }
-
-        log.info("解压缩完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
+        } else if (sourceFile != null) {
+            writeZip(zipOut -> addFileToZip(sourceFile, sourceFile.getName(), zipOut));
+        } else if (sourceFiles != null) {
+            writeZip(zipOut -> {
+                for (File fc : sourceFiles)
+                    addFileToZip(fc, fc.getName(), zipOut);
+            });
+        } else
+            throw new IllegalStateException("No ZIP source configured.");
     }
 
     /**
-     * 解压文件
+     * Converts a relative filesystem path to a ZIP entry name.
      *
-     * @param save        解压文件的路径，必须为目录
-     * @param zipFilePath 输入的解压文件路径，例如 C:/temp/foo.zip 或 c:\\temp\\bar.zip
-     */
-    public static void unzipWithChineseFilename(String save, String zipFilePath) {
-        unzipWithChineseFilename(save, zipFilePath, DEFAULT_EXTRACTION_LIMITS);
-    }
-
-    /**
-     * Extracts a ZIP archive that uses GBK-encoded Chinese filenames, applying the given extraction limits.
+     * <p>ZIP entry names use forward slashes ({@code /}) as path separators
+     * regardless of the host operating system. This method therefore replaces
+     * the platform-specific separator with {@code /}.</p>
      *
-     * @param save        the extraction destination, must be a directory
-     * @param zipFilePath the path to the ZIP file
-     * @param limits      the safety limits to apply during extraction
-     */
-    public static void unzipWithChineseFilename(String save, String zipFilePath, ExtractionLimits limits) {
-        Objects.requireNonNull(limits, "limits");
-        long start = System.currentTimeMillis();
-        Path root = prepareExtractionRoot(save);
-        ExtractionState state = new ExtractionState();
-
-        try (ZipFile zipFile = new ZipFile(zipFilePath, Charset.forName("GBK"))) {
-            Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                checkEntryCount(state, limits);
-                Path target = resolveZipEntry(root, entry.getName());
-
-                if (entry.isDirectory())
-                    createSecureDirectories(root, target);
-                else {
-                    try (InputStream is = zipFile.getInputStream(entry)) {
-                        extractEntry(is, root, target, entry, state, limits);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            log.warn("unzip", e);
-            throw new UncheckedIOException(e);
-        }
-
-        log.info("解压缩 unzipWithChineseFilename 完成，耗时：{}ms，保存在{}", System.currentTimeMillis() - start, save);
-    }
-
-    /**
-     * Creates and returns the real, normalized extraction root directory.
-     *
-     * @param save the extraction destination path
-     * @return the real extraction root
-     */
-    private static Path prepareExtractionRoot(String save) {
-        try {
-            Path root = Paths.get(save).toAbsolutePath().normalize();
-            Files.createDirectories(root);
-
-            return root.toRealPath();
-        } catch (IOException e) {
-            throw new UncheckedIOException("Unable to create ZIP extraction directory: " + save, e);
-        }
-    }
-
-    /**
-     * Resolves a ZIP entry name against the extraction root and checks for directory traversal.
-     *
-     * @param root      the extraction root
-     * @param entryName the ZIP entry name
-     * @return the resolved target path
-     * @throws IOException if the entry escapes the extraction directory
-     */
-    private static Path resolveZipEntry(Path root, String entryName) throws IOException {
-        if (entryName == null)
-            throw new IOException("ZIP entry name is null.");
-
-        Path target = root.resolve(entryName.replace('\\', '/')).normalize();
-        if (!target.startsWith(root))
-            throw new IOException("ZIP entry escapes the extraction directory: " + entryName);
-
-        return target;
-    }
-
-    /**
-     * Creates directories inside the extraction root, guarding against symbolic-link escapes.
-     *
-     * @param root      the extraction root
-     * @param directory the directory to create
-     * @throws IOException if the directory escapes the root or an unsafe path is encountered
-     */
-    private static void createSecureDirectories(Path root, Path directory) throws IOException {
-        if (!directory.startsWith(root))
-            throw new IOException("Directory escapes the ZIP extraction root: " + directory);
-
-        Path current = root;
-        for (Path part : root.relativize(directory)) {
-            current = current.resolve(part);
-
-            if (Files.exists(current, LinkOption.NOFOLLOW_LINKS)) {
-                if (Files.isSymbolicLink(current) || !Files.isDirectory(current, LinkOption.NOFOLLOW_LINKS))
-                    throw new IOException("Unsafe ZIP extraction path: " + current);
-            } else
-                Files.createDirectory(current);
-
-            if (!current.toRealPath().startsWith(root))
-                throw new IOException("ZIP extraction path escapes through a symbolic link: " + current);
-        }
-    }
-
-    /**
-     * Checks whether the number of extracted entries exceeds the configured limit.
-     *
-     * @param state  the current extraction state
-     * @param limits the configured extraction limits
-     * @throws IOException if the entry count exceeds the limit
-     */
-    private static void checkEntryCount(ExtractionState state, ExtractionLimits limits) throws IOException {
-        state.entries++;
-        if (state.entries > limits.maxEntries)
-            throw new IOException("ZIP archive contains too many entries.");
-    }
-
-    /**
-     * Extracts a single ZIP entry to the target path while enforcing safety limits.
-     *
-     * @param in     the input stream of the ZIP entry
-     * @param root   the extraction root
-     * @param target the target file path
-     * @param entry  the ZIP entry being extracted
-     * @param state  the current extraction state
-     * @param limits the configured extraction limits
-     * @throws IOException if any safety limit is violated or an IO error occurs
-     */
-    private static void extractEntry(InputStream in, Path root, Path target, ZipEntry entry,
-                                     ExtractionState state, ExtractionLimits limits) throws IOException {
-        long declaredSize = entry.getSize();
-        if (declaredSize > limits.maxEntrySize)
-            throw new IOException("ZIP entry exceeds the maximum uncompressed size: " + entry.getName());
-
-        checkCompressionRatio(entry, declaredSize, limits);
-        Path parent = target.getParent();
-        if (parent == null)
-            throw new IOException("ZIP entry has no parent directory: " + entry.getName());
-
-        createSecureDirectories(root, parent);
-        if (Files.isSymbolicLink(target))
-            throw new IOException("ZIP entry target is a symbolic link: " + entry.getName());
-
-        Path temporary = Files.createTempFile(parent, ".aj-unzip-", ".tmp");
-
-        try {
-            long entrySize = 0;
-            byte[] buffer = new byte[EXTRACT_BUFFER_SIZE];
-
-            try (OutputStream out = Files.newOutputStream(temporary)) {
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    if (read == 0)
-                        continue;
-
-                    if (entrySize > limits.maxEntrySize - read)
-                        throw new IOException("ZIP entry exceeds the maximum uncompressed size: " + entry.getName());
-                    if (state.totalSize > limits.maxTotalSize - read)
-                        throw new IOException("ZIP archive exceeds the maximum total uncompressed size.");
-
-                    entrySize += read;
-                    state.totalSize += read;
-                    checkCompressionRatio(entry, entrySize, limits);
-                    out.write(buffer, 0, read);
-                }
-            }
-
-            checkCompressionRatio(entry, entrySize, limits);
-            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
-        } finally {
-            Files.deleteIfExists(temporary);
-        }
-    }
-
-    /**
-     * Checks whether the compression ratio of a ZIP entry exceeds the configured limit.
-     *
-     * @param entry            the ZIP entry
-     * @param uncompressedSize the uncompressed size to compare
-     * @param limits           the configured extraction limits
-     * @throws IOException if the compression ratio is invalid or exceeds the limit
-     */
-    private static void checkCompressionRatio(ZipEntry entry, long uncompressedSize,
-                                              ExtractionLimits limits) throws IOException {
-        long compressedSize = entry.getCompressedSize();
-        if (compressedSize < 0)
-            throw new IOException("ZIP entry has no compressed-size metadata: " + entry.getName());
-        if (compressedSize == 0 && uncompressedSize > 0)
-            throw new IOException("ZIP entry has an invalid zero compressed size: " + entry.getName());
-        if (compressedSize > 0 && uncompressedSize > compressedSize * limits.maxCompressionRatio)
-            throw new IOException("ZIP entry exceeds the maximum compression ratio: " + entry.getName());
-    }
-
-    /**
-     * Compress an array of files into a ZIP archive
-     * <p>
-     * Takes an array of File objects and compresses them into a single ZIP file.
-     * All files are added to the root of the ZIP archive without preserving directory structure.
-     *
-     * @param fileContent Array of files to be compressed into the ZIP archive
-     * @param saveZip     Path where the resulting ZIP file will be saved
-     * @param useStore    Compression mode: true for STORED (no compression), false for DEFLATED (standard compression)
-     */
-    public static void zipFile(File[] fileContent, String saveZip, boolean useStore) {
-        writeZip(Paths.get(saveZip), zipOut -> {
-            for (File fc : fileContent)
-                addFileToZip(fc, fc.getName(), zipOut, useStore);
-        });
-    }
-
-    /**
-     * 递归压缩目录为ZIP
-     *
-     * @param sourceDir 目录路径
-     * @param saveZip   目标 zip 文件路径
-     * @param useStore  true: 仅存储(STORED)，false: 标准压缩(DEFLATED)
-     */
-    public static void zipDirectory(String sourceDir, String saveZip, boolean useStore) {
-        Path source = Paths.get(sourceDir).toAbsolutePath().normalize();
-        Path destination = Paths.get(saveZip).toAbsolutePath().normalize();
-
-        if (!Files.isDirectory(source, LinkOption.NOFOLLOW_LINKS))
-            throw new IllegalArgumentException("Source directory does not exist or is not a directory: " + sourceDir);
-        if (Files.isSymbolicLink(source))
-            throw new IllegalArgumentException("Symbolic links are not supported as ZIP source directories: " + sourceDir);
-
-        try {
-            Path sourceReal = source.toRealPath();
-            if (destination.startsWith(source) || destination.startsWith(sourceReal))
-                throw new IllegalArgumentException("The destination ZIP must not be inside the source directory: " + saveZip);
-
-            writeZip(destination, zipOut -> addDirectoryToZip(sourceReal, zipOut, useStore));
-        } catch (IOException e) {
-            throw new UncheckedIOException("Unable to access ZIP source directory: " + sourceDir, e);
-        }
-    }
-
-    /**
-     * Recursively adds the contents of a directory to a ZIP output stream.
-     *
-     * @param source   the source directory
-     * @param zipOut   the ZIP output stream
-     * @param useStore {@code true} to store entries uncompressed, {@code false} to deflate
-     * @throws IOException if an IO error occurs while walking the directory or writing entries
-     */
-    private static void addDirectoryToZip(Path source, ZipOutputStream zipOut, boolean useStore) throws IOException {
-        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                if (Files.isSymbolicLink(dir))
-                    throw new IOException("Symbolic links are not supported in ZIP source directories: " + dir);
-
-                if (!source.equals(dir)) {
-                    ZipEntry entry = new ZipEntry(toZipEntryName(source.relativize(dir)) + "/");
-                    zipOut.putNextEntry(entry);
-                    zipOut.closeEntry();
-                }
-
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                if (attrs.isSymbolicLink() || Files.isSymbolicLink(file))
-                    throw new IOException("Symbolic links are not supported in ZIP source directories: " + file);
-                if (!attrs.isRegularFile())
-                    throw new IOException("Unsupported ZIP source file type: " + file);
-
-                addFileToZip(file.toFile(), toZipEntryName(source.relativize(file)), zipOut, useStore);
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
-
-    /**
-     * Converts a relative path to a ZIP entry name using forward slashes.
-     *
-     * @param relativePath the relative path
-     * @return the ZIP entry name
+     * @param relativePath relative path inside the source directory
+     * @return ZIP-compatible entry name
      */
     private static String toZipEntryName(Path relativePath) {
         return relativePath.toString().replace(File.separatorChar, '/');
     }
 
     /**
-     * 单文件添加到 zip
-     */
-    private static void addFileToZip(File file, String zipEntryName, ZipOutputStream zipOut, boolean useStore) throws IOException {
-        if (Files.isSymbolicLink(file.toPath()))
-            throw new IOException("Symbolic links are not supported as ZIP source files: " + file);
-        if (!Files.isRegularFile(file.toPath(), LinkOption.NOFOLLOW_LINKS))
-            throw new IOException("ZIP source is not a regular file: " + file);
-
-        try (BufferedInputStream bin = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
-            ZipEntry entry = new ZipEntry(zipEntryName);
-
-            if (useStore) {
-                entry.setMethod(ZipEntry.STORED);
-                entry.setSize(file.length());
-                entry.setCrc(getFileCRCCode(file));
-            } else
-                entry.setMethod(ZipEntry.DEFLATED);// // DEFLATED 模式不需要设置 size 和 crc，ZipOutputStream 会自动处理
-
-            zipOut.putNextEntry(entry);
-
-            byte[] buffer = new byte[8192];
-            int len;
-            while ((len = bin.read(buffer)) != -1)
-                zipOut.write(buffer, 0, len);
-
-            zipOut.closeEntry();
-        }
-    }
-
-    /**
-     * 获取 CRC32
-     * CheckedInputStream 一种输入流，它还维护正在读取的数据的校验和。然后可以使用校验和来验证输入数据的完整性。
+     * Adds a regular file to an open ZIP output stream.
      *
-     * @param file 必须是文件，不是目录
+     * <p>Symbolic links and non-regular files are rejected.</p>
+     *
+     * <p>If {@link #useStore} is enabled, the entry uses
+     * {@link ZipEntry#STORED}. Its size and CRC32 checksum are calculated
+     * before the entry is written. Otherwise,
+     * {@link ZipEntry#DEFLATED} is used and {@link ZipOutputStream} handles the
+     * compressed size and checksum automatically.</p>
+     *
+     * @param file         source file
+     * @param zipEntryName entry name inside the ZIP archive
+     * @param zipOut       open ZIP output stream
+     * @throws UncheckedIOException if the source file cannot be read or the entry cannot be written
      */
-    private static long getFileCRCCode(File file) throws IOException {
-        CRC32 crc32 = new CRC32();
+    private void addFileToZip(File file, String zipEntryName, ZipOutputStream zipOut) {
+        try {
+            if (Files.isSymbolicLink(file.toPath()))
+                throw new IOException("Symbolic links are not supported as ZIP source files: " + file);
 
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
-             CheckedInputStream checkedinputstream = new CheckedInputStream(bufferedInputStream, crc32)) {
-            byte[] buffer = new byte[8192];
-            while (checkedinputstream.read(buffer) != -1) {
-                // Reading updates the checksum.
+            if (!Files.isRegularFile(file.toPath(), LinkOption.NOFOLLOW_LINKS))
+                throw new IOException("ZIP source is not a regular file: " + file);
+
+            try (BufferedInputStream bin = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
+                ZipEntry entry = new ZipEntry(zipEntryName);
+
+                if (useStore) {
+                    entry.setMethod(ZipEntry.STORED);
+                    entry.setSize(file.length());
+                    entry.setCrc(getFileCRCCode(file));
+                } else
+                    entry.setMethod(ZipEntry.DEFLATED); // DEFLATED 模式不需要设置 size 和 crc，ZipOutputStream 会自动处理
+
+                zipOut.putNextEntry(entry);
+
+                byte[] buffer = new byte[CommonConstant.BUFFER_SIZE];
+                int len;
+
+                while ((len = bin.read(buffer)) != -1)
+                    zipOut.write(buffer, 0, len);
+
+                zipOut.closeEntry();
             }
-        }
-
-        return crc32.getValue();
-    }
-
-    /**
-     * 检测文件所在的目录是否存在，如果没有则建立。可以跨多个未建的目录
-     *
-     * @param file 必须是文件，不是目录
-     */
-    public static void initFolder(File file) {
-        if (file.isDirectory())
-            throw new IllegalArgumentException("参数必须是文件，不是目录");
-
-        Path parent = file.toPath().toAbsolutePath().getParent();
-
-        if (parent != null)
-            new FileHelper(parent).createDirectory();
-    }
-
-    /**
-     * 检测文件所在的目录是否存在，如果没有则建立。可以跨多个未建的目录
-     *
-     * @param file 必须是文件，不是目录
-     */
-    public static void initFolder(String file) {
-        initFolder(new File(file));
-    }
-
-    /**
-     * 判断给定的文件路径是否为 ZIP 文件。
-     *
-     * @param filePath 文件路径
-     * @return 如果是 ZIP 文件则返回 true，否则返回 false
-     */
-    public static boolean isZipFile(String filePath) {
-        if (filePath == null)
-            return false;
-
-        File file = new File(filePath);
-        if (!file.isFile())
-            return false;
-
-        try (ZipFile ignored = new ZipFile(file)) {
-            return true;
         } catch (IOException e) {
-            return false;
+            throw new UncheckedIOException(e);
         }
     }
 
     /**
-     * 压缩单个文件为ZIP
+     * Creates the ZIP archive at the configured destination.
      *
-     * @param sourceFile 源文件路径
-     * @param saveZip    目标ZIP文件路径
-     * @param useStore   true: 仅存储(STORED)，false: 标准压缩(DEFLATED)
-     */
-    public static void zipSingleFile(String sourceFile, String saveZip, boolean useStore) {
-        File file = new File(sourceFile);
-
-        if (!file.exists() || file.isDirectory())
-            throw new IllegalArgumentException("Source file does not exist or is a directory: " + sourceFile);
-
-        writeZip(Paths.get(saveZip), zipOut -> addFileToZip(file, file.getName(), zipOut, useStore));
-    }
-
-    /**
-     * Functional interface for writing contents to a ZIP output stream.
-     */
-    @FunctionalInterface
-    private interface ZipWriter {
-        /**
-         * Writes entries to the given ZIP output stream.
-         *
-         * @param zipOut the ZIP output stream
-         * @throws IOException if an IO error occurs while writing
-         */
-        void write(ZipOutputStream zipOut) throws IOException;
-    }
-
-    /**
-     * Creates a ZIP archive at the given destination using the provided writer.
+     * <p>The archive is first written to a temporary file in the destination
+     * directory. After the ZIP stream has been closed successfully, the
+     * temporary file replaces the destination file.</p>
      *
-     * @param destination the destination ZIP file path
-     * @param writer      the writer that populates the ZIP entries
+     * <p>Using a temporary file ensures that an existing destination archive
+     * is not replaced by a partially written ZIP if compression fails.</p>
+     *
+     * @param writer callback responsible for populating ZIP entries
+     * @throws IllegalArgumentException if the destination has no parent directory
+     * @throws UncheckedIOException     if the destination directory cannot be
+     *                                  created, the archive cannot be written,
+     *                                  or the temporary file cannot be moved
      */
-    private static void writeZip(Path destination, ZipWriter writer) {
+    private void writeZip(Consumer<ZipOutputStream> writer) {
+        Path destination = Paths.get(zipFilePath);
         Path absolute = destination.toAbsolutePath().normalize();
         Path parent = absolute.getParent();
 
@@ -565,13 +333,14 @@ public class ZipHelper {
             throw new IllegalArgumentException("ZIP destination has no parent directory: " + destination);
 
         Path temporary = null;
+
         try {
             Files.createDirectories(parent);
             temporary = Files.createTempFile(parent, ".aj-zip-", ".tmp");
 
             try (BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(temporary));
                  ZipOutputStream zipOut = new ZipOutputStream(bos)) {
-                writer.write(zipOut);
+                writer.accept(zipOut);
             }
 
             Files.move(temporary, absolute, StandardCopyOption.REPLACE_EXISTING);
@@ -588,4 +357,32 @@ public class ZipHelper {
         }
     }
 
+    /**
+     * Calculates the CRC32 checksum of a file.
+     *
+     * <p>The file is read completely through a {@link CheckedInputStream}.
+     * Reading the stream updates the associated {@link CRC32} checksum.</p>
+     *
+     * <p>This method is used when creating {@link ZipEntry#STORED} entries,
+     * because STORED entries require the CRC32 value to be known before
+     * {@link ZipOutputStream#putNextEntry(ZipEntry)} is called.</p>
+     *
+     * @param file regular file whose CRC32 checksum should be calculated
+     * @return unsigned CRC32 value represented as a {@code long}
+     * @throws IOException if the file cannot be read
+     */
+    private static long getFileCRCCode(File file) throws IOException {
+        CRC32 crc32 = new CRC32();
+
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
+             CheckedInputStream checkedinputstream = new CheckedInputStream(bufferedInputStream, crc32)) {
+            byte[] buffer = new byte[CommonConstant.BUFFER_SIZE];
+
+            while (checkedinputstream.read(buffer) != -1) {
+                // Reading updates the checksum.
+            }
+        }
+
+        return crc32.getValue();
+    }
 }

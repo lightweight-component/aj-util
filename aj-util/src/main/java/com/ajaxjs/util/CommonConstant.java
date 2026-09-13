@@ -23,6 +23,8 @@ public interface CommonConstant {
      */
     String HYPHEN_STR = "-";
 
+    String delimiter = ",";
+
     /**
      * Represents a new line character '\n' (line feed)
      * DO NOT USE IT
@@ -40,4 +42,9 @@ public interface CommonConstant {
      * Represents the "class" string used in reflection operations
      */
     String CLASS = "class";
+
+    /**
+     * Buffer size
+     */
+    int BUFFER_SIZE = 8192;
 }

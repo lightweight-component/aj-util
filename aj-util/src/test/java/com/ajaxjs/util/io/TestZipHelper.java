@@ -1,18 +1,16 @@
 package com.ajaxjs.util.io;
 
+import com.ajaxjs.util.CommonConstant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,118 +19,174 @@ class TestZipHelper {
     Path tempDir;
 
     @Test
-    void testUnzipMultipleEntriesAndNestedDirectories() throws IOException {
-        Path zip = createZip("multiple.zip", entries(
-                "one.txt", "one",
-                "nested/two.txt", "two"
-        ));
-        Path target = tempDir.resolve("target");
-
-        ZipHelper.unzip(target.toString(), zip.toString());
-
-        assertEquals("one", readUtf8(target.resolve("one.txt")));
-        assertEquals("two", readUtf8(target.resolve("nested/two.txt")));
-    }
-
-    @Test
-    void testRejectsZipSlip() throws IOException {
-        Path zip = createZip("slip.zip", entries("../escape.txt", "escaped"));
-        Path target = tempDir.resolve("safe");
-
-        assertThrows(UncheckedIOException.class, () -> ZipHelper.unzip(target.toString(), zip.toString()));
-        assertFalse(Files.exists(tempDir.resolve("escape.txt")));
-    }
-
-    @Test
-    void testExtractionLimits() throws IOException {
-        Path zip = createZip("large.zip", entries("large.txt", "123456"));
-        Path target = tempDir.resolve("limited");
-        ZipHelper.ExtractionLimits limits = new ZipHelper.ExtractionLimits(10, 5, 100, 100);
-
-        assertThrows(UncheckedIOException.class,
-                () -> ZipHelper.unzip(target.toString(), zip.toString(), limits));
-        assertFalse(Files.exists(target.resolve("large.txt")));
-    }
-
-    @Test
-    void testCompressionRatioLimitUsesCentralDirectorySizes() throws IOException {
-        StringBuilder repeated = new StringBuilder();
-        for (int i = 0; i < 10_000; i++)
-            repeated.append('a');
-
-        Path zip = createZip("high-ratio.zip", entries("repeated.txt", repeated.toString()));
-        Path target = tempDir.resolve("ratio-limited");
-        ZipHelper.ExtractionLimits limits = new ZipHelper.ExtractionLimits(10, 20_000, 20_000, 2);
-
-        assertThrows(UncheckedIOException.class,
-                () -> ZipHelper.unzip(target.toString(), zip.toString(), limits));
-        assertFalse(Files.exists(target.resolve("repeated.txt")));
-    }
-
-    @Test
-    void testInitFolderCreatesOnlyParentDirectories() {
-        Path targetFile = tempDir.resolve("a/b/file.txt");
-
-        ZipHelper.initFolder(targetFile.toFile());
-
-        assertTrue(Files.isDirectory(targetFile.getParent()));
-        assertFalse(Files.exists(targetFile));
-    }
-
-    @Test
     void testZipSingleFileWithStoredMethod() throws IOException {
         Path source = tempDir.resolve("source.txt");
         Path zip = tempDir.resolve("source.zip");
-        Files.write(source, "content".getBytes(StandardCharsets.UTF_8));
 
-        ZipHelper.zipSingleFile(source.toString(), zip.toString(), true);
+        Files.write(
+                source,
+                "content".getBytes(StandardCharsets.UTF_8)
+        );
+
+        ZipHelper helper = new ZipHelper(
+                source.toFile(),
+                zip.toString()
+        );
+
+        helper.setUseStore(true);
+        helper.zip();
 
         try (ZipFile zipFile = new ZipFile(zip.toFile())) {
             ZipEntry entry = zipFile.getEntry("source.txt");
+
             assertNotNull(entry);
             assertEquals(ZipEntry.STORED, entry.getMethod());
-            assertEquals("content", new String(readAllBytes(zipFile, entry), StandardCharsets.UTF_8));
+            assertEquals(
+                    "content",
+                    new String(
+                            readAllBytes(zipFile, entry),
+                            StandardCharsets.UTF_8
+                    )
+            );
         }
     }
 
     @Test
-    void testRecognizesRegularAndEmptyZipArchives() throws IOException {
-        Path regular = createZip("regular.zip", entries("file.txt", "content"));
-        Path empty = tempDir.resolve("empty.zip");
-        try (ZipOutputStream ignored = new ZipOutputStream(Files.newOutputStream(empty))) {
-        }
-        Path plain = tempDir.resolve("plain.txt");
-        Files.write(plain, "PK-not-a-zip".getBytes(StandardCharsets.UTF_8));
+    void testZipSingleFileUsesDeflatedByDefault() throws IOException {
+        Path source = tempDir.resolve("source.txt");
+        Path zip = tempDir.resolve("source.zip");
 
-        assertTrue(ZipHelper.isZipFile(regular.toString()));
-        assertTrue(ZipHelper.isZipFile(empty.toString()));
-        assertFalse(ZipHelper.isZipFile(plain.toString()));
-        assertFalse(ZipHelper.isZipFile(tempDir.resolve("missing.zip").toString()));
+        Files.write(
+                source,
+                "content".getBytes(StandardCharsets.UTF_8)
+        );
+
+        new ZipHelper(
+                source.toFile(),
+                zip.toString()
+        ).zip();
+
+        try (ZipFile zipFile = new ZipFile(zip.toFile())) {
+            ZipEntry entry = zipFile.getEntry("source.txt");
+
+            assertNotNull(entry);
+            assertEquals(ZipEntry.DEFLATED, entry.getMethod());
+            assertEquals(
+                    "content",
+                    new String(
+                            readAllBytes(zipFile, entry),
+                            StandardCharsets.UTF_8
+                    )
+            );
+        }
     }
 
     @Test
-    void testEntryCountAndTotalSizeLimits() throws IOException {
-        Path zip = createZip("limits.zip", entries(
-                "one.txt", "1234",
-                "two.txt", "5678"
-        ));
+    void testZipCreatesDestinationParentDirectories() throws IOException {
+        Path source = tempDir.resolve("source.txt");
+
+        Files.write(
+                source,
+                "content".getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path zip = tempDir.resolve("a/b/c/archive.zip");
+
+        new ZipHelper(
+                source.toFile(),
+                zip.toString()
+        ).zip();
+
+        assertTrue(Files.isDirectory(zip.getParent()));
+        assertTrue(Files.isRegularFile(zip));
+    }
+
+    @Test
+    void testZipMultipleFiles() throws IOException {
+        Path first = tempDir.resolve("one.txt");
+        Path second = tempDir.resolve("two.txt");
+        Path zip = tempDir.resolve("multiple.zip");
+
+        Files.write(
+                first,
+                "one".getBytes(StandardCharsets.UTF_8)
+        );
+
+        Files.write(
+                second,
+                "two".getBytes(StandardCharsets.UTF_8)
+        );
+
+        new ZipHelper(
+                new File[]{
+                        first.toFile(),
+                        second.toFile()
+                },
+                zip.toString()
+        ).zip();
+
+        try (ZipFile zipFile = new ZipFile(zip.toFile())) {
+            ZipEntry firstEntry = zipFile.getEntry("one.txt");
+            ZipEntry secondEntry = zipFile.getEntry("two.txt");
+
+            assertNotNull(firstEntry);
+            assertNotNull(secondEntry);
+
+            assertEquals(
+                    "one",
+                    new String(
+                            readAllBytes(zipFile, firstEntry),
+                            StandardCharsets.UTF_8
+                    )
+            );
+
+            assertEquals(
+                    "two",
+                    new String(
+                            readAllBytes(zipFile, secondEntry),
+                            StandardCharsets.UTF_8
+                    )
+            );
+        }
+    }
+
+    @Test
+    void testRejectsDuplicateFileNames() throws IOException {
+        Path firstDir = Files.createDirectory(
+                tempDir.resolve("first")
+        );
+
+        Path secondDir = Files.createDirectory(
+                tempDir.resolve("second")
+        );
+
+        Path first = firstDir.resolve("same.txt");
+        Path second = secondDir.resolve("same.txt");
+
+        Files.write(
+                first,
+                "one".getBytes(StandardCharsets.UTF_8)
+        );
+
+        Files.write(
+                second,
+                "two".getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path zip = tempDir.resolve("duplicate.zip");
 
         assertThrows(
-                UncheckedIOException.class,
-                () -> ZipHelper.unzip(
-                        tempDir.resolve("entry-limit").toString(),
-                        zip.toString(),
-                        new ZipHelper.ExtractionLimits(1, 100, 100, 100)
+                IllegalArgumentException.class,
+                () -> new ZipHelper(
+                        new File[]{
+                                first.toFile(),
+                                second.toFile()
+                        },
+                        zip.toString()
                 )
         );
-        assertThrows(
-                UncheckedIOException.class,
-                () -> ZipHelper.unzip(
-                        tempDir.resolve("total-limit").toString(),
-                        zip.toString(),
-                        new ZipHelper.ExtractionLimits(10, 100, 7, 100)
-                )
-        );
+
+        assertFalse(Files.exists(zip));
     }
 
     @Test
@@ -140,68 +194,218 @@ class TestZipHelper {
         Path missing = tempDir.resolve("missing.txt");
         Path zip = tempDir.resolve("failed.zip");
 
-        assertThrows(UncheckedIOException.class,
-                () -> ZipHelper.zipFile(new java.io.File[]{missing.toFile()}, zip.toString(), true));
+        ZipHelper helper = new ZipHelper(
+                new File[]{missing.toFile()},
+                zip.toString()
+        );
+
+        assertThrows(
+                UncheckedIOException.class,
+                helper::zip
+        );
+
         assertFalse(Files.exists(zip));
     }
 
     @Test
-    void testZipDirectoryRejectsSymbolicLinks() throws IOException {
+    void testZipDirectoryPreservesNestedDirectories()
+            throws IOException {
+
+        Path source = Files.createDirectory(
+                tempDir.resolve("source")
+        );
+
+        Path nested = Files.createDirectories(
+                source.resolve("a/b")
+        );
+
+        Files.write(
+                source.resolve("root.txt"),
+                "root".getBytes(StandardCharsets.UTF_8)
+        );
+
+        Files.write(
+                nested.resolve("nested.txt"),
+                "nested".getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path zip = tempDir.resolve("directory.zip");
+
+        new ZipHelper(
+                source.toString(),
+                zip.toString()
+        ).zip();
+
+        try (ZipFile zipFile = new ZipFile(zip.toFile())) {
+            assertNotNull(zipFile.getEntry("a/"));
+            assertNotNull(zipFile.getEntry("a/b/"));
+
+            ZipEntry rootEntry =
+                    zipFile.getEntry("root.txt");
+
+            ZipEntry nestedEntry =
+                    zipFile.getEntry("a/b/nested.txt");
+
+            assertNotNull(rootEntry);
+            assertNotNull(nestedEntry);
+
+            assertEquals(
+                    "root",
+                    new String(
+                            readAllBytes(zipFile, rootEntry),
+                            StandardCharsets.UTF_8
+                    )
+            );
+
+            assertEquals(
+                    "nested",
+                    new String(
+                            readAllBytes(zipFile, nestedEntry),
+                            StandardCharsets.UTF_8
+                    )
+            );
+        }
+    }
+
+    @Test
+    void testZipDirectoryPreservesEmptyDirectories()
+            throws IOException {
+
         Path source = Files.createDirectory(tempDir.resolve("source"));
+        Files.createDirectories(source.resolve("empty/nested"));
+        Path zip = tempDir.resolve("empty-directory.zip");
+        new ZipHelper(source.toString(), zip.toString()).zip();
+
+        try (ZipFile zipFile = new ZipFile(zip.toFile())) {
+            ZipEntry empty = zipFile.getEntry("empty/");
+            ZipEntry nested = zipFile.getEntry("empty/nested/");
+
+            assertNotNull(empty);
+            assertNotNull(nested);
+
+            assertTrue(empty.isDirectory());
+            assertTrue(nested.isDirectory());
+        }
+    }
+
+    @Test
+    void testZipDirectoryRejectsSymbolicLinks()
+            throws IOException {
+
+        Path source = Files.createDirectory(
+                tempDir.resolve("source")
+        );
+
         Path target = tempDir.resolve("outside.txt");
-        Files.write(target, "outside".getBytes(StandardCharsets.UTF_8));
+
+        Files.write(
+                target,
+                "outside".getBytes(StandardCharsets.UTF_8)
+        );
 
         try {
-            Files.createSymbolicLink(source.resolve("link.txt"), target);
-        } catch (UnsupportedOperationException | SecurityException e) {
-            return; // Symbolic links are not available on this platform.
+            Files.createSymbolicLink(
+                    source.resolve("link.txt"),
+                    target
+            );
+        } catch (
+                UnsupportedOperationException
+                | SecurityException
+                | FileSystemException e) {
+
+            return;
         }
 
         Path zip = tempDir.resolve("links.zip");
-        assertThrows(UncheckedIOException.class,
-                () -> ZipHelper.zipDirectory(source.toString(), zip.toString(), false));
+
+        assertThrows(
+                UncheckedIOException.class,
+                () -> new ZipHelper(
+                        source.toString(),
+                        zip.toString()
+                ).zip()
+        );
+
         assertFalse(Files.exists(zip));
     }
 
     @Test
-    void testZipDirectoryRejectsDestinationInsideSource() throws IOException {
-        Path source = Files.createDirectory(tempDir.resolve("self-containing"));
+    void testZipDirectoryRejectsDestinationInsideSource()
+            throws IOException {
 
-        assertThrows(IllegalArgumentException.class,
-                () -> ZipHelper.zipDirectory(source.toString(), source.resolve("archive.zip").toString(), false));
+        Path source = Files.createDirectory(
+                tempDir.resolve("self-containing")
+        );
+
+        Path zip = source.resolve("archive.zip");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new ZipHelper(
+                        source.toString(),
+                        zip.toString()
+                ).zip()
+        );
+
+        assertFalse(Files.exists(zip));
     }
 
-    private Path createZip(String filename, Map<String, String> content) throws IOException {
-        Path zip = tempDir.resolve(filename);
+    @Test
+    void testRejectsSymbolicLinkAsSingleSource()
+            throws IOException {
 
-        try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(zip))) {
-            for (Map.Entry<String, String> entry : content.entrySet()) {
-                out.putNextEntry(new ZipEntry(entry.getKey()));
-                out.write(entry.getValue().getBytes(StandardCharsets.UTF_8));
-                out.closeEntry();
-            }
+        Path target = tempDir.resolve("real.txt");
+
+        Files.write(
+                target,
+                "content".getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path symbolicLink =
+                tempDir.resolve("link.txt");
+
+        try {
+            Files.createSymbolicLink(
+                    symbolicLink,
+                    target
+            );
+        } catch (
+                UnsupportedOperationException
+                | SecurityException
+                | FileSystemException e) {
+
+            return;
         }
 
-        return zip;
+        Path zip = tempDir.resolve("link.zip");
+
+        ZipHelper helper = new ZipHelper(
+                symbolicLink.toFile(),
+                zip.toString()
+        );
+
+        assertThrows(
+                UncheckedIOException.class,
+                helper::zip
+        );
+
+        assertFalse(Files.exists(zip));
     }
 
-    private static Map<String, String> entries(String... values) {
-        Map<String, String> entries = new LinkedHashMap<>();
+    private static byte[] readAllBytes(
+            ZipFile zipFile,
+            ZipEntry entry) throws IOException {
 
-        for (int i = 0; i < values.length; i += 2)
-            entries.put(values[i], values[i + 1]);
+        try (
+                InputStream input =
+                        zipFile.getInputStream(entry);
 
-        return entries;
-    }
+                ByteArrayOutputStream output =
+                        new ByteArrayOutputStream()
+        ) {
+            byte[] buffer =
+                    new byte[CommonConstant.BUFFER_SIZE];
 
-    private static String readUtf8(Path path) throws IOException {
-        return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-    }
-
-    private static byte[] readAllBytes(ZipFile zipFile, ZipEntry entry) throws IOException {
-        try (java.io.InputStream input = zipFile.getInputStream(entry);
-             java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream()) {
-            byte[] buffer = new byte[8192];
             int read;
 
             while ((read = input.read(buffer)) != -1)

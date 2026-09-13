@@ -1,5 +1,6 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.httpremote.model.HttpConstant;
 import com.ajaxjs.util.httpremote.model.HttpMethod;
 
@@ -136,7 +137,7 @@ public class FileUpload {
         writeUtf8(out, BOUNDARY_PREFIX + boundary + NEWLINE
                 + "Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"" + NEWLINE
                 + "Content-Type: " + HttpConstant.FILE_TYPE + NEWLINE + NEWLINE);
-        byte[] buffer = new byte[8192];
+        byte[] buffer = new byte[CommonConstant.BUFFER_SIZE];
         int length;
         while ((length = in.read(buffer)) != -1)
             out.write(buffer, 0, length);
