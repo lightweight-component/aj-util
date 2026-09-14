@@ -18,7 +18,7 @@
         .hero { padding:86px 0 70px; background:linear-gradient(125deg,var(--brand-soft),transparent 55%); } .tag { color:var(--brand); font:700 .78rem/1 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.09em; text-transform:uppercase; } h1,h2,h3 { line-height:1.15; letter-spacing:-.04em; } h1 { max-width:760px; margin:16px 0; font-size:clamp(2.6rem,6vw,5rem); } h1 [data-lang="en"],h2 [data-lang="en"] { letter-spacing:-.055em; } .intro { max-width:720px; margin:0; color:var(--muted); font-size:1.08rem; }
         .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; } .button { display:inline-block; padding:11px 17px; border:1px solid var(--line); border-radius:7px; color:var(--ink); font-weight:700; } .button:hover { border-color:var(--brand); text-decoration:none; } .button.primary { border-color:var(--brand); background:var(--brand); color:#07231d; }
         section { padding:72px 0; } h2 { margin:8px 0 14px; font-size:clamp(2rem,4vw,3rem); } .section-lede { margin:0 0 30px; color:var(--muted); } .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; } .card { padding:22px; border:1px solid var(--line); border-radius:10px; background:var(--surface); } .card small { color:var(--brand); font-family:ui-monospace,SFMono-Regular,Consolas,monospace; } .card h3 { margin:13px 0 8px; font-size:1.15rem; } .card p { margin:0; color:var(--muted); font-size:.93rem; }
-        .qualities { background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line); } .quality-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; } .quality b { display:block; margin-bottom:6px; } .quality p { margin:0; color:var(--muted); font-size:.9rem; } .start { display:grid; grid-template-columns:.8fr 1.2fr; gap:42px; align-items:center; } pre { margin:0; padding:22px; overflow:auto; border-radius:10px; background:var(--code); color:var(--code-ink); font:14px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace; } .sources { display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; } .source { padding:8px 12px; border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:.9rem; } footer { padding:28px 0 42px; color:var(--muted); font-size:.87rem; } footer .wrap { border-top:1px solid var(--line); padding-top:24px; }
+        .qualities { background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line); } .quality-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:24px; } .quality b { display:block; margin-bottom:6px; } .quality p { margin:0; color:var(--muted); font-size:.9rem; } .start { display:grid; grid-template-columns:.8fr 1.2fr; gap:42px; align-items:center; } pre { margin:0; padding:22px; overflow:auto; border-radius:10px; background:var(--code); color:var(--code-ink); font:14px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace; } .sources { display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; } .source { padding:8px 12px; border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:.9rem; } footer { padding:28px 0 42px; color:var(--muted); font-size:.87rem; } footer .wrap { border-top:1px solid var(--line); padding-top:24px; }
         @media (max-width:760px) { .hero { padding:60px 0 50px; } .grid { grid-template-columns:repeat(2,1fr); } .quality-grid { grid-template-columns:repeat(2,1fr); } .start { grid-template-columns:1fr; gap:24px; } } @media (max-width:500px) { .wrap { width:min(100% - 28px,1080px); } .nav-links { display:none; } .grid,.quality-grid { grid-template-columns:1fr; } section { padding:54px 0; } }
     </style>
 </head>
@@ -39,10 +39,10 @@
     <section class="hero">
         <div class="wrap">
             <div class="tag">Java 8+ · Apache 2.0</div>
-            <h1><span data-lang="zh" style="letter-spacing:3px">轻量、实用的 Java 工具库</span><span data-lang="en">Lightweight, practical Java utilities.</span>
+            <h1><span data-lang="zh" style="letter-spacing:3px">轻量、实用、面向对象的 Java 工具库</span><span data-lang="en">Lightweight, practical, object-oriented Java utilities.</span>
             </h1>
-            <p class="intro"><span data-lang="zh">AJ-Utils 是一个面向 Java 8 的模块化工具库，提供通用、I/O、HTTP、密码学、FTP、S3 对象存储和二维码等能力。</span><span
-                    data-lang="en">A modular Java 8 utility library for common helpers, I/O, HTTP, cryptography, FTP, S3-compatible storage, and QR codes.</span>
+            <p class="intro"><span data-lang="zh">AJ-Utils 是一个面向 Java 8 的模块化工具库，坚持面向对象设计与高质量代码，提供通用、I/O、HTTP、密码学、FTP、S3 对象存储和二维码等能力。</span><span
+                    data-lang="en">A modular Java 8 utility library built with object-oriented design and high-quality code, providing common helpers, I/O, HTTP, cryptography, FTP, S3-compatible storage, and QR codes.</span>
             </p>
             <div class="actions"><a class="button primary" href="#start"><span data-lang="zh">开始使用</span><span
                     data-lang="en">Get started</span></a><a class="button"
@@ -61,7 +61,7 @@
             <div class="grid">
                 <a class="card" href="/docs-index/"><small>01 / CORE</small>
                     <h3>aj-util</h3>
-                    <p><span data-lang="zh">字符串、集合、日期、JSON、XML、I/O、反射等通用工具。</span><span data-lang="en">General utilities for strings, collections, dates, JSON, XML, I/O and reflection.</span>
+                    <p><span data-lang="zh">以面向对象设计组织的字符串、集合、日期、JSON、XML、I/O、反射等通用工具。</span><span data-lang="en">Object-oriented general utilities for strings, collections, dates, JSON, XML, I/O and reflection.</span>
                     </p></a>
                 <a class="card" href="https://github.com/lightweight-component/aj-util/tree/master/aj-ftp"
                    target="_blank" rel="noreferrer"><small>02 / TRANSFER</small>
@@ -104,7 +104,10 @@
                     <p><span data-lang="zh">直观的 API 与实现，便于使用和维护。</span><span data-lang="en">Straightforward APIs and implementations.</span>
                     </p></div>
                 <div class="quality"><b><span data-lang="zh">重视质量</span><span data-lang="en">Quality-focused</span></b>
-                    <p><span data-lang="zh">代码注释、文档和单元测试支持可靠集成。</span><span data-lang="en">Comments, documentation and tests support integration.</span>
+                    <p><span data-lang="zh">以清晰实现、代码注释、文档和单元测试，打造可靠、易维护的高质量代码。</span><span data-lang="en">Clear implementations, comments, documentation and tests deliver reliable, maintainable, high-quality code.</span>
+                    </p></div>
+                <div class="quality"><b><span data-lang="zh">面向对象设计</span><span data-lang="en">Object-oriented design</span></b>
+                    <p><span data-lang="zh">以清晰的对象职责和抽象组织 API，方便扩展与复用。</span><span data-lang="en">Clearly defined object responsibilities and abstractions make APIs easier to extend and reuse.</span>
                     </p></div>
                 <div class="quality"><b><span data-lang="zh">模块化使用</span><span
                         data-lang="en">Modular by default</span></b>

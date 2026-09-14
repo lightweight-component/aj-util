@@ -50,7 +50,6 @@ import java.util.zip.ZipOutputStream;
  *
  * <p>By default, entries use {@link ZipEntry#DEFLATED} compression.
  * {@link ZipEntry#STORED} mode can be enabled through
- * {@link #setUseStore(boolean)}. STORED entries require their size and CRC32
  * checksum to be calculated before the entry is written.</p>
  *
  * <p>Source files should not be modified while compression is in progress,

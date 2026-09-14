@@ -6,8 +6,7 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
 ![Java Version](https://img.shields.io/badge/Java-8-blue)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.3.7-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
-![coverage](https://img.shields.io/badge/coverage-80%25-yellowgreen.svg?maxAge=2592000)
+[![Javadoc](https://img.shields.io/badge/javadoc-1.3.8-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lightweight-component/aj-util)
 ![GitHub repo size](https://img.shields.io/github/repo-size/lightweight-component/aj-util)
@@ -19,52 +18,99 @@
 
 <hr />
 
-This is a Java toolkit that truly embraces Object-Oriented Programming (OOP). Unlike other libraries that rely heavily
-on static methods, this toolkit requires you to instantiate objects before invoking utility methods.
+AJ Utilities is a lightweight Java utility library with a Java 8 baseline. It combines object-oriented APIs with static helpers: overloaded constructors adapt inputs where useful, while simple operations remain directly callable.
 
-By utilizing overloaded constructors, it automatically adapts to and converts various input parameters. This approach
-not only handles complex scenarios with ease but also results in a cleaner API design and more concise, DRY (Don't
-Repeat Yourself) code.
+## Modules
 
-Furthermore, this library is designed to be lightweight with minimal dependencies. The JAR file is only about 170KB in
-size and includes the following modules:
-
-| Class/Package Module | Detail Description                                                                     | Memo                                          |
-|----------------------|----------------------------------------------------------------------------------------|-----------------------------------------------|
-| BytesHelper          | Byte array utility class                                                               |                                               |
-| CollUtils            | Collection utility class                                                               |                                               |
-| ConvertBasicValue    | Attempts to convert target type, note that not all types can be converted              |                                               |
-| DateHelper           | Date utility class                                                                     |                                               |
-| EncodeTools          | String URL/Base64 encoder                                                              |                                               |
-| MessageDigestHelper  | MD5/SHA1/SHA256/384/512 encryption utility class                                       |                                               |
-| ObjectHelper         | A helper for Java Object                                                               |                                               |
-| HTTP Request         | A Small HTTP Request Component                                                         |                                               |
-| RandomTools          | Random Numbers and Strings                                                             |                                               |
-| RegExpUtils          | Regular expression utility class                                                       |                                               |
-| StrUtil              | String utility class                                                                   |                                               |
-| JsonUtil             | Encapsulation of Jackson Library: Conversion Methods Between JSON, Map, Bean, and List | Jackson is the only library that dependencies |
-| XmlHelper            | XML processing utility class                                                           |                                               |
-| Cryptography         | AES/RSA encryption and decryption package                                              |                                               |
-| IO                   | File, resource, stream utility package                                                 |                                               |
-| Reflection           | Reflection utility package                                                             |                                               |
-
-## Source code
-
-[Github](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
-
-## Link
-
-[Tutorials](https://aj-util.ajaxjs.com) | [Tutorials(Chinese)](https://framework.ajaxjs.com/aj-util/cn/) | [DeepWiki Tutorials](https://deepwiki.com/lightweight-component/aj-util) | [Java Documents](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)
+| Classes / package | Purpose |
+| --- | --- |
+| StrUtil, StringBytes, Base64Utils, UrlCodec | Strings, bytes/hex, Base64, form and query-value encoding |
+| ConvertBasicValue, ObjectHelper, MapTool | Type conversion, object and map helpers |
+| RegExpUtils, RegExpHelper | Regular expressions |
+| RandomTools, HashHelper | Random numbers/strings, UUIDv7, digests and HMAC |
+| JsonUtil, XmlHelper | JSON conversion, XML parsing and map conversion |
+| date | DateTools, DateTypeConvert and Formatter |
+| io | DataReader, DataWriter, FileHelper, ResourceHelper, ZipHelper and UnzipHelper |
+| httpremote | HTTP helpers, upload, download and call proxies; models in httpremote.model |
+| reflect | Clazz, Fields, Methods, Types and NewInstance |
+| cryptography | Symmetric encryption, RSA, signatures, key and certificate helpers |
+| log | Trace, TextBox and operation-log annotation |
 
 ## Install
 
-Runs on Java 8+. Maven:
+The current checkout declares version **1.3.8**. Java 8 is the compatibility baseline; see [known issues](to_fix.md) for runtime limitations.
 
 ```xml
-
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.6</version>
+    <version>1.3.8</version>
 </dependency>
 ```
+
+The default JSON engine uses Jackson 2. Both dependencies below are `provided` in the library POM, so applications using it must supply them at runtime. These versions match the current POM:
+
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.22.1</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.datatype</groupId>
+    <artifactId>jackson-datatype-jsr310</artifactId>
+    <version>2.22.1</version>
+</dependency>
+```
+
+## Quick start
+
+```java
+import com.ajaxjs.util.RandomTools;
+import com.ajaxjs.util.StringBytes;
+import com.ajaxjs.util.UrlCodec;
+import com.ajaxjs.util.io.ZipHelper;
+import com.ajaxjs.util.io.UnzipHelper;
+
+String queryValue = new UrlCodec("a b+c").encodeQueryValue(); // a%20b%2Bc
+String hex = StringBytes.bytesToHex(new byte[]{0x0A, 0x2F}); // 0A2F
+String id = RandomTools.uuidV7(); // 32 hex characters
+java.util.Date createdAt = RandomTools.showTime(id);
+
+new ZipHelper("input-directory", "output.zip").zip();
+new UnzipHelper("output.zip", "extracted").extract();
+```
+
+The String-based ZipHelper constructor accepts a directory. For a single file, use `new ZipHelper(new java.io.File("input.txt"), "output.zip")`.
+
+## Refactoring notes
+
+- UrlEncode and UrlHelper are consolidated into UrlCodec. Choose form or query-value methods explicitly; do not encode an entire URL as a query value.
+- Hex conversion is now StringBytes.bytesToHex / hexToBytes.
+- Resources is now ResourceHelper. Use getStream for resources packaged in JARs.
+- Compression and extraction are separate instance APIs: ZipHelper.zip() and UnzipHelper.extract().
+- Request, Response, HttpConstant, HttpMethod and PayloadType are in com.ajaxjs.util.httpremote.model.
+- XML/map conversion belongs to XmlHelper.
+- RandomTools.uuidV7() returns compact text; uuidV7(true) includes hyphens. showTime accepts both formats.
+
+## Usage boundaries
+
+Random numbers/strings are not security tokens. HMAC requires an explicit key. Hashing and Base64 are not encryption. Legacy crypto convenience methods and SkipSSL are not recommended for new production code.
+
+Use explicit charsets for portable byte conversion. Stream overloads differ in ownership, and text readers still have line-ending limitations. Java 17 default-interface reflection is also a known issue. See [to_fix.md](to_fix.md) for verified findings and test status; refactoring does not mean every outstanding issue is resolved.
+
+## Development and agent skill
+
+From the repository root:
+
+```sh
+mvn -f aj-util/pom.xml test
+```
+
+The repository includes an [aj-util agent skill](../skills/aj-util/SKILL.md) describing current APIs, contracts and the maintenance workflow.
+
+## Source and documentation
+
+[GitHub](https://github.com/lightweight-component/aj-util) | [GitCode](https://gitcode.com/lightweight-component/aj-util)
+
+[English tutorials](https://aj-util.ajaxjs.com) | [Chinese tutorials](https://framework.ajaxjs.com/aj-util/cn/) | [DeepWiki](https://deepwiki.com/lightweight-component/aj-util) | [Javadoc](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util)

@@ -10,7 +10,7 @@ that may lag behind the implementation.
 
 ## Locate the project
 
-1. Find `aj-util/pom.xml` and set its parent as the repository root.
+1. Find the repository directory containing `aj-util/` and `skills/`; `aj-util/pom.xml` is the module POM.
 2. Read the target class under `aj-util/src/main/java/com/ajaxjs/util` before proposing code.
 3. Read the matching English and Chinese pages under `docs-src/src` when changing public behavior or examples.
 4. Read nearby tests under `aj-util/src/test/java`; add a regression test for every bug fix.
@@ -39,15 +39,15 @@ Load only the reference relevant to the task. For cross-package reviews or broad
 7. Run the narrow test first, then the module suite:
 
 ```bash
-mvn -pl aj-util -Dtest=TestClassName test
-mvn -pl aj-util test
+mvn -f aj-util/pom.xml -Dtest=TestClassName test
+mvn -f aj-util/pom.xml test
 ```
 
 If the parent POM or local JDK prevents a full build, report the exact command and failure; do not claim verification.
 
 ## Update documentation
 
-When public behavior changes, update both language variants in the same change:
+Keep `aj-util/README.md`, `aj-util/README.zh-CN.md` and `aj-util/to_fix.md` aligned with verified source and test results. For detailed site pages, update both language variants in the same change:
 
 - English: `name.md`
 - Chinese: `name-cn.md`
@@ -59,7 +59,7 @@ coordinates, or code identifiers.
 When reviewing source comments, verify each statement against the method body and its callers. Distinguish
 `null` returns from thrown exceptions, configured precision from actual clock resolution, security controls
 that are enabled from dangerous XML features that are disabled, and key reconstruction from password-based
-key derivation. Change comments and documentation only when the task does not authorize implementation edits.
+key derivation. For documentation-only requests, do not modify implementation or tests.
 
 ## Review code
 

@@ -1,46 +1,55 @@
 # aj-util 待修复问题
 
-本文记录已经确认、但尚未处理的问题。已修复问题不在此重复列出。
+本文按当前源码区分未解决问题、已解决事项与测试维护工作。本次仅同步文档，未修改实现或测试。
 
-## 审查范围
+## 核对基线（2026-09-14）
 
-- 本轮检查了 `com.ajaxjs.util` 直属类以及 `cryptography`、`date`、`httpremote`、`io`、
-  `json`、`log` 包。
-- `reflect` 包沿用此前的审查结果，本轮没有重新检查。
-- 下列优先级按“安全/数据损坏 > 错误结果/资源失控 > API 一致性和可诊断性”划分。
+- 当前模块版本：1.3.8。核对范围包括直属类、I/O、HTTP、日期、JSON/XML、密码学和反射；日志包保留源码审查结论。
+- 使用 JDK 17 执行 `mvn -o -f aj-util/pom.xml test`：295 项，280 项通过、10 项断言失败、5 项错误、0 项跳过。没有执行 Java 8 运行时验证。
+- 失败不能全部归为生产缺陷：下面单独记录测试预期、夹具与环境问题。优先级按安全/数据损坏、错误结果/资源失控、API 一致性排列。
+
+### 已解决或已被新 API 替代
+
+- HashHelper.getMac() 缺失 HMAC 密钥时抛出 IllegalStateException；hash() 按算法名分派，旧的隐式随机密钥问题已解决。
+- UrlEncode/UrlHelper 被 UrlCodec 替代，表单与查询参数值编码语义已拆分；旧 encodeSafe 问题不再适用于当前 API。
+- RandomTools.showTime() 支持紧凑 UUIDv7；生成方法为 uuidV7() / uuidV7(boolean)。
+- FileHelper.writeFileContent() 已使用 UTF-8；读取时的换行问题仍在。
+- Jackson2Engine 解析失败抛出 RuntimeException，旧的“记录日志后返回 null”问题移除；原文日志泄漏仍在。
+- XML/Map 转换移至 XmlHelper；无匹配 XPath 返回空 Map，非法 XML/DOCTYPE 被拒绝，不应按旧测试预期判为解析器缺陷。
+
+### 测试维护与环境问题
+
+以下 6 项占本次 15 项失败/错误中的 6 项，需先澄清或修正测试，不能据此回退生产逻辑：
+
+1. TestObjectHelper.initialCapacityDoesNotOverflowForLargeExpectedSize：仍期待最小容量 16；当前小容量从 expectedSize + 1 开始，大容量返回 Integer.MAX_VALUE。先确认新容量策略再调整断言。
+2. TestXmlHelper.testNodeAsMapWithInvalidXPath：旧预期 null，当前为空 Map。
+3. TestXmlHelper.testRejectsExternalEntities：当前安全拒绝输入并抛出 IllegalArgumentException，测试仍按返回 null 处理。
+4. TestIoSafety.mergeFailureDoesNotPublishPartialFile：当前先拒绝非法分块并抛出 IllegalArgumentException，旧测试期待 UncheckedIOException；保留“不发布部分文件”的断言。
+5. TestResourceHelper.classRelativeResourceUsesTargetClassPackage：缺少 `src/test/resources/com/ajaxjs/util/io/test.txt` 夹具；src/test/java 下的文件不会按默认 Maven 配置复制为测试资源。
+6. TestIoSafety.copyDirectoryRejectsSymbolicLinks：本机 Windows 无创建符号链接权限。需要具备权限的环境验证，或显式跳过并注明未验证，不能宣称防护失效或已通过。
+
+其余 9 项对应下文 DataReader（2）、DataWriter（2）、FileHelper（1）、日期（3）和接口默认方法反射（1）问题。
 
 ## `com.ajaxjs.util` 直属类
 
-### 高优先级
-
-1. `HashHelper.getMac()` 在没有设置 HMAC 密钥时临时生成随机密钥，但既不保存也不返回该密钥。
-   调用者拿到的 MAC 无法复算或验证；同一实例连续调用也会得到不同结果。更容易混淆的是，
-   `hash()` 在没有密钥时走普通摘要，而直接调用 `getMac()` 却使用不可见的随机密钥。
-   修复方案：要求调用者显式提供密钥；或者将生成的密钥保存到字段并提供安全的导出 API，同时统一
-   `hash()` 与 `getMac()` 的状态语义。
-   单测：`TestHashHelper.macRequiresAnExplicitKey()`。
-
 ### 中优先级
 
-2. `ConvertBasicValue` 的整数转换使用 `Number.intValue()`、`longValue()` 等截断式转换。
+1. `ConvertBasicValue` 的整数转换使用 `Number.intValue()`、`longValue()` 等截断式转换。
    超出目标类型范围或把小数转换为整数时不会报错，可能静默产生溢出或精度丢失。
    修复方案：默认使用精确、带范围检查的转换；如需 Java 强制转换语义，另提供名称明确的方法。
 
-3. `UrlEncode.encodeSafe()` 的名称暗示 RFC 3986 URL 编码，但实现基于表单编码
-   `URLEncoder`，仍会编码 `~`，并且不能区分 query、path segment 等不同 URL 组件。
-   修复方案：明确它只处理 `application/x-www-form-urlencoded`，或实现真正的 RFC 3986
-   component encoder。
-
 ### 低优先级
 
-4. `RegExpUtils.isMatch(Pattern, String)` 内部调用 `Matcher.find()`，而同类方法
+2. `RegExpUtils.isMatch(Pattern, String)` 内部调用 `Matcher.find()`，而同类方法
    `match()` 才调用 `matches()`。“isMatch” 很容易被理解成整串匹配。
    修复方案：统一命名与语义，保留旧方法时标记弃用并在文档中明确是“查找子串”。
 
-5. `StringBytes` 在未指定 charset 时存在回退到平台默认字符集的入口，跨机器结果不稳定。
+3. `StringBytes` 在未指定 charset 时存在回退到平台默认字符集的入口，跨机器结果不稳定。
    修复方案：文本与字节互转默认固定为 UTF-8，其他字符集必须显式指定。
 
 ## `com.ajaxjs.util.httpremote`
+
+Request、Response、HttpConstant、HttpMethod、PayloadType 现位于 `httpremote.model`，以下简称不改变其实际包路径。
 
 ### 高优先级
 
@@ -61,7 +70,7 @@
    `Future` 汇总给调用者。
 
 4. `BatchDownload.start()` 为每个 URL 创建一个原生线程，固定等待 20 秒后不检查
-   `awaitTermination()` 的返回值。方法可能在后台任务尚未结束时返回，大批 URL 还会导致线程资源
+   `CountDownLatch.await(20, TimeUnit.SECONDS)` 的返回值。方法可能在后台任务尚未结束时返回，大批 URL 还会导致线程资源
    失控。
    修复方案：使用有界线程池，允许配置总超时，取消超时任务，并返回每项成功/失败的完整结果。
 
@@ -88,6 +97,14 @@
    multipart 分支还是空的 TODO。
    修复方案：不支持的类型立即抛出异常，任何一次 set 调用都不能静默沿用旧数据。
 
+### 调用代理补充
+
+10. CallHandler 根据 method.getDeclaringClass() 获取服务注解，对 Object 方法以及 create2() 调用的 init() 缺乏专门处理，可能因注解为空而失败。
+    修复方案：先分派 Object/初始化方法，再解析服务方法元数据。
+11. 代理没有实现 HEAD 分支，不能将其视为与直接 Head 工具等价。
+12. 路径参数直接替换且依赖 Parameter.getName()，未启用 -parameters 时名称可能为 arg0；参数未编码且 null 会触发异常。
+    修复方案：使用显式参数名与路径组件编码，并验证缺失/null 参数。
+
 ## `com.ajaxjs.util.io`
 
 ### 高优先级
@@ -96,13 +113,12 @@
    没有结尾换行的内容强行增加换行。它被 HTTP 和文件读取 API 复用，会静默修改数据。
    修复方案：用 `Reader` 的字符缓冲区直接复制，保留原始字符序列。
    单测：`TestDataReader.testReadAsString()`、
-   `TestDataReader.readAsStringPreservesOriginalLineEndingsAndTrailingNewline()` 和
-   `TestResources.readsResourceText()`。
+   `TestDataReader.readAsStringPreservesOriginalLineEndingsAndTrailingNewline()`；资源文本读取调用链也受影响。
 
 2. `DataWriter.write(InputStream)` 会通过 `DataReader` 关闭调用者传入的输入流，但注释只强调输出流
    不会关闭，所有权约定不清晰且容易导致后续读取失败。
    修复方案：复制方法默认不关闭任一外部流；需要托管生命周期时提供名称明确的独立入口。
-   单测：`TestDataWriter.writeDoesNotCloseCallerInputOrOutput()`。
+   单测：`TestDataWriter.writeDoesNotCloseCallerInputOrOutput()`。新增静态 `DataWriter.write(OutputStream, InputStream)` 已不关闭或 flush 外部流，但实例重载尚未统一；不能认为该问题整体解决。
 
 ### 中优先级
 
@@ -111,13 +127,12 @@
    修复方案：让三参数重载严格遵守 offset/length 语义；单参数重载直接写完整数组。
    单测：`TestDataWriter.zeroLengthWritesNoBytes()`。
 
-4. `FileHelper.writeFileContent()` 使用平台默认字符集，而读取文本默认 UTF-8，同一 API 往返可能
-   乱码。
-   修复方案：默认统一 UTF-8，并提供接受 `Charset` 的重载。
-
-5. `FileHelper.getFileContent()` 按行读取后重新拼接，会统一换行并丢失文件最后是否有换行的信息。
+4. `FileHelper.getFileContent()` 按行读取后重新拼接，会统一换行并丢失文件最后是否有换行的信息。
    修复方案：复用修正后的原样文本读取实现。
    单测：`TestFileHelper.readingTextPreservesLineEndingsAndTrailingNewline()`。
+
+5. UnzipHelper.ExtractionLimits 构造器没有校验自定义阈值。尤其 maxCompressionRatio 为 NaN 时，比较不会触发比例限制；非正数等输入也无法给出明确的配置错误。
+   修复方案：构造时验证条目数、单条/总大小与比例的有效范围，比例必须有限且为正；补充 NaN、Infinity、零和负值测试。默认策略与路径穿越检查并未因此失效。
 
 ### 低优先级
 
@@ -129,8 +144,7 @@
 
 ### 单元测试确认
 
-2026-07-30 使用 JDK 17 定向执行 `com.ajaxjs.util.date.Test*`：共 66 个测试，63 个通过、
-2 个失败、1 个错误。失败对应下列 3 个问题。测试已作为回归用例保留，生产源码尚未修改。
+本次全量测试仍复现以下 3 个问题，详见顶部基线。跳过零点的日期属于需要明确严格/宽松策略的行为问题。
 
 ### 中优先级
 
@@ -159,19 +173,11 @@
    或大体积正文，造成敏感数据泄露和日志放大。
    修复方案：日志只记录目标类型、输入长度、摘要/trace id 和异常；禁止默认记录原始 JSON。
 
-### 中优先级
-
-2. JSON 转换方法大量采用“记录日志并返回 null”的错误模型，无法区分合法 JSON `null`、输入为空和
-   解析失败，也容易让错误延迟到后续空指针。
-   修复方案：核心转换 API 抛出带 cause 的统一异常；如需容错，另提供名称明确的 `tryXxx` API。
-
 ## `com.ajaxjs.util.cryptography`
 
 ### 单元测试确认
 
-2026-08-17 使用 JDK 8 定向执行 `com.ajaxjs.util.cryptography.**`：共 27 个测试，全部通过。
-转换名与密钥算法混用、cipher 状态校验、敏感字段输出、GCM 参数校验、证书字段去引号和未生成
-密钥对时的错误提示已经修复，不再列为待处理问题。
+本次 JDK 17 全量测试中密码学相关 27 项测试全部通过。已有转换名、状态和参数校验修复保留；测试通过不代表下列默认算法、协议与 API 安全问题已经解决。
 
 ### 高优先级
 

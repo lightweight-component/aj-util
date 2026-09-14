@@ -1,46 +1,47 @@
 # Module map
 
-## Build and source layout
+Paths below are relative to the repository root (the directory containing both `aj-util/` and `skills/`).
+The module POM currently declares `com.ajaxjs:ajaxjs-util:1.3.8` and a Java 8 baseline.
+Jackson databind and datatype-jsr310 are declared with provided scope; applications using the default JSON engine must supply them at runtime.
 
-- Maven module: `aj-util`
-- Coordinates: `com.ajaxjs:ajaxjs-util`
-- Runtime baseline: Java 8+
-- Production source: `aj-util/src/main/java`
-- Tests: `aj-util/src/test/java`
-- Documentation: `docs-src/src`
+## Current packages
 
-The Jackson dependencies are declared with `provided` scope. Code that uses `JsonUtil` must ensure compatible Jackson
-databind and JSR-310 modules are available at runtime.
+| Package under com.ajaxjs.util | Classes and responsibilities |
+| --- | --- |
+| root | StrUtil, StringBytes (including hex), Base64Utils, UrlCodec, ConvertBasicValue, ObjectHelper, MapTool, RegExpUtils, RegExpHelper, RandomTools, HashHelper, JsonUtil, XmlHelper, CommonConstant |
+| date | DateTools, DateTypeConvert, Formatter |
+| io | DataReader, DataWriter, FileHelper, ResourceHelper, ZipHelper, UnzipHelper |
+| httpremote | Get, Post, Put, Delete, Head, BasePost, BatchDownload, FileUpload, SkipSSL |
+| httpremote.model | Request, Response, HttpConstant, HttpMethod, PayloadType |
+| reflect | Clazz, Fields, Methods, Types, NewInstance |
+| cryptography | Cryptography, SecretKeyMgr, CertificateUtils, Constant; rsa contains KeyMgr, DoSignature, DoVerify |
+| json | JSON engine abstraction and Jackson 2 implementation |
+| log | Trace, TextBox, EnableOperationLog |
 
-## Package routing
+## Refactoring migration
 
-| Area                                                | Source                         | Documentation               |
-|-----------------------------------------------------|--------------------------------|-----------------------------|
-| Core string, bytes, map, XML, URL, conversion, JSON | `com/ajaxjs/util/*.java`       | `docs-src/src/common`       |
-| Date and time                                       | `com/ajaxjs/util/date`         | `docs-src/src/date`         |
-| Reflection                                          | `com/ajaxjs/util/reflect`      | `docs-src/src/reflect`      |
-| Streams, files, resources, ZIP, commands            | `com/ajaxjs/util/io`           | `docs-src/src/io`           |
-| Symmetric crypto, certificates, RSA                 | `com/ajaxjs/util/cryptography` | `docs-src/src/cryptography` |
-| HTTP client helpers                                 | `com/ajaxjs/util/httpremote`   | `docs-src/src/http_request` |
-| Logging helpers                                     | `com/ajaxjs/util/log`          | related source and tests    |
+| Old name or location | Current API |
+| --- | --- |
+| UrlEncode / UrlHelper | UrlCodec: explicit form or query-value encoding; concatUrl and simpleGET |
+| BytesHelper hex conversion | StringBytes.bytesToHex / hexToBytes |
+| Resources | ResourceHelper |
+| ZipHelper extraction | new UnzipHelper(...).extract() |
+| ZIP compression | new ZipHelper(...).zip() |
+| httpremote.Request / Response / related models | httpremote.model package |
+| MapTool XML conversion | XmlHelper.xmlToMap / mapToXml |
+| RandomTools.uuid / uuidStr | uuidV7() or uuidV7(boolean withHyphen) |
+| ReflectMethod | Methods |
 
-## Primary classes
+Do not generate examples using removed README names such as CollUtils, DateHelper, EncodeTools or MessageDigestHelper.
+Hashing is handled by HashHelper, not an encryption API.
 
-- `StrUtil`: counting, padding, templates, and joining.
-- `ConvertBasicValue`: primitive, wrapper, enum, and string conversion.
-- `BytesHelper`, `StringBytes`, `Base64Utils`, `HashHelper`: byte and encoding helpers.
-- `UrlEncode`, `UrlHelper`: URL and query-string handling.
-- `MapTool`: map transforms plus XML conversion.
-- `XmlHelper`: hardened DOM and XPath helpers.
-- `JsonUtil`: facade over a pluggable `JsonEngine`.
-- `DateTypeConvert`, `DateTools`, `Formatter`: legacy and `java.time` conversion/formatting.
-- `Clazz`, `Fields`, `Methods`, `Types`, `NewInstance`: reflection utilities. Their paired English/Chinese
-  documentation pages are under `docs-src/src/reflect`; known limitations are tracked in `to_fix.md`.
-- `DataReader`, `DataWriter`, `FileHelper`, `Resources`, `ZipHelper`: I/O utilities.
-- `Cryptography`, `SecretKeyMgr`, `CertificateUtils`, RSA `KeyMgr`, `DoSignature`, `DoVerify`: cryptographic utilities.
+## Navigation
 
-Use `rg` to locate symbols and callers rather than relying on this summary:
+- Implementation: `aj-util/src/main/java/com/ajaxjs/util/`.
+- Tests and fixtures: `aj-util/src/test/java/`, `aj-util/src/test/resources/`.
+- Overview: `aj-util/README.md` (English), `aj-util/README.zh-CN.md` (Chinese).
+- Known issues and test baseline: `aj-util/to_fix.md`.
+- Detailed site documentation: `docs-src/src/`; locate relevant pages by content, since filenames may retain pre-refactor class names.
+- Local style conventions: `code-style.md`.
 
-```bash
-rg -n "methodName|ClassName" aj-util/src/main aj-util/src/test docs-src/src
-```
+Read the actual constructors and overloads before recommending a usage pattern; static helpers and instance APIs coexist.
