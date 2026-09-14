@@ -61,6 +61,31 @@
     return applyLanguage(read("language") || getBrowserLanguage(options.supported, options.fallback || "en"), false);
   }
 
+  /** Bind buttons that switch between light and dark themes. */
+  function bindThemeToggle(options) {
+    options = options || {};
+    var buttons = document.querySelectorAll(options.selector || "[data-theme-toggle]");
+
+    function refreshLabel() {
+      var current = root.dataset.theme || initTheme();
+      var next = current === "dark" ? "light" : "dark";
+      buttons.forEach(function (button) {
+        button.textContent = current === "dark" ? "☀" : "☾";
+        button.setAttribute("aria-label", "Switch theme to " + next);
+        button.setAttribute("title", "Switch theme to " + next);
+      });
+    }
+
+    buttons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var current = root.dataset.theme || initTheme();
+        applyTheme(current === "dark" ? "light" : "dark", true);
+        refreshLabel();
+      });
+    });
+    refreshLabel();
+  }
+
   /** Bind buttons that switch between the configured site languages. */
   function bindLanguageToggle(options) {
     options = options || {};
@@ -112,6 +137,7 @@
     prefersDarkMode: prefersDarkMode,
     applyTheme: applyTheme,
     initTheme: initTheme,
+    bindThemeToggle: bindThemeToggle,
     applyLanguage: applyLanguage,
     initLanguage: initLanguage,
     bindLanguageToggle: bindLanguageToggle,
