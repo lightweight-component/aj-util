@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +32,7 @@ class TestHttpIoHelpers {
         data.put("file", file.toFile());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        FileUpload.writeFormData(data, out, "test-boundary");
+        new MultipartWriter(out, "test-boundary").write(data);
         String body = new String(out.toByteArray(), StandardCharsets.UTF_8);
 
         assertTrue(body.contains("你好"));
@@ -39,18 +40,7 @@ class TestHttpIoHelpers {
         assertTrue(body.contains("name=\"empty\""));
         assertTrue(body.endsWith("--test-boundary--\r\n"));
         assertThrows(IllegalArgumentException.class,
-                () -> FileUpload.writeFormData(new LinkedHashMap<>(), out, "boundary"));
-    }
-
-    @Test
-    void batchDownloadUsesIndependentResultsAndPortableFileNames() {
-        String[] urls = {"https://example.test/a.txt"};
-        BatchDownload download = new BatchDownload(urls, tempDir.toString(), null);
-        urls[0] = "changed";
-
-        assertArrayEquals(new String[]{null}, download.getFileNames());
-        assertEquals("file.txt",
-                BatchDownload.getFileNameFromPath(tempDir.resolve("folder").resolve("file.txt").toString()));
+                () -> new MultipartWriter(out, "boundary").write(new LinkedHashMap<>()));
     }
 
     @Test
@@ -62,6 +52,33 @@ class TestHttpIoHelpers {
         UncheckedIOException error =
                 assertThrows(UncheckedIOException.class, () -> Head.gzip(connection("gzip"), invalid));
         assertNotNull(error.getCause());
+    }
+
+    @Test
+    void gzipRecognizesCaseInsensitiveEncodingTokenOnly() throws Exception {
+        byte[] content = "gzip content".getBytes(StandardCharsets.UTF_8);
+        ByteArrayOutputStream compressed = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzip = new GZIPOutputStream(compressed)) {
+            gzip.write(content);
+        }
+
+        try (InputStream in = Head.gzip(connection(" GZip "), new ByteArrayInputStream(compressed.toByteArray()))) {
+            assertArrayEquals(content, readAll(in));
+        }
+
+        InputStream chained = new ByteArrayInputStream(compressed.toByteArray());
+        assertSame(chained, Head.gzip(connection("gzip, br"), chained));
+    }
+
+    private static byte[] readAll(InputStream in) throws Exception {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[128];
+        int length;
+
+        while ((length = in.read(buffer)) != -1)
+            out.write(buffer, 0, length);
+
+        return out.toByteArray();
     }
 
     private static HttpURLConnection connection(String contentEncoding) throws Exception {

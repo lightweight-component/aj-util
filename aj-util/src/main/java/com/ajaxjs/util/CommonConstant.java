@@ -34,6 +34,11 @@ public interface CommonConstant {
     char NEW_LINE = '\n';
 
     /**
+     * CRLF sequence required by HTTP multipart formatting.
+     */
+    String NEWLINE2 = "\r\n";
+
+    /**
      * Represents the UTF-8 character encoding string
      */
     String UTF8 = "UTF-8";

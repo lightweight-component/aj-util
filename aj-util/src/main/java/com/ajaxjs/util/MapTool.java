@@ -157,6 +157,22 @@ public class MapTool {
     }
 
     /**
+     * 万能 Map 转换器，为了泛型的转换而设的一个方法，怎么转换在 fn 中处理
+     *
+     * @param map 原始 Map，key 必须为 String 类型
+     * @param fn  转换函数
+     * @param <K> Key 的类型
+     * @param <T> 返回 value 的类型
+     * @return 转换后的 map
+     */
+    public static <T, K> Map<String, T> as(Map<String, K> map, Function<K, T> fn) {
+        Map<String, T> _map = new HashMap<>();
+        map.forEach((k, v) -> _map.put(k, v == null ? null : fn.apply(v)));
+
+        return _map;
+    }
+
+    /**
      * Flattens a nested Map into a single-level Map.
      * <p>
      * Nested keys are joined with '.'.

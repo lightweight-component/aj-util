@@ -28,11 +28,5 @@ class TestGet {
         assertNotNull(map.get("error"));
     }
 
-    @Test
-    void testDownload2disk() {
-        assertNotNull(BatchDownload.download(HttpMethod.GET, "https://www.baidu.com/", null, "c:/temp", "baidu"));
 
-        String url = "https://etax.guangdong.chinatax.gov.cn:8443/static_res/images/nlogo14400.png";
-        assertNotNull(BatchDownload.download(HttpMethod.GET, url, null, "c:/temp", null));
-    }
 }

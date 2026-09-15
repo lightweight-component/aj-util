@@ -1,7 +1,6 @@
 package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.httpremote.model.HttpMethod;
-import com.ajaxjs.util.httpremote.model.Request;
 
 import java.net.HttpURLConnection;
 import java.util.Map;

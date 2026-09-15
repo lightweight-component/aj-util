@@ -7,7 +7,7 @@ import com.ajaxjs.util.httpremote.model.HttpConstant;
 import com.ajaxjs.util.httpremote.Post;
 import com.ajaxjs.util.httpremote.Put;
 import com.ajaxjs.util.httpremote.model.HttpMethod;
-import com.ajaxjs.util.httpremote.model.Request;
+import com.ajaxjs.util.httpremote.Request;
 import com.ajaxjs.util.httpremote.call.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 

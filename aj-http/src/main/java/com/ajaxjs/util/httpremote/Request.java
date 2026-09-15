@@ -1,9 +1,12 @@
-package com.ajaxjs.util.httpremote.model;
+package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.MapTool;
 import com.ajaxjs.util.UrlCodec;
 import com.ajaxjs.util.date.DateTools;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Response;
 import com.ajaxjs.util.io.DataReader;
 import com.ajaxjs.util.log.TextBox;
 import com.ajaxjs.util.log.Trace;

@@ -1,7 +1,6 @@
 package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.httpremote.model.HttpMethod;
-import com.ajaxjs.util.httpremote.model.Request;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -102,16 +101,23 @@ public class Head extends Request {
     }
 
     /**
-     * Checks if the input stream is GZIP-encoded and returns the appropriate input stream.
-     * Some websites automatically add Content-Encoding:gzip regardless of the request headers.
+     * Checks whether the input stream has a single GZIP content encoding and returns
+     * the appropriate input stream.
+     *
+     * <p>The encoding token is compared case-insensitively after surrounding
+     * optional whitespace is removed. Multiple content encodings are intentionally
+     * left untouched because this method can decode only GZIP, not a complete
+     * encoding chain.</p>
      *
      * @param conn HTTP connection object
      * @param in   Original input stream
-     * @return GZIPInputStream if Content-Encoding is gzip, otherwise the original stream
+     * @return GZIPInputStream for a single gzip Content-Encoding, otherwise the original stream
      * @throws UncheckedIOException if gzip data is malformed or cannot be read
      */
     public static InputStream gzip(HttpURLConnection conn, InputStream in) {
-        if ("gzip".equals(conn.getHeaderField("Content-Encoding"))) {
+        String contentEncoding = conn.getHeaderField("Content-Encoding");
+
+        if (contentEncoding != null && "gzip".equalsIgnoreCase(contentEncoding.trim())) {
             try {
                 return new GZIPInputStream(in);
             } catch (IOException e) {
