@@ -1,7 +1,11 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Request;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -49,10 +53,8 @@ public class Head extends Request {
      */
     @Override
     public HttpURLConnection init(Consumer<HttpURLConnection> initConnection) {
-        Consumer<HttpURLConnection> beforeInit = conn -> {
-            // Must set too false to prevent automatic redirect to Location URL
-            conn.setInstanceFollowRedirects(false);
-        };
+        // Must set too false to prevent automatic redirect to Location URL
+        Consumer<HttpURLConnection> beforeInit = conn -> conn.setInstanceFollowRedirects(false);
 
         return super.init(initConnection == null ? beforeInit : beforeInit.andThen(initConnection));
     }
@@ -105,18 +107,19 @@ public class Head extends Request {
      *
      * @param conn HTTP connection object
      * @param in   Original input stream
-     * @return GZIPInputStream if Content-Encoding is gzip, otherwise null
+     * @return GZIPInputStream if Content-Encoding is gzip, otherwise the original stream
+     * @throws UncheckedIOException if gzip data is malformed or cannot be read
      */
     public static InputStream gzip(HttpURLConnection conn, InputStream in) {
         if ("gzip".equals(conn.getHeaderField("Content-Encoding"))) {
             try {
                 return new GZIPInputStream(in);
             } catch (IOException e) {
-                // Logging commented out in original code
+                throw new UncheckedIOException("Invalid gzip stream.", e);
             }
         }
 
-        return null;
+        return in;
     }
 
     /**
@@ -134,11 +137,20 @@ public class Head extends Request {
         };
     }
 
-    public static Consumer<HttpURLConnection> json(String token) {
-        return conn -> {
-            conn.setRequestProperty(CONTENT_TYPE, CONTENT_TYPE_JSON);
-            conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
-        };
-    }
+    /**
+     * Connection initializer that sets the {@code Content-Type} header to JSON.
+     */
+    public static final Consumer<HttpURLConnection> json = conn -> {
+        conn.setRequestProperty(CONTENT_TYPE, CONTENT_TYPE_JSON);
+    };
 
+    /**
+     * Returns a connection initializer that adds a Bearer authorization token.
+     *
+     * @param token the Bearer token
+     * @return a connection initializer setting the {@code Authorization} header
+     */
+    public static Consumer<HttpURLConnection> setBearerToken(String token) {
+        return conn -> conn.setRequestProperty(AUTHORIZATION, "Bearer " + token);
+    }
 }

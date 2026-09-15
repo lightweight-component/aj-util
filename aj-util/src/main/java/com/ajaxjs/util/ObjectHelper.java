@@ -100,7 +100,7 @@ public class ObjectHelper {
      * @return whether the given Map is empty
      */
     public static boolean isEmpty(Map<?, ?> map) {
-        return (map == null || map.isEmpty());
+        return map == null || map.isEmpty();
     }
 
     /**

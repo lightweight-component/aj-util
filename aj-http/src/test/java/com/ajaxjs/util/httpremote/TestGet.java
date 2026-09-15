@@ -1,5 +1,6 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.httpremote.model.HttpMethod;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -29,9 +30,9 @@ class TestGet {
 
     @Test
     void testDownload2disk() {
-        assertNotNull(BatchDownload.download(HttpConstant.HttpMethod.GET, "https://www.baidu.com/", null, "c:/temp", "baidu"));
+        assertNotNull(BatchDownload.download(HttpMethod.GET, "https://www.baidu.com/", null, "c:/temp", "baidu"));
 
         String url = "https://etax.guangdong.chinatax.gov.cn:8443/static_res/images/nlogo14400.png";
-        assertNotNull(BatchDownload.download(HttpConstant.HttpMethod.GET, url, null, "c:/temp", null));
+        assertNotNull(BatchDownload.download(HttpMethod.GET, url, null, "c:/temp", null));
     }
 }

@@ -1,8 +1,18 @@
 package com.ajaxjs.util.httpremote;
 
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Request;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -104,6 +114,7 @@ public class Get extends Request {
      * @param url   The URL to send the GET request to
      * @param clz   The class to map the response to
      * @param token The authorization token to include in the request header
+     * @param <T>   The type of the response object
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz, String token) {
@@ -117,6 +128,7 @@ public class Get extends Request {
      * @param url            The URL to send the GET request to
      * @param clz            The class to map the response to
      * @param initConnection Consumer that configures the HTTP connection
+     * @param <T>            The type of the response object
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz, Consumer<HttpURLConnection> initConnection) {
@@ -129,6 +141,7 @@ public class Get extends Request {
      *
      * @param url The URL to send the GET request to
      * @param clz The class to map the response to
+     * @param <T> The type of the response object
      * @return The response mapped to the specified class type
      */
     public static <T> T api(String url, Class<T> clz) {
@@ -145,5 +158,32 @@ public class Get extends Request {
      */
     public static Map<String, String> apiXml(String url, Consumer<HttpURLConnection> initConnection) {
         return new Get(url, initConnection).getResp().responseAsXML();
+    }
+
+    /**
+     * GET HTTP请求的最简洁方式
+     *
+     * @param urlStr URL
+     * @return 返回字符串
+     */
+    public static String simpleGet(String urlStr) {
+        StringBuilder inputLine = new StringBuilder();
+        String read;
+
+        try {
+            URLConnection conn = new URL(urlStr).openConnection();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                while ((read = in.readLine()) != null)
+                    inputLine.append(read);
+            }
+
+            return inputLine.toString();
+        } catch (MalformedURLException e) {
+            log.error("Wrong format of this URL: {}", urlStr, e);
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            log.error("Error when simple HTTP get {}", urlStr, e);
+            throw new UncheckedIOException(e);
+        }
     }
 }

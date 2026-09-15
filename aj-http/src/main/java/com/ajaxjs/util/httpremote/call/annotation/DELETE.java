@@ -9,6 +9,9 @@ import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.util.function.Consumer;
 
+/**
+ * DELETE request
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DELETE {

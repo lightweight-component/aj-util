@@ -10,11 +10,24 @@ import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.util.function.Consumer;
 
+/**
+ * Marks an interface method as an HTTP POST request.
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface POST {
+    /**
+     * The URL path to call.
+     *
+     * @return the URL path
+     */
     String value() default "";
 
+    /**
+     * The payload type used to serialize the request body.
+     *
+     * @return the payload type
+     */
     PayloadType type() default PayloadType.FORM;
 
     /**

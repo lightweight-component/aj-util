@@ -1,25 +1,30 @@
-package com.ajaxjs.util.httpremote;
+package com.ajaxjs.util.httpremote.model;
 
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.MapTool;
-import com.ajaxjs.util.UrlEncode;
+import com.ajaxjs.util.UrlCodec;
 import com.ajaxjs.util.date.DateTools;
 import com.ajaxjs.util.io.DataReader;
 import com.ajaxjs.util.log.TextBox;
 import com.ajaxjs.util.log.Trace;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -28,7 +33,8 @@ import java.util.function.Consumer;
  * initializing connections, and sending requests with proper logging and error handling.
  * Implements HttpConstant to provide access to common HTTP constants.
  */
-@Data
+@Getter
+@Setter
 @Slf4j
 public class Request implements HttpConstant {
     /**
@@ -53,14 +59,16 @@ public class Request implements HttpConstant {
      * @param url    the URL to which the request will be sent
      */
     public Request(HttpMethod method, String url) {
-        this.method = method;
-        this.url = url;
+        this.method = Objects.requireNonNull(method, "Request.method");
+        this.url = Objects.requireNonNull(url, "Request.url");
     }
 
     /**
      * The request data to be sent in bytes.
      */
     private byte[] data;
+
+    private Consumer<OutputStream> outputStreamConsumer;
 
     /**
      * Sets the raw byte data for the request body.
@@ -75,19 +83,21 @@ public class Request implements HttpConstant {
      * Sets request data from a string in query parameter format.
      * Automatically converts to the appropriate format based on a content type.
      *
-     * @param data The request data in string format, like `a=foo&b=bar`
+     * @param data The request data in string format, like `a=foo&amp;b=bar`
      * @throws IllegalArgumentException if a content type is not set or data is invalid
      */
     public void setDataStr(String data) {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
-        if (contentType.equals(CONTENT_TYPE_JSON)) {
-            Map<String, String> map = UrlEncode.parseStringToMap(data);
+        if (isContentType(CONTENT_TYPE_JSON)) {
+            Map<String, String> map = MapTool.toMap(data);
             String json = JsonUtil.toJson(map);
             this.data = json.getBytes(StandardCharsets.UTF_8);
-        } else if (contentType.equals(CONTENT_TYPE_FORM))
+        } else if (isContentType(CONTENT_TYPE_FORM))
             this.data = data.getBytes(StandardCharsets.UTF_8); // directly send the string
+        else
+            throw new IllegalArgumentException("Unsupported content type: " + contentType);
     }
 
     /**
@@ -101,16 +111,23 @@ public class Request implements HttpConstant {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
-        if (!json.startsWith("[") && !json.startsWith("{"))
+        String trimmed = json.trim();
+
+        if (!trimmed.startsWith("[") && !trimmed.startsWith("{"))
             throw new IllegalArgumentException("Please input a valid JSON string.");
 
-        if (contentType.equals(CONTENT_TYPE_JSON))
-            this.data = json.getBytes(StandardCharsets.UTF_8);// directly send the string
-        else if (contentType.equals(CONTENT_TYPE_FORM)) {
+        if (isContentType(CONTENT_TYPE_JSON))
+            this.data = json.getBytes(StandardCharsets.UTF_8);
+        else if (isContentType(CONTENT_TYPE_FORM)) {
             Map<String, Object> map = JsonUtil.json2map(json);
-            String str = MapTool.join(map, v -> v == null ? null : new UrlEncode(v.toString()).encode());
+            String str = MapTool.join(map, v -> v == null
+                    ? null
+                    : new UrlCodec(v.toString()).encodeForm()
+            );
+
             this.data = str.getBytes(StandardCharsets.UTF_8);
-        }
+        } else
+            throw new IllegalArgumentException("Unsupported content type: " + contentType);
     }
 
     /**
@@ -124,15 +141,18 @@ public class Request implements HttpConstant {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
-        if (contentType.equals(CONTENT_TYPE_JSON)) {
+        if (isContentType(CONTENT_TYPE_JSON)) {
             String json = JsonUtil.toJson(dataMap);
             this.data = json.getBytes(StandardCharsets.UTF_8);
-        } else if (contentType.equals(CONTENT_TYPE_FORM)) {
-            String str = MapTool.join(dataMap, v -> v == null ? null : new UrlEncode(v.toString()).encode());
+        } else if (isContentType(CONTENT_TYPE_FORM)) {
+            String str = MapTool.join(dataMap,
+                    v -> v == null ? null : new UrlCodec(v.toString()).encodeForm());
+
             this.data = str.getBytes(StandardCharsets.UTF_8);
-        } else if (contentType.contains(CONTENT_TYPE_FORM_UPLOAD)) {// Only supports Map when uploading
-            // TODO
-        }
+        } else if (isContentType(CONTENT_TYPE_FORM_UPLOAD)) { // TODO
+            throw new UnsupportedOperationException("Multipart form upload is not implemented yet.");
+        } else
+            throw new IllegalArgumentException("Unsupported content type: " + contentType);
     }
 
     /**
@@ -146,14 +166,18 @@ public class Request implements HttpConstant {
         if (contentType == null)
             throw new IllegalArgumentException("Please set the content type first, then call this method later.");
 
-        if (contentType.equals(CONTENT_TYPE_JSON)) {
+        if (isContentType(CONTENT_TYPE_JSON)) {
             String json = JsonUtil.toJson(javaBean);
             this.data = json.getBytes(StandardCharsets.UTF_8);
-        } else if (contentType.equals(CONTENT_TYPE_FORM)) {
+        } else if (isContentType(CONTENT_TYPE_FORM)) {
             Map<String, Object> map = JsonUtil.pojo2map(javaBean);
-            String str = MapTool.join(map, v -> v == null ? null : new UrlEncode(v.toString()).encode());
+            String str = MapTool.join(map, v -> v == null
+                    ? null
+                    : new UrlCodec(v.toString()).encodeForm()
+            );
             this.data = str.getBytes(StandardCharsets.UTF_8);
-        }
+        } else
+            throw new IllegalArgumentException("Unsupported content type: " + contentType);
     }
 
     /**
@@ -169,6 +193,7 @@ public class Request implements HttpConstant {
     /**
      * The underlying HTTP connection object
      */
+    @Setter(AccessLevel.NONE)
     private HttpURLConnection conn;
 
     /**
@@ -190,31 +215,38 @@ public class Request implements HttpConstant {
      * @throws RuntimeException if there's an error creating or configuring the connection
      */
     public HttpURLConnection init(Consumer<HttpURLConnection> initConnection) {
-//        log.info("准备连接： {} {}", method, url);
         URL httpUrl;
 
         try {
             httpUrl = new URL(url);
         } catch (MalformedURLException e) {
-            log.warn("Wrong format of this URL: " + url, e);
+            log.warn("Wrong format of this URL: {}", url, e);
             throw new RuntimeException("Wrong format on this URL: " + url, e);
         }
 
         HttpURLConnection conn;
 
         try {
+            String protocol = httpUrl.getProtocol();
+
+            if (!"http".equalsIgnoreCase(protocol) && !"https".equalsIgnoreCase(protocol))
+                throw new IllegalArgumentException("Only HTTP and HTTPS URLs are supported: " + url);
+
             conn = (HttpURLConnection) httpUrl.openConnection();
         } catch (IOException e) {
-            log.warn("Connected fail of this URL:" + url, e);
-            throw new RuntimeException("Connected fail on this URL: " + url, e);
+            log.warn("Connected fail of this URL:{}", url, e);
+            throw new UncheckedIOException("Connected fail on this URL: " + url, e);
         }
 
         try {
+            if (contentType != null)
+                conn.setRequestProperty(CONTENT_TYPE, contentType);
+
             conn.setRequestMethod(method.toString());
             conn.setConnectTimeout(connectTimeout);// Set connection timeout and read timeout
             conn.setReadTimeout(readTimeout);
         } catch (ProtocolException e) {
-            log.warn("Protocol Exception on this URL: " + url, e);
+            log.warn("Protocol Exception on this URL: {}", url, e);
             throw new RuntimeException("Protocol Exception on this URL: " + url, e);
         }
 
@@ -229,6 +261,7 @@ public class Request implements HttpConstant {
     /**
      * The response object created after sending the request
      */
+    @Setter(AccessLevel.NONE)
     private Response resp;
 
     /**
@@ -244,6 +277,9 @@ public class Request implements HttpConstant {
      * @return the Response object containing the server's response
      */
     public Response connect() {
+        if (conn == null)
+            throw new IllegalStateException("Connection has not been initialized. Call init() first.");
+
         Response resp = new Response();
         this.resp = resp;
         resp.setStartTime(System.currentTimeMillis());
@@ -257,16 +293,17 @@ public class Request implements HttpConstant {
             int responseCode = conn.getResponseCode(); // starts to connect
             resp.setHttpCode(responseCode);
 
+            boolean ok = responseCode >= 200 && responseCode < 300;
 
-            if (responseCode >= 400) {
-                // If response code is 400+ it indicates an error
+            if (!ok) {
                 /*
+                 If the response code is 400 +, it indicates an error.
                  An error stream if any, null if there have been no errors, the connection is not connected or the server sent no useful data.
                  After connection is established, the server may not have sent data yet - stream is empty.
                  The data transmission is activated after getHeaderFields() is called. Let's test this.
                  https://blog.csdn.net/xia4820723/article/details/47804797
                  */
-                conn.getExpiration();
+//                conn.getExpiration();
                 resp.setOk(false);
                 in = conn.getErrorStream(); // Errors are typically text
             } else {
@@ -277,7 +314,6 @@ public class Request implements HttpConstant {
             if (in != null) {
                 if (inputStreamConsumer == null) {
                     result = new DataReader(in).readAsString();
-                    result = result.trim();
                     resp.setResponseText(result);
                 } else
                     inputStreamConsumer.accept(in);
@@ -298,7 +334,7 @@ public class Request implements HttpConstant {
             String requestParams = "NONE";
 
             if (getData() != null)
-                requestParams = new String(getData());
+                requestParams = new String(getData(), StandardCharsets.UTF_8);
 
             printLog(resp.isOk(), resp.getHttpMethod(), resp.getUrl(), requestParams, resp.getHttpCode(), result, resp.getStartTime());
         }
@@ -310,6 +346,10 @@ public class Request implements HttpConstant {
      * Maximum length of a response text to print in logs
      */
     private static final int MAX_LENGTH_TO_PRINT = 460;
+
+    private boolean isContentType(String expected) {
+        return contentType != null && contentType.toLowerCase(Locale.ROOT).startsWith(expected.toLowerCase(Locale.ROOT));
+    }
 
     /**
      * Prints detailed log information about an HTTP request and response.
@@ -355,16 +395,27 @@ public class Request implements HttpConstant {
      * @throws RuntimeException if there's error writing data to the connection
      */
     public void initData() {
-        conn.setDoOutput(true); // Allow writing to output stream
-        conn.setDoInput(true); // Allow reading from input stream
+        if (conn == null)
+            throw new IllegalStateException("Connection has not been initialized. Call init() first.");
 
-        if (data != null && data.length > 0) {
+        if (outputStreamConsumer == null && (data == null || data.length == 0))
+            return;
+
+        conn.setDoOutput(true);
+
+        if (outputStreamConsumer != null) {
             try (OutputStream out = conn.getOutputStream()) {
-                out.write(data); // Write byte data through output stream
+                outputStreamConsumer.accept(out);
                 out.flush();
             } catch (IOException e) {
-                log.warn("Write data to connection failed!", e);
-                throw new RuntimeException("Write data to connection failed!", e);
+                throw new UncheckedIOException("Write data to connection failed!", e);
+            }
+        } else {
+            try (OutputStream out = conn.getOutputStream()) {
+                out.write(data);
+                out.flush();
+            } catch (IOException e) {
+                throw new UncheckedIOException("Write data to connection failed!", e);
             }
         }
     }

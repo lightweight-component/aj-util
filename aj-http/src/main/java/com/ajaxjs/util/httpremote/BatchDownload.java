@@ -11,6 +11,8 @@
 package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.RegExpUtils;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Request;
 import com.ajaxjs.util.io.DataWriter;
 import com.ajaxjs.util.io.FileHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -41,7 +45,9 @@ public class BatchDownload {
     /**
      * Array of URLs to download
      */
-    private final String[] arr;
+    private final String[] urls;
+
+    private final String[] fileNames;
 
     /**
      * Directory to save downloaded files
@@ -61,9 +67,11 @@ public class BatchDownload {
      * @param newFileNameFn function to generate new file names. If null, original file names are used.
      */
     public BatchDownload(String[] arr, String saveFolder, Supplier<String> newFileNameFn) {
+        if (arr == null)
+            throw new IllegalArgumentException("URL array must not be null.");
         latch = new CountDownLatch(arr.length);
-
-        this.arr = arr;
+        this.urls = arr.clone();
+        this.fileNames = new String[arr.length];
         this.saveFolder = saveFolder;
         this.newFileNameFn = newFileNameFn;
     }
@@ -79,13 +87,11 @@ public class BatchDownload {
 
         try {
             if (newFileNameFn == null)
-                newFileName = download(HttpConstant.HttpMethod.GET, url, null, saveFolder, null);
+                newFileName = download(HttpMethod.GET, url, null, saveFolder, null);
             else
-                newFileName = download(HttpConstant.HttpMethod.GET, url, null, saveFolder, newFileNameFn.get());
+                newFileName = download(HttpMethod.GET, url, null, saveFolder, newFileNameFn.get());
 
-            String[] _arr = newFileName.split("\\\\");
-            String f = _arr[_arr.length - 1];
-            arr[i] = f;
+            fileNames[i] = getFileNameFromPath(newFileName);
         } finally {
             latch.countDown(); // Decrement latch in all cases, regardless of success or exception
         }
@@ -96,9 +102,9 @@ public class BatchDownload {
      * Spawns a new thread for each download and waits for completion (with timeout).
      */
     public void start() {
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < urls.length; i++) {
             final int j = i;
-            new Thread(() -> exec(arr[j], j)).start();
+            new Thread(() -> exec(urls[j], j)).start();
         }
 
         try {
@@ -107,6 +113,17 @@ public class BatchDownload {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public String[] getFileNames() {
+        return Arrays.copyOf(fileNames, fileNames.length);
+    }
+
+    public static String getFileNameFromPath(String path) {
+        if (path == null || path.isEmpty())
+            throw new IllegalArgumentException("Path must not be null or empty.");
+
+        return Paths.get(path).getFileName().toString();
     }
 
     /**
@@ -119,7 +136,7 @@ public class BatchDownload {
      * @param newFileName optional new name for the downloaded file
      * @return the absolute path of the downloaded file
      */
-    public static String download(HttpConstant.HttpMethod method, String url, Consumer<HttpURLConnection> fn, String saveDir, String newFileName) {
+    public static String download(HttpMethod method, String url, Consumer<HttpURLConnection> fn, String saveDir, String newFileName) {
         Request get = new Request(method, url);
 
         Consumer<HttpURLConnection> init = conn -> {

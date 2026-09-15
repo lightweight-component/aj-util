@@ -1,6 +1,7 @@
 package com.ajaxjs.util.httpremote;
 
 import com.ajaxjs.util.ObjectHelper;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
