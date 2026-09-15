@@ -12,6 +12,7 @@ import java.security.cert.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Provides X.509 certificate loading and AES-GCM certificate-payload decryption utilities.
@@ -26,6 +27,8 @@ public class CertificateUtils {
      * @throws RuntimeException     if the certificate is invalid or outside its validity period
      */
     public static X509Certificate getCert(String filePath) {
+        Objects.requireNonNull(filePath, "getCert.filePath");
+
         try {
             return getCert(new FileInputStream(filePath));
         } catch (FileNotFoundException e) {
@@ -43,7 +46,7 @@ public class CertificateUtils {
      */
     public static X509Certificate getCert(InputStream in) {
         try (InputStream input = in) {
-            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(in);
+            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(input);
             cert.checkValidity();
 
             return cert;
@@ -69,8 +72,20 @@ public class CertificateUtils {
      */
     @SuppressWarnings("unchecked")
     public static Map<BigInteger, X509Certificate> deserializeToCerts(String apiV3Key, Map<String, Object> pMap) {
+        if (apiV3Key == null)
+            throw new IllegalArgumentException("ApiV3Key must not be null.");
+
         byte[] apiV3KeyByte = new StringBytes(apiV3Key).getUTF8_Bytes();
-        List<Map<String, Object>> list = (List<Map<String, Object>>) pMap.get("data");
+
+        if (apiV3KeyByte.length != 32)
+            throw new IllegalArgumentException("ApiV3Key must contain exactly 32 bytes.");
+
+        Object data = pMap.get("data");
+
+        if (!(data instanceof List))
+            throw new IllegalArgumentException("Certificate response field 'data' must be a list.");
+
+        List<Map<String, Object>> list = (List<Map<String, Object>>) data;
         Map<BigInteger, X509Certificate> newCertList = new HashMap<>();
 
         if (!ObjectHelper.isEmpty(list)) {
@@ -127,7 +142,7 @@ public class CertificateUtils {
     /**
      * Decrypts the given ciphertext using AEAD_AES_256_GCM with string associated data and nonce.
      *
-     * @param aesKey         the AES key, must be 32 bytes long
+     * @param aesKey         the AES key must be 32 bytes long
      * @param associatedData the associated data as a string
      * @param nonce          the nonce as a string
      * @param cipherText     the Base64-encoded ciphertext
@@ -147,7 +162,7 @@ public class CertificateUtils {
     /**
      * Decrypts the given ciphertext using AEAD_AES_256_GCM.
      *
-     * @param aesKey         the AES key, must be 32 bytes long
+     * @param aesKey         the AES key must be 32 bytes long
      * @param associatedData the associated data
      * @param nonce          the nonce
      * @param cipherText     the Base64-encoded ciphertext

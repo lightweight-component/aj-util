@@ -12,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
+import static com.ajaxjs.util.cryptography.TestCryptography.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestCryptographyCompatibility {
@@ -22,9 +23,8 @@ class TestCryptographyCompatibility {
         byte[] tripleDesKey = "123456789012345678901234".getBytes(StandardCharsets.US_ASCII);
 
         assertEquals(text, Cryptography.AES_decode(Cryptography.AES_encode(text, password), password));
-        assertEquals(text, Cryptography.DES_decode(Cryptography.DES_encode(text, password), password));
-        assertEquals(text, Cryptography.tripleDES_decode(
-                Cryptography.tripleDES_encode(text, tripleDesKey), tripleDesKey));
+        assertEquals(text, DES_decode(DES_encode(text, password), password));
+        assertEquals(text, tripleDES_decode(tripleDES_encode(text, tripleDesKey), tripleDesKey));
     }
 
     @Test
@@ -51,15 +51,15 @@ class TestCryptographyCompatibility {
         byte[] salt = "12345678".getBytes(StandardCharsets.US_ASCII);
         int iterations = 100;
         PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
-        SecretKey key = SecretKeyFactory.getInstance(Constant.PBE_LEGACY).generateSecret(keySpec);
-        Cipher cipher = Cipher.getInstance(Constant.PBE_LEGACY);
+        SecretKey key = SecretKeyFactory.getInstance(TestCryptography.PBE_LEGACY).generateSecret(keySpec);
+        Cipher cipher = Cipher.getInstance(TestCryptography.PBE_LEGACY);
         cipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(salt, iterations));
         byte[] encrypted = cipher.doFinal("legacy content".getBytes(StandardCharsets.UTF_8));
         keySpec.clearPassword();
 
-        assertEquals("legacy content", Cryptography.PBE_legacy_decode(encrypted, password, salt, iterations));
+        assertEquals("legacy content", PBE_legacy_decode(encrypted, password, salt, iterations));
         assertThrows(IllegalArgumentException.class,
-                () -> Cryptography.PBE_legacy_decode(encrypted, password, new byte[7], iterations));
+                () -> PBE_legacy_decode(encrypted, password, new byte[7], iterations));
     }
 
     @Test

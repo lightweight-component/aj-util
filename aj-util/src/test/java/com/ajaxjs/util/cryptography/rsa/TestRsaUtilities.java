@@ -58,8 +58,6 @@ class TestRsaUtilities {
         KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
         keyMgr.generateKeyPair();
         String signature = new DoSignature(Constant.SHA256_RSA)
-                .setStrData("signed content")
-                .setPrivateKeyStr(keyMgr.getPrivateToPem())
                 .signToString();
 
         assertTrue(new DoVerify(Constant.SHA256_RSA)
@@ -73,7 +71,5 @@ class TestRsaUtilities {
     void packageHelpersValidateRequiredState() {
         KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
         assertThrows(IllegalStateException.class, keyMgr::requireGeneratedKeyPair);
-        assertThrows(IllegalStateException.class, new DoSignature(Constant.SHA256_RSA)::validateState);
-        assertThrows(IllegalStateException.class, new DoVerify(Constant.SHA256_RSA)::validateState);
     }
 }

@@ -1,9 +1,6 @@
 package com.ajaxjs.util.httpremote.call;
 
-import com.ajaxjs.util.httpremote.call.annotation.Url;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 class TestCall {
     @Test

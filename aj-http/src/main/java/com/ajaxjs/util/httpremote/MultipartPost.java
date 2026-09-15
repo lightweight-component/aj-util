@@ -40,8 +40,8 @@ public final class MultipartPost {
      * <p>Use File values in the map; use the dedicated overloads for streams
      * and byte arrays.</p>
      *
-     * @param url target HTTP or HTTPS URL
-     * @param data multipart fields; must not be null or empty
+     * @param url            target HTTP or HTTPS URL
+     * @param data           multipart fields; must not be null or empty
      * @param initConnection optional connection configuration callback
      * @return the server response, including HTTP status and request errors
      */
@@ -57,9 +57,9 @@ public final class MultipartPost {
     /**
      * Uploads a single local file.
      *
-     * @param url target HTTP or HTTPS URL
-     * @param fieldName multipart file field name
-     * @param file readable regular file to upload
+     * @param url            target HTTP or HTTPS URL
+     * @param fieldName      multipart file field name
+     * @param file           readable regular file to upload
      * @param initConnection optional connection configuration callback
      * @return the server response, including HTTP status and request errors
      */
@@ -75,10 +75,10 @@ public final class MultipartPost {
     /**
      * Uploads a byte array as a file.
      *
-     * @param url target HTTP or HTTPS URL
-     * @param fieldName multipart file field name
-     * @param fileName file name reported in the multipart header
-     * @param data file content
+     * @param url            target HTTP or HTTPS URL
+     * @param fieldName      multipart file field name
+     * @param fileName       file name reported in the multipart header
+     * @param data           file content
      * @param initConnection optional connection configuration callback
      * @return the server response, including HTTP status and request errors
      */
@@ -91,10 +91,10 @@ public final class MultipartPost {
     /**
      * Uploads an input stream as a file. The caller must close the input stream.
      *
-     * @param url target HTTP or HTTPS URL
-     * @param fieldName multipart file field name
-     * @param fileName file name reported in the multipart header
-     * @param in file content stream; not closed by this method
+     * @param url            target HTTP or HTTPS URL
+     * @param fieldName      multipart file field name
+     * @param fileName       file name reported in the multipart header
+     * @param in             file content stream; not closed by this method
      * @param initConnection optional connection configuration callback
      * @return the server response, including HTTP status and request errors
      */
@@ -124,7 +124,7 @@ public final class MultipartPost {
             if (initConnection != null)
                 initConnection.accept(connection);
 
-            // Apply this header after the callback so it matches the body boundary.
+            // Apply this header after the callback, so it matches the body boundary.
             connection.setRequestProperty(HttpConstant.CONTENT_TYPE, contentType);
             connection.setChunkedStreamingMode(8192);// Stream without buffering the entire file.
             connection.setInstanceFollowRedirects(false);// Let the caller handle redirects without replaying the upload.
@@ -134,7 +134,7 @@ public final class MultipartPost {
                 writeBody.accept(form);
             });
 
-            post.initData();// Acquire, write and close the request output stream.
+            post.initData();// Acquire, write, and close the request output stream.
 
             return post.connect(); // Read the server response.
         } finally {

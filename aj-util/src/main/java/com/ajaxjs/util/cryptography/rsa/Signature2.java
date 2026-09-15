@@ -4,43 +4,31 @@ import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.cryptography.Constant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.security.*;
 
-/**
- * Generates digital signatures using a configured signature algorithm,
- * input data and private key.
- *
- * <p>Instances are mutable and are not thread-safe.</p>
- */
-@Getter
-@Setter
 @RequiredArgsConstructor
-public class DoSignature {
+public class Signature2 {
     /**
      * The name of algorithm, required.
      */
     private final String algorithmName;
 
     /**
-     * The data to be signed, in bytes.
-     */
-    private byte[] data;
-
-    /**
      * The private key
      */
-    private PrivateKey privateKey;
+    private final PrivateKey privateKey;
 
-    /**
-     * Generates a digital signature for the configured input data.
-     *
-     * @return the signature bytes
-     * @throws IllegalStateException    if required, signing state is missing or the signing operation fails
-     * @throws IllegalArgumentException if the signature algorithm or private key is invalid
-     */
-    public byte[] sign() {
+    @Getter
+    private byte[] result;
+
+    public Signature2 sign(String data) {
+        sign(data.getBytes());
+
+        return this;
+    }
+
+    public Signature2 sign(byte[] data) {
         if (algorithmName == null || algorithmName.trim().isEmpty())
             throw new IllegalStateException("Signature algorithm is required.");
 
@@ -55,7 +43,7 @@ public class DoSignature {
             signature.initSign(privateKey);
             signature.update(data);
 
-            return signature.sign();
+            result = signature.sign();
         } catch (SignatureException e) {
             throw new IllegalStateException("Signature failed.", e);
         } catch (NoSuchAlgorithmException e) {
@@ -63,17 +51,10 @@ public class DoSignature {
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid Private Key", e);
         }
+        return this;
     }
 
-    /**
-     * Sign the data then returns it as Base64 string.
-     *
-     * @return The signature in Base64 string.
-     * @throws IllegalStateException    if the algorithm, data, or private key is missing
-     * @throws IllegalArgumentException if the private key is invalid
-     * @throws RuntimeException         if the algorithm is unavailable or signing fails
-     */
     public String signToString() {
-        return new Base64Utils(sign()).encodeAsString();
+        return new Base64Utils(result).encodeAsString();
     }
 }

@@ -1,6 +1,6 @@
 package com.ajaxjs.util.cryptography;
 
-import com.ajaxjs.util.BytesHelper;
+import com.ajaxjs.util.StringBytes;
 
 import java.util.Objects;
 
@@ -23,7 +23,7 @@ public class XOR {
         for (int i = 0; i < bs.length; i++)
             bs[i] = (byte) xor(bs[i], key);
 
-        return BytesHelper.bytesToHexStr(bs);
+        return StringBytes.bytesToHex(bs);
     }
 
     /**
@@ -34,7 +34,7 @@ public class XOR {
      * @return 结果
      */
     public static String decode(String res, String key) {
-        byte[] bs = BytesHelper.parseHexStr2Byte(res);
+        byte[] bs = StringBytes.hexToBytes(res);
 
         for (int i = 0; i < Objects.requireNonNull(bs).length; i++)
             bs[i] = (byte) xor(bs[i], key);

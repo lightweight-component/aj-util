@@ -3,12 +3,12 @@ package com.ajaxjs.util.httpremote.call;
 import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.UrlCodec;
-import com.ajaxjs.util.httpremote.model.HttpConstant;
 import com.ajaxjs.util.httpremote.Post;
 import com.ajaxjs.util.httpremote.Put;
-import com.ajaxjs.util.httpremote.model.HttpMethod;
 import com.ajaxjs.util.httpremote.Request;
 import com.ajaxjs.util.httpremote.call.annotation.*;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -133,7 +133,7 @@ public class CallHandler implements InvocationHandler {
     }
 
     /**
-     * Builds the full URL by combining the root URL, method-level path and path variables.
+     * Builds the full URL by combining the root URL, method-level path, and path variables.
      *
      * @param rootUrl       the root URL from the interface annotation
      * @param valueOnMethod the path specified on the method annotation

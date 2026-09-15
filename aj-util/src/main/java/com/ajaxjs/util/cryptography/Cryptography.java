@@ -3,15 +3,11 @@ package com.ajaxjs.util.cryptography;
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.RandomTools;
 import com.ajaxjs.util.StringBytes;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -19,13 +15,15 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
- * Configures and performs AES, DES, Triple DES, and password-based cipher operations.
+ * Configures and performs symmetric cipher operations,
+ * including AES and password-based encryption using PBKDF2 and AES-GCM.
  * <p>
  * Instances are mutable and are not thread-safe.
  */
-@Data
+@Getter
 @RequiredArgsConstructor
 public class Cryptography {
     /**
@@ -68,6 +66,7 @@ public class Cryptography {
      */
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Setter
     private Key key;
 
     /**
@@ -78,6 +77,11 @@ public class Cryptography {
      * @throws IllegalArgumentException if the key bytes are null or invalid
      */
     public void setKeyData(byte[] keyData) {
+        Objects.requireNonNull(keyData, "setKeyData.keyData");
+
+        if (keyData.length == 0)
+            throw new IllegalArgumentException("Key data must not be empty.");
+
         key = new SecretKeySpec(keyData, getKeyAlgorithm());
     }
 
@@ -97,8 +101,14 @@ public class Cryptography {
      * @throws IllegalStateException if the configured cipher algorithm is missing
      */
     public void setSecretKey(SecretKey secretKey) {
+        Objects.requireNonNull(secretKey, "setSecretKey.secretKey");
+        byte[] encoded = secretKey.getEncoded();
+
+        if (encoded == null)
+            throw new IllegalArgumentException("Secret key is not encodable.");
+
         this.secretKey = secretKey;
-        key = new SecretKeySpec(secretKey.getEncoded(), getKeyAlgorithm());
+        this.key = new SecretKeySpec(encoded, getKeyAlgorithm());
     }
 
     /**
@@ -106,6 +116,7 @@ public class Cryptography {
      */
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Setter
     private byte[] data;
 
     /**
@@ -131,6 +142,7 @@ public class Cryptography {
     /**
      * The algorithm parameter specification, such as an initialization vector or GCM parameters.
      */
+    @Setter
     private AlgorithmParameterSpec spec;
 
     /**
@@ -138,13 +150,14 @@ public class Cryptography {
      */
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Setter
     private byte[] associatedData;
 
     /**
      * Performs the configured cipher operation and returns the result as bytes.
      *
      * @return the encrypted or decrypted bytes
-     * @throws IllegalStateException    if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required, cipher state is missing or invalid
      * @throws IllegalArgumentException if the key, parameters, input length, padding, or authentication tag is invalid
      * @throws RuntimeException         if the configured transformation is unavailable
      */
@@ -213,10 +226,16 @@ public class Cryptography {
     }
 
     /**
-     * Performs the configured cipher operation and returns the result as a UTF-8 string.
+     * Performs the configured cipher operation and interprets the resulting
+     * bytes as UTF-8 text.
+     *
+     * <p>This method is intended primarily for decryption when the plaintext
+     * is known to be UTF-8 encoded. It should not be used to represent
+     * ciphertext. Use {@link #doCipherAsBase64Str()} or
+     * {@link #doCipherAsHexStr()} for encrypted binary data.</p>
      *
      * @return the encrypted or decrypted string
-     * @throws IllegalStateException    if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required, cipher state is missing or invalid
      * @throws IllegalArgumentException if the cipher operation fails for invalid input or parameters
      * @throws RuntimeException         if the configured transformation is unavailable
      */
@@ -228,7 +247,7 @@ public class Cryptography {
      * Performs the configured cipher operation and returns the result as a Base64-encoded string.
      *
      * @return the Base64-encoded result
-     * @throws IllegalStateException    if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required, cipher state is missing or invalid
      * @throws IllegalArgumentException if the cipher operation fails for invalid input or parameters
      * @throws RuntimeException         if the configured transformation is unavailable
      */
@@ -237,10 +256,10 @@ public class Cryptography {
     }
 
     /**
-     * Get hex string of cipher, which is good for encrypt.
+     * Get hex string of cipher, which is good for encrypting.
      *
      * @return Hex string of cipher.
-     * @throws IllegalStateException    if required cipher state is missing or invalid
+     * @throws IllegalStateException    if required, cipher state is missing or invalid
      * @throws IllegalArgumentException if the cipher operation fails for invalid input or parameters
      * @throws RuntimeException         if the configured transformation is unavailable
      */
@@ -278,74 +297,6 @@ public class Cryptography {
         Cryptography cryptography = new Cryptography(Constant.AES, Cipher.DECRYPT_MODE);
         cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
         cryptography.setData(StringBytes.hexToBytes(data));
-
-        return cryptography.doCipherAsStr();
-    }
-
-    /**
-     * Encrypts the given data using DES and returns the result as a hex string.
-     *
-     * @param data the plaintext to encrypt
-     * @param key  the encryption key
-     * @return the encrypted hex string
-     * @throws RuntimeException         if DES or the configured secure-random algorithm is unavailable
-     * @throws IllegalArgumentException if the key or input is invalid
-     */
-    public static String DES_encode(String data, String key) {
-        Cryptography cryptography = new Cryptography(Constant.DES, Cipher.ENCRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setDataStr(data);
-
-        return cryptography.doCipherAsHexStr();
-    }
-
-    /**
-     * Decrypts the given DES-encrypted hex string.
-     *
-     * @param data the encrypted hex string
-     * @param key  the decryption key
-     * @return the decrypted plaintext
-     * @throws RuntimeException         if DES or the configured secure-random algorithm is unavailable
-     * @throws IllegalArgumentException if the key, hexadecimal input, or ciphertext is invalid
-     */
-    public static String DES_decode(String data, String key) {
-        Cryptography cryptography = new Cryptography(Constant.DES, Cipher.DECRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setData(StringBytes.hexToBytes(data));
-
-        return cryptography.doCipherAsStr();
-    }
-
-    /**
-     * Encrypts the given data using Triple DES and returns the raw bytes.
-     *
-     * @param data the plaintext to encrypt
-     * @param key  the encryption key bytes
-     * @return the encrypted bytes
-     * @throws IllegalArgumentException if the key or input is invalid
-     * @throws RuntimeException         if Triple DES is unavailable
-     */
-    public static byte[] tripleDES_encode(String data, byte[] key) {
-        Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.ENCRYPT_MODE);
-        cryptography.setKey(new SecretKeySpec(key, Constant.TRIPLE_DES));
-        cryptography.setDataStr(data);
-
-        return cryptography.doCipher();
-    }
-
-    /**
-     * Decrypts the given Triple DES-encrypted bytes.
-     *
-     * @param data the encrypted bytes
-     * @param key  the decryption key bytes
-     * @return the decrypted plaintext
-     * @throws IllegalArgumentException if the key or ciphertext is invalid
-     * @throws RuntimeException         if Triple DES is unavailable
-     */
-    public static String tripleDES_decode(byte[] data, byte[] key) {
-        Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.DECRYPT_MODE);
-        cryptography.setKey(new SecretKeySpec(key, Constant.TRIPLE_DES));
-        cryptography.setData(data);
 
         return cryptography.doCipherAsStr();
     }
@@ -409,41 +360,6 @@ public class Cryptography {
         cryptography.setKey(derivePbeKey(key, salt, iterationCount));
         cryptography.setSpec(new GCMParameterSpec(GCM_TAG_LENGTH, Arrays.copyOf(data, GCM_NONCE_LENGTH)));
         cryptography.setData(Arrays.copyOfRange(data, GCM_NONCE_LENGTH, data.length));
-
-        return cryptography.doCipherAsStr();
-    }
-
-    /**
-     * Decrypts data created by the former PBEWithMD5AndDES implementation.
-     * This method must not be used to encrypt new data.
-     *
-     * @param data           the data to be decoded
-     * @param key            the password used to derive the decryption key
-     * @param salt           the legacy 8-byte PBE salt
-     * @param iterationCount the positive legacy key-derivation iteration count
-     * @return the decrypted plaintext
-     * @throws IllegalArgumentException if the password, salt, iteration count, key, or ciphertext is invalid
-     * @throws RuntimeException         if the legacy algorithm is unavailable
-     */
-    @Deprecated
-    public static String PBE_legacy_decode(byte[] data, String key, byte[] salt, int iterationCount) {
-        if (salt == null || salt.length != 8)
-            throw new IllegalArgumentException("Legacy PBE salt must contain exactly 8 bytes.");
-
-        if (iterationCount <= 0)
-            throw new IllegalArgumentException("Legacy PBE iteration count must be greater than zero.");
-
-        Cryptography cryptography = new Cryptography(Constant.PBE_LEGACY, Cipher.DECRYPT_MODE);
-        PBEKeySpec keySpec = new PBEKeySpec(key.toCharArray());
-
-        try {
-            cryptography.setKey(SecretKeyMgr.getSecretKey(Constant.PBE_LEGACY, keySpec));
-        } finally {
-            keySpec.clearPassword();
-        }
-
-        cryptography.setSpec(new PBEParameterSpec(salt, iterationCount));
-        cryptography.setData(data);
 
         return cryptography.doCipherAsStr();
     }

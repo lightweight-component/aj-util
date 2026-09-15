@@ -30,6 +30,8 @@ import java.security.spec.X509EncodedKeySpec;
 @Accessors(chain = true)
 @Data
 public class KeyMgr implements Constant {
+    private static final String RSA_CIPHER = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
+
     /**
      * The name of algorithm, required.
      */
@@ -77,6 +79,7 @@ public class KeyMgr implements Constant {
      */
     public byte[] getPublicKeyBytes() {
         requireGeneratedKeyPair();
+
         return keyPair.getPublic().getEncoded();
     }
 
@@ -261,7 +264,7 @@ public class KeyMgr implements Constant {
     static byte[] action(boolean isEncrypt, boolean isPublic, byte[] data, String key) {
         int mode = isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
 
-        Cryptography cryptography = new Cryptography(RSA, mode);
+        Cryptography cryptography = new Cryptography(RSA_CIPHER, mode);
         cryptography.setKey(restoreKey(isPublic, key));
         cryptography.setData(data);
 

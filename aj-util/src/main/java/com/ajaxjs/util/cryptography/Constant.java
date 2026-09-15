@@ -37,13 +37,6 @@ public interface Constant {
     String PBE = "PBKDF2WithHmacSHA256";
 
     /**
-     * Legacy PBE algorithm retained only for decrypting existing data.
-     */
-    @Deprecated
-    @SuppressWarnings("SpellCheckingInspection")
-    String PBE_LEGACY = "PBEWITHMD5andDES";
-
-    /**
      * RSA algorithm name.
      */
     String RSA = "RSA";// "RSA/ECB/PKCS1Padding"

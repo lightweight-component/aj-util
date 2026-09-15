@@ -29,8 +29,7 @@ public class Delete extends Request {
      * This constructor automatically initializes and connects to the server.
      *
      * @param url            The URL to send the DELETE request to
-     * @param initConnection Consumer that configures the HTTP connection
-     *                       before it's established
+     * @param initConnection Consumer that configures the HTTP connection before it's established
      */
     public Delete(String url, Consumer<HttpURLConnection> initConnection) {
         super(HttpMethod.DELETE, url);

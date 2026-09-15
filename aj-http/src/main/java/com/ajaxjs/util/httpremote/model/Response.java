@@ -1,7 +1,6 @@
 package com.ajaxjs.util.httpremote.model;
 
 import com.ajaxjs.util.JsonUtil;
-import com.ajaxjs.util.MapTool;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.XmlHelper;
 import lombok.Data;

@@ -140,12 +140,6 @@ public class SkipSSL {
      */
     public static void setSSL_Ignore(HttpsURLConnection conn) {
         conn.setSSLSocketFactory(getSocketFactory(null));
-//        conn.setHostnameVerifier(new HostnameVerifier() {
-//            @Override
-//            public boolean verify(String urlHostName, SSLSession session) {
-//                return true;
-//            }
-//        });
         conn.setHostnameVerifier((urlHostName, session) -> true); // This might not be necessary
     }
 }

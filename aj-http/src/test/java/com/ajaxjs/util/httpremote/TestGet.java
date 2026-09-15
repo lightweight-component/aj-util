@@ -1,6 +1,5 @@
 package com.ajaxjs.util.httpremote;
 
-import com.ajaxjs.util.httpremote.model.HttpMethod;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
