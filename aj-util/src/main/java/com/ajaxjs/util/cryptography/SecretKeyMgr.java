@@ -137,6 +137,15 @@ public class SecretKeyMgr {
     }
 
     /**
+     * Advanced Encryption Standard algorithm name.
+     */
+    final static String AES = "AES";
+
+    public static SecretKey getSecretKey(SecureRandom secure) {
+        return getSecretKey(AES, 128, secure);
+    }
+
+    /**
      * Generates or reconstructs a secret key from a key specification.
      *
      * <p>The supplied algorithm name is passed to
@@ -155,8 +164,7 @@ public class SecretKeyMgr {
      * @param spec          key specification containing or describing the key material
      * @return generated or reconstructed secret key
      * @throws IllegalArgumentException if the supplied key specification is invalid for the selected algorithm
-     * @throws RuntimeException         if the requested
-     *                                  {@link SecretKeyFactory} algorithm is unavailable
+     * @throws RuntimeException         if the requested {@link SecretKeyFactory} algorithm is unavailable
      */
     public static SecretKey getSecretKey(String algorithmName, KeySpec spec) {
         Objects.requireNonNull(algorithmName, "getSecretKey.algorithmName");
@@ -169,6 +177,16 @@ public class SecretKeyMgr {
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
         }
+    }
+
+    /**
+     * Password-Based Key Derivation Function 2 with HMAC-SHA-256.
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    private final static String PBE = "PBKDF2WithHmacSHA256";
+
+    public static SecretKey getSecretKey(KeySpec spec) {
+        return getSecretKey(PBE, spec);
     }
 
     /**
@@ -218,10 +236,18 @@ public class SecretKeyMgr {
     }
 
     /**
+     * Secure random number generator algorithm name.
+     */
+    private final static String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+
+    public static SecureRandom getRandom(String key) {
+        return getRandom(SECURE_RANDOM_ALGORITHM, key);
+    }
+
+    /**
      * Generates a symmetric secret key and returns its encoded key material as a Base64 string.
      *
-     * <p>The key is created using
-     * {@link #getSecretKey(String, int, SecureRandom)} and the raw encoded key
+     * <p>The key is created using {@link #getSecretKey(String, int, SecureRandom)} and the raw encoded key
      * bytes returned by {@link SecretKey#getEncoded()} are then Base64 encoded.</p>
      *
      * <p>For ordinary software-generated keys such as AES or HMAC keys,
@@ -236,7 +262,7 @@ public class SecretKeyMgr {
      *
      * @param algorithmName key-generation algorithm name
      * @param keySize       requested key size in bits, or {@code 0} to use the provider default
-     * @param secure        optional secure random generator; may be  {@code null}
+     * @param secure        optional secure random generator; may be {@code null}
      * @return Base64 representation of the encoded secret key
      * @throws RuntimeException         if the requested algorithm is unavailable
      * @throws IllegalArgumentException if the requested key size is invalid for the selected algorithm or provider

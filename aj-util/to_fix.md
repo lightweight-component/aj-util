@@ -5,7 +5,8 @@
 ## 核对基线（2026-09-14）
 
 - 当前模块版本：1.3.8。核对范围包括直属类、I/O、HTTP、日期、JSON/XML、密码学和反射；日志包保留源码审查结论。
-- 使用 JDK 17 执行 `mvn -o -f aj-util/pom.xml test`：295 项，280 项通过、10 项断言失败、5 项错误、0 项跳过。没有执行 Java 8 运行时验证。
+- 使用 JDK 17 执行 `mvn -o -f aj-util/pom.xml test`：295 项，280 项通过、10 项断言失败、5 项错误、0 项跳过。没有执行 Java 8
+  运行时验证。
 - 失败不能全部归为生产缺陷：下面单独记录测试预期、夹具与环境问题。优先级按安全/数据损坏、错误结果/资源失控、API 一致性排列。
 
 ### 已解决或已被新 API 替代
@@ -21,11 +22,14 @@
 
 以下 6 项占本次 15 项失败/错误中的 6 项，需先澄清或修正测试，不能据此回退生产逻辑：
 
-1. TestObjectHelper.initialCapacityDoesNotOverflowForLargeExpectedSize：仍期待最小容量 16；当前小容量从 expectedSize + 1 开始，大容量返回 Integer.MAX_VALUE。先确认新容量策略再调整断言。
+1. TestObjectHelper.initialCapacityDoesNotOverflowForLargeExpectedSize：仍期待最小容量 16；当前小容量从 expectedSize + 1
+   开始，大容量返回 Integer.MAX_VALUE。先确认新容量策略再调整断言。
 2. TestXmlHelper.testNodeAsMapWithInvalidXPath：旧预期 null，当前为空 Map。
 3. TestXmlHelper.testRejectsExternalEntities：当前安全拒绝输入并抛出 IllegalArgumentException，测试仍按返回 null 处理。
-4. TestIoSafety.mergeFailureDoesNotPublishPartialFile：当前先拒绝非法分块并抛出 IllegalArgumentException，旧测试期待 UncheckedIOException；保留“不发布部分文件”的断言。
-5. TestResourceHelper.classRelativeResourceUsesTargetClassPackage：缺少 `src/test/resources/com/ajaxjs/util/io/test.txt` 夹具；src/test/java 下的文件不会按默认 Maven 配置复制为测试资源。
+4. TestIoSafety.mergeFailureDoesNotPublishPartialFile：当前先拒绝非法分块并抛出 IllegalArgumentException，旧测试期待
+   UncheckedIOException；保留“不发布部分文件”的断言。
+5. TestResourceHelper.classRelativeResourceUsesTargetClassPackage：缺少 `src/test/resources/com/ajaxjs/util/io/test.txt`
+   夹具；src/test/java 下的文件不会按默认 Maven 配置复制为测试资源。
 6. TestIoSafety.copyDirectoryRejectsSymbolicLinks：本机 Windows 无创建符号链接权限。需要具备权限的环境验证，或显式跳过并注明未验证，不能宣称防护失效或已通过。
 
 其余 9 项对应下文 DataReader（2）、DataWriter（2）、FileHelper（1）、日期（3）和接口默认方法反射（1）问题。
@@ -99,7 +103,8 @@ Request、Response、HttpConstant、HttpMethod、PayloadType 现位于 `httpremo
 
 ### 调用代理补充
 
-10. CallHandler 根据 method.getDeclaringClass() 获取服务注解，对 Object 方法以及 create2() 调用的 init() 缺乏专门处理，可能因注解为空而失败。
+10. CallHandler 根据 method.getDeclaringClass() 获取服务注解，对 Object 方法以及 create2() 调用的 init()
+    缺乏专门处理，可能因注解为空而失败。
     修复方案：先分派 Object/初始化方法，再解析服务方法元数据。
 11. 代理没有实现 HEAD 分支，不能将其视为与直接 Head 工具等价。
 12. 路径参数直接替换且依赖 Parameter.getName()，未启用 -parameters 时名称可能为 arg0；参数未编码且 null 会触发异常。
@@ -118,7 +123,8 @@ Request、Response、HttpConstant、HttpMethod、PayloadType 现位于 `httpremo
 2. `DataWriter.write(InputStream)` 会通过 `DataReader` 关闭调用者传入的输入流，但注释只强调输出流
    不会关闭，所有权约定不清晰且容易导致后续读取失败。
    修复方案：复制方法默认不关闭任一外部流；需要托管生命周期时提供名称明确的独立入口。
-   单测：`TestDataWriter.writeDoesNotCloseCallerInputOrOutput()`。新增静态 `DataWriter.write(OutputStream, InputStream)` 已不关闭或 flush 外部流，但实例重载尚未统一；不能认为该问题整体解决。
+   单测：`TestDataWriter.writeDoesNotCloseCallerInputOrOutput()`。新增静态 `DataWriter.write(OutputStream, InputStream)`
+   已不关闭或 flush 外部流，但实例重载尚未统一；不能认为该问题整体解决。
 
 ### 中优先级
 
@@ -131,7 +137,8 @@ Request、Response、HttpConstant、HttpMethod、PayloadType 现位于 `httpremo
    修复方案：复用修正后的原样文本读取实现。
    单测：`TestFileHelper.readingTextPreservesLineEndingsAndTrailingNewline()`。
 
-5. UnzipHelper.ExtractionLimits 构造器没有校验自定义阈值。尤其 maxCompressionRatio 为 NaN 时，比较不会触发比例限制；非正数等输入也无法给出明确的配置错误。
+5. UnzipHelper.ExtractionLimits 构造器没有校验自定义阈值。尤其 maxCompressionRatio 为 NaN
+   时，比较不会触发比例限制；非正数等输入也无法给出明确的配置错误。
    修复方案：构造时验证条目数、单条/总大小与比例的有效范围，比例必须有限且为正；补充 NaN、Infinity、零和负值测试。默认策略与路径穿越检查并未因此失效。
 
 ### 低优先级
@@ -177,7 +184,8 @@ Request、Response、HttpConstant、HttpMethod、PayloadType 现位于 `httpremo
 
 ### 单元测试确认
 
-本次 JDK 17 全量测试中密码学相关 27 项测试全部通过。已有转换名、状态和参数校验修复保留；测试通过不代表下列默认算法、协议与 API 安全问题已经解决。
+本次 JDK 17 全量测试中密码学相关 27 项测试全部通过。已有转换名、状态和参数校验修复保留；测试通过不代表下列默认算法、协议与
+API 安全问题已经解决。
 
 ### 高优先级
 

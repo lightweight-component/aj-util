@@ -108,7 +108,7 @@ public class UrlCodec {
      *
      * @return the decoded form value
      * @throws IllegalArgumentException if a percent escape is incomplete or contains non-hexadecimal digits
-     * @throws IllegalStateException if the charset name is not supported by {@link URLDecoder}
+     * @throws IllegalStateException    if the charset name is not supported by {@link URLDecoder}
      * @see #encodeForm()
      */
     public String decodeForm() {
@@ -128,7 +128,7 @@ public class UrlCodec {
      *
      * @return the decoded query parameter value
      * @throws IllegalArgumentException if a percent escape is incomplete or contains non-hexadecimal digits
-     * @throws IllegalStateException if the charset name is not supported by {@link URLDecoder}
+     * @throws IllegalStateException    if the charset name is not supported by {@link URLDecoder}
      * @see #encodeQueryValue()
      */
     public String decodeQueryValue() {
@@ -175,7 +175,7 @@ public class UrlCodec {
      *
      * @param url the URL string to open
      * @return the response text, an empty string for empty content, or {@code null} if URL
-     *         construction or opening the stream throws an {@link IOException}
+     * construction or opening the stream throws an {@link IOException}
      * @throws java.io.UncheckedIOException if an I/O error occurs while reading or closing the stream
      */
     public static String simpleGET(String url) {

@@ -18,27 +18,29 @@
 
 <hr />
 
-AJ Utilities is a lightweight Java utility library with a Java 8 baseline. It combines object-oriented APIs with static helpers: overloaded constructors adapt inputs where useful, while simple operations remain directly callable.
+AJ Utilities is a lightweight Java utility library with a Java 8 baseline. It combines object-oriented APIs with static
+helpers: overloaded constructors adapt inputs where useful, while simple operations remain directly callable.
 
 ## Modules
 
-| Classes / package | Purpose |
-| --- | --- |
-| StrUtil, StringBytes, Base64Utils, UrlCodec | Strings, bytes/hex, Base64, form and query-value encoding |
-| ConvertBasicValue, ObjectHelper, MapTool | Type conversion, object and map helpers |
-| RegExpUtils, RegExpHelper | Regular expressions |
-| RandomTools, HashHelper | Random numbers/strings, UUIDv7, digests and HMAC |
-| JsonUtil, XmlHelper | JSON conversion, XML parsing and map conversion |
-| date | DateTools, DateTypeConvert and Formatter |
-| io | DataReader, DataWriter, FileHelper, ResourceHelper, ZipHelper and UnzipHelper |
-| httpremote | HTTP helpers, upload, download and call proxies; models in httpremote.model |
-| reflect | Clazz, Fields, Methods, Types and NewInstance |
-| cryptography | Symmetric encryption, RSA, signatures, key and certificate helpers |
-| log | Trace, TextBox and operation-log annotation |
+| Classes / package                           | Purpose                                                                       |
+|---------------------------------------------|-------------------------------------------------------------------------------|
+| StrUtil, StringBytes, Base64Utils, UrlCodec | Strings, bytes/hex, Base64, form and query-value encoding                     |
+| ConvertBasicValue, ObjectHelper, MapTool    | Type conversion, object and map helpers                                       |
+| RegExpUtils, RegExpHelper                   | Regular expressions                                                           |
+| RandomTools, HashHelper                     | Random numbers/strings, UUIDv7, digests and HMAC                              |
+| JsonUtil, XmlHelper                         | JSON conversion, XML parsing and map conversion                               |
+| date                                        | DateTools, DateTypeConvert and Formatter                                      |
+| io                                          | DataReader, DataWriter, FileHelper, ResourceHelper, ZipHelper and UnzipHelper |
+| httpremote                                  | HTTP helpers, upload, download and call proxies; models in httpremote.model   |
+| reflect                                     | Clazz, Fields, Methods, Types and NewInstance                                 |
+| cryptography                                | Symmetric encryption, RSA, signatures, key and certificate helpers            |
+| log                                         | Trace, TextBox and operation-log annotation                                   |
 
 ## Install
 
-The current checkout declares version **1.3.8**. Java 8 is the compatibility baseline; see [known issues](to_fix.md) for runtime limitations.
+The current checkout declares version **1.3.8**. Java 8 is the compatibility baseline; see [known issues](to_fix.md) for
+runtime limitations.
 
 ```xml
 <dependency>
@@ -48,7 +50,8 @@ The current checkout declares version **1.3.8**. Java 8 is the compatibility bas
 </dependency>
 ```
 
-The default JSON engine uses Jackson 2. Both dependencies below are `provided` in the library POM, so applications using it must supply them at runtime. These versions match the current POM:
+The default JSON engine uses Jackson 2. Both dependencies below are `provided` in the library POM, so applications using
+it must supply them at runtime. These versions match the current POM:
 
 ```xml
 <dependency>
@@ -81,11 +84,13 @@ new ZipHelper("input-directory", "output.zip").zip();
 new UnzipHelper("output.zip", "extracted").extract();
 ```
 
-The String-based ZipHelper constructor accepts a directory. For a single file, use `new ZipHelper(new java.io.File("input.txt"), "output.zip")`.
+The String-based ZipHelper constructor accepts a directory. For a single file,
+use `new ZipHelper(new java.io.File("input.txt"), "output.zip")`.
 
 ## Refactoring notes
 
-- UrlEncode and UrlHelper are consolidated into UrlCodec. Choose form or query-value methods explicitly; do not encode an entire URL as a query value.
+- UrlEncode and UrlHelper are consolidated into UrlCodec. Choose form or query-value methods explicitly; do not encode
+  an entire URL as a query value.
 - Hex conversion is now StringBytes.bytesToHex / hexToBytes.
 - Resources is now ResourceHelper. Use getStream for resources packaged in JARs.
 - Compression and extraction are separate instance APIs: ZipHelper.zip() and UnzipHelper.extract().
@@ -95,9 +100,12 @@ The String-based ZipHelper constructor accepts a directory. For a single file, u
 
 ## Usage boundaries
 
-Random numbers/strings are not security tokens. HMAC requires an explicit key. Hashing and Base64 are not encryption. Legacy crypto convenience methods and SkipSSL are not recommended for new production code.
+Random numbers/strings are not security tokens. HMAC requires an explicit key. Hashing and Base64 are not encryption.
+Legacy crypto convenience methods and SkipSSL are not recommended for new production code.
 
-Use explicit charsets for portable byte conversion. Stream overloads differ in ownership, and text readers still have line-ending limitations. Java 17 default-interface reflection is also a known issue. See [to_fix.md](to_fix.md) for verified findings and test status; refactoring does not mean every outstanding issue is resolved.
+Use explicit charsets for portable byte conversion. Stream overloads differ in ownership, and text readers still have
+line-ending limitations. Java 17 default-interface reflection is also a known issue. See [to_fix.md](to_fix.md) for
+verified findings and test status; refactoring does not mean every outstanding issue is resolved.
 
 ## Development and agent skill
 
@@ -107,7 +115,8 @@ From the repository root:
 mvn -f aj-util/pom.xml test
 ```
 
-The repository includes an [aj-util agent skill](../skills/aj-util/SKILL.md) describing current APIs, contracts and the maintenance workflow.
+The repository includes an [aj-util agent skill](../skills/aj-util/SKILL.md) describing current APIs, contracts and the
+maintenance workflow.
 
 ## Source and documentation
 

@@ -64,8 +64,8 @@ public class Aes {
      * @throws IllegalArgumentException if the key or input is invalid
      */
     public static String aesEncryptLegacy(String data, String key) {
-        SecretKey _key = SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key));
-        DoCipher cryptography = new DoCipher(Constant.AES, Cipher.ENCRYPT_MODE, _key);
+        SecretKey _key = SecretKeyMgr.getSecretKey(SecretKeyMgr.getRandom(key));
+        DoCipher cryptography = new DoCipher("AES", Cipher.ENCRYPT_MODE, _key);
 
         return cryptography.doCipher(data, DoCipher.OutputType.HEX, null, null);
     }
@@ -80,8 +80,8 @@ public class Aes {
      * @throws IllegalArgumentException if the key, hexadecimal input, or ciphertext is invalid
      */
     public static String aesDecryptLegacy(String data, String key) {
-        SecretKey _key = SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key));
-        DoCipher cryptography = new DoCipher(Constant.AES, Cipher.DECRYPT_MODE, _key);
+        SecretKey _key = SecretKeyMgr.getSecretKey(SecretKeyMgr.getRandom(key));
+        DoCipher cryptography = new DoCipher("AES", Cipher.DECRYPT_MODE, _key);
 
         return cryptography.doCipher(StringBytes.hexToBytes(data), DoCipher.OutputType.UTF8_STR, null, null);
     }
@@ -96,8 +96,8 @@ public class Aes {
      * @throws IllegalArgumentException if the key or input is invalid
      */
     public static String aesEncrypt(String data, byte[] keyBytes, byte[] nonce, byte[] associatedData) {
-        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, Constant.AES);
-        DoCipher cryptography = new DoCipher(Constant.AES_GCM, Cipher.ENCRYPT_MODE, keySpec);
+        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, SecretKeyMgr.AES);
+        DoCipher cryptography = new DoCipher(AES_GCM, Cipher.ENCRYPT_MODE, keySpec);
 
 //        byte[] nonce = randomBytes(GCM_NONCE_LENGTH);
         GCMParameterSpec spec = new GCMParameterSpec(128, nonce);
@@ -123,18 +123,29 @@ public class Aes {
     }
 
     public static String aesDecrypt(String data, byte[] keyBytes, byte[] nonce, byte[] associatedData) {
-        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, Constant.AES);
-        DoCipher cryptography = new DoCipher(Constant.AES_GCM, Cipher.DECRYPT_MODE, keySpec);
+        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, SecretKeyMgr.AES);
+        DoCipher cryptography = new DoCipher(AES_GCM, Cipher.DECRYPT_MODE, keySpec);
 
         return cryptography.doCipher(new Base64Utils(data).decode(), DoCipher.OutputType.UTF8_STR, new GCMParameterSpec(128, nonce), associatedData);
     }
 
-    public static String aesDecryptCBC(String data, String key, String spec) {
-        SecretKeySpec keySpec = new SecretKeySpec(new Base64Utils(key).decode(), Constant.AES);
-        DoCipher cryptography = new DoCipher(Constant.AES_WX_MINI_APP, Cipher.DECRYPT_MODE, keySpec);
-        IvParameterSpec _spce = new IvParameterSpec(new Base64Utils(spec).decode());
+    /**
+     * AES transformation used by WeChat mini programs: CBC mode with PKCS5 padding.
+     */
+    final static String AES_CBC = "AES/CBC/PKCS5Padding";
 
-        return cryptography.doCipher(new Base64Utils(data).decode(), DoCipher.OutputType.UTF8_STR, _spce, null);
+
+    /**
+     * AES transformation used by WeChat mini programs: GCM mode with no padding.
+     */
+    final static String AES_GCM = "AES/GCM/NoPadding";
+
+    public static String aesDecryptCBC(String data, String key, String spec) {
+        SecretKeySpec keySpec = new SecretKeySpec(new Base64Utils(key).decode(), SecretKeyMgr.AES);
+        DoCipher cryptography = new DoCipher(AES_CBC, Cipher.DECRYPT_MODE, keySpec);
+        IvParameterSpec _spec = new IvParameterSpec(new Base64Utils(spec).decode());
+
+        return cryptography.doCipher(new Base64Utils(data).decode(), DoCipher.OutputType.UTF8_STR, _spec, null);
     }
 
     /**
@@ -150,7 +161,7 @@ public class Aes {
      */
     public static byte[] pbeEncrypt(String data, String key, byte[] salt, int iterationCount) {
         validatePbeParameters(salt, iterationCount);
-        DoCipher cryptography = new DoCipher(Constant.AES_GCM, Cipher.ENCRYPT_MODE, derivePbeKey(key, salt, iterationCount));
+        DoCipher cryptography = new DoCipher(AES_GCM, Cipher.ENCRYPT_MODE, derivePbeKey(key, salt, iterationCount));
 
         byte[] nonce = randomBytes(GCM_NONCE_LENGTH);
         byte[] encrypted = cryptography.doCipher(data, new GCMParameterSpec(GCM_TAG_LENGTH, nonce), null);
@@ -177,7 +188,7 @@ public class Aes {
         if (data == null || data.length < GCM_NONCE_LENGTH + GCM_TAG_LENGTH / Byte.SIZE)
             throw new IllegalArgumentException("PBE ciphertext is missing or too short.");
 
-        DoCipher cryptography = new DoCipher(Constant.AES_GCM, Cipher.DECRYPT_MODE, derivePbeKey(key, salt, iterationCount));
+        DoCipher cryptography = new DoCipher(AES_GCM, Cipher.DECRYPT_MODE, derivePbeKey(key, salt, iterationCount));
 
         return cryptography.doCipher(Arrays.copyOfRange(data, GCM_NONCE_LENGTH, data.length),
                 DoCipher.OutputType.UTF8_STR,
@@ -201,13 +212,13 @@ public class Aes {
         PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, iterationCount, PBE_KEY_LENGTH);
 
         try {
-            SecretKey derivedKey = SecretKeyMgr.getSecretKey(Constant.PBE, keySpec);
+            SecretKey derivedKey = SecretKeyMgr.getSecretKey(keySpec);
             byte[] encoded = derivedKey.getEncoded();
 
             if (encoded == null)
                 throw new IllegalStateException("Derived PBE key is not encodable.");
 
-            return new SecretKeySpec(encoded, Constant.AES);
+            return new SecretKeySpec(encoded, SecretKeyMgr.AES);
         } finally {
             keySpec.clearPassword();
         }

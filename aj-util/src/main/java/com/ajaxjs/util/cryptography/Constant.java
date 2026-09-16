@@ -10,47 +10,6 @@ public interface Constant {
     String AES = "AES";
 
     /**
-     * AES transformation used by WeChat mini programs: CBC mode with PKCS5 padding.
-     */
-    String AES_WX_MINI_APP = "AES/CBC/PKCS5Padding";
-
-    /**
-     * AES transformation used by WeChat mini programs: GCM mode with no padding.
-     */
-    String AES_GCM = "AES/GCM/NoPadding";
-
-    /**
-     * Password-Based Key Derivation Function 2 with HMAC-SHA-256.
-     */
-    @SuppressWarnings("SpellCheckingInspection")
-    String PBE = "PBKDF2WithHmacSHA256";
-
-    /**
-     * RSA algorithm name.
-     */
-    String RSA = "RSA";// "RSA/ECB/PKCS1Padding"
-
-    /**
-     * RSA signature algorithm using MD5 with RSA.
-     */
-    String MD5_RSA = "MD5withRSA";
-
-    /**
-     * RSA signature algorithm using SHA-256 with RSA.
-     */
-    String SHA256_RSA = "SHA256withRSA";
-
-    /**
-     * Secure random number generator algorithm name.
-     */
-    String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
-
-    /**
-     * Optimal Asymmetric Encryption Padding
-     */
-    String RSAES_OAEP = "RSA/ECB/OAEPWithSHA-1AndMGF1Padding";
-
-    /**
      * Error message prefix used when a requested algorithm is not available.
      */
     String NO_SUCH_ALGORITHM = "No Such Algorithm in this Java. ";

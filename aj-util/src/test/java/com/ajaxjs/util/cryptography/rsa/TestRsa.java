@@ -1,10 +1,13 @@
 package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
+import com.ajaxjs.util.cryptography.CertificateUtils;
+import com.ajaxjs.util.io.ResourceHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +38,11 @@ class TestRsa {
         boolean verified = new DoVerify(publicKeyStr).verify("hello world", result);
 
         assertTrue(verified);
+    }
+
+    @Test
+    void testRejectsWeakRsaKeySize() {
+        assertThrows(IllegalArgumentException.class, () -> Rsa.generateKeyPair(2047));
     }
 
     @Test
@@ -126,5 +134,22 @@ class TestRsa {
         assertTrue(new DoVerify(pair.getPublic()).verify("signed content", signature));
 
         assertTrue(new DoVerify(PemUtils.publicKeyToPem(pair.getPublic())).verify("signed content", signature));
+    }
+
+    static String text = "Hello world";
+
+    @Test
+    void testEncryptOAEP() {
+        // 公钥加密
+        InputStream stream = new ResourceHelper("\\1623777099_20251021_cert\\apiclient_cert.pem").getStream();
+        String result = Rsa.encryptOAEP(text, CertificateUtils.getCert(stream));
+        System.out.println(result);
+
+        // 私钥解密
+        InputStream stream2 = new ResourceHelper("\\1623777099_20251021_cert\\apiclient_key.pem").getStream();
+        PrivateKey privateKey = RestoreKey.loadPrivateKey(stream2);
+
+        String decryptOAEP = Rsa.decryptOAEP(result, privateKey);
+        assertEquals(text, decryptOAEP);
     }
 }

@@ -21,19 +21,19 @@ AJ Utilities 是一个以 Java 8 为兼容基线的轻量级 Java 工具库。�
 
 ## 模块
 
-| 类 / 包 | 用途 |
-| --- | --- |
-| StrUtil、StringBytes、Base64Utils、UrlCodec | 字符串、字节/十六进制、Base64、表单与查询参数值编码 |
-| ConvertBasicValue、ObjectHelper、MapTool | 类型转换、对象与 Map 辅助操作 |
-| RegExpUtils、RegExpHelper | 正则表达式 |
-| RandomTools、HashHelper | 随机数/字符串、UUIDv7、摘要与 HMAC |
-| JsonUtil、XmlHelper | JSON 转换、XML 解析与 Map 转换 |
-| date | DateTools、DateTypeConvert 和 Formatter |
-| io | DataReader、DataWriter、FileHelper、ResourceHelper、ZipHelper 和 UnzipHelper |
-| httpremote | HTTP 请求、上传、下载与调用代理；模型位于 httpremote.model |
-| reflect | Clazz、Fields、Methods、Types 和 NewInstance |
-| cryptography | 对称加密、RSA、签名、密钥与证书辅助操作 |
-| log | Trace、TextBox 与操作日志注解 |
+| 类 / 包                                    | 用途                                                                      |
+|------------------------------------------|-------------------------------------------------------------------------|
+| StrUtil、StringBytes、Base64Utils、UrlCodec | 字符串、字节/十六进制、Base64、表单与查询参数值编码                                           |
+| ConvertBasicValue、ObjectHelper、MapTool   | 类型转换、对象与 Map 辅助操作                                                       |
+| RegExpUtils、RegExpHelper                 | 正则表达式                                                                   |
+| RandomTools、HashHelper                   | 随机数/字符串、UUIDv7、摘要与 HMAC                                                 |
+| JsonUtil、XmlHelper                       | JSON 转换、XML 解析与 Map 转换                                                  |
+| date                                     | DateTools、DateTypeConvert 和 Formatter                                   |
+| io                                       | DataReader、DataWriter、FileHelper、ResourceHelper、ZipHelper 和 UnzipHelper |
+| httpremote                               | HTTP 请求、上传、下载与调用代理；模型位于 httpremote.model                                |
+| reflect                                  | Clazz、Fields、Methods、Types 和 NewInstance                                |
+| cryptography                             | 对称加密、RSA、签名、密钥与证书辅助操作                                                   |
+| log                                      | Trace、TextBox 与操作日志注解                                                   |
 
 ## 安装
 
@@ -47,7 +47,8 @@ AJ Utilities 是一个以 Java 8 为兼容基线的轻量级 Java 工具库。�
 </dependency>
 ```
 
-默认 JSON 引擎使用 Jackson 2。以下依赖在工具库 POM 中为 `provided`，使用该引擎的应用需要在运行时自行提供。版本与当前 POM 保持一致：
+默认 JSON 引擎使用 Jackson 2。以下依赖在工具库 POM 中为 `provided`，使用该引擎的应用需要在运行时自行提供。版本与当前 POM
+保持一致：
 
 ```xml
 <dependency>
@@ -96,7 +97,8 @@ ZipHelper 的 String 构造器接受目录。压缩单个文件请使用 `new Zi
 
 随机数/字符串不适合作为安全令牌。HMAC 必须显式设置密钥。摘要与 Base64 都不是加密。旧式加密便捷方法和 SkipSSL 不建议用于新的生产代码。
 
-为保证字节转换跨环境一致，请显式选择字符集。不同流重载的关闭约定不同，文本读取仍存在换行保真问题；Java 17 下调用接口默认方法的反射实现也存在已知问题。已确认的问题与测试状态见 [to_fix.md](to_fix.md)，重构完成不代表所有遗留问题均已解决。
+为保证字节转换跨环境一致，请显式选择字符集。不同流重载的关闭约定不同，文本读取仍存在换行保真问题；Java 17
+下调用接口默认方法的反射实现也存在已知问题。已确认的问题与测试状态见 [to_fix.md](to_fix.md)，重构完成不代表所有遗留问题均已解决。
 
 ## 开发与 agent skill
 

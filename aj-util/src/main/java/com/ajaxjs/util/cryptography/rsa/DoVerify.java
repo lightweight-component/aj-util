@@ -1,3 +1,13 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
@@ -54,10 +64,10 @@ public class DoVerify {
     /**
      * Signature algorithm used for verification.
      *
-     * <p>The default value is {@link Constant#SHA256_RSA}. The value is passed
+     * <p>The default value is {@link Rsa#SHA256_RSA}. The value is passed
      * directly to {@link Signature#getInstance(String)}.</p>
      */
-    private String algorithmName = Constant.SHA256_RSA;
+    private String algorithmName = Rsa.SHA256_RSA;
 
     /**
      * Public key used to verify digital signatures.
@@ -86,7 +96,7 @@ public class DoVerify {
      * The default signature algorithm {@link Constant#SHA256_RSA} is used.</p>
      *
      * <p>The supported public-key encoding depends on
-     * {@link RestoreKey#restorePublicKey( String)}. Typically, this includes X.509 SubjectPublicKeyInfo / PEM values using
+     * {@link RestoreKey#restorePublicKey(String)}. Typically, this includes X.509 SubjectPublicKeyInfo / PEM values using
      * {@code -----BEGIN PUBLIC KEY-----} and
      * {@code -----END PUBLIC KEY-----} boundaries.</p>
      *

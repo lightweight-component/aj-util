@@ -9,7 +9,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,19 +48,18 @@ class TestCryptographyLegacy {
         if (iterationCount <= 0)
             throw new IllegalArgumentException("Legacy PBE iteration count must be greater than zero.");
 
-        Cryptography cryptography = new Cryptography(PBE_LEGACY, Cipher.DECRYPT_MODE);
         PBEKeySpec keySpec = new PBEKeySpec(key.toCharArray());
+        SecretKey secretKey;
 
         try {
-            cryptography.setKey(SecretKeyMgr.getSecretKey(PBE_LEGACY, keySpec));
+            secretKey = SecretKeyMgr.getSecretKey(PBE_LEGACY, keySpec);
         } finally {
             keySpec.clearPassword();
         }
 
-        cryptography.setSpec(new PBEParameterSpec(salt, iterationCount));
-        cryptography.setData(data);
+        DoCipher cipher = new DoCipher(PBE_LEGACY, Cipher.DECRYPT_MODE, secretKey);
 
-        return cryptography.doCipherAsStr();
+        return cipher.doCipher(data, DoCipher.OutputType.UTF8_STR, new PBEParameterSpec(salt, iterationCount), null);
     }
 
     /**
@@ -76,11 +74,10 @@ class TestCryptographyLegacy {
      */
     @Deprecated
     public static String DES_encode(String data, String key) {
-        Cryptography cryptography = new Cryptography(DES, Cipher.ENCRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setDataStr(data);
+        SecretKey secretKey = SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(key));
+        DoCipher cipher = new DoCipher(DES, Cipher.ENCRYPT_MODE, secretKey);
 
-        return cryptography.doCipherAsHexStr();
+        return cipher.doCipher(data, DoCipher.OutputType.HEX, null, null);
     }
 
     /**
@@ -95,11 +92,10 @@ class TestCryptographyLegacy {
      */
     @Deprecated
     public static String DES_decode(String data, String key) {
-        Cryptography cryptography = new Cryptography(DES, Cipher.DECRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
-        cryptography.setData(StringBytes.hexToBytes(data));
+        SecretKey secretKey = SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(key));
+        DoCipher cipher = new DoCipher(DES, Cipher.DECRYPT_MODE, secretKey);
 
-        return cryptography.doCipherAsStr();
+        return cipher.doCipher(StringBytes.hexToBytes(data), DoCipher.OutputType.UTF8_STR, null, null);
     }
 
     /**
@@ -113,11 +109,9 @@ class TestCryptographyLegacy {
      */
     @Deprecated
     public static byte[] tripleDES_encode(String data, byte[] key) {
-        Cryptography cryptography = new Cryptography(TRIPLE_DES, Cipher.ENCRYPT_MODE);
-        cryptography.setKey(new SecretKeySpec(key, TRIPLE_DES));
-        cryptography.setDataStr(data);
+        DoCipher cipher = new DoCipher(TRIPLE_DES, Cipher.ENCRYPT_MODE, new SecretKeySpec(key, TRIPLE_DES));
 
-        return cryptography.doCipher();
+        return cipher.doCipher(data, null, null);
     }
 
     /**
@@ -142,11 +136,9 @@ class TestCryptographyLegacy {
      */
     @Deprecated
     public static String tripleDES_decode(byte[] data, byte[] key) {
-        Cryptography cryptography = new Cryptography(TRIPLE_DES, Cipher.DECRYPT_MODE);
-        cryptography.setKey(new SecretKeySpec(key, TRIPLE_DES));
-        cryptography.setData(data);
+        DoCipher cipher = new DoCipher(TRIPLE_DES, Cipher.DECRYPT_MODE, new SecretKeySpec(key, TRIPLE_DES));
 
-        return cryptography.doCipherAsStr();
+        return cipher.doCipher(data, DoCipher.OutputType.UTF8_STR, null, null);
     }
 
     final String key = "abc";
@@ -154,8 +146,8 @@ class TestCryptographyLegacy {
 
     @Test
     void testAES() {
-        String encWord = Cryptography.AES_encode(word, key);
-        assertEquals(word, Cryptography.AES_decode(encWord, key));
+        String encWord = Aes.aesEncryptLegacy(word, key);
+        assertEquals(word, Aes.aesDecryptLegacy(encWord, key));
     }
 
     @Test
@@ -182,10 +174,10 @@ class TestCryptographyLegacy {
 
     @Test
     void testPBE() {
-        byte[] salt = Cryptography.initSalt();
-        byte[] encData = Cryptography.PBE_encode(word, key, salt, 100_000);
+        byte[] salt = Aes.randomBytes(Aes.PBE_SALT_LENGTH);
+        byte[] encData = Aes.pbeEncrypt(word, key, salt, Aes.MIN_PBE_ITERATIONS);
 
-        assertEquals(word, Cryptography.PBE_decode(encData, key, salt, 100_000));
+        assertEquals(word, Aes.pbeDecrypt(encData, key, salt, Aes.MIN_PBE_ITERATIONS));
     }
 
     @Test
@@ -210,7 +202,7 @@ class TestCryptographyLegacy {
         String password = "compatibility-password";
         byte[] tripleDesKey = "123456789012345678901234".getBytes(StandardCharsets.US_ASCII);
 
-        assertEquals(text, Cryptography.AES_decode(Cryptography.AES_encode(text, password), password));
+        assertEquals(text, Aes.aesDecryptLegacy(Aes.aesEncryptLegacy(text, password), password));
         assertEquals(text, DES_decode(DES_encode(text, password), password));
         assertEquals(text, tripleDES_decode(tripleDES_encode(text, tripleDesKey), tripleDesKey));
     }

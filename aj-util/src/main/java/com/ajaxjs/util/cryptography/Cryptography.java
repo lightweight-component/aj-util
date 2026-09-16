@@ -278,7 +278,7 @@ public class Cryptography {
      */
     public static String AES_encode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
+        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(key)));
         cryptography.setDataStr(data);
 
         return cryptography.doCipherAsHexStr();
@@ -295,7 +295,7 @@ public class Cryptography {
      */
     public static String AES_decode(String data, String key) {
         Cryptography cryptography = new Cryptography(Constant.AES, Cipher.DECRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
+        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(key)));
         cryptography.setData(StringBytes.hexToBytes(data));
 
         return cryptography.doCipherAsStr();
@@ -326,7 +326,7 @@ public class Cryptography {
      */
     public static byte[] PBE_encode(String data, String key, byte[] salt, int iterationCount) {
         validatePbeParameters(salt, iterationCount);
-        Cryptography cryptography = new Cryptography(Constant.AES_GCM, Cipher.ENCRYPT_MODE);
+        Cryptography cryptography = new Cryptography(Aes.AES_GCM, Cipher.ENCRYPT_MODE);
         cryptography.setKey(derivePbeKey(key, salt, iterationCount));
         byte[] nonce = new byte[GCM_NONCE_LENGTH];
         RandomTools.RANDOM.nextBytes(nonce);
@@ -356,7 +356,7 @@ public class Cryptography {
         if (data == null || data.length < GCM_NONCE_LENGTH + GCM_TAG_LENGTH / Byte.SIZE)
             throw new IllegalArgumentException("PBE ciphertext is missing or too short.");
 
-        Cryptography cryptography = new Cryptography(Constant.AES_GCM, Cipher.DECRYPT_MODE);
+        Cryptography cryptography = new Cryptography(Aes.AES_GCM, Cipher.DECRYPT_MODE);
         cryptography.setKey(derivePbeKey(key, salt, iterationCount));
         cryptography.setSpec(new GCMParameterSpec(GCM_TAG_LENGTH, Arrays.copyOf(data, GCM_NONCE_LENGTH)));
         cryptography.setData(Arrays.copyOfRange(data, GCM_NONCE_LENGTH, data.length));
@@ -381,7 +381,8 @@ public class Cryptography {
         PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, iterationCount, PBE_KEY_LENGTH);
 
         try {
-            Key derivedKey = SecretKeyMgr.getSecretKey(Constant.PBE, keySpec);
+            Key derivedKey = SecretKeyMgr.getSecretKey(keySpec);
+
             return new SecretKeySpec(derivedKey.getEncoded(), Constant.AES);
         } finally {
             keySpec.clearPassword();
