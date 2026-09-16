@@ -309,4 +309,19 @@ public class HashHelper {
     public static String hmacSHA256(String str, String key, boolean isWithoutPadding) {
         return hmac(HMAC_SHA256, str, key, isWithoutPadding);
     }
+
+    /**
+     * Message digest algorithms.
+     */
+    enum Digest {
+        /**
+         * Standard MD5 digest.
+         */
+        Md5,
+
+        /**
+         * MD5 digest with an additional salt.
+         */
+        Md5WithSalt,
+    }
 }

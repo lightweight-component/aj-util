@@ -46,7 +46,7 @@ public class CertificateUtils {
      */
     public static X509Certificate getCert(InputStream in) {
         try (InputStream input = in) {
-            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(input);
+            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(input);
             cert.checkValidity();
 
             return cert;
@@ -182,7 +182,7 @@ public class CertificateUtils {
         if (cipherText == null || cipherText.trim().isEmpty())
             throw new IllegalArgumentException("GCM ciphertext can't be null.");
 
-        Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.DECRYPT_MODE);
+        Cryptography cryptography = new Cryptography(Constant.AES_GCM, Cipher.DECRYPT_MODE);
         cryptography.setKey(new SecretKeySpec(aesKey, Constant.AES)); // little odd, it's AES.
         cryptography.setSpec(new GCMParameterSpec(128, nonce));
         cryptography.setDataStrBase64(cipherText);

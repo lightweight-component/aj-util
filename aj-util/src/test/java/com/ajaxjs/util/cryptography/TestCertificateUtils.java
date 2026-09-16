@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.security.cert.X509Certificate;
 
-public class TestCertificateUtils {
+class TestCertificateUtils {
     @Test
     void testGetCert() {
         X509Certificate cert = CertificateUtils.getCert(

@@ -136,28 +136,32 @@ public class Base64Utils {
     }
 
     /**
-     * Formats a Base64 string using 64 characters per line,
-     * as commonly used in PEM-style Base64 data.
-     *
-     * @param base64 the Base64 string to format
-     * @return the formatted Base64 string with line breaks
+     * Common binary-to-text encodings.
      */
-    public static String formatPemBase64(String base64) {
-        int len = base64.length();
+    enum Encode {
+        /**
+         * Base16 (hexadecimal) encoding.
+         */
+        BASE16,
 
-        if (len <= 64)
-            return base64;
+        /**
+         * Base32 encoding.
+         */
+        BASE32,
 
-        int lineBreaks = (len - 1) / 64;
-        StringBuilder sb = new StringBuilder(len + lineBreaks);
+        /**
+         * Base58 encoding.
+         */
+        BASE58,
 
-        for (int i = 0; i < len; i += 64) {
-            if (i > 0)
-                sb.append('\n');
+        /**
+         * Base64 encoding.
+         */
+        BASE64,
 
-            sb.append(base64, i, Math.min(i + 64, len));
-        }
-
-        return sb.toString();
+        /**
+         * Base91 encoding.
+         */
+        BASE91,
     }
 }

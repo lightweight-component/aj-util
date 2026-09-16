@@ -17,18 +17,7 @@ public interface Constant {
     /**
      * AES transformation used by WeChat mini programs: GCM mode with no padding.
      */
-    String AES_WX_MINI_APP2 = "AES/GCM/NoPadding";
-
-    /**
-     * Data Encryption Standard algorithm name.
-     */
-    String DES = "DES";
-
-    /**
-     * Triple DES (also known as DESede) algorithm name.
-     */
-    @SuppressWarnings("SpellCheckingInspection")
-    String TRIPLE_DES = "DESede";
+    String AES_GCM = "AES/GCM/NoPadding";
 
     /**
      * Password-Based Key Derivation Function 2 with HMAC-SHA-256.
@@ -65,49 +54,4 @@ public interface Constant {
      * Error message prefix used when a requested algorithm is not available.
      */
     String NO_SUCH_ALGORITHM = "No Such Algorithm in this Java. ";
-
-    /**
-     * Common binary-to-text encodings.
-     */
-    enum Encode {
-        /**
-         * Base16 (hexadecimal) encoding.
-         */
-        BASE16,
-
-        /**
-         * Base32 encoding.
-         */
-        BASE32,
-
-        /**
-         * Base58 encoding.
-         */
-        BASE58,
-
-        /**
-         * Base64 encoding.
-         */
-        BASE64,
-
-        /**
-         * Base91 encoding.
-         */
-        BASE91,
-    }
-
-    /**
-     * Message digest algorithms.
-     */
-    enum Digest {
-        /**
-         * Standard MD5 digest.
-         */
-        Md5,
-
-        /**
-         * MD5 digest with an additional salt.
-         */
-        Md5WithSalt,
-    }
 }

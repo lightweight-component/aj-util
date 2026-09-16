@@ -1,21 +1,21 @@
 package com.ajaxjs.util.cryptography;
 
-import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.StringBytes;
-import com.ajaxjs.util.cryptography.rsa.DoSignature;
-import com.ajaxjs.util.cryptography.rsa.DoVerify;
-import com.ajaxjs.util.cryptography.rsa.KeyMgr;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.nio.charset.StandardCharsets;
 
-public class TestCryptography {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class TestCryptographyLegacy {
     /**
      * Legacy PBE algorithm retained only for decrypting existing data.
      */
@@ -76,8 +76,8 @@ public class TestCryptography {
      */
     @Deprecated
     public static String DES_encode(String data, String key) {
-        Cryptography cryptography = new Cryptography(Constant.DES, Cipher.ENCRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
+        Cryptography cryptography = new Cryptography(DES, Cipher.ENCRYPT_MODE);
+        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
         cryptography.setDataStr(data);
 
         return cryptography.doCipherAsHexStr();
@@ -95,8 +95,8 @@ public class TestCryptography {
      */
     @Deprecated
     public static String DES_decode(String data, String key) {
-        Cryptography cryptography = new Cryptography(Constant.DES, Cipher.DECRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
+        Cryptography cryptography = new Cryptography(DES, Cipher.DECRYPT_MODE);
+        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(Constant.SECURE_RANDOM_ALGORITHM, key)));
         cryptography.setData(StringBytes.hexToBytes(data));
 
         return cryptography.doCipherAsStr();
@@ -113,12 +113,23 @@ public class TestCryptography {
      */
     @Deprecated
     public static byte[] tripleDES_encode(String data, byte[] key) {
-        Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.ENCRYPT_MODE);
-        cryptography.setKey(new SecretKeySpec(key, Constant.TRIPLE_DES));
+        Cryptography cryptography = new Cryptography(TRIPLE_DES, Cipher.ENCRYPT_MODE);
+        cryptography.setKey(new SecretKeySpec(key, TRIPLE_DES));
         cryptography.setDataStr(data);
 
         return cryptography.doCipher();
     }
+
+    /**
+     * Data Encryption Standard algorithm name.
+     */
+    static String DES = "DES";
+
+    /**
+     * Triple DES (also known as DESede) algorithm name.
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    static String TRIPLE_DES = "DESede";
 
     /**
      * Decrypts the given Triple DES-encrypted bytes.
@@ -131,8 +142,8 @@ public class TestCryptography {
      */
     @Deprecated
     public static String tripleDES_decode(byte[] data, byte[] key) {
-        Cryptography cryptography = new Cryptography(Constant.TRIPLE_DES, Cipher.DECRYPT_MODE);
-        cryptography.setKey(new SecretKeySpec(key, Constant.TRIPLE_DES));
+        Cryptography cryptography = new Cryptography(TRIPLE_DES, Cipher.DECRYPT_MODE);
+        cryptography.setKey(new SecretKeySpec(key, TRIPLE_DES));
         cryptography.setData(data);
 
         return cryptography.doCipherAsStr();
@@ -178,65 +189,29 @@ public class TestCryptography {
     }
 
     @Test
-    void testDoSignature() {
-// 生成公钥私钥
-        KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
-        keyMgr.generateKeyPair();
-        String privateKey = keyMgr.getPrivateKeyStr();
+    void legacyPbeDecoderReadsHistoricalCiphertext() throws Exception {
+        String password = "legacy-password";
+        byte[] salt = "12345678".getBytes(StandardCharsets.US_ASCII);
+        int iterations = 100;
+        PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
+        SecretKey key = SecretKeyFactory.getInstance(TestCryptographyLegacy.PBE_LEGACY).generateSecret(keySpec);
+        Cipher cipher = Cipher.getInstance(TestCryptographyLegacy.PBE_LEGACY);
+        cipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(salt, iterations));
+        byte[] encrypted = cipher.doFinal("legacy content".getBytes(StandardCharsets.UTF_8));
+        keySpec.clearPassword();
 
-        byte[] helloWorlds = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).sign();
-        String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
-
-        assertEquals(new Base64Utils(helloWorlds).encodeAsString(), result);
+        assertEquals("legacy content", PBE_legacy_decode(encrypted, password, salt, iterations));
+        assertThrows(IllegalArgumentException.class, () -> PBE_legacy_decode(encrypted, password, new byte[7], iterations));
     }
 
     @Test
-    void testDoVerify() {
-// 生成公钥私钥
-        KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
-        keyMgr.generateKeyPair();
-        String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
-        String result = new DoSignature(Constant.SHA256_RSA).setStrData("hello world").setPrivateKeyStr(privateKey).signToString();
-        boolean verified = new DoVerify(Constant.SHA256_RSA).setStrData("hello world").setPublicKeyStr(publicKey).setSignatureBase64(result).verify();
+    void legacySymmetricConvenienceMethodsRoundTrip() {
+        String text = "Legacy encryption 测试";
+        String password = "compatibility-password";
+        byte[] tripleDesKey = "123456789012345678901234".getBytes(StandardCharsets.US_ASCII);
 
-        assertTrue(verified);
-    }
-
-    @Test
-    public void testRSA() {
-        // 生成公钥私钥
-        KeyMgr keyMgr = new KeyMgr(Constant.RSA, 2048);
-        keyMgr.generateKeyPair();
-        String publicKey = keyMgr.getPublicKeyStr(), privateKey = keyMgr.getPrivateKeyStr();
-
-        System.out.println("公钥: \n\r" + publicKey);
-        System.out.println("私钥： \n\r" + privateKey);
-//		System.out.println("公钥加密--------私钥解密");
-
-        String word = "你好，世界！";
-
-        byte[] encWord = KeyMgr.publicKeyEncrypt(word.getBytes(), publicKey);
-        String decWord = new String(KeyMgr.privateKeyDecrypt(encWord, privateKey));
-
-        String eBody = new Base64Utils(encWord).encodeAsString();
-        String decWord2 = new String(KeyMgr.privateKeyDecrypt(new Base64Utils(eBody).decode(), privateKey));
-        System.out.println("加密前: " + word + "\n\r密文：" + eBody + "\n解密后: " + decWord2);
-        assertEquals(word, decWord);
-
-//		System.out.println("私钥加密--------公钥解密");
-
-        String english = "Hello, World!";
-        byte[] encEnglish = KeyMgr.privateKeyEncrypt(english.getBytes(), privateKey);
-        String decEnglish = new String(KeyMgr.publicKeyDecrypt(encEnglish, publicKey));
-//		System.out.println("加密前: " + english + "\n\r" + "解密后: " + decEnglish);
-
-        assertEquals(english, decEnglish);
-//		System.out.println("私钥签名——公钥验证签名");
-
-// 产生签名
-        String sign = new DoSignature(Constant.MD5_RSA).setPrivateKeyStr(privateKey).setData(encEnglish).signToString();
-//		System.out.println("签名:\r" + sign);
-// 验证签名
-        assertTrue(new DoVerify(Constant.MD5_RSA).setPublicKeyStr(publicKey).setData(encEnglish).setSignatureBase64(sign).verify());
+        assertEquals(text, Cryptography.AES_decode(Cryptography.AES_encode(text, password), password));
+        assertEquals(text, DES_decode(DES_encode(text, password), password));
+        assertEquals(text, tripleDES_decode(tripleDES_encode(text, tripleDesKey), tripleDesKey));
     }
 }

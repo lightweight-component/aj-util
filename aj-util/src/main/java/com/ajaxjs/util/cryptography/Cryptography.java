@@ -326,7 +326,7 @@ public class Cryptography {
      */
     public static byte[] PBE_encode(String data, String key, byte[] salt, int iterationCount) {
         validatePbeParameters(salt, iterationCount);
-        Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.ENCRYPT_MODE);
+        Cryptography cryptography = new Cryptography(Constant.AES_GCM, Cipher.ENCRYPT_MODE);
         cryptography.setKey(derivePbeKey(key, salt, iterationCount));
         byte[] nonce = new byte[GCM_NONCE_LENGTH];
         RandomTools.RANDOM.nextBytes(nonce);
@@ -356,7 +356,7 @@ public class Cryptography {
         if (data == null || data.length < GCM_NONCE_LENGTH + GCM_TAG_LENGTH / Byte.SIZE)
             throw new IllegalArgumentException("PBE ciphertext is missing or too short.");
 
-        Cryptography cryptography = new Cryptography(Constant.AES_WX_MINI_APP2, Cipher.DECRYPT_MODE);
+        Cryptography cryptography = new Cryptography(Constant.AES_GCM, Cipher.DECRYPT_MODE);
         cryptography.setKey(derivePbeKey(key, salt, iterationCount));
         cryptography.setSpec(new GCMParameterSpec(GCM_TAG_LENGTH, Arrays.copyOf(data, GCM_NONCE_LENGTH)));
         cryptography.setData(Arrays.copyOfRange(data, GCM_NONCE_LENGTH, data.length));
