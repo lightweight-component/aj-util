@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Objects;
 
-public class DoAes {
+public class DoAes extends DoCipher {
     /**
      * The name of the algorithm
      */
@@ -43,7 +43,8 @@ public class DoAes {
     }
 
     public DoAes(String algorithmName, byte[] key) {
-        Objects.requireNonNull(algorithmName, "DoAes.algorithmName");
+        super(Objects.requireNonNull(algorithmName, "DoAes.algorithmName"),
+                Cipher.ENCRYPT_MODE, new SecretKeySpec(key, SecretKeyMgr.AES));
 
         this.algorithmName = algorithmName;
         this.key = key;

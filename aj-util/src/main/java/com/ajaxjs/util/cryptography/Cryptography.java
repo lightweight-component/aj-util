@@ -177,7 +177,7 @@ public class Cryptography {
 
             return cipher.doFinal(data);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            throw new RuntimeException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
         } catch (AEADBadTagException e) {
             throw new IllegalArgumentException("Authentication failed: the key, parameters, associated data, or ciphertext is invalid.", e);
         } catch (IllegalBlockSizeException e) {
@@ -277,8 +277,8 @@ public class Cryptography {
      * @throws IllegalArgumentException if the key or input is invalid
      */
     public static String AES_encode(String data, String key) {
-        Cryptography cryptography = new Cryptography(Constant.AES, Cipher.ENCRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(key)));
+        Cryptography cryptography = new Cryptography(SecretKeyMgr.AES, Cipher.ENCRYPT_MODE);
+        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(SecretKeyMgr.AES, 128, SecretKeyMgr.getRandom(key)));
         cryptography.setDataStr(data);
 
         return cryptography.doCipherAsHexStr();
@@ -294,8 +294,8 @@ public class Cryptography {
      * @throws IllegalArgumentException if the key, hexadecimal input, or ciphertext is invalid
      */
     public static String AES_decode(String data, String key) {
-        Cryptography cryptography = new Cryptography(Constant.AES, Cipher.DECRYPT_MODE);
-        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(Constant.AES, 128, SecretKeyMgr.getRandom(key)));
+        Cryptography cryptography = new Cryptography(SecretKeyMgr.AES, Cipher.DECRYPT_MODE);
+        cryptography.setSecretKey(SecretKeyMgr.getSecretKey(SecretKeyMgr.AES, 128, SecretKeyMgr.getRandom(key)));
         cryptography.setData(StringBytes.hexToBytes(data));
 
         return cryptography.doCipherAsStr();
@@ -383,7 +383,7 @@ public class Cryptography {
         try {
             Key derivedKey = SecretKeyMgr.getSecretKey(keySpec);
 
-            return new SecretKeySpec(derivedKey.getEncoded(), Constant.AES);
+            return new SecretKeySpec(derivedKey.getEncoded(), SecretKeyMgr.AES);
         } finally {
             keySpec.clearPassword();
         }

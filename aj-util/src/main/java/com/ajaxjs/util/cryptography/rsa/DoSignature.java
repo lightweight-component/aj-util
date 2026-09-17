@@ -12,7 +12,7 @@ package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.cryptography.Constant;
+import com.ajaxjs.util.cryptography.DoCipher;
 import lombok.AllArgsConstructor;
 
 import java.nio.charset.StandardCharsets;
@@ -159,7 +159,7 @@ public class DoSignature {
         } catch (SignatureException e) {
             throw new IllegalStateException("Signature failed.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            throw new IllegalArgumentException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid Private Key", e);
         }

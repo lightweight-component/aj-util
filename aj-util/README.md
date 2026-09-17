@@ -43,6 +43,7 @@ The current checkout declares version **1.3.8**. Java 8 is the compatibility bas
 runtime limitations.
 
 ```xml
+
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
@@ -54,15 +55,16 @@ The default JSON engine uses Jackson 2. Both dependencies below are `provided` i
 it must supply them at runtime. These versions match the current POM:
 
 ```xml
+
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
     <version>2.22.1</version>
 </dependency>
 <dependency>
-    <groupId>com.fasterxml.jackson.datatype</groupId>
-    <artifactId>jackson-datatype-jsr310</artifactId>
-    <version>2.22.1</version>
+<groupId>com.fasterxml.jackson.datatype</groupId>
+<artifactId>jackson-datatype-jsr310</artifactId>
+<version>2.22.1</version>
 </dependency>
 ```
 
@@ -75,13 +77,13 @@ import com.ajaxjs.util.UrlCodec;
 import com.ajaxjs.util.io.ZipHelper;
 import com.ajaxjs.util.io.UnzipHelper;
 
-String queryValue = new UrlCodec("a b+c").encodeQueryValue(); // a%20b%2Bc
-String hex = StringBytes.bytesToHex(new byte[]{0x0A, 0x2F}); // 0A2F
-String id = RandomTools.uuidV7(); // 32 hex characters
-java.util.Date createdAt = RandomTools.showTime(id);
+String queryValue=new UrlCodec("a b+c").encodeQueryValue(); // a%20b%2Bc
+        String hex=StringBytes.bytesToHex(new byte[]{0x0A,0x2F}); // 0A2F
+        String id=RandomTools.uuidV7(); // 32 hex characters
+        java.util.Date createdAt=RandomTools.showTime(id);
 
-new ZipHelper("input-directory", "output.zip").zip();
-new UnzipHelper("output.zip", "extracted").extract();
+        new ZipHelper("input-directory","output.zip").zip();
+        new UnzipHelper("output.zip","extracted").extract();
 ```
 
 The String-based ZipHelper constructor accepts a directory. For a single file,

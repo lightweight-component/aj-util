@@ -3,6 +3,7 @@ package com.ajaxjs.util.cryptography;
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.StringBytes;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.crypto.*;
@@ -23,6 +24,7 @@ public class DoCipher {
     /**
      * The cipher mode, normally {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}.
      */
+    @Getter
     private final int mode;
 
     /**
@@ -65,7 +67,7 @@ public class DoCipher {
 
             return new Result(cipher.doFinal(data));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new IllegalArgumentException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            throw new IllegalArgumentException(NO_SUCH_ALGORITHM + algorithmName, e);
         } catch (AEADBadTagException e) {
             throw new IllegalArgumentException("Authentication failed: the key, parameters, associated data, or ciphertext is invalid.", e);
         } catch (IllegalBlockSizeException e) {
@@ -75,7 +77,7 @@ public class DoCipher {
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid Key.", e);
         } catch (InvalidAlgorithmParameterException e) {
-            throw new IllegalArgumentException("Invalid Algorithm Parameter.", e);
+            throw new IllegalArgumentException("Invalid Algorithm Parameter: " + algorithmName, e);
         }
     }
 
@@ -90,4 +92,9 @@ public class DoCipher {
 
         return doCipher(new Base64Utils(base64Str).decode(), spec, associatedData);
     }
+
+    /**
+     * Error message prefix used when a requested algorithm is not available.
+     */
+    public final static String NO_SUCH_ALGORITHM = "No Such Algorithm in this Java. ";
 }

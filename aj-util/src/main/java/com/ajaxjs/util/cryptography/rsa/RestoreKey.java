@@ -12,7 +12,7 @@ package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.CommonConstant;
-import com.ajaxjs.util.cryptography.Constant;
+import com.ajaxjs.util.cryptography.DoCipher;
 import com.ajaxjs.util.io.DataWriter;
 import com.ajaxjs.util.io.FileHelper;
 
@@ -109,7 +109,7 @@ public class RestoreKey {
         } catch (InvalidKeySpecException e) {
             throw new IllegalArgumentException("Invalid RSA public key encoding. Expected X.509 SubjectPublicKeyInfo.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(Constant.NO_SUCH_ALGORITHM + Rsa.RSA, e);
+            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + Rsa.RSA, e);
         }
     }
 
@@ -154,7 +154,7 @@ public class RestoreKey {
         } catch (InvalidKeySpecException e) {
             throw new IllegalArgumentException("Invalid RSA private key encoding. Expected PKCS#8.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(Constant.NO_SUCH_ALGORITHM + Rsa.RSA, e);
+            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + Rsa.RSA, e);
         }
     }
 

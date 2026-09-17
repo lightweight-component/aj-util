@@ -12,7 +12,7 @@ package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.cryptography.Constant;
+import com.ajaxjs.util.cryptography.DoCipher;
 import lombok.AllArgsConstructor;
 
 import java.nio.charset.StandardCharsets;
@@ -23,7 +23,7 @@ import java.util.Objects;
  * Verifies RSA digital signatures using a configured signature algorithm
  * and public key.
  *
- * <p>The default signature algorithm is {@link Constant#SHA256_RSA}, which
+ * <p>The default signature algorithm is {@link Rsa#SHA256_RSA}, which
  * typically represents {@code SHA256withRSA}. A different signature algorithm
  * may be supplied through the all-arguments constructor when compatibility
  * with another RSA signature scheme is required.</p>
@@ -93,7 +93,7 @@ public class DoVerify {
      *
      * <p>The supplied key is restored using
      * {@link RestoreKey#restorePublicKey(String)} with public-key mode enabled.
-     * The default signature algorithm {@link Constant#SHA256_RSA} is used.</p>
+     * The default signature algorithm {@link Rsa#SHA256_RSA} is used.</p>
      *
      * <p>The supported public-key encoding depends on
      * {@link RestoreKey#restorePublicKey(String)}. Typically, this includes X.509 SubjectPublicKeyInfo / PEM values using
@@ -185,10 +185,10 @@ public class DoVerify {
      * {@link Signature#verify(byte[])} returns {@code false} when the
      * signature does not authenticate the supplied data.</p>
      *
-     * @param data          the original binary data; an empty byte array is  valid
+     * @param data          the original binary data; an empty byte array is valid
      * @param signatureData the raw binary signature bytes
      * @return {@code true} if the signature is valid for the supplied data and
-     * configured public key; {@code false} if verification fails
+     * configured a public key; {@code false} if verification fails
      * because the signature does not match
      * @throws IllegalArgumentException if the algorithm name is missing or
      *                                  unsupported, the public key is invalid,
@@ -219,7 +219,7 @@ public class DoVerify {
         } catch (SignatureException e) {
             throw new IllegalStateException("Signature verification failed.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            throw new IllegalArgumentException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid Public Key", e);
         }

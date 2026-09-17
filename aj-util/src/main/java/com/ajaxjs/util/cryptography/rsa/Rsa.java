@@ -11,7 +11,6 @@
 package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
-import com.ajaxjs.util.cryptography.Constant;
 import com.ajaxjs.util.cryptography.DoCipher;
 
 import javax.crypto.Cipher;
@@ -304,7 +303,7 @@ public class Rsa {
 
             return generator.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(Constant.NO_SUCH_ALGORITHM + RSA, e);
+            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + RSA, e);
         }
     }
 

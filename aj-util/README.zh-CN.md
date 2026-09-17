@@ -40,6 +40,7 @@ AJ Utilities 是一个以 Java 8 为兼容基线的轻量级 Java 工具库。�
 当前源码声明的版本为 **1.3.8**，兼容基线为 Java 8；运行时限制见[已知问题](to_fix.md)。
 
 ```xml
+
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
@@ -51,15 +52,16 @@ AJ Utilities 是一个以 Java 8 为兼容基线的轻量级 Java 工具库。�
 保持一致：
 
 ```xml
+
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
     <version>2.22.1</version>
 </dependency>
 <dependency>
-    <groupId>com.fasterxml.jackson.datatype</groupId>
-    <artifactId>jackson-datatype-jsr310</artifactId>
-    <version>2.22.1</version>
+<groupId>com.fasterxml.jackson.datatype</groupId>
+<artifactId>jackson-datatype-jsr310</artifactId>
+<version>2.22.1</version>
 </dependency>
 ```
 
@@ -72,13 +74,13 @@ import com.ajaxjs.util.UrlCodec;
 import com.ajaxjs.util.io.ZipHelper;
 import com.ajaxjs.util.io.UnzipHelper;
 
-String queryValue = new UrlCodec("a b+c").encodeQueryValue(); // a%20b%2Bc
-String hex = StringBytes.bytesToHex(new byte[]{0x0A, 0x2F}); // 0A2F
-String id = RandomTools.uuidV7(); // 32 hex characters
-java.util.Date createdAt = RandomTools.showTime(id);
+String queryValue=new UrlCodec("a b+c").encodeQueryValue(); // a%20b%2Bc
+        String hex=StringBytes.bytesToHex(new byte[]{0x0A,0x2F}); // 0A2F
+        String id=RandomTools.uuidV7(); // 32 hex characters
+        java.util.Date createdAt=RandomTools.showTime(id);
 
-new ZipHelper("input-directory", "output.zip").zip();
-new UnzipHelper("output.zip", "extracted").extract();
+        new ZipHelper("input-directory","output.zip").zip();
+        new UnzipHelper("output.zip","extracted").extract();
 ```
 
 ZipHelper 的 String 构造器接受目录。压缩单个文件请使用 `new ZipHelper(new java.io.File("input.txt"), "output.zip")`。

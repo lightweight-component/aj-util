@@ -130,7 +130,7 @@ public class SecretKeyMgr {
             } else if (secure != null)
                 kg.init(secure);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            throw new IllegalArgumentException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
         }
 
         return kg.generateKey();
@@ -175,7 +175,7 @@ public class SecretKeyMgr {
         } catch (InvalidKeySpecException e) {
             throw new IllegalArgumentException("Invalid Key Spec.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            throw new IllegalArgumentException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
         }
     }
 
@@ -227,7 +227,7 @@ public class SecretKeyMgr {
         try {
             random = SecureRandom.getInstance(algorithmName);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
+            throw new RuntimeException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
         }
 
         random.setSeed(new StringBytes(key).getUTF8_Bytes());
