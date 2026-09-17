@@ -1,3 +1,13 @@
+/**
+ * Copyright Sp42 frank@ajaxjs.com Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.ajaxjs.util.cryptography.rsa;
 
 import com.ajaxjs.util.Base64Utils;
@@ -84,7 +94,7 @@ public class Rsa {
      * RSA digital-signature algorithm using SHA-256.
      *
      * <p>This value is intended for the JCA {@link Signature} API and is
-     * independent from the RSA encryption transformation used by this
+     * independent of the RSA encryption transformation used by this
      * class.</p>
      */
     static final String SHA256_RSA = "SHA256withRSA";
@@ -150,7 +160,7 @@ public class Rsa {
      * {@link RestoreKey#restorePublicKey(String)} and encryption is then
      * performed using RSA-OAEP with SHA-256.</p>
      *
-     * @param publicKeyStr the Base64- or PEM-encoded an RSA public key
+     * @param publicKeyStr the Base64- or PEM-encoded RSA public key
      * @return the encrypted binary data
      * @throws IllegalArgumentException if the public key encoding is invalid,
      *                                  the input is too large for the RSA key,
@@ -169,7 +179,7 @@ public class Rsa {
      * <p>Base64 is only a textual representation of the binary RSA ciphertext;
      * it does not provide additional encryption.</p>
      *
-     * @param publicKeyStr the Base64- or PEM-encoded an RSA public key
+     * @param publicKeyStr the Base64- or PEM-encoded RSA public key
      * @return the Base64-encoded RSA ciphertext
      * @throws IllegalArgumentException if the public key or plaintext is invalid
      */
@@ -177,36 +187,112 @@ public class Rsa {
         return new Base64Utils(encryptWithPublicKey(publicKeyStr)).encodeAsString();
     }
 
+    /**
+     * Encrypts the configured data with the supplied RSA public key.
+     *
+     * <p>Uses OAEP with SHA-256 for both the message digest and MGF1 digest.
+     * The plaintext must fit within the maximum OAEP input size for the key.</p>
+     *
+     * @param publicKey the RSA public key used for encryption
+     * @return the binary RSA ciphertext
+     * @throws IllegalArgumentException if the key, plaintext, or encryption
+     *                                  parameters are invalid
+     */
     public byte[] encryptWithPublicKey(PublicKey publicKey) {
-        return new DoCipher(RSA_CIPHER, Cipher.ENCRYPT_MODE, publicKey).doCipher(data, OAEP_SPEC, null);
+        return new DoCipher(RSA_CIPHER, Cipher.ENCRYPT_MODE, publicKey).doCipher(data, OAEP_SPEC, null).getResult();
     }
 
+    /**
+     * Encrypts the configured data with the supplied RSA public key and
+     * returns the ciphertext as Base64 text.
+     *
+     * @param publicKey the RSA public key used for encryption
+     * @return the Base64-encoded RSA ciphertext
+     * @throws IllegalArgumentException if the key, plaintext, or encryption
+     *                                  parameters are invalid
+     */
     public String encryptWithPublicKeyToBase64(PublicKey publicKey) {
         return new Base64Utils(encryptWithPublicKey(publicKey)).encodeAsString();
     }
 
+    /**
+     * Decrypts the configured ciphertext using a Base64- or PEM-encoded RSA
+     * private key.
+     *
+     * @param privateKeyStr the Base64- or PEM-encoded RSA private key
+     * @return the decrypted binary plaintext
+     * @throws IllegalArgumentException if the private key or ciphertext is
+     *                                  invalid, or if it was not encrypted
+     *                                  with the matching OAEP parameters
+     */
     public byte[] decryptWithPrivateKey(String privateKeyStr) {
         return decryptWithPrivateKey(RestoreKey.restorePrivateKey(privateKeyStr));
     }
 
+    /**
+     * Decrypts the configured ciphertext using an RSA private key.
+     *
+     * <p>The ciphertext must have been encrypted with the matching public key
+     * using OAEP with SHA-256 for both digests.</p>
+     *
+     * @param privateKey the RSA private key used for decryption
+     * @return the decrypted binary plaintext
+     * @throws IllegalArgumentException if the key or ciphertext is invalid, or
+     *                                  if the OAEP parameters do not match
+     */
     public byte[] decryptWithPrivateKey(PrivateKey privateKey) {
-        return new DoCipher(RSA_CIPHER, Cipher.DECRYPT_MODE, privateKey).doCipher(data, OAEP_SPEC, null);
+        return new DoCipher(RSA_CIPHER, Cipher.DECRYPT_MODE, privateKey).doCipher(data, OAEP_SPEC, null).getResult();
     }
 
+    /**
+     * Decrypts the configured RSA ciphertext and interprets the resulting
+     * plaintext as UTF-8 text.
+     *
+     * <p>This convenience method should only be used when the original
+     * plaintext is known to be UTF-8 text. Use
+     * {@link #decryptWithPrivateKey(String)} when the decrypted content is
+     * arbitrary binary data.</p>
+     *
+     * @param privateKeyStr the Base64- or PEM-encoded RSA private key
+     * @return the decrypted UTF-8 text
+     * @throws IllegalArgumentException if the private key or ciphertext is invalid
+     */
     public String decryptToString(String privateKeyStr) {
         return decryptToString(RestoreKey.restorePrivateKey(privateKeyStr));
     }
 
+    /**
+     * Decrypts the configured RSA ciphertext and interprets the result as
+     * UTF-8 text.
+     *
+     * <p>This method is appropriate only when the encrypted plaintext was
+     * originally UTF-8 text. Binary plaintext should be retrieved using
+     * {@link #decryptWithPrivateKey(PrivateKey)} instead.</p>
+     *
+     * @param privateKey the RSA private key
+     * @return the decrypted UTF-8 text
+     * @throws IllegalArgumentException if the private key or ciphertext is invalid
+     */
     public String decryptToString(PrivateKey privateKey) {
         return new String(decryptWithPrivateKey(privateKey), StandardCharsets.UTF_8);
     }
 
     /**
-     * Get a pair of keys: public key and private key
+     * Generates an RSA public/private key pair.
      *
-     * @return Key pair object
-     * @throws IllegalArgumentException if the key size is not 2048, 3072, or 4096 bits
-     * @throws IllegalStateException    if the requested key-pair algorithm is unavailable
+     * <p>Supported key sizes are {@code 2048}, {@code 3072}, and
+     * {@code 4096} bits. The resulting {@link KeyPair} contains both the
+     * public key and its corresponding private key.</p>
+     *
+     * <p>The JCA provider supplies the secure random source used by
+     * {@link KeyPairGenerator} during key generation.</p>
+     *
+     * @param keySize the RSA modulus size in bits; must be {@code 2048},
+     *                {@code 3072}, or {@code 4096}
+     * @return the generated RSA key pair
+     * @throws IllegalArgumentException if {@code keySize} is unsupported
+     * @throws IllegalStateException    if the RSA key-pair generator is not
+     *                                  available in the current runtime
      */
     public static KeyPair generateKeyPair(int keySize) {
         if (keySize != 2048 && keySize != 3072 && keySize != 4096)
@@ -226,33 +312,56 @@ public class Rsa {
     /* <a href="https://pay.weixin.qq.com/doc/global/v3/zh/4012354992">...</a> */
 
     /**
-     * Optimal Asymmetric Encryption Padding
+     * RSA OAEP transformation required by certain external protocols.
+     *
+     * <p>This transformation uses SHA-1 for OAEP and MGF1 according to the
+     * provider/protocol requirements. It is retained separately from
+     * {@link #RSA_CIPHER}, which uses SHA-256 and is preferred for the primary
+     * RSA encryption API in this class.</p>
+     *
+     * <p>Do not replace this transformation with the SHA-256 variant when an
+     * external protocol explicitly requires OAEP with SHA-1, because the two
+     * ciphertext formats are not interoperable.</p>
      */
     static final String RSAES_OAEP = "RSA/ECB/OAEPWithSHA-1AndMGF1Padding";
 
     /**
-     * 敏感信息加密
+     * Encrypts sensitive UTF-8 text with the public key in an X.509
+     * certificate and returns Base64 ciphertext.
      *
-     * @param message     数据
-     * @param certificate 证书
-     * @return 加密后的文本
+     * <p>This compatibility method uses RSA-OAEP with SHA-1, as required by
+     * protocols such as WeChat Pay sensitive-information encryption. It is
+     * not interchangeable with this class's primary SHA-256 OAEP methods.</p>
+     *
+     * @param message     the plaintext to encrypt
+     * @param certificate the certificate containing the recipient's RSA public key
+     * @return the Base64-encoded ciphertext
+     * @throws IllegalArgumentException if an argument is invalid or the
+     *                                  plaintext is too large for the key
      */
     public static String encryptOAEP(String message, X509Certificate certificate) {
         DoCipher cryptography = new DoCipher(RSAES_OAEP, Cipher.ENCRYPT_MODE, certificate.getPublicKey());
 
-        return cryptography.doCipher(message, DoCipher.OutputType.BASE64, null, null);
+        return cryptography.doCipher(message, null, null).toBase64();
     }
 
     /**
-     * 解密
+     * Decrypts Base64 ciphertext created by {@link #encryptOAEP(String, X509Certificate)}.
      *
-     * @param cipherText 密文
-     * @param privateKey 商户私钥
-     * @return 解密后的文本
+     * <p>This method uses RSA-OAEP with SHA-1 and decodes the recovered bytes
+     * as UTF-8 text. The supplied private key must correspond to the public
+     * key in the encryption certificate.</p>
+     *
+     * @param cipherText the Base64-encoded ciphertext
+     * @param privateKey the recipient's RSA private key
+     * @return the decrypted UTF-8 plaintext
+     * @throws IllegalArgumentException if an argument is invalid, the
+     *                                  ciphertext cannot be decrypted, or it
+     *                                  does not use the expected OAEP scheme
      */
     public static String decryptOAEP(String cipherText, PrivateKey privateKey) {
         DoCipher cryptography = new DoCipher(RSAES_OAEP, Cipher.DECRYPT_MODE, privateKey);
 
-        return cryptography.doCipherFromBase64(cipherText, DoCipher.OutputType.UTF8_STR, null, null);
+        return cryptography.doCipherFromBase64(cipherText, null, null).toUtf8();
     }
 }

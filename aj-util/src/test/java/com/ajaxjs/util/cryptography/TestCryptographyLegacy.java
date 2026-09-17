@@ -59,7 +59,7 @@ class TestCryptographyLegacy {
 
         DoCipher cipher = new DoCipher(PBE_LEGACY, Cipher.DECRYPT_MODE, secretKey);
 
-        return cipher.doCipher(data, DoCipher.OutputType.UTF8_STR, new PBEParameterSpec(salt, iterationCount), null);
+        return cipher.doCipher(data, new PBEParameterSpec(salt, iterationCount), null).toUtf8();
     }
 
     /**
@@ -77,7 +77,7 @@ class TestCryptographyLegacy {
         SecretKey secretKey = SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(key));
         DoCipher cipher = new DoCipher(DES, Cipher.ENCRYPT_MODE, secretKey);
 
-        return cipher.doCipher(data, DoCipher.OutputType.HEX, null, null);
+        return cipher.doCipher(data, null, null).toHex();
     }
 
     /**
@@ -95,7 +95,7 @@ class TestCryptographyLegacy {
         SecretKey secretKey = SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(key));
         DoCipher cipher = new DoCipher(DES, Cipher.DECRYPT_MODE, secretKey);
 
-        return cipher.doCipher(StringBytes.hexToBytes(data), DoCipher.OutputType.UTF8_STR, null, null);
+        return cipher.doCipher(StringBytes.hexToBytes(data), null, null).toUtf8();
     }
 
     /**
@@ -111,7 +111,7 @@ class TestCryptographyLegacy {
     public static byte[] tripleDES_encode(String data, byte[] key) {
         DoCipher cipher = new DoCipher(TRIPLE_DES, Cipher.ENCRYPT_MODE, new SecretKeySpec(key, TRIPLE_DES));
 
-        return cipher.doCipher(data, null, null);
+        return cipher.doCipher(data, null, null).getResult();
     }
 
     /**
@@ -138,7 +138,7 @@ class TestCryptographyLegacy {
     public static String tripleDES_decode(byte[] data, byte[] key) {
         DoCipher cipher = new DoCipher(TRIPLE_DES, Cipher.DECRYPT_MODE, new SecretKeySpec(key, TRIPLE_DES));
 
-        return cipher.doCipher(data, DoCipher.OutputType.UTF8_STR, null, null);
+        return cipher.doCipher(data, null, null).toUtf8();
     }
 
     final String key = "abc";

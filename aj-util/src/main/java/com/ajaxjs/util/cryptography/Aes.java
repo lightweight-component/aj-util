@@ -67,7 +67,7 @@ public class Aes {
         SecretKey _key = SecretKeyMgr.getSecretKey(SecretKeyMgr.getRandom(key));
         DoCipher cryptography = new DoCipher("AES", Cipher.ENCRYPT_MODE, _key);
 
-        return cryptography.doCipher(data, DoCipher.OutputType.HEX, null, null);
+        return cryptography.doCipher(data, null, null).toHex();
     }
 
     /**
@@ -83,7 +83,7 @@ public class Aes {
         SecretKey _key = SecretKeyMgr.getSecretKey(SecretKeyMgr.getRandom(key));
         DoCipher cryptography = new DoCipher("AES", Cipher.DECRYPT_MODE, _key);
 
-        return cryptography.doCipher(StringBytes.hexToBytes(data), DoCipher.OutputType.UTF8_STR, null, null);
+        return cryptography.doCipher(StringBytes.hexToBytes(data), null, null).toUtf8();
     }
 
     /**
@@ -102,7 +102,7 @@ public class Aes {
 //        byte[] nonce = randomBytes(GCM_NONCE_LENGTH);
         GCMParameterSpec spec = new GCMParameterSpec(128, nonce);
 
-        return cryptography.doCipher(data, DoCipher.OutputType.BASE64, spec, associatedData);
+        return cryptography.doCipher(data, spec, associatedData).toBase64();
     }
 
     public static String aesEncrypt(String data, byte[] keyBytes, byte[] nonce) {
@@ -126,14 +126,13 @@ public class Aes {
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, SecretKeyMgr.AES);
         DoCipher cryptography = new DoCipher(AES_GCM, Cipher.DECRYPT_MODE, keySpec);
 
-        return cryptography.doCipher(new Base64Utils(data).decode(), DoCipher.OutputType.UTF8_STR, new GCMParameterSpec(128, nonce), associatedData);
+        return cryptography.doCipherFromBase64(data, new GCMParameterSpec(128, nonce), associatedData).toUtf8();
     }
 
     /**
      * AES transformation used by WeChat mini programs: CBC mode with PKCS5 padding.
      */
     final static String AES_CBC = "AES/CBC/PKCS5Padding";
-
 
     /**
      * AES transformation used by WeChat mini programs: GCM mode with no padding.
@@ -145,7 +144,7 @@ public class Aes {
         DoCipher cryptography = new DoCipher(AES_CBC, Cipher.DECRYPT_MODE, keySpec);
         IvParameterSpec _spec = new IvParameterSpec(new Base64Utils(spec).decode());
 
-        return cryptography.doCipher(new Base64Utils(data).decode(), DoCipher.OutputType.UTF8_STR, _spec, null);
+        return cryptography.doCipherFromBase64(data, _spec, null).toUtf8();
     }
 
     /**
@@ -164,9 +163,9 @@ public class Aes {
         DoCipher cryptography = new DoCipher(AES_GCM, Cipher.ENCRYPT_MODE, derivePbeKey(key, salt, iterationCount));
 
         byte[] nonce = randomBytes(GCM_NONCE_LENGTH);
-        byte[] encrypted = cryptography.doCipher(data, new GCMParameterSpec(GCM_TAG_LENGTH, nonce), null);
-        byte[] result = Arrays.copyOf(nonce, nonce.length + encrypted.length);
-        System.arraycopy(encrypted, 0, result, nonce.length, encrypted.length);
+        Result encrypted = cryptography.doCipher(data, new GCMParameterSpec(GCM_TAG_LENGTH, nonce), null);
+        byte[] result = Arrays.copyOf(nonce, nonce.length + encrypted.getResult().length);
+        System.arraycopy(encrypted.getResult(), 0, result, nonce.length, encrypted.getResult().length);
 
         return result;
     }
@@ -188,11 +187,10 @@ public class Aes {
         if (data == null || data.length < GCM_NONCE_LENGTH + GCM_TAG_LENGTH / Byte.SIZE)
             throw new IllegalArgumentException("PBE ciphertext is missing or too short.");
 
-        DoCipher cryptography = new DoCipher(AES_GCM, Cipher.DECRYPT_MODE, derivePbeKey(key, salt, iterationCount));
+        DoCipher cipher = new DoCipher(AES_GCM, Cipher.DECRYPT_MODE, derivePbeKey(key, salt, iterationCount));
 
-        return cryptography.doCipher(Arrays.copyOfRange(data, GCM_NONCE_LENGTH, data.length),
-                DoCipher.OutputType.UTF8_STR,
-                new GCMParameterSpec(GCM_TAG_LENGTH, Arrays.copyOf(data, GCM_NONCE_LENGTH)), null);
+        return cipher.doCipher(Arrays.copyOfRange(data, GCM_NONCE_LENGTH, data.length),
+                new GCMParameterSpec(GCM_TAG_LENGTH, Arrays.copyOf(data, GCM_NONCE_LENGTH)), null).toUtf8();
     }
 
     /**

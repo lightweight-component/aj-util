@@ -39,7 +39,7 @@ public class DoCipher {
      * @throws IllegalArgumentException if the key, parameters, input length, padding, or authentication tag is invalid
      * @throws RuntimeException         if the configured transformation is unavailable
      */
-    public byte[] doCipher(byte[] data, AlgorithmParameterSpec spec, byte[] associatedData) {
+    public Result doCipher(byte[] data, AlgorithmParameterSpec spec, byte[] associatedData) {
         if (ObjectHelper.isEmptyText(algorithmName))
             throw new IllegalStateException("Cipher algorithm is required.");
 
@@ -63,7 +63,7 @@ public class DoCipher {
             if (associatedData != null)
                 cipher.updateAAD(associatedData);
 
-            return cipher.doFinal(data);
+            return new Result(cipher.doFinal(data));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new IllegalArgumentException(Constant.NO_SUCH_ALGORITHM + algorithmName, e);
         } catch (AEADBadTagException e) {
@@ -79,51 +79,15 @@ public class DoCipher {
         }
     }
 
-    public byte[] doCipher(String dataStr, AlgorithmParameterSpec spec, byte[] associatedData) {
+    public Result doCipher(String dataStr, AlgorithmParameterSpec spec, byte[] associatedData) {
         Objects.requireNonNull(dataStr, "doCipher.dataStr");
 
         return doCipher(new StringBytes(dataStr).getUTF8_Bytes(), spec, associatedData);
     }
 
-    public byte[] doCipherFromBase64(String base64Str, AlgorithmParameterSpec spec, byte[] associatedData) {
+    public Result doCipherFromBase64(String base64Str, AlgorithmParameterSpec spec, byte[] associatedData) {
         Objects.requireNonNull(base64Str, "doCipher.base64Str");
 
         return doCipher(new Base64Utils(base64Str).decode(), spec, associatedData);
-    }
-
-    public enum OutputType {
-        UTF8_STR,
-
-        BASE64,
-
-        HEX
-    }
-
-    public String doCipher(byte[] data, OutputType outputType, AlgorithmParameterSpec spec, byte[] associatedData) {
-        Objects.requireNonNull(outputType, "doCipher.outputType");
-
-        if (outputType == OutputType.UTF8_STR && mode == Cipher.ENCRYPT_MODE)
-            throw new IllegalArgumentException("UTF8_STR output is not suitable for encrypted binary data.");
-
-        byte[] result = doCipher(data, spec, associatedData);
-
-        switch (outputType) {
-            case UTF8_STR:
-                return new StringBytes(result).getUTF8_String();
-            case BASE64:
-                return new Base64Utils(result).encodeAsString();
-            case HEX:
-                return StringBytes.bytesToHex(result);
-        }
-
-        throw new UnsupportedOperationException("Unsupported output type: " + outputType);
-    }
-
-    public String doCipher(String dataStr, OutputType outputType, AlgorithmParameterSpec spec, byte[] associatedData) {
-        return doCipher(new StringBytes(dataStr).getUTF8_Bytes(), outputType, spec, associatedData);
-    }
-
-    public String doCipherFromBase64(String base64Str, OutputType outputType, AlgorithmParameterSpec spec, byte[] associatedData) {
-        return doCipher(new Base64Utils(base64Str).decode(), outputType, spec, associatedData);
     }
 }
