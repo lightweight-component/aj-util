@@ -10,6 +10,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TestStrUtil {
     /**
+     * 简单模板替换方法。根据 Map 中的数据进行替换。
+     * 与 simpleTpl 方法的区别在于这里将 null 值替换为字符串 "null"。
+     *
+     * @param template 待替换的字符串模板
+     * @param data     存放替换数据的 Map
+     * @return 替换后的字符串
+     */
+    public static String simpleTpl2(String template, Map<String, Object> data) {
+        String result = template;
+
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value == null)
+                value = "null";
+
+            String placeholder = "#{" + key + "}";
+            result = result.replace(placeholder, value.toString());
+        }
+
+        return result;
+    }
+
+    /**
      * 统计文本中某个字符串出现的次数
      * <p>
      * 支持重叠匹配，例如 {@code charCount("aaa", "aa")} 返回 2。

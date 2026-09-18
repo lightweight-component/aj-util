@@ -1,0 +1,290 @@
+/* Theme surface for the documentation layouts. Theme state is maintained by AJUtils. */
+.theme-toggle {
+    margin-left: 4px;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 2px 7px;
+    border: 1px solid #c5cbd3;
+    border-radius: 5px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    border-color: #10af88;
+    outline: none;
+}
+
+#project-select {
+    display: block;
+    width: 100%;
+    margin: 8px 0 20px;
+    padding: 6px;
+    border: 1px solid #d0d7de;
+    border-radius: 5px;
+    background: #f6f8fa;
+    color: #24292f;
+    font: inherit;
+}
+
+html[data-theme="dark"] body {
+    background: #111827;
+    color: #c9d1d9;
+}
+
+html[data-theme="dark"] nav,
+html[data-theme="dark"] footer {
+    background: #111827;
+    border-color: #30363d;
+}
+
+html[data-theme="dark"] nav {
+    box-shadow: rgba(255, 255, 255, .12) 0 1px 2px;
+}
+
+html[data-theme="dark"] .aj-text,
+html[data-theme="dark"] article h1,
+html[data-theme="dark"] menu h3 {
+    color: #e6edf3;
+}
+
+html[data-theme="dark"] a,
+html[data-theme="dark"] a:visited {
+    color: #79c0ff;
+}
+
+html[data-theme="dark"] a:hover {
+    color: #a5d6ff;
+}
+
+html[data-theme="dark"] menu ul,
+html[data-theme="dark"] footer,
+html[data-theme="dark"] article h1,
+html[data-theme="dark"] article h2,
+html[data-theme="dark"] article td,
+html[data-theme="dark"] article th,
+html[data-theme="dark"] article table {
+    border-color: #30363d;
+}
+
+html[data-theme="dark"] article code:not(.hljs),
+html[data-theme="dark"] article .c {
+    background: #21262d;
+    color: #c9d1d9;
+}
+
+html[data-theme="dark"] article pre,
+html[data-theme="dark"] article pre .hljs {
+    background: #0d1117;
+    color: #c9d1d9;
+    border-color: #30363d;
+}
+
+html[data-theme="dark"] article blockquote {
+    background: #161b22;
+    border-color: #30363d;
+    color: #c9d1d9;
+}
+
+html[data-theme="dark"] .theme-toggle {
+    border-color: #484f58;
+    color: #e6edf3;
+}
+
+html[data-theme="dark"] #project-select {
+    border-color: #484f58;
+    background: #21262d;
+    color: #e6edf3;
+}
+
+html[data-theme="dark"] #project-select option {
+    background: #21262d;
+    color: #e6edf3;
+}
+
+/* Mobile and tablet layout: keep the desktop sidebar, but turn it into a compact scrollable section. */
+@media (max-width: 820px) {
+    nav {
+        height: auto;
+        min-height: 0;
+    }
+
+    nav > div {
+        padding: 12px 16px;
+    }
+
+    nav h1,
+    nav h3 {
+        margin: 6px 0;
+    }
+
+    nav h1 {
+        font-size: 1.35rem;
+    }
+
+    nav h3 {
+        padding-left: 10px;
+        font-size: .9rem;
+    }
+
+    .links {
+        float: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 7px;
+        line-height: 1.5;
+        font-size: .9rem;
+    }
+
+    .docs-layout {
+        display: block;
+        padding: 0 16px;
+    }
+
+    .docs-navigation {
+        float: none;
+        box-sizing: border-box;
+        width: 100%;
+        max-height: 42vh;
+        margin: 16px 0 20px;
+        padding: 12px;
+        overflow: auto;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        background: #f6f8fa;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .docs-navigation h3:first-of-type {
+        margin-top: 0;
+    }
+
+    .docs-navigation ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px 12px;
+        margin: 0 0 12px;
+        padding: 0 0 10px 10px;
+    }
+
+    .docs-navigation ul li {
+        margin: 0;
+    }
+
+    article,
+    .aj-text {
+        float: none;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0 0 40px;
+        font-size: 15px;
+        text-align: left;
+    }
+
+    article h1 {
+        margin-top: 0;
+        font-size: 1.55rem;
+    }
+
+    article h2 {
+        font-size: 1.25rem;
+    }
+
+    article h3 {
+        margin-left: 0;
+        font-size: 1.08rem;
+    }
+
+    article pre {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 14px;
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+    article table {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: normal;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    article td,
+    article th {
+        min-width: 120px;
+    }
+
+    article img,
+    article p img {
+        box-sizing: border-box;
+        max-width: 100%;
+        height: auto;
+    }
+
+    footer {
+        box-sizing: border-box;
+        height: auto;
+        margin-top: 24px;
+        padding: 24px 16px 32px;
+        line-height: 1.6;
+    }
+
+    html[data-theme="dark"] .docs-navigation {
+        border-color: #30363d;
+        background: #161b22;
+    }
+}
+
+@media (max-width: 480px) {
+    nav > div,
+    .docs-layout {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    nav h1 img {
+        height: 34px !important;
+    }
+
+    nav h1 {
+        font-size: 1.2rem;
+    }
+
+    nav h3 {
+        display: block;
+        padding-left: 0;
+    }
+
+    .links {
+        font-size: .82rem;
+    }
+
+    .docs-navigation {
+        max-height: 38vh;
+        padding: 10px;
+    }
+
+    article,
+    .aj-text {
+        font-size: 14px;
+    }
+
+    article h1 {
+        font-size: 1.35rem;
+    }
+
+    article pre {
+        padding: 12px;
+        font-size: 12px;
+    }
+}

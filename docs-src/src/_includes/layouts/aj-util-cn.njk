@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/{{ project }}/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,8 +50,8 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 {% include "project-select.njk" %}
                 <ul>
                     <li class="selected">
@@ -63,7 +69,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -102,6 +108,7 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 {% endif %}

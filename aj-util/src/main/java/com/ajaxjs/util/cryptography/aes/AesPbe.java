@@ -150,7 +150,7 @@ public class AesPbe extends DoCipher {
         byte[] nonce = randomBytes(AesGcm.GCM_NONCE_LENGTH);
         CipherResult encrypted = doCipher(Cipher.ENCRYPT_MODE, data, new GCMParameterSpec(AesGcm.GCM_TAG_LENGTH, nonce), null);
 
-       return ObjectHelper.concat(nonce, encrypted.getResult());
+        return ObjectHelper.concat(nonce, encrypted.getResult());
     }
 
     /**

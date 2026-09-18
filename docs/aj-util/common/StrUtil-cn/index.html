@@ -5,8 +5,8 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>aj-util - StrUtil</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  字符串模板、填充、连接和操作的实用方法" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 字符串,工具,操作" />
+        <meta name="description" content="Small Java utilities with many useful functions.  字符串模板与数组、列表拼接。" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 字符串,模板" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,12 +50,10 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <label for="project-select">选择工程</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/cn/" selected>aj-util</option>
     
@@ -87,7 +91,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -126,61 +130,67 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 
                 
             </menu>
             <article class="aj-text chinese">
-                <h1>StrUtil 教程</h1>
-<p>本教程提供了 <code>StrUtil</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>StrUtil</code> 类为 Java
-应用程序中的字符串操作提供了实用工具方法。</p>
-<h2>简介</h2>
-<p><code>StrUtil</code> 提供字符串计数、填充、模板替换、拼接和成员判断等静态方法。</p>
-<h2>主要特性</h2>
-<ul>
-<li>带占位符的字符串模板</li>
-<li>字符串填充和格式化</li>
-<li>使用自定义分隔符连接列表/数组</li>
-</ul>
-<h2>方法</h2>
-<h3>1. 拼接</h3>
-<ol>
-<li><code>join(T[] arr, String str)</code> - 使用分隔符连接数组</li>
-<li><code>join(List&lt;String&gt; list, String str)</code> - 使用分隔符连接字符串列表</li>
-<li><code>join(List&lt;String&gt; list, String tpl, String str)</code> - 格式化并连接字符串列表</li>
-</ol>
-<p>数组和列表重载都将 <code>null</code> 元素输出为空字符串。</p>
-<h3>3. 模板</h3>
-<ol>
-<li><code>simpleTpl(String template, Map&lt;String, Object&gt; params)</code> - <code>${var}</code> 替换</li>
-<li><code>simpleTpl2(String template, Map&lt;String, Object&gt; data)</code> - <code>#{var}</code> 替换</li>
-<li><code>simpleTpl(String template, Object data)</code> - JavaBean 属性替换</li>
-</ol>
-<p>替换值按字面量处理，值中包含 <code>$</code> 或 <code>\</code> 也不会被解释为分组引用。JavaBean 模板会跳过只写属性；
-getter 执行失败时，抛出的 <code>RuntimeException</code> 会指出属性名并保留 getter 异常作为 cause。</p>
-<h3>4. 实用工具</h3>
-<ol>
-<li><code>charCount(String str, String _char)</code> - 统计出现次数，支持重叠匹配</li>
-<li><code>leftPad(String str, int len, String padding)</code> - 精确填充到 <code>len</code>，不会改动原字符串已有空白</li>
-<li><code>isWordOneOfThem(String word, String[] arr)</code> - 检查字符串是否在数组中</li>
-</ol>
-<h2>使用示例</h2>
-<h3>模板</h3>
+                <h1>StrUtil</h1>
+<p><code>StrUtil</code> 当前提供简单模板替换以及数组、列表拼接；不再提供填充、字符计数或成员判断方法。</p>
+<h2>模板</h2>
+<p>Map 重载替换 <code>${name}</code> 占位符，Map 中缺失或为 null 的值替换为空字符串。</p>
 <pre><code class="language-java">Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();
-values.put(&quot;name&quot;, &quot;John&quot;);
-String tpl = StrUtil.simpleTpl(&quot;Name: ${name}&quot;, values);
-// &quot;Name: John&quot;
+values.put(&quot;name&quot;, &quot;Ada&quot;);
+String message = StrUtil.simpleTpl(&quot;Hello, ${name}! ${missing}&quot;, values);
+// Hello, Ada!
 </code></pre>
-<h3>计数与填充</h3>
-<pre><code class="language-java">int count = StrUtil.charCount(&quot;aaa&quot;, &quot;aa&quot;); // 2，重叠匹配也会计数
-String padded = StrUtil.leftPad(&quot;a b&quot;, 6, &quot;$&quot;); // &quot;$$$a b&quot;
+<p>JavaBean 重载替换可读属性对应的 <code>#{property}</code> 占位符。Bean 属性为 null 时替换为文本 <code>null</code>，只写属性会跳过。替换值按字面量处理，<code>$</code> 和反斜杠可安全使用。getter 执行失败时，抛出的 <code>RuntimeException</code> 会标明属性名并保留原始异常作为 cause。</p>
+<pre><code class="language-java">String message = StrUtil.simpleTpl(&quot;Hello, #{name}!&quot;, user);
 </code></pre>
-<h3>连接</h3>
-<pre><code class="language-java">String joined = StrUtil.join(Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;,&quot;); // &quot;a,b,c&quot;
+<h2>拼接数组和列表</h2>
+<pre><code class="language-java">String array = StrUtil.join(new String[]{&quot;a&quot;, null, &quot;c&quot;}, &quot;&amp;&quot;);
+String list = StrUtil.join(Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;[%s]&quot;, &quot;, &quot;);
+// a&amp;&amp;c
+// [a], [b], [c]
 </code></pre>
-<h2>结论</h2>
-<p><code>StrUtil</code> 类提供了全面的实用方法，用于字符串操作，使 Java 应用程序中的常见字符串操作更加方便。</p>
+<p>可用重载包括泛型数组、带格式模板的字符串数组，以及带可选模板的字符串列表。null 元素会输出为空字符串。</p>
+<h2>占位符和格式规则</h2>
+<p>两类模板重载刻意使用不同的占位符语法：</p>
+<table>
+<thead>
+<tr>
+<th>重载</th>
+<th>占位符</th>
+<th>缺失/null 值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>simpleTpl(String, Map)</code></td>
+<td><code>${word}</code></td>
+<td>空字符串</td>
+</tr>
+<tr>
+<td><code>simpleTpl(String, Object)</code></td>
+<td><code>#{property}</code></td>
+<td>可读属性为 null 时输出文本 <code>null</code></td>
+</tr>
+</tbody>
+</table>
+<p>Map 占位符仅匹配单词字符（<code>${name_1}</code> 有效，<code>${user.name}</code> 不属于该 API 的占位符）。无法识别的文本保持不变。Bean 重载检查 JavaBean getter 属性（包含继承属性），不直接读取字段。</p>
+<pre><code class="language-java">Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();
+values.put(&quot;path&quot;, &quot;$1\\temp&quot;);
+String result = StrUtil.simpleTpl(&quot;path=${path}&quot;, values);
+// path=$1\temp
+</code></pre>
+<p>之所以能够安全处理 <code>$1</code>，是因为替换内容在调用 <code>Matcher.appendReplacement</code> 前会被引用；<code>$1</code> 只是数据，不是正则反向引用。列表拼接的模板会传入 <code>String.format</code>，因此应包含如 <code>%s</code> 的合适转换符。</p>
+<h2>选择合适的工具</h2>
+<p><code>StrUtil</code> 专注于小型格式化操作。正则替换使用 <code>RegExpHelper</code>；URL/表单编码使用 <code>UrlCodec</code>；字节、字符集和十六进制转换使用 <code>StringBytes</code>。</p>
+<h2>实现原理与取舍</h2>
+<p>Map 模板重载使用一个预编译 <code>Pattern</code> 扫描 <code>${word}</code>，再通过 <code>Matcher.appendReplacement</code> / <code>appendTail</code> 构造结果。对替换文本进行引用后，正则引擎不会把值中的 <code>$</code> 或反斜杠解释为特殊语法。Bean 重载则使用 JavaBeans 内省，并针对每个可读属性调用普通 <code>String.replace</code>；这也解释了它为何使用 <code>#{property}</code> 语法，以及为什么 null 行为不同。</p>
+<p>拼接方法使用 <code>StringBuilder</code>，仅在元素之间附加分隔符，从而避免尾部分隔符。它们刻意不转义值、也不进行依赖 Locale 的格式化；需要时应在拼接前完成这些转换。</p>
 
             </article>
         </div>

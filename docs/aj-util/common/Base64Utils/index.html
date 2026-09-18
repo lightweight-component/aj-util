@@ -10,8 +10,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,7 +131,8 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
@@ -148,7 +153,36 @@ String encoded = new Base64Utils(&quot;你好&quot;, StandardCharsets.UTF_16)
 String decoded = new Base64Utils(encoded).setUrlSafe(true)
         .decodeAsString(StandardCharsets.UTF_16);
 </code></pre>
-<p><code>formatPemBase64(String)</code> inserts a newline every 64 characters, with no trailing newline or PEM boundaries. Decode Base64 text using the default string constructor, even when the plaintext used UTF-16.</p>
+<h2>Standard, URL-safe, and padding modes</h2>
+<p>Standard Base64 uses <code>+</code> and <code>/</code>. URL-safe Base64 substitutes <code>-</code> and <code>_</code>, avoiding characters that would otherwise
+need escaping in a URL value. Padding (<code>=</code>) completes groups of four output characters. It is optional in formats such
+as JWT, but the receiving protocol decides whether omitted padding is accepted.</p>
+<pre><code class="language-java">byte[] tokenBytes = new byte[]{(byte) 0xfb, (byte) 0xff};
+
+String standard = new Base64Utils(tokenBytes).encodeAsString(); // +/8=
+String urlToken = new Base64Utils(tokenBytes)
+        .setUrlSafe(true).setWithoutPadding(true).encodeAsString(); // -_8
+
+byte[] original = new Base64Utils(urlToken).setUrlSafe(true).decode();
+</code></pre>
+<p>The selected <code>urlSafe</code> mode must match the encoded alphabet for decoding. <code>withoutPadding</code> is an encoder setting;
+decoding accepts the representation supported by the JDK decoder, but it does not select the alphabet for you.</p>
+<h2>Binary data versus text</h2>
+<p>Base64 carries bytes. The <code>String</code> constructors and <code>decodeAsString(...)</code> are convenience boundaries that turn text
+into bytes or bytes back into text. Use a <code>byte[]</code> constructor for a file, digest, key, or other binary material.</p>
+<pre><code class="language-java">byte[] digest = MessageDigest.getInstance(&quot;SHA-256&quot;)
+        .digest(&quot;payload&quot;.getBytes(StandardCharsets.UTF_8));
+String wireValue = new Base64Utils(digest).encodeAsString();
+
+byte[] restoredDigest = new Base64Utils(wireValue).decode();
+</code></pre>
+<p>A <code>byte[]</code> supplied to the constructor is retained by reference. Do not mutate it between construction and
+<code>encode()</code>/<code>decode()</code> unless that change is intentional. Base64 is not confidentiality protection: anyone who receives
+the encoded text can decode it. It also expands data to roughly four output characters per three input bytes.</p>
+<h2>Implementation notes</h2>
+<p>The implementation delegates to <code>java.util.Base64</code> rather than maintaining a custom codec. That gives it the JDK's
+validation behavior (<code>IllegalArgumentException</code> for malformed input) and keeps standard and URL-safe behavior aligned
+with the runtime. <code>encodeAsString()</code> explicitly uses US-ASCII because Base64 output is ASCII by definition.</p>
 
             </article>
         </div>

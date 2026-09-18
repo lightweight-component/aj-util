@@ -2,21 +2,69 @@ package com.ajaxjs.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Object-oriented helper for a compiled regular expression.
+ *
+ * <p>Creating an instance from a regular-expression string reuses a shared,
+ * thread-safe cache of compiled {@link Pattern Patterns}. Supplying a
+ * {@link Pattern} directly never changes that cache.</p>
+ */
 public class RegExpHelper {
-    private String inputStr;
+    /**
+     * Shared cache for patterns created from regular-expression strings.
+     */
+    private static final ConcurrentMap<String, Pattern> PATTERN_CACHE = new ConcurrentHashMap<>();
 
+    /**
+     * Compiled pattern used by this helper.
+     */
     private final Pattern inputRegexp;
 
-    public RegExpHelper(String inputStr) {
-        this(Pattern.compile(inputStr));
-        this.inputStr = inputStr;
+    /**
+     * Creates a helper from a regular-expression string, reusing its cached
+     * compiled pattern when available.
+     *
+     * @param regexp regular-expression string
+     */
+    public RegExpHelper(String regexp) {
+        this(getPattern(regexp));
     }
 
+    /**
+     * Creates a helper from an already compiled pattern.
+     *
+     * @param inputRegexp compiled pattern
+     */
     public RegExpHelper(Pattern inputRegexp) {
-        this.inputRegexp = inputRegexp;
+        this.inputRegexp = Objects.requireNonNull(inputRegexp, "inputRegexp");
+    }
+
+    /**
+     * Gets a compiled pattern from the shared cache, compiling it only once
+     * for each distinct regular-expression string.
+     *
+     * @param regexp regular-expression string
+     * @return cached compiled pattern
+     */
+    public static Pattern getPattern(String regexp) {
+        Objects.requireNonNull(regexp, "regexp");
+
+        return PATTERN_CACHE.computeIfAbsent(regexp, Pattern::compile);
+    }
+
+    /**
+     * Returns the compiled pattern used by this helper.
+     *
+     * @return this helper's compiled pattern
+     */
+    public Pattern getPattern() {
+        return inputRegexp;
     }
 
     /**
@@ -87,5 +135,30 @@ public class RegExpHelper {
             list.add(m.group());
 
         return list.toArray(new String[0]);
+    }
+
+    /**
+     * Determines if the entire string matches the given regular expression
+     * <p>
+     * Uses matches() which requires the pattern to match the entire input string
+     *
+     * @param regexp the regular expression to compile and use for matching
+     * @param str    the string to test
+     * @return true if the entire string matches the pattern, false otherwise
+     */
+    public static boolean match(String regexp, String str) {
+        return new RegExpHelper(regexp).fullMatch(str);
+    }
+
+    /**
+     * 使用正则的快捷方式。可指定分组
+     *
+     * @param regexp     正则
+     * @param str        测试的字符串
+     * @param groupIndex 分组 id，若为 -1 则取最后一个分组
+     * @return 匹配结果
+     */
+    public static String regMatch(String regexp, String str, int groupIndex) {
+        return new RegExpHelper(regexp).match(str, groupIndex);
     }
 }

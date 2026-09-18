@@ -10,8 +10,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,7 +131,8 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
@@ -145,6 +150,70 @@ InputStream stream = new ResourceHelper(&quot;config.properties&quot;, MyService
 <p><code>getStream()</code> works for resources packaged in JAR files. <code>getPath(boolean)</code> and <code>list(Consumer&lt;File&gt;)</code> require a
 filesystem-backed resource and may not work for <code>jar:</code> URLs. <code>getJarDir()</code> returns the directory containing the running
 JAR when that location is available. Close streams returned by <code>getStream()</code> yourself.</p>
+<h2>Choosing a resource name</h2>
+<p>The two constructors intentionally use different lookup roots. This is often the cause of a resource that exists in
+<code>src/test/resources</code> but cannot be found at runtime.</p>
+<table>
+<thead>
+<tr>
+<th>Construction</th>
+<th>Resource name</th>
+<th>Lookup location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>new ResourceHelper(&quot;a/b.txt&quot;)</code></td>
+<td>no leading slash</td>
+<td>classpath root: <code>a/b.txt</code></td>
+</tr>
+<tr>
+<td><code>new ResourceHelper(&quot;file.txt&quot;, MyService.class)</code></td>
+<td>no leading slash</td>
+<td>package of <code>MyService</code></td>
+</tr>
+<tr>
+<td><code>new ResourceHelper(&quot;/file.txt&quot;, MyService.class)</code></td>
+<td>leading slash</td>
+<td>classpath root: <code>file.txt</code></td>
+</tr>
+</tbody>
+</table>
+<p>For example, a test resource located at
+<code>src/test/resources/com/ajaxjs/util/io/test.txt</code> can be read relative to its test class:</p>
+<pre><code class="language-java">try (InputStream in = new ResourceHelper(&quot;test.txt&quot;, MyIoTest.class).getStream()) {
+    byte[] bytes = new DataReader(in).readAsBytes();
+    String text = new String(bytes, StandardCharsets.UTF_8);
+}
+
+// A leading slash changes the same constructor to a classpath-root lookup.
+String rootText = new ResourceHelper(&quot;/test.txt&quot;, MyIoTest.class).toString();
+</code></pre>
+<p><code>getStream()</code>, <code>toString()</code> and <code>getProperties()</code> throw <code>IllegalArgumentException</code> when the resource is absent. This
+is deliberate: a required packaged configuration should fail at the lookup site instead of producing a later
+<code>NullPointerException</code>.</p>
+<h2>Reading text and properties</h2>
+<p><code>toString()</code> delegates to <code>DataReader</code>, so it decodes with UTF-8, normalizes lines to the current platform separator,
+and closes its stream. <code>getProperties()</code> loads a standard Java <code>Properties</code> file and also closes its stream.</p>
+<pre><code class="language-java">Properties db = new ResourceHelper(&quot;test-demo.properties&quot;).getProperties();
+String username = db.getProperty(&quot;database.username&quot;);
+
+String json = new ResourceHelper(&quot;fixtures/request.json&quot;).toString();
+</code></pre>
+<p>Use <code>getStream()</code> when another API needs the stream, for example an image decoder or certificate parser. In that case
+the caller owns closure; do not pass a stream to an API and then close it before that API has consumed it.</p>
+<h2>Filesystem and packaged-resource boundaries</h2>
+<p>Classpath lookup returns a URL, not necessarily a <code>File</code>. A development build usually exposes <code>file:</code> URLs, while a
+deployed application commonly exposes <code>jar:</code> URLs. <code>getPath(true)</code> converts only the former into a usable filesystem
+path; it is therefore appropriate for tests or an unpacked application, not for a resource that must work from inside
+an executable JAR. <code>list(Consumer&lt;File&gt;)</code> has the same <code>file:</code>-only limitation and enumerates the classpath root.</p>
+<p><code>getJarDir()</code> is a deployment helper for locating files next to the running artifact, not a way to locate a resource
+inside that artifact. <code>getClassName(File, String)</code> turns a <code>.class</code> file name plus a package prefix into a binary class
+name, and rejects non-<code>.class</code> inputs.</p>
+<h2>Implementation notes</h2>
+<p>The class does not copy resources to a temporary directory. It keeps the classpath abstraction intact and exposes a
+stream first; this is why JAR resources work reliably with <code>getStream()</code> but not with file-oriented APIs. Prefer a
+stream unless an external API truly requires a <code>Path</code> or <code>File</code>.</p>
 
             </article>
         </div>

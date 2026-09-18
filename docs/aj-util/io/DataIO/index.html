@@ -10,8 +10,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,7 +131,8 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
@@ -147,6 +152,51 @@ writing to a caller-owned response, file, or in-memory stream. Its default buffe
 <code>setBuffered(boolean)</code>.</p>
 <p><code>readStreamAsBytes(int, BiConsumer&lt;Integer, byte[]&gt;)</code> passes the number of valid bytes together with a reusable buffer;
 consume only the range <code>[0, readSize)</code> before the next callback.</p>
+<h2>Reading text, bytes, and chunks</h2>
+<p>Choose the reading API by the size and shape of the data. <code>readAsBytes()</code> collects the whole stream in memory, which is
+convenient for a small resource but unsuitable for an unbounded upload or a large file. <code>readAsString()</code> reads line by
+line using the configured charset (UTF-8 by default), then appends <code>System.lineSeparator()</code> after every line. Use the
+<code>DataReader(InputStream, Charset)</code> constructor when the source text is not UTF-8.</p>
+<pre><code class="language-java">String csv = new DataReader(input, StandardCharsets.ISO_8859_1).readAsString();
+
+new DataReader(input).readAsLineString(line -&gt; {
+    if (!line.isEmpty())
+        consumeCsvLine(line);
+});
+</code></pre>
+<p>For streaming work, the callback sees the same buffer instance on every iteration. Copy a chunk if it must outlive
+the callback; otherwise process it immediately. The final chunk can be shorter than the requested buffer size.</p>
+<pre><code class="language-java">MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);
+new DataReader(input).readStreamAsBytes(8 * 1024,
+        (size, buffer) -&gt; digest.update(buffer, 0, size));
+
+// For &quot;abcdefghij&quot; and a buffer size of 4, callback sizes are 4, 4, 2.
+</code></pre>
+<p>The buffer size must be positive. I/O failures are wrapped as <code>UncheckedIOException</code>, while close failures are logged.</p>
+<h2>Copying to an output stream</h2>
+<p><code>new DataWriter(out).write(in)</code> copies an input stream in 1 KiB chunks and flushes the output. It uses a buffered
+output wrapper by default; turn it off only when the destination already has suitable buffering or the flushing
+behavior is significant.</p>
+<pre><code class="language-java">try (InputStream in = Files.newInputStream(source);
+     OutputStream out = Files.newOutputStream(target)) {
+    new DataWriter(out).write(in);
+}
+
+ByteArrayOutputStream memory = new ByteArrayOutputStream();
+new DataWriter(memory).write(&quot;hello&quot;.getBytes(StandardCharsets.UTF_8));
+</code></pre>
+<p><code>DataWriter</code> never closes the caller's output stream. Its instance <code>write(InputStream)</code> delegates to <code>DataReader</code>, so
+the input is closed when copying completes; callers should regard that input as consumed. The static
+<code>DataWriter.write(OutputStream, InputStream)</code> is lower level: it only copies bytes and does not flush or close either
+stream.</p>
+<p>For <code>write(byte[], off, length)</code>, <code>(0, 0)</code> is a special shorthand meaning <strong>write the entire array</strong>; it is not a
+zero-byte write. Pass an explicit non-zero length for a slice, such as <code>write(bytes, 7, 5)</code>.</p>
+<h2>Implementation notes</h2>
+<p>Both classes are deliberately small adapters around JDK streams. <code>DataReader</code> adds a buffered character reader only
+for line-oriented text, while byte transfer uses one reusable byte array to avoid allocating a new array for each
+chunk. <code>DataWriter</code> flushes instead of closing so that callers can compose several writes or retain ownership of an
+HTTP response stream. For Java 9+ projects that do not need Java 8 compatibility, <code>InputStream.transferTo</code> is the JDK
+alternative for a simple stream copy.</p>
 
             </article>
         </div>

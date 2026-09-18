@@ -18,12 +18,13 @@ common application tasks.
 | Area | Main APIs | Description |
 | --- | --- | --- |
 | Encoding and hashes | `Base64Utils`, `StringBytes`, `UrlCodec`, `HashHelper` | Base64, hexadecimal, URL values, message digests, and HMACs. |
-| General utilities | `ConvertBasicValue`, `ObjectHelper`, `MapTool`, `RandomTools`, `StrUtil`, `RegExpUtils` | Type conversion, objects, maps, random values, strings, and regular expressions. |
+| General utilities | `ConvertBasicValue`, `ObjectHelper`, `MapTool`, `RandomTools`, `StrUtil`, `RegExpHelper` | Type conversion, objects, maps, random values, strings, and cached regular expressions. |
 | Structured data | `JsonUtil`, `XmlHelper` | JSON conversion through a pluggable engine and secure XML helpers. |
 | Date and time | `DateTools`, `DateTypeConvert`, `Formatter` | Java 8 time formatting, strict parsing, and conversion between legacy and modern types. |
 | I/O | `FileHelper`, `ResourceHelper`, `DataReader`, `DataWriter`, `ZipHelper`, `UnzipHelper` | File, classpath resource, stream, ZIP creation, and protected ZIP extraction operations. |
 | Cryptography | `DoCipher`, `AesGcm`, `AesCbc`, `AesPbe`, `AesLegacy`, `Rsa`, `SecretKeyMgr`, `RestoreKey`, `PemUtils`, `DoSignature`, `DoVerify` | AES, password-based encryption, RSA-OAEP, keys and signatures; see the [cryptography guide](/aj-util/cryptography/intro/). |
 | Reflection | `Clazz`, `Fields`, `Methods`, `NewInstance`, `Types` | Class loading, member lookup, object construction, and generic type inspection. |
+| Logging | `Trace`, `TextBox`, `EnableOperationLog` | MDC trace context, formatted console text boxes, and an operation-log marker annotation. |
 
 HTTP requests, uploads, downloads and annotation proxies now belong to the separate [AJ HTTP project](/aj-http/). Its Java package remains `com.ajaxjs.util.httpremote`, but it requires its own dependency; see the AJ HTTP installation guide.
 

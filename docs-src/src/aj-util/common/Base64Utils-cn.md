@@ -28,4 +28,42 @@ String decoded = new Base64Utils(encoded).setUrlSafe(true)
         .decodeAsString(StandardCharsets.UTF_16);
 ```
 
-`formatPemBase64(String)` 每 64 个字符换行，不追加末尾换行或 PEM 头尾。即使原文是 UTF-16，解码 Base64 文本时也应使用默认字符串构造器。
+## 标准、URL-safe 与填充模式
+
+标准 Base64 使用 `+` 和 `/`。URL-safe Base64 改用 `-` 与 `_`，避免作为 URL 参数时还要转义这些字符。填充字符
+`=` 用于补足四个输出字符一组；JWT 等格式可能省略填充，但是否接受由接收协议决定。
+
+```java
+byte[] tokenBytes = new byte[]{(byte) 0xfb, (byte) 0xff};
+
+String standard = new Base64Utils(tokenBytes).encodeAsString(); // +/8=
+String urlToken = new Base64Utils(tokenBytes)
+        .setUrlSafe(true).setWithoutPadding(true).encodeAsString(); // -_8
+
+byte[] original = new Base64Utils(urlToken).setUrlSafe(true).decode();
+```
+
+解码时，`urlSafe` 的选择必须与输入文本使用的字母表一致。`withoutPadding` 只是编码设置；解码可否接受无填充表示由
+JDK 解码器决定，它不会自动替你选择 URL-safe 字母表。
+
+## 二进制数据与文本的边界
+
+Base64 传递的是字节。`String` 构造器和 `decodeAsString(...)` 是便利的文本边界，分别把文本转为字节、把字节转回文本。
+文件、摘要、密钥等二进制材料应使用 `byte[]` 构造器。
+
+```java
+byte[] digest = MessageDigest.getInstance("SHA-256")
+        .digest("payload".getBytes(StandardCharsets.UTF_8));
+String wireValue = new Base64Utils(digest).encodeAsString();
+
+byte[] restoredDigest = new Base64Utils(wireValue).decode();
+```
+
+传给构造器的 `byte[]` 会按引用保留。除非有意让结果随之改变，否则不要在构造后、调用 `encode()`/`decode()` 前修改数组。
+Base64 不提供保密性：任何拿到文本的人都可以解码；同时它会把数据扩展为大约每 3 个输入字节对应 4 个输出字符。
+
+## 实现原理与取舍
+
+实现直接委托 `java.util.Base64`，而非维护自定义编解码器。因此可获得 JDK 的输入校验行为（非法输入抛出
+`IllegalArgumentException`），并让标准与 URL-safe 行为始终与运行时保持一致。`encodeAsString()` 明确使用
+US-ASCII，因为 Base64 输出天生就是 ASCII。

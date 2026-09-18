@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - 日志工具</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  MDC 链路上下文、格式化文本框和操作日志标记。" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, 日志,MDC" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+    <option value="/image-combiner/cn/">image-combiner</option>
+    
+    <option value="/aj-parent/cn/">aj-parent</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>日志工具</h1>
+<p><code>com.ajaxjs.util.log</code> 包提供与 SLF4J 配合使用的小型辅助工具。</p>
+<h2>Trace 上下文</h2>
+<p><code>Trace</code> 定义了 <code>traceId</code>、<code>bizAction</code> 和 <code>ENABLE_OPERATION_LOG</code> 等 MDC 键。仅当 MDC 已存在 <code>ENABLE_OPERATION_LOG</code> 时，<code>saveLogToMDC()</code> 才会追加内容。</p>
+<pre><code class="language-java">MDC.put(Trace.ENABLE_OPERATION_LOG, &quot;Start: &quot;);
+Trace.saveLogToMDC(&quot;created order; &quot;);
+String operationLog = MDC.get(Trace.ENABLE_OPERATION_LOG);
+MDC.remove(Trace.ENABLE_OPERATION_LOG);
+</code></pre>
+<p>MDC 通常是线程本地上下文。任务跨线程池或请求边界时，需要自行传播或清理。</p>
+<h2>TextBox</h2>
+<p><code>TextBox</code> 使用制表框字符和 ANSI 颜色格式化诊断用键值数据。</p>
+<pre><code class="language-java">String output = new TextBox()
+        .boxStart(&quot;Request&quot;)
+        .line(&quot;id: &quot;, requestId)
+        .line(&quot;status: &quot;, 200)
+        .boxEnd();
+</code></pre>
+<p>它默认换行长文本、将常见 CJK 字符按双宽度计算，并将单个值截断到 1,500 个字符。<code>setWrapLongLines(false)</code> 改为截断模式。ANSI 输出适合支持它的终端，并不适用于所有结构化日志目标。</p>
+<h2>EnableOperationLog</h2>
+<p><code>@EnableOperationLog</code> 是带可选标题的运行时方法注解：</p>
+<pre><code class="language-java">@EnableOperationLog(&quot;创建订单&quot;)
+public void createOrder() {
+}
+</code></pre>
+<p>该注解在本模块中仅是标记。具体如何记录操作日志，需要由应用的 AOP 拦截器或其他集成代码决定。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

@@ -3,7 +3,7 @@ title: 使用 Jackson 3
 description: 使用 Jackson 3
 tags:
   - Jackson3
-layout: layouts/aj-util.njk
+layout: layouts/aj-util-cn.njk
 ---
 
 # 使用 Jackson 3

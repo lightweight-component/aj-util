@@ -10,8 +10,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,7 +131,8 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
@@ -181,6 +186,48 @@ String url = UrlCodec.concatUrl(&quot;https://example.com/&quot;, &quot;/search&
 <h2>Other operations</h2>
 <p><code>concatUrl(String, String)</code> only joins at the slash boundary. It is not URI resolution, validation or normalization and does not specially handle query strings/fragments.</p>
 <p><code>simpleGET(String)</code> opens a URL stream without explicit timeouts or headers, reads UTF-8 and normalizes line endings (including a trailing separator). It closes the stream. URL/open failures return null; read failures may throw <code>UncheckedIOException</code>. Use the <a href="/aj-http/http_request/Base/">AJ HTTP API</a> for controlled requests. Query parsing is <code>MapTool.toMap(String)</code>.</p>
+<h2>Encode values, then assemble the URL</h2>
+<p>Encode each key and value separately. Do not pass <code>?</code>, <code>&amp;</code>, <code>=</code> or an already-built URL to <code>encodeQueryValue()</code>; those
+characters are data in this API and will be escaped. This prevents ambiguous parameters and avoids accidental
+double-encoding.</p>
+<pre><code class="language-java">String q = new UrlCodec(&quot;Java 8 + streams&quot;).encodeQueryValue();
+String page = new UrlCodec(&quot;2&quot;).encodeQueryValue();
+String url = UrlCodec.concatUrl(&quot;https://example.com/api&quot;, &quot;search&quot;)
+        + &quot;?q=&quot; + q + &quot;&amp;page=&quot; + page;
+// https://example.com/api/search?q=Java%208%20%2B%20streams&amp;page=2
+</code></pre>
+<p>The class intentionally does not parse or build a multi-value query map. If a complete URL must be validated,
+resolved against a base URI, or composed from structured components, use <code>java.net.URI</code> (or a dedicated HTTP client)
+at that boundary.</p>
+<h2>Form semantics versus query-value semantics</h2>
+<p>HTML form bodies using <code>application/x-www-form-urlencoded</code> use <code>+</code> for spaces; <code>URLEncoder</code> and <code>URLDecoder</code> follow
+that convention. RFC 3986-style query values conventionally use <code>%20</code> for spaces, and a literal plus is preserved.
+This distinction is especially important for signed URLs and tokens.</p>
+<pre><code class="language-java">String form = new UrlCodec(&quot;a b+c&quot;).encodeForm();             // a+b%2Bc
+String rawQuery = new UrlCodec(&quot;a b+c&quot;).encodeQueryValue();  // a%20b%2Bc
+
+new UrlCodec(&quot;a+b%2Bc&quot;).decodeForm();          // &quot;a b+c&quot;
+new UrlCodec(&quot;a%20b+c&quot;).decodeQueryValue();    // &quot;a b+c&quot;
+</code></pre>
+<p>Percent escapes represent bytes in the codec charset (UTF-8 unless explicitly changed). A literal <code>%</code> is not treated
+as an escape during encoding: <code>new UrlCodec(&quot;%2F&quot;).encodeQueryValue()</code> produces <code>%252F</code>. Decode only text you know is
+encoded once; malformed <code>%</code> sequences fail fast with <code>IllegalArgumentException</code>.</p>
+<h2>Path joining and simple reads</h2>
+<p><code>concatUrl</code> removes at most one trailing slash from the first part and uses the leading slash of the second part when
+present. It is predictable for normal path fragments, but deliberately leaves repeated internal slashes, queries, and
+fragments alone.</p>
+<pre><code class="language-java">UrlCodec.concatUrl(&quot;https://host/api/&quot;, &quot;/users&quot;); // https://host/api/users
+UrlCodec.concatUrl(&quot;https://host/api&quot;, &quot;users&quot;);  // https://host/api/users
+</code></pre>
+<p><code>simpleGET</code> is suitable only for a small, trusted, best-effort read. It has no timeout, headers, status handling,
+redirect policy, authentication, or response-charset detection. A failure while constructing or opening the URL
+returns <code>null</code>; failure during content reading can still throw <code>UncheckedIOException</code>. Use the AJ HTTP API for normal
+network calls.</p>
+<h2>Implementation notes</h2>
+<p>Form methods delegate to the JDK's <code>URLEncoder</code>/<code>URLDecoder</code>. Query-value encoding begins with the form result, then
+converts <code>+</code> to <code>%20</code>, <code>*</code> to <code>%2A</code>, and <code>%7E</code> back to <code>~</code>. Query-value decoding protects literal plus signs by first
+rewriting them as <code>%2B</code> before invoking <code>URLDecoder</code>. This small adaptation preserves the JDK's robust percent-byte
+handling while providing RFC 3986-style value semantics.</p>
 
             </article>
         </div>

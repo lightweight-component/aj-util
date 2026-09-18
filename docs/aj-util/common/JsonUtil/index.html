@@ -5,13 +5,18 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>aj-util - JsonUtil</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for JSON conversion between JSON, Map, Bean, and List" />
+        <meta name="description" content="Small Java utilities with many useful functions. JSON conversion through a pluggable JSON engine" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, JSON,serialization,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,7 +131,8 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
@@ -135,20 +140,20 @@
             </menu>
             <article class="aj-text">
                 <h1>JsonUtil Tutorial</h1>
-<p>This tutorial provides an overview of the <code>JsonUtil</code> class, which is part of the <code>lightweight-component/aj-util</code>
-library. The <code>JsonUtil</code> class provides utility methods for working with JSON data in Java applications.</p>
+<p><code>JsonUtil</code> is a static facade for JSON serialization, parsing, and object conversion. It delegates work to a
+<code>JsonEngine</code>, so callers do not need to expose implementation-specific types such as Jackson <code>ObjectMapper</code> or
+<code>JsonNode</code>.</p>
 <h2>Introduction</h2>
-<p>The <code>JsonUtil</code> class contains static methods for common JSON operations using Jackson library, including conversion
-between JSON strings, Java objects, Maps, and Lists.</p>
+<p><code>JsonUtil</code> provides common JSON operations between JSON strings, Java objects, Maps, and Lists through the configured
+JSON engine.</p>
 <h2>Main Features</h2>
 <ul>
 <li>Convert Java objects to JSON strings (pretty or compact)</li>
 <li>Parse JSON strings into Java objects</li>
 <li>Convert between JSON and Maps/Lists</li>
 <li>Type-safe JSON processing</li>
-<li>Java 8 date/time support</li>
-<li>Strict duplicate detection</li>
-<li>Lazily initialized, safely published shared <code>JsonEngine</code></li>
+<li>A lazily initialized, safely published shared <code>JsonEngine</code></li>
+<li>An implementation-independent JSON tree returned as <code>Object</code></li>
 </ul>
 <h2>Methods</h2>
 <h3>1. Serialization (to JSON)</h3>
@@ -181,7 +186,7 @@ between JSON strings, Java objects, Maps, and Lists.</p>
 </ol>
 <h3>6. JSON Tree Model</h3>
 <ol>
-<li><code>json2Node(String jsonStr)</code> - Parse JSON to JsonNode tree</li>
+<li><code>json2Node(String jsonStr)</code> - Parse JSON to an engine-specific tree object</li>
 </ol>
 <h2>Usage Examples</h2>
 <h3>Basic Serialization</h3>
@@ -213,14 +218,43 @@ Map&lt;String, Object&gt; map2 = JsonUtil.json2map(json);
 <pre><code class="language-java">String jsonArray = &quot;[{\&quot;name\&quot;:\&quot;John\&quot;}, {\&quot;name\&quot;:\&quot;Alice\&quot;}]&quot;;
 List&lt;User&gt; users = JsonUtil.json2list(jsonArray, User.class);
 </code></pre>
-<h2>Configuration</h2>
-<p>The <code>JsonUtil</code> class is pre-configured with:</p>
-<ul>
-<li>Java 8 date/time support</li>
-<li>Strict duplicate detection</li>
-<li>Asia/Shanghai timezone</li>
-<li>Default ObjectMapper instance</li>
-</ul>
+<h2>Engine configuration</h2>
+<p>On first use, <code>JsonUtil.getEngine()</code> loads <code>JsonEngineProvider</code> implementations through Java <code>ServiceLoader</code> and
+selects the provider with the highest priority. The project provides a Jackson 2 engine when its optional Jackson
+dependencies are present, but the facade itself is not tied to Jackson.</p>
+<p>An application may set an engine explicitly before its first conversion:</p>
+<pre><code class="language-java">JsonUtil.setEngine(myJsonEngine);
+</code></pre>
+<p><code>setEngine(null)</code> is rejected. Replacing the engine changes subsequent calls globally, so configure it during
+application startup rather than concurrently with ordinary JSON work. Date support, duplicate-key handling, time zone
+behavior, and the concrete tree-model type are engine-specific rather than guarantees of <code>JsonUtil</code>.</p>
+<h2>Map, bean, and tree examples</h2>
+<pre><code class="language-java">Map&lt;String, Object&gt; source = new LinkedHashMap&lt;&gt;();
+source.put(&quot;name&quot;, &quot;Ada&quot;);
+source.put(&quot;age&quot;, 36);
+
+String json = JsonUtil.toJson(source);
+Map&lt;String, String&gt; strings = JsonUtil.json2StrMap(json);
+Map&lt;String, Object&gt; values = JsonUtil.json2map(json);
+User user = JsonUtil.map2pojo(values, User.class);
+Map&lt;String, Object&gt; userValues = JsonUtil.pojo2map(user);
+</code></pre>
+<p><code>json2sortMap</code> requests a <code>LinkedHashMap</code> so parsed key order is retained. <code>convertValue</code> delegates to the selected
+engine's object-conversion facility and is useful when the desired target type is known at runtime. <code>json2Node</code> is for
+engine-specific tree traversal; cast its result only when the chosen engine is known.</p>
+<h2>Lifecycle and failures</h2>
+<p>The first engine is cached in a volatile field after lazy creation. If no <code>JsonEngineProvider</code> is visible to the
+runtime class loader, <code>getEngine()</code> throws <code>IllegalStateException</code>. <code>fromJson</code> wraps parser/mapper failures in a
+<code>RuntimeException</code> with the original cause. Other methods delegate directly and may expose provider-specific
+exceptions. Do not log untrusted raw JSON merely because a conversion failed.</p>
+<h2>Implementation notes</h2>
+<p><code>JsonUtil</code> keeps the selected engine in a <code>volatile</code> field and uses synchronized double-checked initialization. This
+means normal calls avoid locking after startup while still publishing a fully created engine safely. Providers are
+discovered through Java's standard <code>ServiceLoader</code>, then compared by their declared priority; this lets applications
+replace the JSON backend without changing <code>JsonUtil</code> callers.</p>
+<p>The facade deliberately exposes <code>Object</code> for <code>json2Node</code>: returning a library-specific tree type here would make the
+common module permanently depend on that library. The trade-off is that tree processing code must know which provider
+is active.</p>
 <h2>Conclusion</h2>
 <p>The <code>JsonUtil</code> class provides comprehensive utility methods for working with JSON data, making it easier to serialize,
 deserialize, and convert between JSON and Java objects.</p>

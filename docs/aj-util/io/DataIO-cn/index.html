@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,12 +50,10 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <label for="project-select">选择工程</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/cn/" selected>aj-util</option>
     
@@ -87,7 +91,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -126,6 +130,7 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 
@@ -141,6 +146,46 @@ new DataWriter(output).write(&quot;hello&quot;.getBytes(StandardCharsets.UTF_8))
 </code></pre>
 <p><code>DataReader</code> 在 <code>readStreamAsBytes</code>、<code>readAsLineString</code>、<code>readAsString</code> 和 <code>readAsBytes</code> 完成后会关闭输入流，因此输入流不能再复用。<code>DataWriter</code> 会刷新但不会关闭输出流，适合调用方持有的响应流、文件流或内存流；默认缓冲可通过 <code>setBuffered(boolean)</code> 修改。</p>
 <p><code>readStreamAsBytes(int, BiConsumer&lt;Integer, byte[]&gt;)</code> 会传入有效字节数和可复用缓冲区；每次回调只能处理 <code>[0, readSize)</code> 范围，下一次回调会复用该数组。</p>
+<h2>读取文本、字节和分块数据</h2>
+<p>应按数据的大小与形态选择读取 API。<code>readAsBytes()</code> 会把整个流收集到内存，适合小资源，但不适合无限制上传或大文件。
+<code>readAsString()</code> 使用指定字符集（默认 UTF-8）逐行读取，并在每一行后追加 <code>System.lineSeparator()</code>。来源不是 UTF-8
+时，使用 <code>DataReader(InputStream, Charset)</code> 构造器。</p>
+<pre><code class="language-java">String csv = new DataReader(input, StandardCharsets.ISO_8859_1).readAsString();
+
+new DataReader(input).readAsLineString(line -&gt; {
+    if (!line.isEmpty())
+        consumeCsvLine(line);
+});
+</code></pre>
+<p>流式处理时，每轮回调拿到的是同一个缓冲数组。如果数据需要在回调之后继续保留，请自行复制；否则应立即处理。
+最后一块数据可能小于请求的缓冲区大小。</p>
+<pre><code class="language-java">MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);
+new DataReader(input).readStreamAsBytes(8 * 1024,
+        (size, buffer) -&gt; digest.update(buffer, 0, size));
+
+// 对 &quot;abcdefghij&quot; 使用大小为 4 的缓冲区时，回调大小依次为 4、4、2。
+</code></pre>
+<p>缓冲区大小必须为正数。I/O 失败会包装为 <code>UncheckedIOException</code>，关闭流失败则会被记录日志。</p>
+<h2>复制到输出流</h2>
+<p><code>new DataWriter(out).write(in)</code> 以 1 KiB 块复制输入流并刷新输出流。默认会为输出增加缓冲包装；仅当目标已具备合适
+缓冲或需要严格控制刷新行为时才考虑关闭它。</p>
+<pre><code class="language-java">try (InputStream in = Files.newInputStream(source);
+     OutputStream out = Files.newOutputStream(target)) {
+    new DataWriter(out).write(in);
+}
+
+ByteArrayOutputStream memory = new ByteArrayOutputStream();
+new DataWriter(memory).write(&quot;hello&quot;.getBytes(StandardCharsets.UTF_8));
+</code></pre>
+<p><code>DataWriter</code> 从不关闭调用方的输出流。实例方法 <code>write(InputStream)</code> 委托给 <code>DataReader</code>，复制结束时会关闭输入流，
+调用方应把该输入流视为已经消费完毕。静态方法 <code>DataWriter.write(OutputStream, InputStream)</code> 更底层：只复制字节，
+不刷新，也不关闭任一流。</p>
+<p>对于 <code>write(byte[], off, length)</code>，<code>(0, 0)</code> 是一个特殊简写，含义是<strong>写入整个数组</strong>，并不是写入零字节。写片段时请
+传入明确的非零长度，例如 <code>write(bytes, 7, 5)</code>。</p>
+<h2>实现原理与取舍</h2>
+<p>两个类都是对 JDK 流的小型适配。<code>DataReader</code> 仅在逐行读取文本时增加缓冲字符读取器；字节传输则复用一个数组，避免
+每一块都分配新数组。<code>DataWriter</code> 刷新而不关闭，便于调用方组合多次写入或继续拥有 HTTP 响应流。对于不需要 Java 8
+兼容的 Java 9+ 项目，简单的流复制可直接使用 JDK 的 <code>InputStream.transferTo</code>。</p>
 
             </article>
         </div>

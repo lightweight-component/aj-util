@@ -1,7 +1,7 @@
 package com.ajaxjs.util.date;
 
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.RegExpUtils;
+import com.ajaxjs.util.RegExpHelper;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -62,9 +62,9 @@ public class DateTools {
                 return null;
 
             LocalDateTime dateTime;
-            if (RegExpUtils.match(DATE_TIME, str))
+            if (RegExpHelper.match(DATE_TIME, str))
                 dateTime = LocalDateTime.parse(str, Formatter.getDateTimeParser());
-            else if (RegExpUtils.match(DATE_YEAR, str))
+            else if (RegExpHelper.match(DATE_YEAR, str))
                 return new DateTypeConvert(LocalDate.parse(str, Formatter.getDateParser())).to(Date.class, null);
             else
                 dateTime = LocalDateTime.parse(str, Formatter.getDateTimeShortParser());

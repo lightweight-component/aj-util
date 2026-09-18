@@ -28,4 +28,44 @@ String decoded = new Base64Utils(encoded).setUrlSafe(true)
         .decodeAsString(StandardCharsets.UTF_16);
 ```
 
-`formatPemBase64(String)` inserts a newline every 64 characters, with no trailing newline or PEM boundaries. Decode Base64 text using the default string constructor, even when the plaintext used UTF-16.
+## Standard, URL-safe, and padding modes
+
+Standard Base64 uses `+` and `/`. URL-safe Base64 substitutes `-` and `_`, avoiding characters that would otherwise
+need escaping in a URL value. Padding (`=`) completes groups of four output characters. It is optional in formats such
+as JWT, but the receiving protocol decides whether omitted padding is accepted.
+
+```java
+byte[] tokenBytes = new byte[]{(byte) 0xfb, (byte) 0xff};
+
+String standard = new Base64Utils(tokenBytes).encodeAsString(); // +/8=
+String urlToken = new Base64Utils(tokenBytes)
+        .setUrlSafe(true).setWithoutPadding(true).encodeAsString(); // -_8
+
+byte[] original = new Base64Utils(urlToken).setUrlSafe(true).decode();
+```
+
+The selected `urlSafe` mode must match the encoded alphabet for decoding. `withoutPadding` is an encoder setting;
+decoding accepts the representation supported by the JDK decoder, but it does not select the alphabet for you.
+
+## Binary data versus text
+
+Base64 carries bytes. The `String` constructors and `decodeAsString(...)` are convenience boundaries that turn text
+into bytes or bytes back into text. Use a `byte[]` constructor for a file, digest, key, or other binary material.
+
+```java
+byte[] digest = MessageDigest.getInstance("SHA-256")
+        .digest("payload".getBytes(StandardCharsets.UTF_8));
+String wireValue = new Base64Utils(digest).encodeAsString();
+
+byte[] restoredDigest = new Base64Utils(wireValue).decode();
+```
+
+A `byte[]` supplied to the constructor is retained by reference. Do not mutate it between construction and
+`encode()`/`decode()` unless that change is intentional. Base64 is not confidentiality protection: anyone who receives
+the encoded text can decode it. It also expands data to roughly four output characters per three input bytes.
+
+## Implementation notes
+
+The implementation delegates to `java.util.Base64` rather than maintaining a custom codec. That gives it the JDK's
+validation behavior (`IllegalArgumentException` for malformed input) and keeps standard and URL-safe behavior aligned
+with the runtime. `encodeAsString()` explicitly uses US-ASCII because Base64 output is ASCII by definition.

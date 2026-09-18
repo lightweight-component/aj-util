@@ -1,103 +1,65 @@
 ---
 title: RandomTools
-description: Methods for generating random numbers, strings, and UUID v7
+description: Random numbers, strings, secure random bytes, and UUID version 7 strings.
 tags:
   - random
-  - utilities
-  - Java
+  - UUIDv7
 layout: layouts/aj-util.njk
 ---
 
-# RandomTools Tutorial
+# RandomTools
 
-`RandomTools` is a utility class for generating various types of random values, including numbers, strings, and UUIDs (
-with version 7 support).
-
-### Main Features
-
-1. **Thread-safe random generation**: Uses `ThreadLocalRandom` for high performance
-2. **Explicit random sources**: Exposes both `SecureRandom` and ordinary `Random`; choose according to the use case
-3. **Multiple random value generation**: Supports numbers, strings, UUIDv7, etc.
-4. **Time-ordered UUIDs**: UUIDv7 provides better locality than random UUIDs
-
-### Number Random Generation
-
-#### 1. Generate Six-Digit Numbers
+`RandomTools` generates ordinary random numbers and strings, exposes a shared `SecureRandom`, and creates UUID version 7 strings.
 
 ```java
-// Generate a six-digit random number (100000-999999)
-int number = RandomTools.generateNumber();
-System.out.println(number); // e.g.: 456789
+int code = RandomTools.generateNumber();          // six digits, 100000–999999
+String text = RandomTools.generateRandomString(8); // eight letters/digits
+
+String compactId = RandomTools.uuidV7();          // 32 lowercase hex characters
+String standardId = RandomTools.uuidV7(true);     // 8-4-4-4-12 format
+Date createdAt = RandomTools.showTime(compactId);
 ```
 
-#### 2. Generate Numbers with Specified Digits
+`generateNumber(int)` accepts 1 through 9 digits, and `generateRandomString(int)` requires a positive length. Both use `ThreadLocalRandom` and are not suitable for passwords, authentication codes, tokens, or cryptographic keys.
+
+`uuidV7` uses `RandomTools.RANDOM` (`SecureRandom`) for its random portion and embeds the current epoch millisecond. UUIDv7 is time-ordered by that timestamp but is not guaranteed monotonic inside the same millisecond or if the system clock moves backward. It is an identifier, not a secret token. `showTime` accepts hyphenated or 32-character UUIDv7 input and rejects other UUID versions.
+
+Use `RandomTools.RANDOM` or `DoCipher.randomBytes()` when cryptographically strong random bytes are needed.
+
+## UUIDv7 format and validation
+
+UUIDv7 includes a 48-bit Unix-millisecond timestamp, version bits, RFC UUID variant bits, and 74 random bits. The
+default `uuidV7()` is equivalent to `uuidV7(false)`; it returns a compact 32-character lowercase value. Choose the
+hyphenated form when interoperating with APIs that expect `UUID.toString()` format.
 
 ```java
-// Generate random numbers with specified digit count
-int threeDigit = RandomTools.generateNumber(3); // 100-999
-int fourDigit = RandomTools.generateNumber(4); // 1000-9999
+String id = RandomTools.uuidV7(true);
+Date timestamp = RandomTools.showTime(id);
 
-System.out.println(threeDigit); // e.g.: 567
-System.out.println(fourDigit);  // e.g.: 3456
+// Either form is accepted by showTime:
+Date sameTimestamp = RandomTools.showTime(id.replace("-", ""));
 ```
 
-The digit count must be between 1 and 9; other values throw `IllegalArgumentException`.
+`showTime` does not trim whitespace and throws `IllegalArgumentException` for malformed input or a UUID that is not
+version 7. The returned `Date` is the timestamp embedded in the identifier; it is not independent proof of the actual
+creation time.
 
-### String Random Generation
+## Randomness choices
 
-#### 1. Generate Six-Character Random String
+| API | Generator | Suitable for |
+| --- | --- | --- |
+| `generateNumber`, `generateRandomString` | `ThreadLocalRandom` | UI samples, non-security identifiers |
+| `uuidV7` | shared `SecureRandom` random portion | ordinary unique identifiers |
+| `RandomTools.RANDOM` / `DoCipher.randomBytes` | `SecureRandom` | nonces, salts, key material |
 
-```java
-// Generate a six-character alphanumeric random string
-String randomStr = RandomTools.generateRandomString();
-System.out.println(randomStr); // e.g.: aB3xY9
-```
+None of these APIs keeps a uniqueness registry. Store and enforce uniqueness where the application requires it.
 
-The requested string length must be positive. These strings use `ThreadLocalRandom` and are not intended as passwords,
-tokens, or cryptographic secrets.
+## Implementation notes
 
-#### 2. Generate Random String with Specified Length
+The numeric and alphanumeric helpers use `ThreadLocalRandom`, avoiding contention on a shared pseudo-random generator
+in ordinary concurrent application code. UUIDv7 takes a different path: it fills 16 bytes from a shared
+`SecureRandom`, then overwrites the timestamp, version, and variant positions according to UUIDv7 layout before
+formatting with `UUID`. The timestamp extraction method reverses that layout from the UUID most-significant bits.
 
-```java
-// Generate random strings with specified length
-String shortStr = RandomTools.generateRandomString(3);
-String longStr = RandomTools.generateRandomString(10);
-
-System.out.println(shortStr); // e.g.: Xy2
-System.out.println(longStr);  // e.g.: AbC3dE5fGh
-```
-
-### UUID Generation
-
-#### 1. Generate UUIDv7
-
-```java
-// Generate UUID version 7 (time-ordered)
-UUID uuid = RandomTools.uuid();
-System.out.println(uuid); // version field is 7
-```
-
-#### 2. Generate UUIDv7 String Without Hyphens
-
-```java
-// Generate UUID string without hyphens
-String uuidStr = RandomTools.uuidStr();
-System.out.println(uuidStr); // e.g.: 550e8400e29b41d4a716446655440000
-```
-
-#### 3. View Timestamp of UUID
-
-```java
-// Get timestamp information from UUIDv7
-String uuidString = RandomTools.uuidStr();
-Date timestamp = RandomTools.showTime(uuidString);
-System.out.println(timestamp); // e.g.: Wed Oct 25 14:30:45 CST 2023
-```
-
-### Notes
-
-1. All generation methods are static and can be called directly through the class name
-2. Number generation uses `ThreadLocalRandom` to ensure thread safety and performance
-3. UUIDv7 is time-ordered and has better database indexing performance
-4. String generation uses a fixed alphanumeric character pool
-5. The current UUIDv7 random portion uses `java.util.Random`; UUIDs are suitable as identifiers, not as security tokens.
+This design gives sortable identifiers and a strong random component, but it does not coordinate calls made in the
+same millisecond. If strict database ordering is required, store a separate sequence or ordering column.

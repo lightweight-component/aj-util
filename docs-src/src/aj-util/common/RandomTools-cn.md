@@ -1,109 +1,57 @@
 ---
 title: RandomTools
-description: 生成随机数、随机字符串和 UUID v7 的方法
+description: 随机数字、字符串、安全随机字节与 UUID v7 字符串。
 tags:
   - 随机数
-  - 工具类
-  - Java
+  - UUIDv7
 layout: layouts/aj-util-cn.njk
 ---
 
-# RandomTools 使用教程
+# RandomTools
 
-RandomTools 是一个用于生成各种类型随机值的工具类，包括数字、字符串和 UUID（支持版本 7）。
-
-### 主要功能特性
-
-1. **线程安全的随机数生成**：使用 `ThreadLocalRandom` 提供高性能
-2. **明确的随机源**：同时暴露 `SecureRandom` 和普通 `Random`，应按场景选择
-3. **多种随机值生成**：支持数字、字符串、UUIDv7 等
-4. **时间有序 UUID**：UUIDv7 提供比随机 UUID 更好的局部性
-
-### 数字随机数生成
-
-#### 1. 生成六位数字
+`RandomTools` 用于生成普通随机数字和字符串，暴露共享 `SecureRandom`，并生成 UUID v7 字符串。
 
 ```java
-// 生成六位随机数字（100000-999999）
-int number = RandomTools.generateNumber();
-System.out.println(number); // 例如：456789
+int code = RandomTools.generateNumber();          // 六位数字，100000–999999
+String text = RandomTools.generateRandomString(8); // 八位字母数字
+
+String compactId = RandomTools.uuidV7();          // 32 位小写十六进制字符
+String standardId = RandomTools.uuidV7(true);     // 8-4-4-4-12 格式
+Date createdAt = RandomTools.showTime(compactId);
 ```
 
-#### 2. 生成指定位数的数字
+`generateNumber(int)` 只接受 1 到 9 位，`generateRandomString(int)` 要求长度为正。二者均使用 `ThreadLocalRandom`，不能用于密码、验证码、令牌或密码学密钥。
+
+`uuidV7` 使用 `RandomTools.RANDOM`（`SecureRandom`）生成随机部分，并写入当前的 epoch 毫秒时间。UUIDv7 按该时间戳有序，但同一毫秒内或系统时钟回拨时不保证单调递增。它是标识符，不是秘密令牌。`showTime` 接受带连字符或 32 字符的 UUIDv7，其他 UUID 版本会被拒绝。
+
+需要密码学强度的随机字节时，应使用 `RandomTools.RANDOM` 或 `DoCipher.randomBytes()`。
+
+## UUIDv7 格式与校验
+
+UUIDv7 包含 48 位 Unix 毫秒时间戳、版本位、RFC UUID 变体位和 74 位随机数据。默认的 `uuidV7()` 等同于 `uuidV7(false)`，返回 32 位小写紧凑格式。与要求 `UUID.toString()` 格式的 API 互通时，应选择带连字符形式。
 
 ```java
-// 生成指定位数的随机数字
-int threeDigit = RandomTools.generateNumber(3); // 100-999
-int fourDigit = RandomTools.generateNumber(4); // 1000-9999
+String id = RandomTools.uuidV7(true);
+Date timestamp = RandomTools.showTime(id);
 
-System.out.println(threeDigit); // 例如：567
-System.out.println(fourDigit);  // 例如：3456
+// showTime 接受两种形式：
+Date sameTimestamp = RandomTools.showTime(id.replace("-", ""));
 ```
 
-位数只能是 1 到 9，其他值会抛出 `IllegalArgumentException`。
+`showTime` 不会裁剪空白；输入格式错误或 UUID 不是版本 7 时抛出 `IllegalArgumentException`。返回的 `Date` 是标识符中嵌入的时间戳，不能独立证明标识符实际创建时间。
 
-### 字符串随机数生成
+## 随机性选择
 
-#### 1. 生成六位随机字符串
+| API | 随机源 | 适用场景 |
+| --- | --- | --- |
+| `generateNumber`、`generateRandomString` | `ThreadLocalRandom` | UI 样例、非安全标识 |
+| `uuidV7` | 随机部分使用共享 `SecureRandom` | 一般唯一标识 |
+| `RandomTools.RANDOM` / `DoCipher.randomBytes` | `SecureRandom` | nonce、盐值、密钥材料 |
 
-```java
-// 生成六位字母数字随机字符串
-String randomStr = RandomTools.generateRandomString();
-System.out.println(randomStr); // 例如：aB3xY9
-```
+这些 API 都不维护唯一性注册表。应用需要唯一性时，应自行存储并约束。
 
-字符串长度必须大于零。这些字符串使用 `ThreadLocalRandom`，不应作为密码、令牌或其他加密秘密。
+## 实现原理与取舍
 
-#### 2. 生成指定长度的随机字符串
+数字和字母数字字符串方法使用 `ThreadLocalRandom`，避免普通并发应用中竞争共享伪随机生成器。UUIDv7 则采用不同路径：先通过共享 `SecureRandom` 填充 16 字节，再按 UUIDv7 布局覆盖时间戳、版本和变体位置，最后借助 `UUID` 格式化。时间戳提取方法会从 UUID 的最高有效位按该布局反向读取。
 
-```java
-// 生成指定长度的随机字符串
-String shortStr = RandomTools.generateRandomString(3);
-String longStr = RandomTools.generateRandomString(10);
-
-System.out.println(shortStr); // 例如：Xy2
-System.out.println(longStr);  // 例如：AbC3dE5fGh
-```
-
-### UUID 生成
-
-#### 1. 生成 UUIDv7
-
-```java
-// 生成 UUID 版本 7（时间有序）
-UUID uuid = RandomTools.uuid();
-System.out.println(uuid); // 版本字段为 7
-```
-
-#### 2. 生成无连字符的 UUIDv7 字符串
-
-```java
-// 生成无连字符的 UUID 字符串
-String uuidStr = RandomTools.uuidStr();
-System.out.println(uuidStr); // 例如：550e8400e29b41d4a716446655440000
-```
-
-#### 3. 查看 UUID 的时间戳
-
-```java
-// 获取 UUIDv7 中的时间戳信息
-String uuidString = RandomTools.uuidStr();
-Date timestamp = RandomTools.showTime(uuidString);
-System.out.println(timestamp); // 例如：Wed Oct 25 14:30:45 CST 2023
-```
-
-### 常量说明
-
-- `RANDOM`: `SecureRandom` 实例，用于加密强度的随机数生成
-- `SIMPLE_RANDOM`: `Random` 实例，用于基本的随机数生成
-- `STR`: 字符池，包含大小写字母和数字（a-z, A-Z, 0-9）
-
-### 注意事项
-
-1. 所有生成方法都是静态的，可以直接通过类名调用
-2. 数字生成使用 `ThreadLocalRandom` 保证线程安全和性能
-3. UUIDv7 是时间有序的，具有更好的数据库索引性能
-4. 字符串生成使用固定的字母数字字符池
-5. 当前 UUIDv7 的随机部分使用 `java.util.Random`；它适合作为标识符，不适合作为安全令牌。
-
----
+这一设计提供了可排序标识和强随机部分，但不会协调同一毫秒内的调用。若数据库需要严格排序，应额外保存序列或排序字段。

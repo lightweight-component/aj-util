@@ -29,7 +29,7 @@ class TestAes {
         AesCipherResult suppliedIv = aes.encrypt("CBC content", iv);
 
         assertEquals(16, generatedIv.getNonce().getResult().length);
-        assertEquals("CBC content", aes.decrypt(generatedIv.toBase64(), generatedIv.getNonce().toBase64() ));
+        assertEquals("CBC content", aes.decrypt(generatedIv.toBase64(), generatedIv.getNonce().toBase64()));
         assertEquals("CBC content", aes.decrypt(suppliedIv.toBase64(), suppliedIv.getNonce().toBase64()));
         assertThrows(IllegalArgumentException.class, () -> aes.encrypt("CBC content", new byte[15]));
     }

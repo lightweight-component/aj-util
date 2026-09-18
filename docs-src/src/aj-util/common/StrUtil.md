@@ -1,81 +1,81 @@
 ---
 title: StrUtil
-description: Utility methods for string templating, padding, joining, and manipulation
-date: 2025-09-11
+description: String templates and array/list joining.
 tags:
   - string
-  - utilities
-  - manipulation
+  - template
 layout: layouts/aj-util.njk
 ---
 
-# StrUtil Tutorial
+# StrUtil
 
-This tutorial provides an overview of the `StrUtil` class, which is part of the `lightweight-component/aj-util` library.
-The `StrUtil` class provides utility methods for string manipulation in Java applications.
+`StrUtil` currently provides simple template replacement and array/list joining. It does not provide padding, character counting, or membership helpers.
 
-## Introduction
+## Templates
 
-The `StrUtil` class contains static methods for counting, padding, templating, joining, and membership checks.
-
-## Main Features
-
-- String templating with placeholders
-- String padding and formatting
-- List/array joining with custom delimiters
-
-## Methods
-
-### 1. Joining
-
-1. `join(T[] arr, String str)` - Join an array with a delimiter
-2. `join(List<String> list, String str)` - Join a string list with a delimiter
-3. `join(List<String> list, String tpl, String str)` - Format and join a string list
-
-Array and list overloads serialize a `null` element as an empty string.
-
-### 3. Templating
-
-1. `simpleTpl(String template, Map<String, Object> params)` - `${var}` replacement
-2. `simpleTpl2(String template, Map<String, Object> data)` - `#{var}` replacement
-3. `simpleTpl(String template, Object data)` - JavaBean property replacement
-
-Replacement values are treated literally, so `$` and `\` are safe in values. JavaBean templating skips write-only
-properties. If a getter fails, the thrown `RuntimeException` identifies the property and retains the getter failure
-as its cause.
-
-### 4. Utilities
-
-1. `charCount(String str, String _char)` - Count occurrences, including overlapping matches
-2. `leftPad(String str, int len, String padding)` - Pad to exactly `len` characters without changing whitespace already
-   in `str`
-3. `isWordOneOfThem(String word, String[] arr)` - Check string in array
-
-## Usage Examples
-
-### Templating
+The Map overload replaces `${name}` placeholders. Missing or null map values become empty strings.
 
 ```java
 Map<String, Object> values = new HashMap<>();
-values.put("name", "John");
-String tpl = StrUtil.simpleTpl("Name: ${name}", values);
-// "Name: John"
+values.put("name", "Ada");
+String message = StrUtil.simpleTpl("Hello, ${name}! ${missing}", values);
+// Hello, Ada!
 ```
 
-### Counting and padding
+The JavaBean overload replaces `#{property}` placeholders with readable bean properties. A null bean property becomes the text `null`; write-only properties are skipped. Replacement values are literal, so `$` and backslashes are safe. If a getter fails, the thrown `RuntimeException` identifies the property and retains the getter exception as its cause.
 
 ```java
-int count = StrUtil.charCount("aaa", "aa"); // 2: overlapping matches are counted
-String padded = StrUtil.leftPad("a b", 6, "$"); // "$$$a b"
+String message = StrUtil.simpleTpl("Hello, #{name}!", user);
 ```
 
-### Joining
+## Join arrays and lists
 
 ```java
-String joined = StrUtil.join(Arrays.asList("a", "b", "c"), ","); // "a,b,c"
+String array = StrUtil.join(new String[]{"a", null, "c"}, "&");
+String list = StrUtil.join(Arrays.asList("a", "b", "c"), "[%s]", ", ");
+// a&&c
+// [a], [b], [c]
 ```
 
-## Conclusion
+Available overloads accept a generic array, a string array with a format template, and string lists with an optional template. Null elements are rendered as empty strings.
 
-The `StrUtil` class provides comprehensive utility methods for string manipulation, making common string operations more
-convenient in Java applications.
+## Placeholder and formatting rules
+
+The two template forms deliberately use different placeholder syntax:
+
+| Overload | Placeholder | Missing/null value |
+| --- | --- | --- |
+| `simpleTpl(String, Map)` | `${word}` | empty string |
+| `simpleTpl(String, Object)` | `#{property}` | text `null` for a readable null property |
+
+Map placeholders match word characters only (`${name_1}` is valid; `${user.name}` is not a placeholder for this API).
+Unrecognized text remains unchanged. The Bean overload inspects JavaBean getter properties, including inherited ones;
+it does not read fields directly.
+
+```java
+Map<String, Object> values = new HashMap<>();
+values.put("path", "$1\\temp");
+String result = StrUtil.simpleTpl("path=${path}", values);
+// path=$1\temp
+```
+
+This works because replacements are quoted before applying `Matcher.appendReplacement`; `$1` is data, not a regex
+back-reference. For list joins, the template is passed to `String.format`, so it should contain an appropriate
+conversion such as `%s`.
+
+## Choosing the right helper
+
+`StrUtil` intentionally focuses on small formatting operations. For regular-expression replacement use
+`RegExpHelper`; for URL/form encoding use `UrlCodec`; for bytes, character sets, and hexadecimal conversion use
+`StringBytes`.
+
+## Implementation notes
+
+The Map template overload scans `${word}` with one precompiled `Pattern` and builds the result with
+`Matcher.appendReplacement` / `appendTail`. Quoting replacement text prevents the regex engine from interpreting `$`
+or backslashes in a value. The Bean overload instead uses JavaBeans introspection and ordinary `String.replace` for
+each readable property, which explains both its `#{property}` syntax and its different null behavior.
+
+Join methods use a `StringBuilder` and append the delimiter only between elements, avoiding a trailing delimiter.
+They intentionally do not escape values or apply locale-sensitive formatting; perform those transformations before
+joining when required.

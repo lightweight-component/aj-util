@@ -3,10 +3,7 @@ package com.ajaxjs.util.cryptography.aes;
 import com.ajaxjs.util.cryptography.CipherResult;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestAesCipherResult {
     @Test

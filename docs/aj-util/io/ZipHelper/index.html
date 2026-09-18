@@ -10,8 +10,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,7 +131,8 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
@@ -157,6 +162,63 @@ before writing, so source files must not change during the operation. Multiple f
 because they are stored at the archive root.</p>
 <p>The archive is first written to a temporary sibling file, then replaces the target only after a successful write.
 I/O failures are reported as <code>UncheckedIOException</code>.</p>
+<h2>Archive layout examples</h2>
+<p>Directory input is represented relative to the selected source directory, rather than including the source directory
+name itself. All entry separators are <code>/</code>, including when the archive is created on Windows.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Entry in archive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C:/work/source/root.txt</code></td>
+<td><code>root.txt</code></td>
+</tr>
+<tr>
+<td><code>C:/work/source/a/b/nested.txt</code></td>
+<td><code>a/b/nested.txt</code></td>
+</tr>
+<tr>
+<td><code>C:/work/source/empty</code></td>
+<td><code>empty/</code></td>
+</tr>
+<tr>
+<td><code>new File[]{a.txt, b.txt}</code></td>
+<td><code>a.txt</code>, <code>b.txt</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-java">Path source = Paths.get(&quot;C:/work/source&quot;);
+new ZipHelper(source.toString(), &quot;C:/out/source.zip&quot;).zip();
+
+// Creates a root-level archive of the two files; duplicate base names are rejected.
+new ZipHelper(new File[]{new File(&quot;logs/app.log&quot;), new File(&quot;report.csv&quot;)},
+        &quot;C:/out/files.zip&quot;).zip();
+</code></pre>
+<p>The directory walker records directory entries explicitly, so an empty directory remains visible after extraction.
+This matters for application templates and backup archives where directory structure is meaningful.</p>
+<h2>Compression choice</h2>
+<p><code>DEFLATED</code> is the normal choice: the ZIP writer compresses while it writes. <code>STORED</code> writes raw file bytes; ZIP
+requires the exact size and CRC32 in the entry header before those bytes are written. <code>ZipHelper</code> therefore reads each
+file once to calculate metadata and again to archive it.</p>
+<p>Use <code>STORED</code> only when no compression is desired (for example, an already-compressed media file and a compatible
+consumer). Do not modify input files between those two passes. A changed file can make the recorded CRC or length
+inconsistent with the archived bytes.</p>
+<h2>Safety and failure behavior</h2>
+<p>The helper intentionally rejects symbolic links and non-regular files, avoiding accidental inclusion of a file outside
+the selected tree. It also rejects a destination placed within the source tree, which would otherwise risk recursively
+adding the archive to itself. The destination parent directory is created when needed.</p>
+<p>Writing to a temporary sibling archive before replacing the destination reduces the chance that a failed operation
+leaves a half-written target. It is not a transaction across every filesystem: a process crash or an unsupported atomic
+move can still leave normal filesystem-level recovery considerations. Handle <code>UncheckedIOException</code> when the caller
+needs to surface or retry a failed backup.</p>
+<h2>Implementation notes</h2>
+<p><code>ZipHelper</code> is a creation-only API; it does not make extraction safe by itself. When consuming untrusted ZIP files,
+use <a href="/aj-util/io/UnzipHelper/">UnzipHelper</a> and keep its destination validation in place to defend against path
+traversal entries such as <code>../../outside.txt</code>.</p>
 
             </article>
         </div>

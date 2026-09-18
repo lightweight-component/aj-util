@@ -5,13 +5,18 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>aj-util - MapTool</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for Map operations, filtering, and transformations" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Map utilities,XML conversion,data structures" />
+        <meta name="description" content="Small Java utilities with many useful functions. Join, parse, convert, and flatten Map values." />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Map,conversion,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,90 +131,72 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
                 
             </menu>
             <article class="aj-text">
-                <h1>MapTool Tutorial</h1>
-<p>This tutorial provides an overview of the <code>MapTool</code> class, which is part of the <code>lightweight-component/aj-util</code> library.
-The <code>MapTool</code> class provides utility methods for working with Map data structures in Java applications.</p>
-<h2>Introduction</h2>
-<p>The <code>MapTool</code> class contains static methods for common Map operations such as conversion, joining, and XML
-serialization/deserialization.</p>
-<h2>Main Features</h2>
-<ul>
-<li>Join Map entries into strings with various delimiters</li>
-<li>Convert between different Map types and formats</li>
-<li>Convert between Maps and XML</li>
-<li>Copy the top-level entries of a Map</li>
-<li>Helper methods for Map value processing</li>
-</ul>
-<h2>Methods</h2>
-<h3>1. <code>join()</code> Methods</h3>
-<p>Four overloaded methods for joining Map entries into strings:</p>
-<ol>
-<li><code>join(Map&lt;String, T&gt; map, String div, Function&lt;T, String&gt; fn)</code> - Join with custom delimiter and value processor</li>
-<li><code>join(Map&lt;String, T&gt; map, Function&lt;T, String&gt; fn)</code> - Join with default delimiter (&amp;) and custom value processor</li>
-<li><code>join(Map&lt;String, T&gt; map, String div)</code> - Join with custom delimiter and default toString() value processor</li>
-<li><code>join(Map&lt;String, T&gt; map)</code> - Join with default delimiter (&amp;) and default toString() value processor</li>
-</ol>
-<h3>2. <code>toMap()</code> Methods</h3>
-<p>Two methods for converting to Maps:</p>
-<ol>
-<li><code>toMap(String[] pairs, Function&lt;String, Object&gt; fn)</code> - Convert array of key=value strings to Map</li>
-<li><code>toMap(String[] columns, String[] values, Function&lt;String, Object&gt; fn)</code> - Convert parallel key and value arrays to
-Map</li>
-</ol>
-<h3>3. <code>getValue()</code></h3>
-<p><code>getValue(Map&lt;String, T&gt; map, String key, Consumer&lt;T&gt; s)</code> - Safely get and process a Map value if present</p>
-<h3>4. <code>as()</code> Methods</h3>
-<p>Two methods for Map conversion:</p>
-<ol>
-<li><code>as(Map&lt;String, K&gt; map, Function&lt;K, T&gt; fn)</code> - Convert Map values using a function</li>
-<li><code>as(Map&lt;String, String[]&gt; map)</code> - Convert Map with String[] values to Map&lt;String, Object&gt;</li>
-</ol>
-<h3>5. <code>shallowCopy()</code></h3>
-<p><code>shallowCopy(Map&lt;T, K&gt; map)</code> creates a new <code>HashMap</code> containing the same keys and values. Nested maps,
-collections, arrays, and objects remain shared references.</p>
-<h3>6. XML Conversion Methods</h3>
-<ol>
-<li><code>beanToXml(Object bean)</code> - Convert Java bean to XML string</li>
-<li><code>mapToXml(Map&lt;String, ?&gt; data)</code> - Convert Map to XML string</li>
-<li><code>xmlToMap(String strXML)</code> - Convert XML string to Map</li>
-</ol>
-<p><code>mapToXml</code> preserves value whitespace. Every key must be a valid XML element name; an invalid key causes
-<code>IllegalArgumentException</code> whose message identifies that key.</p>
-<h2>Usage Examples</h2>
-<h3>Joining Map Entries</h3>
-<pre><code class="language-java">Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
-map.put(&quot;name&quot;, &quot;John&quot;);
-map.put(&quot;age&quot;, &quot;30&quot;);
+                <h1>MapTool</h1>
+<p><code>MapTool</code> contains static operations for serializing simple string-keyed maps, parsing key/value inputs, converting map values, and flattening nested maps. XML conversion is not part of <code>MapTool</code>; use <code>XmlHelper</code> for XML work.</p>
+<h2>Join map entries</h2>
+<pre><code class="language-java">Map&lt;String, Object&gt; values = new LinkedHashMap&lt;&gt;();
+values.put(&quot;name&quot;, &quot;Ada&quot;);
+values.put(&quot;page&quot;, null);
 
-String joined = MapTool.join(map); // &quot;name=John&amp;age=30&quot;
+String queryLike = MapTool.join(values); // name=Ada&amp;page=
+String custom = MapTool.join(values, &quot;;&quot;, value -&gt; String.valueOf(value));
 </code></pre>
-<h3>Converting to Map</h3>
-<pre><code class="language-java">String[] pairs = {&quot;name=John&quot;, &quot;age=30&quot;};
-Map&lt;String, Object&gt; map = MapTool.toMap(pairs, Integer::parseInt);
-</code></pre>
-<p>Only the first <code>=</code> separates the key and value, so values such as JWTs and signatures are preserved. A pair ending
-in <code>=</code> produces an empty-string value.</p>
-<h3>XML Conversion</h3>
-<pre><code class="language-java">Map&lt;String, String&gt; data = new HashMap&lt;&gt;();
-data.put(&quot;name&quot;, &quot;John&quot;);
-data.put(&quot;age&quot;, &quot;30&quot;);
-data.put(&quot;note&quot;, null); // serialized as an empty element
+<p><code>join</code> writes <code>key=value</code> pairs in the map's iteration order. Its default delimiter is <code>&amp;</code>; null values become empty strings. It does not URL-encode keys or values—apply <code>UrlCodec</code> first when producing an HTTP query string.</p>
+<h2>Create maps from key/value input</h2>
+<pre><code class="language-java">Map&lt;String, Object&gt; fromPairs = MapTool.toMap(
+        new String[]{&quot;id=42&quot;, &quot;page=3&quot;}, Integer::valueOf);
 
-String xml = MapTool.mapToXml(data); 
-// &lt;xml&gt;&lt;name&gt;John&lt;/name&gt;&lt;age&gt;30&lt;/age&gt;&lt;/xml&gt;
+Map&lt;String, Object&gt; fromColumns = MapTool.toMap(
+        new String[]{&quot;id&quot;, &quot;name&quot;}, new String[]{&quot;42&quot;, &quot;Ada&quot;}, null);
 
-Map&lt;String, String&gt; map = MapTool.xmlToMap(xml);
+Map&lt;String, String&gt; query = MapTool.toMap(&quot;name=Ada+Lovelace&amp;token=x%3D%3D&quot;);
 </code></pre>
-<h2>Conclusion</h2>
-<p>The <code>MapTool</code> class provides comprehensive utility methods for working with Map data structures, including joining,
-conversion, and XML serialization/deserialization.</p>
+<p>For array pairs, only the first <code>=</code> separates key and value; <code>null</code> entries are ignored, and an entry without <code>=</code> is rejected. Parallel key/value arrays must have the same length. The query-string overload decodes form encoding through <code>UrlCodec</code>; duplicate keys are overwritten by later values.</p>
+<h2>Convert and flatten values</h2>
+<pre><code class="language-java">Map&lt;String, Integer&gt; lengths = MapTool.as(values, value -&gt; value.toString().length());
+
+Map&lt;String, Object&gt; nested = new LinkedHashMap&lt;&gt;();
+nested.put(&quot;server&quot;, Collections.singletonMap(&quot;host&quot;, &quot;localhost&quot;));
+Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
+// {server.host=localhost}
+</code></pre>
+<p><code>as</code> converts non-null values with the supplied function and preserves null values. <code>flatten</code> joins nesting levels with <code>.</code>. A literal <code>.</code> in a source key is escaped as <code>\\.</code>, and a literal backslash is escaped as <code>\\\\</code>; empty nested maps remain values. Circular map references are rejected with <code>IllegalArgumentException</code>.</p>
+<h2>Detailed parsing behavior</h2>
+<p>The two <code>toMap</code> families intentionally differ when malformed input is encountered:</p>
+<pre><code class="language-java">Map&lt;String, Object&gt; strict = MapTool.toMap(
+        new String[]{&quot;token=header.payload=signature==&quot;}, null);
+// strict.get(&quot;token&quot;) is &quot;header.payload=signature==&quot;
+
+Map&lt;String, String&gt; lenient = MapTool.toMap(&quot;flag&amp;name=Ada&quot;);
+// &quot;flag&quot; has no '=' and is ignored; lenient contains only name=Ada
+</code></pre>
+<p>The array form rejects a non-null pair without <code>=</code> because it normally represents structured configuration input. The
+query-string form is more tolerant and ignores fields without a complete key/value pair. Neither form URL-encodes
+output from <code>join</code>, and neither preserves multiple values for the same key.</p>
+<p>For flattening, keys are paths rather than reversible original keys unless the caller understands the escaping rules:</p>
+<pre><code class="language-java">Map&lt;String, Object&gt; nested = new LinkedHashMap&lt;&gt;();
+nested.put(&quot;a.b&quot;, Collections.singletonMap(&quot;c&quot;, 42));
+
+Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
+// {a\\.b.c=42}
+</code></pre>
+<p><code>flatten(null)</code> returns an empty <code>LinkedHashMap</code>. Lists, arrays, primitive values, and null are leaves; only <code>Map</code>
+values are traversed.</p>
+<h2>Implementation notes</h2>
+<p><code>join</code> is a direct iteration over <code>map.keySet()</code>, so its output order is the concrete map's iteration order. Use a
+<code>LinkedHashMap</code> when stable serialized order matters. The parser splits at most once (<code>split(&quot;=&quot;, 2)</code>), which is why
+Base64 values, JWT-like strings, and signatures containing <code>=</code> remain intact.</p>
+<p><code>flatten</code> uses depth-first recursion and an identity-based set of maps currently on the recursion path. Identity rather
+than <code>equals()</code> detects an actual object cycle without treating two equal-but-independent maps as a cycle. The current
+path is removed after each branch, so reusing the same non-cyclic child map in two separate branches is supported.</p>
 
             </article>
         </div>

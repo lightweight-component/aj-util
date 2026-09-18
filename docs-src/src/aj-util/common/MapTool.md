@@ -1,112 +1,93 @@
 ---
 title: MapTool
-description: Utility methods for Map operations, filtering, and transformations
+description: Join, parse, convert, and flatten Map values.
 tags:
-  - Map utilities
-  - XML conversion
-  - data structures
+  - Map
+  - conversion
+  - Java
 layout: layouts/aj-util.njk
 ---
 
-# MapTool Tutorial
+# MapTool
 
-This tutorial provides an overview of the `MapTool` class, which is part of the `lightweight-component/aj-util` library.
-The `MapTool` class provides utility methods for working with Map data structures in Java applications.
+`MapTool` contains static operations for serializing simple string-keyed maps, parsing key/value inputs, converting map values, and flattening nested maps. XML conversion is not part of `MapTool`; use `XmlHelper` for XML work.
 
-## Introduction
-
-The `MapTool` class contains static methods for common Map operations such as conversion, joining, and XML
-serialization/deserialization.
-
-## Main Features
-
-- Join Map entries into strings with various delimiters
-- Convert between different Map types and formats
-- Convert between Maps and XML
-- Copy the top-level entries of a Map
-- Helper methods for Map value processing
-
-## Methods
-
-### 1. `join()` Methods
-
-Four overloaded methods for joining Map entries into strings:
-
-1. `join(Map<String, T> map, String div, Function<T, String> fn)` - Join with custom delimiter and value processor
-2. `join(Map<String, T> map, Function<T, String> fn)` - Join with default delimiter (&) and custom value processor
-3. `join(Map<String, T> map, String div)` - Join with custom delimiter and default toString() value processor
-4. `join(Map<String, T> map)` - Join with default delimiter (&) and default toString() value processor
-
-### 2. `toMap()` Methods
-
-Two methods for converting to Maps:
-
-1. `toMap(String[] pairs, Function<String, Object> fn)` - Convert array of key=value strings to Map
-2. `toMap(String[] columns, String[] values, Function<String, Object> fn)` - Convert parallel key and value arrays to
-   Map
-
-### 3. `getValue()`
-
-`getValue(Map<String, T> map, String key, Consumer<T> s)` - Safely get and process a Map value if present
-
-### 4. `as()` Methods
-
-Two methods for Map conversion:
-
-1. `as(Map<String, K> map, Function<K, T> fn)` - Convert Map values using a function
-2. `as(Map<String, String[]> map)` - Convert Map with String[] values to Map<String, Object>
-
-### 5. `shallowCopy()`
-
-`shallowCopy(Map<T, K> map)` creates a new `HashMap` containing the same keys and values. Nested maps,
-collections, arrays, and objects remain shared references.
-
-### 6. XML Conversion Methods
-
-1. `beanToXml(Object bean)` - Convert Java bean to XML string
-2. `mapToXml(Map<String, ?> data)` - Convert Map to XML string
-3. `xmlToMap(String strXML)` - Convert XML string to Map
-
-`mapToXml` preserves value whitespace. Every key must be a valid XML element name; an invalid key causes
-`IllegalArgumentException` whose message identifies that key.
-
-## Usage Examples
-
-### Joining Map Entries
+## Join map entries
 
 ```java
-Map<String, String> map = new HashMap<>();
-map.put("name", "John");
-map.put("age", "30");
+Map<String, Object> values = new LinkedHashMap<>();
+values.put("name", "Ada");
+values.put("page", null);
 
-String joined = MapTool.join(map); // "name=John&age=30"
+String queryLike = MapTool.join(values); // name=Ada&page=
+String custom = MapTool.join(values, ";", value -> String.valueOf(value));
 ```
 
-### Converting to Map
+`join` writes `key=value` pairs in the map's iteration order. Its default delimiter is `&`; null values become empty strings. It does not URL-encode keys or values—apply `UrlCodec` first when producing an HTTP query string.
+
+## Create maps from key/value input
 
 ```java
-String[] pairs = {"name=John", "age=30"};
-Map<String, Object> map = MapTool.toMap(pairs, Integer::parseInt);
+Map<String, Object> fromPairs = MapTool.toMap(
+        new String[]{"id=42", "page=3"}, Integer::valueOf);
+
+Map<String, Object> fromColumns = MapTool.toMap(
+        new String[]{"id", "name"}, new String[]{"42", "Ada"}, null);
+
+Map<String, String> query = MapTool.toMap("name=Ada+Lovelace&token=x%3D%3D");
 ```
 
-Only the first `=` separates the key and value, so values such as JWTs and signatures are preserved. A pair ending
-in `=` produces an empty-string value.
+For array pairs, only the first `=` separates key and value; `null` entries are ignored, and an entry without `=` is rejected. Parallel key/value arrays must have the same length. The query-string overload decodes form encoding through `UrlCodec`; duplicate keys are overwritten by later values.
 
-### XML Conversion
+## Convert and flatten values
 
 ```java
-Map<String, String> data = new HashMap<>();
-data.put("name", "John");
-data.put("age", "30");
-data.put("note", null); // serialized as an empty element
+Map<String, Integer> lengths = MapTool.as(values, value -> value.toString().length());
 
-String xml = MapTool.mapToXml(data); 
-// <xml><name>John</name><age>30</age></xml>
-
-Map<String, String> map = MapTool.xmlToMap(xml);
+Map<String, Object> nested = new LinkedHashMap<>();
+nested.put("server", Collections.singletonMap("host", "localhost"));
+Map<String, Object> flat = MapTool.flatten(nested);
+// {server.host=localhost}
 ```
 
-## Conclusion
+`as` converts non-null values with the supplied function and preserves null values. `flatten` joins nesting levels with `.`. A literal `.` in a source key is escaped as `\\.`, and a literal backslash is escaped as `\\\\`; empty nested maps remain values. Circular map references are rejected with `IllegalArgumentException`.
 
-The `MapTool` class provides comprehensive utility methods for working with Map data structures, including joining,
-conversion, and XML serialization/deserialization.
+## Detailed parsing behavior
+
+The two `toMap` families intentionally differ when malformed input is encountered:
+
+```java
+Map<String, Object> strict = MapTool.toMap(
+        new String[]{"token=header.payload=signature=="}, null);
+// strict.get("token") is "header.payload=signature=="
+
+Map<String, String> lenient = MapTool.toMap("flag&name=Ada");
+// "flag" has no '=' and is ignored; lenient contains only name=Ada
+```
+
+The array form rejects a non-null pair without `=` because it normally represents structured configuration input. The
+query-string form is more tolerant and ignores fields without a complete key/value pair. Neither form URL-encodes
+output from `join`, and neither preserves multiple values for the same key.
+
+For flattening, keys are paths rather than reversible original keys unless the caller understands the escaping rules:
+
+```java
+Map<String, Object> nested = new LinkedHashMap<>();
+nested.put("a.b", Collections.singletonMap("c", 42));
+
+Map<String, Object> flat = MapTool.flatten(nested);
+// {a\\.b.c=42}
+```
+
+`flatten(null)` returns an empty `LinkedHashMap`. Lists, arrays, primitive values, and null are leaves; only `Map`
+values are traversed.
+
+## Implementation notes
+
+`join` is a direct iteration over `map.keySet()`, so its output order is the concrete map's iteration order. Use a
+`LinkedHashMap` when stable serialized order matters. The parser splits at most once (`split("=", 2)`), which is why
+Base64 values, JWT-like strings, and signatures containing `=` remain intact.
+
+`flatten` uses depth-first recursion and an identity-based set of maps currently on the recursion path. Identity rather
+than `equals()` detects an actual object cycle without treating two equal-but-independent maps as a cycle. The current
+path is removed after each branch, so reusing the same non-cyclic child map in two separate branches is supported.

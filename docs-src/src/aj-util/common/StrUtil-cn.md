@@ -1,78 +1,70 @@
 ---
 title: StrUtil
-description: 字符串模板、填充、连接和操作的实用方法
-date: 2025-09-11
+description: 字符串模板与数组、列表拼接。
 tags:
   - 字符串
-  - 工具
-  - 操作
+  - 模板
 layout: layouts/aj-util-cn.njk
 ---
 
-# StrUtil 教程
+# StrUtil
 
-本教程提供了 `StrUtil` 类的概述，该类是 `lightweight-component/aj-util` 库的一部分。`StrUtil` 类为 Java
-应用程序中的字符串操作提供了实用工具方法。
+`StrUtil` 当前提供简单模板替换以及数组、列表拼接；不再提供填充、字符计数或成员判断方法。
 
-## 简介
+## 模板
 
-`StrUtil` 提供字符串计数、填充、模板替换、拼接和成员判断等静态方法。
-
-## 主要特性
-
-- 带占位符的字符串模板
-- 字符串填充和格式化
-- 使用自定义分隔符连接列表/数组
-
-## 方法
-
-### 1. 拼接
-
-1. `join(T[] arr, String str)` - 使用分隔符连接数组
-2. `join(List<String> list, String str)` - 使用分隔符连接字符串列表
-3. `join(List<String> list, String tpl, String str)` - 格式化并连接字符串列表
-
-数组和列表重载都将 `null` 元素输出为空字符串。
-
-### 3. 模板
-
-1. `simpleTpl(String template, Map<String, Object> params)` - `${var}` 替换
-2. `simpleTpl2(String template, Map<String, Object> data)` - `#{var}` 替换
-3. `simpleTpl(String template, Object data)` - JavaBean 属性替换
-
-替换值按字面量处理，值中包含 `$` 或 `\` 也不会被解释为分组引用。JavaBean 模板会跳过只写属性；
-getter 执行失败时，抛出的 `RuntimeException` 会指出属性名并保留 getter 异常作为 cause。
-
-### 4. 实用工具
-
-1. `charCount(String str, String _char)` - 统计出现次数，支持重叠匹配
-2. `leftPad(String str, int len, String padding)` - 精确填充到 `len`，不会改动原字符串已有空白
-3. `isWordOneOfThem(String word, String[] arr)` - 检查字符串是否在数组中
-
-## 使用示例
-
-### 模板
+Map 重载替换 `${name}` 占位符，Map 中缺失或为 null 的值替换为空字符串。
 
 ```java
 Map<String, Object> values = new HashMap<>();
-values.put("name", "John");
-String tpl = StrUtil.simpleTpl("Name: ${name}", values);
-// "Name: John"
+values.put("name", "Ada");
+String message = StrUtil.simpleTpl("Hello, ${name}! ${missing}", values);
+// Hello, Ada!
 ```
 
-### 计数与填充
+JavaBean 重载替换可读属性对应的 `#{property}` 占位符。Bean 属性为 null 时替换为文本 `null`，只写属性会跳过。替换值按字面量处理，`$` 和反斜杠可安全使用。getter 执行失败时，抛出的 `RuntimeException` 会标明属性名并保留原始异常作为 cause。
 
 ```java
-int count = StrUtil.charCount("aaa", "aa"); // 2，重叠匹配也会计数
-String padded = StrUtil.leftPad("a b", 6, "$"); // "$$$a b"
+String message = StrUtil.simpleTpl("Hello, #{name}!", user);
 ```
 
-### 连接
+## 拼接数组和列表
 
 ```java
-String joined = StrUtil.join(Arrays.asList("a", "b", "c"), ","); // "a,b,c"
+String array = StrUtil.join(new String[]{"a", null, "c"}, "&");
+String list = StrUtil.join(Arrays.asList("a", "b", "c"), "[%s]", ", ");
+// a&&c
+// [a], [b], [c]
 ```
 
-## 结论
+可用重载包括泛型数组、带格式模板的字符串数组，以及带可选模板的字符串列表。null 元素会输出为空字符串。
 
-`StrUtil` 类提供了全面的实用方法，用于字符串操作，使 Java 应用程序中的常见字符串操作更加方便。
+## 占位符和格式规则
+
+两类模板重载刻意使用不同的占位符语法：
+
+| 重载 | 占位符 | 缺失/null 值 |
+| --- | --- | --- |
+| `simpleTpl(String, Map)` | `${word}` | 空字符串 |
+| `simpleTpl(String, Object)` | `#{property}` | 可读属性为 null 时输出文本 `null` |
+
+Map 占位符仅匹配单词字符（`${name_1}` 有效，`${user.name}` 不属于该 API 的占位符）。无法识别的文本保持不变。Bean 重载检查 JavaBean getter 属性（包含继承属性），不直接读取字段。
+
+```java
+Map<String, Object> values = new HashMap<>();
+values.put("path", "$1\\temp");
+String result = StrUtil.simpleTpl("path=${path}", values);
+// path=$1\temp
+```
+
+之所以能够安全处理 `$1`，是因为替换内容在调用 `Matcher.appendReplacement` 前会被引用；`$1` 只是数据，不是正则反向引用。列表拼接的模板会传入 `String.format`，因此应包含如 `%s` 的合适转换符。
+
+## 选择合适的工具
+
+`StrUtil` 专注于小型格式化操作。正则替换使用 `RegExpHelper`；URL/表单编码使用 `UrlCodec`；字节、字符集和十六进制转换使用 `StringBytes`。
+
+## 实现原理与取舍
+
+Map 模板重载使用一个预编译 `Pattern` 扫描 `${word}`，再通过 `Matcher.appendReplacement` / `appendTail` 构造结果。对替换文本进行引用后，正则引擎不会把值中的 `$` 或反斜杠解释为特殊语法。Bean 重载则使用 JavaBeans 内省，并针对每个可读属性调用普通 `String.replace`；这也解释了它为何使用 `#{property}` 语法，以及为什么 null 行为不同。
+
+拼接方法使用 `StringBuilder`，仅在元素之间附加分隔符，从而避免尾部分隔符。它们刻意不转义值、也不进行依赖 Locale 的格式化；需要时应在拼接前完成这些转换。

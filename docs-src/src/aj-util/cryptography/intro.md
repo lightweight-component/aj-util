@@ -20,17 +20,3 @@ AJ Util wraps JCA/JCE with explicit keys and per-operation inputs. Current sourc
 - CBC is unauthenticated. Legacy ECB is for historical interoperability only. DES/3DES and old PBE examples in `TestCryptographyLegacy` are test-local helpers, not current library convenience APIs.
 
 Read [cipher flow and key handling](/aj-util/cryptography/flow/), [AES/PBE](/aj-util/cryptography/Cryptography/) and [RSA, PEM and certificates](/aj-util/cryptography/Rsa/).
-
-## Dependency and evidence
-
-Current `aj-util/pom.xml` coordinates (not a claim of latest published version), Java 8 baseline:
-
-```xml
-<dependency>
-    <groupId>com.ajaxjs</groupId>
-    <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.8</version>
-</dependency>
-```
-
-[Source](https://github.com/lightweight-component/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/cryptography) and tests under `aj-util/src/test/java/com/ajaxjs/util/cryptography/` are the authority. Relevant tests include `TestDoCipher`, `TestCipherResult`, `TestSecretKeyMgr`, `aes/TestAes`, `aes/TestAesCipherResult`, `rsa/TestRsa`, `rsa/TestVerify`, `rsa/TestPemUtils` and `rsa/TestRestoreKey`. Round trips are not a security audit; provider support and deployed JDK policy still matter.

@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,12 +50,10 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <label for="project-select">选择工程</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/cn/" selected>aj-util</option>
     
@@ -87,7 +91,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -126,6 +130,7 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 
@@ -168,15 +173,6 @@
 <li>CBC 不提供认证，旧 ECB 仅用于历史互通。<code>TestCryptographyLegacy</code> 中的 DES/3DES 和旧 PBE 示例是测试内部辅助方法，不是当前库的便捷 API。</li>
 </ul>
 <p>阅读<a href="/aj-util/cryptography/flow-cn/">加解密流程与密钥处理</a>、<a href="/aj-util/cryptography/Cryptography-cn/">AES/PBE</a> 和 <a href="/aj-util/cryptography/Rsa-cn/">RSA、PEM 与证书</a>。</p>
-<h2>依赖与依据</h2>
-<p>当前 <code>aj-util/pom.xml</code> 坐标（不代表最新已发布版本），Java 8 基线：</p>
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
-    &lt;artifactId&gt;ajaxjs-util&lt;/artifactId&gt;
-    &lt;version&gt;1.3.8&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>以<a href="https://github.com/lightweight-component/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/cryptography">源码</a>及 <code>aj-util/src/test/java/com/ajaxjs/util/cryptography/</code> 下的测试为准。相关测试包括 <code>TestDoCipher</code>、<code>TestCipherResult</code>、<code>TestSecretKeyMgr</code>、<code>aes/TestAes</code>、<code>aes/TestAesCipherResult</code>、<code>rsa/TestRsa</code>、<code>rsa/TestVerify</code>、<code>rsa/TestPemUtils</code> 和 <code>rsa/TestRestoreKey</code>。往返测试不是安全审计，仍须核对提供者支持及部署 JDK 策略。</p>
 
             </article>
         </div>

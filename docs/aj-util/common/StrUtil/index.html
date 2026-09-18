@@ -5,13 +5,18 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>aj-util - StrUtil</title>
-        <meta name="description" content="Small Java utilities with many useful functions. Utility methods for string templating, padding, joining, and manipulation" />
-        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, string,utilities,manipulation" />
+        <meta name="description" content="Small Java utilities with many useful functions. String templates and array/list joining." />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, string,template" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,65 +131,79 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
                 
             </menu>
             <article class="aj-text">
-                <h1>StrUtil Tutorial</h1>
-<p>This tutorial provides an overview of the <code>StrUtil</code> class, which is part of the <code>lightweight-component/aj-util</code> library.
-The <code>StrUtil</code> class provides utility methods for string manipulation in Java applications.</p>
-<h2>Introduction</h2>
-<p>The <code>StrUtil</code> class contains static methods for counting, padding, templating, joining, and membership checks.</p>
-<h2>Main Features</h2>
-<ul>
-<li>String templating with placeholders</li>
-<li>String padding and formatting</li>
-<li>List/array joining with custom delimiters</li>
-</ul>
-<h2>Methods</h2>
-<h3>1. Joining</h3>
-<ol>
-<li><code>join(T[] arr, String str)</code> - Join an array with a delimiter</li>
-<li><code>join(List&lt;String&gt; list, String str)</code> - Join a string list with a delimiter</li>
-<li><code>join(List&lt;String&gt; list, String tpl, String str)</code> - Format and join a string list</li>
-</ol>
-<p>Array and list overloads serialize a <code>null</code> element as an empty string.</p>
-<h3>3. Templating</h3>
-<ol>
-<li><code>simpleTpl(String template, Map&lt;String, Object&gt; params)</code> - <code>${var}</code> replacement</li>
-<li><code>simpleTpl2(String template, Map&lt;String, Object&gt; data)</code> - <code>#{var}</code> replacement</li>
-<li><code>simpleTpl(String template, Object data)</code> - JavaBean property replacement</li>
-</ol>
-<p>Replacement values are treated literally, so <code>$</code> and <code>\</code> are safe in values. JavaBean templating skips write-only
-properties. If a getter fails, the thrown <code>RuntimeException</code> identifies the property and retains the getter failure
-as its cause.</p>
-<h3>4. Utilities</h3>
-<ol>
-<li><code>charCount(String str, String _char)</code> - Count occurrences, including overlapping matches</li>
-<li><code>leftPad(String str, int len, String padding)</code> - Pad to exactly <code>len</code> characters without changing whitespace already
-in <code>str</code></li>
-<li><code>isWordOneOfThem(String word, String[] arr)</code> - Check string in array</li>
-</ol>
-<h2>Usage Examples</h2>
-<h3>Templating</h3>
+                <h1>StrUtil</h1>
+<p><code>StrUtil</code> currently provides simple template replacement and array/list joining. It does not provide padding, character counting, or membership helpers.</p>
+<h2>Templates</h2>
+<p>The Map overload replaces <code>${name}</code> placeholders. Missing or null map values become empty strings.</p>
 <pre><code class="language-java">Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();
-values.put(&quot;name&quot;, &quot;John&quot;);
-String tpl = StrUtil.simpleTpl(&quot;Name: ${name}&quot;, values);
-// &quot;Name: John&quot;
+values.put(&quot;name&quot;, &quot;Ada&quot;);
+String message = StrUtil.simpleTpl(&quot;Hello, ${name}! ${missing}&quot;, values);
+// Hello, Ada!
 </code></pre>
-<h3>Counting and padding</h3>
-<pre><code class="language-java">int count = StrUtil.charCount(&quot;aaa&quot;, &quot;aa&quot;); // 2: overlapping matches are counted
-String padded = StrUtil.leftPad(&quot;a b&quot;, 6, &quot;$&quot;); // &quot;$$$a b&quot;
+<p>The JavaBean overload replaces <code>#{property}</code> placeholders with readable bean properties. A null bean property becomes the text <code>null</code>; write-only properties are skipped. Replacement values are literal, so <code>$</code> and backslashes are safe. If a getter fails, the thrown <code>RuntimeException</code> identifies the property and retains the getter exception as its cause.</p>
+<pre><code class="language-java">String message = StrUtil.simpleTpl(&quot;Hello, #{name}!&quot;, user);
 </code></pre>
-<h3>Joining</h3>
-<pre><code class="language-java">String joined = StrUtil.join(Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;,&quot;); // &quot;a,b,c&quot;
+<h2>Join arrays and lists</h2>
+<pre><code class="language-java">String array = StrUtil.join(new String[]{&quot;a&quot;, null, &quot;c&quot;}, &quot;&amp;&quot;);
+String list = StrUtil.join(Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;[%s]&quot;, &quot;, &quot;);
+// a&amp;&amp;c
+// [a], [b], [c]
 </code></pre>
-<h2>Conclusion</h2>
-<p>The <code>StrUtil</code> class provides comprehensive utility methods for string manipulation, making common string operations more
-convenient in Java applications.</p>
+<p>Available overloads accept a generic array, a string array with a format template, and string lists with an optional template. Null elements are rendered as empty strings.</p>
+<h2>Placeholder and formatting rules</h2>
+<p>The two template forms deliberately use different placeholder syntax:</p>
+<table>
+<thead>
+<tr>
+<th>Overload</th>
+<th>Placeholder</th>
+<th>Missing/null value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>simpleTpl(String, Map)</code></td>
+<td><code>${word}</code></td>
+<td>empty string</td>
+</tr>
+<tr>
+<td><code>simpleTpl(String, Object)</code></td>
+<td><code>#{property}</code></td>
+<td>text <code>null</code> for a readable null property</td>
+</tr>
+</tbody>
+</table>
+<p>Map placeholders match word characters only (<code>${name_1}</code> is valid; <code>${user.name}</code> is not a placeholder for this API).
+Unrecognized text remains unchanged. The Bean overload inspects JavaBean getter properties, including inherited ones;
+it does not read fields directly.</p>
+<pre><code class="language-java">Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();
+values.put(&quot;path&quot;, &quot;$1\\temp&quot;);
+String result = StrUtil.simpleTpl(&quot;path=${path}&quot;, values);
+// path=$1\temp
+</code></pre>
+<p>This works because replacements are quoted before applying <code>Matcher.appendReplacement</code>; <code>$1</code> is data, not a regex
+back-reference. For list joins, the template is passed to <code>String.format</code>, so it should contain an appropriate
+conversion such as <code>%s</code>.</p>
+<h2>Choosing the right helper</h2>
+<p><code>StrUtil</code> intentionally focuses on small formatting operations. For regular-expression replacement use
+<code>RegExpHelper</code>; for URL/form encoding use <code>UrlCodec</code>; for bytes, character sets, and hexadecimal conversion use
+<code>StringBytes</code>.</p>
+<h2>Implementation notes</h2>
+<p>The Map template overload scans <code>${word}</code> with one precompiled <code>Pattern</code> and builds the result with
+<code>Matcher.appendReplacement</code> / <code>appendTail</code>. Quoting replacement text prevents the regex engine from interpreting <code>$</code>
+or backslashes in a value. The Bean overload instead uses JavaBeans introspection and ordinary <code>String.replace</code> for
+each readable property, which explains both its <code>#{property}</code> syntax and its different null behavior.</p>
+<p>Join methods use a <code>StringBuilder</code> and append the delimiter only between elements, avoiding a trailing delimiter.
+They intentionally do not escape values or apply locale-sensitive formatting; perform those transformations before
+joining when required.</p>
 
             </article>
         </div>

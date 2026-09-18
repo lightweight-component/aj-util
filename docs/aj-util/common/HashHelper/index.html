@@ -10,8 +10,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             // 获取用户的默认语言
             var userLang = navigator.language || navigator.userLanguage;
@@ -38,6 +43,7 @@
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                     | 🚀 <a href="/aj-util/cn/">Chinese Version</a>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -46,12 +52,10 @@
                 <h3>Java Tools Documentation</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
                 <label for="project-select">Project</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/" selected>aj-util</option>
     
@@ -89,7 +93,7 @@
                     <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
@@ -127,7 +131,8 @@
                </ul>
                <h3>Misc.</h3>
                <ul>
-                <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
                 <li><a href="/aj-util/misc/contact/">Contact</a></li>
                </ul>
                 
@@ -149,6 +154,50 @@ String sameMac = HashHelper.hmacSHA256(&quot;hello&quot;, &quot;example-only-key
 <h2>Convenience methods</h2>
 <p><code>md5(String)</code>, <code>md5(byte[])</code>, <code>md5(InputStream)</code>, <code>sha1(String)</code> and <code>sha256(String)</code> return lowercase hex. <code>hmacMD5</code>, <code>hmacSHA1</code> and <code>hmacSHA256</code> take <code>(String data, String key, boolean isWithoutPadding)</code> and return Base64.</p>
 <p><strong>Stream ownership:</strong> current <code>md5(InputStream)</code> uses <code>DataReader</code> and closes the input stream, despite its Javadoc saying otherwise. Do not reuse it afterward. It processes chunks instead of loading the entire file. Protect real HMAC keys; the example key is not a production secret.</p>
+<h2>Digest or HMAC?</h2>
+<p>A message digest is an unkeyed fingerprint: the same bytes always produce the same result, so it is useful for an
+integrity check where the expected digest comes from a trusted source. HMAC combines data with a shared secret and is
+used to authenticate a message. HMAC is not selected by a separate method family internally: the exact algorithm name
+must begin with <code>Hmac</code> (for example <code>HmacSHA256</code>).</p>
+<pre><code class="language-java">String sha256 = new HashHelper(HashHelper.SHA256, &quot;abc&quot;).hashAsStr();
+// ba7816bf8f01cfea414140de5dae2223...
+
+String signature = new HashHelper(HashHelper.HMAC_SHA256, &quot;data&quot;)
+        .setKey(&quot;shared-secret&quot;)
+        .hashAsBase64(true);
+</code></pre>
+<p>The key must be supplied before an HMAC call. Use <code>setKey(String)</code> only when the protocol defines a UTF-8 textual
+secret. If a provider supplies random key bytes as Base64, use <code>setKeyBase64(String)</code> so those bytes are not mistakenly
+treated as the literal Base64 characters.</p>
+<pre><code class="language-java">String keyFromConfig = &quot;c2lnbmluZy1rZXktYnl0ZXM=&quot;;
+String mac = new HashHelper(HashHelper.HMAC_SHA256, payloadBytes)
+        .setKeyBase64(keyFromConfig)
+        .hashAsBase64();
+</code></pre>
+<h2>Output formats and interoperability</h2>
+<p><code>hashAsStr()</code> is lowercase hexadecimal and is usually convenient for logs or a checksum file. <code>hashAsBase64()</code> is
+shorter for a binary digest and retains <code>=</code> padding by default. Choose the format required by the remote protocol;
+changing hex letter case or Base64 padding can cause a signature comparison to fail even when the underlying bytes are
+identical.</p>
+<p><code>String</code> data is consistently converted with UTF-8. For a protocol that signs a canonical byte sequence, construct
+the helper with <code>byte[]</code> after producing that exact sequence. Avoid signing a Java object string representation unless
+the protocol explicitly specifies it.</p>
+<h2>Stream checksums</h2>
+<p><code>md5(InputStream)</code> updates a <code>MessageDigest</code> per chunk, so it does not retain the entire file in memory:</p>
+<pre><code class="language-java">try (InputStream in = Files.newInputStream(Paths.get(&quot;release.zip&quot;))) {
+    String checksum = HashHelper.md5(in);
+    verifyExpectedChecksum(checksum);
+}
+</code></pre>
+<p>The method closes the stream itself. The surrounding try-with-resources is harmless but redundant; use it when the
+same code path may change to another stream API later.</p>
+<h2>Security guidance and implementation notes</h2>
+<p>Prefer SHA-256 or HMAC-SHA-256 for new designs. MD5 and SHA-1 may remain necessary for legacy interoperability or a
+non-security checksum, but do not use them for password storage, signatures, or collision-resistant identity checks.
+For passwords, use a dedicated adaptive password-hashing scheme supplied by an appropriate security library.</p>
+<p>Each operation asks the JDK security provider for a <code>MessageDigest</code> or <code>Mac</code>, initializes it, and returns its result;
+instances do not cache a mutable digest state. Unsupported algorithms and invalid HMAC keys fail explicitly instead of
+silently returning an empty value.</p>
 
             </article>
         </div>

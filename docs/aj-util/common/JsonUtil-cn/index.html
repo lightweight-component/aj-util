@@ -5,7 +5,7 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title>aj-util - JsonUtil</title>
-        <meta name="description" content="Small Java utilities with many useful functions.  JSON、Map、Bean、List 之间转换的实用方法" />
+        <meta name="description" content="Small Java utilities with many useful functions.  基于可替换 JSON 引擎的 JSON 转换工具" />
         <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, JSON,序列化,Java" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,12 +50,10 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <label for="project-select">选择工程</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/cn/" selected>aj-util</option>
     
@@ -87,7 +91,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -126,6 +130,7 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 
@@ -133,19 +138,18 @@
             </menu>
             <article class="aj-text chinese">
                 <h1>JsonUtil 教程</h1>
-<p>本教程提供了 <code>JsonUtil</code> 类的概述，该类是 <code>lightweight-component/aj-util</code> 库的一部分。<code>JsonUtil</code> 类为 Java 应用程序中的
-JSON 数据处理提供了实用工具方法。</p>
+<p><code>JsonUtil</code> 是 JSON 序列化、解析和对象转换的静态门面。它将工作委托给 <code>JsonEngine</code>，调用方无需暴露 Jackson <code>ObjectMapper</code>、
+<code>JsonNode</code> 等实现特定类型。</p>
 <h2>简介</h2>
-<p><code>JsonUtil</code> 类包含使用 Jackson 库的静态方法，用于常见的 JSON 操作，包括 JSON 字符串、Java 对象、Map 和 List 之间的转换。</p>
+<p><code>JsonUtil</code> 通过当前配置的 JSON 引擎提供 JSON 字符串、Java 对象、Map 和 List 之间的常见转换。</p>
 <h2>主要特性</h2>
 <ul>
 <li>将 Java 对象转换为 JSON 字符串（美化或紧凑格式）</li>
 <li>将 JSON 字符串解析为 Java 对象</li>
 <li>JSON 与 Map/List 之间的转换</li>
 <li>类型安全的 JSON 处理</li>
-<li>Java 8 日期/时间支持</li>
-<li>严格的重复检测</li>
 <li>延迟初始化并安全发布共享 <code>JsonEngine</code></li>
+<li>以 <code>Object</code> 返回实现无关的 JSON 树模型</li>
 </ul>
 <h2>方法</h2>
 <h3>1. 序列化 (转 JSON)</h3>
@@ -178,7 +182,7 @@ JSON 数据处理提供了实用工具方法。</p>
 </ol>
 <h3>6. JSON 树模型</h3>
 <ol>
-<li><code>json2Node(String jsonStr)</code> - 将 JSON 解析为 JsonNode 树</li>
+<li><code>json2Node(String jsonStr)</code> - 将 JSON 解析为引擎特定的树对象</li>
 </ol>
 <h2>使用示例</h2>
 <h3>基本序列化</h3>
@@ -210,14 +214,30 @@ Map&lt;String, Object&gt; map2 = JsonUtil.json2map(json);
 <pre><code class="language-java">String jsonArray = &quot;[{\&quot;name\&quot;:\&quot;John\&quot;}, {\&quot;name\&quot;:\&quot;Alice\&quot;}]&quot;;
 List&lt;User&gt; users = JsonUtil.json2list(jsonArray, User.class);
 </code></pre>
-<h2>配置</h2>
-<p><code>JsonUtil</code> 类预配置了：</p>
-<ul>
-<li>Java 8 日期/时间支持</li>
-<li>严格的重复检测</li>
-<li>亚洲/上海时区</li>
-<li>默认的 ObjectMapper 实例</li>
-</ul>
+<h2>引擎配置</h2>
+<p>首次使用时，<code>JsonUtil.getEngine()</code> 会通过 Java <code>ServiceLoader</code> 加载 <code>JsonEngineProvider</code> 实现，并选择优先级最高的提供者。
+工程在可选的 Jackson 依赖存在时提供 Jackson 2 引擎，但门面 API 本身不绑定 Jackson。</p>
+<p>应用可在首次转换之前显式设置引擎：</p>
+<pre><code class="language-java">JsonUtil.setEngine(myJsonEngine);
+</code></pre>
+<p><code>setEngine(null)</code> 会被拒绝。替换引擎会全局影响后续调用，应在应用启动阶段配置，而不是与普通 JSON 操作并发执行。日期支持、重复键处理、时区行为和具体树模型类型取决于引擎，并非 <code>JsonUtil</code> 的统一保证。</p>
+<h2>Map、Bean 和树模型示例</h2>
+<pre><code class="language-java">Map&lt;String, Object&gt; source = new LinkedHashMap&lt;&gt;();
+source.put(&quot;name&quot;, &quot;Ada&quot;);
+source.put(&quot;age&quot;, 36);
+
+String json = JsonUtil.toJson(source);
+Map&lt;String, String&gt; strings = JsonUtil.json2StrMap(json);
+Map&lt;String, Object&gt; values = JsonUtil.json2map(json);
+User user = JsonUtil.map2pojo(values, User.class);
+Map&lt;String, Object&gt; userValues = JsonUtil.pojo2map(user);
+</code></pre>
+<p><code>json2sortMap</code> 请求 <code>LinkedHashMap</code>，以保留解析后的键顺序。<code>convertValue</code> 委托给所选引擎的对象转换能力，适合目标类型在运行时才确定的场景。<code>json2Node</code> 用于引擎特定的树遍历，只有在确定所选引擎时才应强制转换其结果。</p>
+<h2>生命周期与失败处理</h2>
+<p>首次创建完成后，引擎会缓存在 volatile 字段中。运行时类加载器中没有可见的 <code>JsonEngineProvider</code> 时，<code>getEngine()</code> 抛出 <code>IllegalStateException</code>。<code>fromJson</code> 将解析/映射失败包装为带原始 cause 的 <code>RuntimeException</code>；其他方法直接委托，可能暴露提供者特定异常。转换失败时，也不应因此记录不受信任的原始 JSON 内容。</p>
+<h2>实现原理与取舍</h2>
+<p><code>JsonUtil</code> 将选中的引擎保存于 <code>volatile</code> 字段，并通过 synchronized 的双重检查完成延迟初始化。这样启动后的普通调用无需加锁，同时能安全发布已完整创建的引擎。提供者使用 Java 标准 <code>ServiceLoader</code> 发现，再按声明的优先级比较；应用无需改动 <code>JsonUtil</code> 调用方即可替换 JSON 后端。</p>
+<p>门面刻意让 <code>json2Node</code> 返回 <code>Object</code>：若在此处返回某个库特定的树类型，通用模块将永久依赖该库。代价是处理树模型的代码必须知道当前激活的提供者。</p>
 <h2>结论</h2>
 <p><code>JsonUtil</code> 类提供了全面的实用方法，用于处理 JSON 数据，使序列化、反序列化以及 JSON 与 Java 对象之间的转换更加容易。</p>
 

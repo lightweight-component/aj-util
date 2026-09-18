@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,12 +50,10 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <label for="project-select">选择工程</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/cn/" selected>aj-util</option>
     
@@ -87,7 +91,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -126,6 +130,7 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 
@@ -147,6 +152,43 @@ String sameMac = HashHelper.hmacSHA256(&quot;hello&quot;, &quot;example-only-key
 <h2>便捷方法</h2>
 <p><code>md5(String)</code>、<code>md5(byte[])</code>、<code>md5(InputStream)</code>、<code>sha1(String)</code>、<code>sha256(String)</code> 返回小写十六进制。<code>hmacMD5</code>、<code>hmacSHA1</code>、<code>hmacSHA256</code> 接收 <code>(String data, String key, boolean isWithoutPadding)</code>，返回 Base64。</p>
 <p><strong>流所有权：</strong> 当前 <code>md5(InputStream)</code> 通过 <code>DataReader</code> 关闭输入流，与源码 Javadoc 的说法不同，调用后不要复用。它分块处理而非加载整个文件。请保护真实 HMAC 密钥；示例密钥不是生产秘密。</p>
+<h2>使用摘要还是 HMAC？</h2>
+<p>消息摘要是不带密钥的指纹：相同字节总会得到相同结果，适合在预期摘要来自可信来源时进行完整性校验。HMAC 将数据与共享
+秘密结合，用于认证消息。内部不会通过另一套方法自动判断 HMAC，算法名称必须以精确大小写的 <code>Hmac</code> 开头，例如
+<code>HmacSHA256</code>。</p>
+<pre><code class="language-java">String sha256 = new HashHelper(HashHelper.SHA256, &quot;abc&quot;).hashAsStr();
+// ba7816bf8f01cfea414140de5dae2223...
+
+String signature = new HashHelper(HashHelper.HMAC_SHA256, &quot;data&quot;)
+        .setKey(&quot;shared-secret&quot;)
+        .hashAsBase64(true);
+</code></pre>
+<p>调用 HMAC 前必须设置密钥。只有当协议将秘密定义为 UTF-8 文本时才使用 <code>setKey(String)</code>；如果提供方给出的是随机密钥
+字节的 Base64 表示，请使用 <code>setKeyBase64(String)</code>，避免把 Base64 字符本身误当作密钥。</p>
+<pre><code class="language-java">String keyFromConfig = &quot;c2lnbmluZy1rZXktYnl0ZXM=&quot;;
+String mac = new HashHelper(HashHelper.HMAC_SHA256, payloadBytes)
+        .setKeyBase64(keyFromConfig)
+        .hashAsBase64();
+</code></pre>
+<h2>输出格式与互操作</h2>
+<p><code>hashAsStr()</code> 输出小写十六进制，适合日志或校验和文件。<code>hashAsBase64()</code> 对二进制摘要更短，默认保留 <code>=</code> 填充。应选择
+远端协议规定的格式；即使底层字节相同，改变十六进制大小写或 Base64 填充也可能导致签名比较失败。</p>
+<p>字符串数据一律按 UTF-8 转字节。若协议要求对规范化字节序列签名，请先构造出精确的 <code>byte[]</code> 再创建 helper。除非协议
+明确规定，否则不要签名 Java 对象的字符串表示。</p>
+<h2>流式校验和</h2>
+<p><code>md5(InputStream)</code> 每块更新一次 <code>MessageDigest</code>，不会将整个文件保留在内存中：</p>
+<pre><code class="language-java">try (InputStream in = Files.newInputStream(Paths.get(&quot;release.zip&quot;))) {
+    String checksum = HashHelper.md5(in);
+    verifyExpectedChecksum(checksum);
+}
+</code></pre>
+<p>该方法自身会关闭流。外层的 try-with-resources 无害但属于冗余；当同一段代码日后可能换用其他流 API 时，保留它也能让
+资源所有权更直观。</p>
+<h2>安全建议与实现原理</h2>
+<p>新设计应优先 SHA-256 或 HMAC-SHA-256。MD5、SHA-1 可以用于遗留互操作或非安全校验和，但不要用于密码存储、签名或
+需要抗碰撞的身份判断。密码应使用合适安全库提供的专门、可调成本的密码哈希算法。</p>
+<p>每次操作都会向 JDK 安全提供者获取 <code>MessageDigest</code> 或 <code>Mac</code>、初始化并返回结果；实例不缓存可变摘要状态。不支持的
+算法与非法 HMAC 密钥会明确失败，不会悄悄返回空值。</p>
 
             </article>
         </div>

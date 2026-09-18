@@ -20,17 +20,3 @@ AJ Util 对 JCA/JCE 做轻量封装，显式配置密钥并在每次操作时传
 - CBC 不提供认证，旧 ECB 仅用于历史互通。`TestCryptographyLegacy` 中的 DES/3DES 和旧 PBE 示例是测试内部辅助方法，不是当前库的便捷 API。
 
 阅读[加解密流程与密钥处理](/aj-util/cryptography/flow-cn/)、[AES/PBE](/aj-util/cryptography/Cryptography-cn/) 和 [RSA、PEM 与证书](/aj-util/cryptography/Rsa-cn/)。
-
-## 依赖与依据
-
-当前 `aj-util/pom.xml` 坐标（不代表最新已发布版本），Java 8 基线：
-
-```xml
-<dependency>
-    <groupId>com.ajaxjs</groupId>
-    <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.8</version>
-</dependency>
-```
-
-以[源码](https://github.com/lightweight-component/aj-util/tree/main/aj-util/src/main/java/com/ajaxjs/util/cryptography)及 `aj-util/src/test/java/com/ajaxjs/util/cryptography/` 下的测试为准。相关测试包括 `TestDoCipher`、`TestCipherResult`、`TestSecretKeyMgr`、`aes/TestAes`、`aes/TestAesCipherResult`、`rsa/TestRsa`、`rsa/TestVerify`、`rsa/TestPemUtils` 和 `rsa/TestRestoreKey`。往返测试不是安全审计，仍须核对提供者支持及部署 JDK 策略。

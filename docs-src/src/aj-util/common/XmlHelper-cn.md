@@ -1,6 +1,6 @@
 ---
 title: XmlHelper
-description: XML 解析、创建和节点操作的实用方法
+description: 安全 XML 解析、XPath 查询与 XML/Map 转换。
 tags:
   - XML
   - 解析
@@ -10,98 +10,53 @@ layout: layouts/aj-util-cn.njk
 
 # XmlHelper
 
-`XmlHelper` 类提供了用于解析 XML 文档、检索元素以及将节点转换为映射的方法。这些方法可用于处理和操作 XML 数据。
+`XmlHelper` 用于解析 XML 字符串、查询 DOM 节点，以及在简单 XML 结构和 Map 之间转换。所有 `xml` 参数都是 XML 内容，不是文件路径。
 
-`initBuilder()` 创建解析器时会应用安全限制，禁用 DTD 声明、外部实体、外部 DTD/Schema 访问、
-XInclude 和实体引用展开。因此 `getRoot`、`parseXML`、`xPath` 以及 `MapTool.xmlToMap` 都会拒绝
-XXE 输入。解析失败使用脱敏消息，不会把完整 XML 拼入日志或异常。
+## 安全解析与查询
 
-## 方法
-
-### 1. `initBuilder()`
-
-初始化一个用于 XML 解析的 `DocumentBuilder`。
-
-* **返回值:** 一个 `DocumentBuilder` 实例。
-
-**示例:**
+`initBuilder()` 创建的 `DocumentBuilder` 会禁用 DTD 声明、外部实体、外部 DTD/Schema 访问、XInclude 和实体展开。`initBuilder(boolean namespaceAware)` 仅控制命名空间感知，仍保留这些安全设置。解析失败使用脱敏消息，不会附带完整 XML 内容。
 
 ```java
-DocumentBuilder builder = XmlHelper.initBuilder();
-// builder 将是一个新的 DocumentBuilder 实例
+String xml = "<root><item id=\"7\">value</item></root>";
+
+Element root = XmlHelper.getRoot(xml);
+XmlHelper.xPath(xml, "/root/item", node -> System.out.println(node.getTextContent()));
+XmlHelper.parseXML(xml, rootNode -> System.out.println(rootNode.getNodeName()));
 ```
 
-### 2. `xPath(String xml, String xpath, Consumer<Node> fn)`
+`xPath` 会对每个选中的节点调用消费者。`parseXML` 使用 `Consumer<Node>`，仅对根元素调用一次。`nodeAsMap(xml, xpath)` 返回所选节点属性；节点没有属性或属性不存在时，`getNodeAttribute(node, name)` 返回 `null`。`getInnerXml(node)` 返回节点的子标记内容。
 
-使用 XPath 表达式从 XML 文档中检索节点，并使用给定的函数处理它们。
-
-* **参数说明：**
-    * `xml`: XML 文件的路径。
-    * `xpath`: 用于定位节点的 XPath 表达式。
-    * `fn`: 用于处理节点的函数。
-* **返回值:** 无。
-
-**示例:**
+## Map 与 Bean 转换
 
 ```java
-XmlHelper.xPath("path/to/xml/file.xml", "/root/element", node -> {
-    // 处理节点
-    System.out.println(node.getTextContent());
-});
+String generated = XmlHelper.mapToXml(Collections.singletonMap("name", "Ada"));
+Map<String, String> values = XmlHelper.xmlToMap("<xml><name>Ada</name></xml>");
+Map<String, Object> repeated = XmlHelper.xmlToMultiValueMap(
+        "<xml><tag>a</tag><tag>b</tag></xml>");
 ```
 
-### 3. `parseXML(String xml, BiConsumer<Node, NodeList> fn)`
+`mapToXml` 生成 `<xml>` 根节点，并将 Map 条目序列化为元素。`xmlToMap` 对每个元素名只保留一个值；`xmlToMultiValueMap` 会将重复元素名保留为集合。`beanToXml` 序列化 JavaBean 属性。这些方法要求合法的 XML 元素名，适用于简单数据交换，不适合处理任意 XML Schema。
 
-解析 XML 字符串，并使用给定的函数处理根元素及其子元素。
-
-* **参数说明：**
-    * `xml`: XML 内容的字符串。
-    * `fn`: 用于处理根元素及其子元素的函数。
-* **返回值:** 无。
-
-**示例:**
+## 节点级操作
 
 ```java
-String xmlContent = "<root><child>Content</child></root>";
-XmlHelper.parseXML(xmlContent, (node, nodeList) -> {
-    // 处理根元素及其子元素
-    System.out.println(node.getNodeName());
-    for (int i = 0; i < nodeList.getLength(); i++) {
-        System.out.println(nodeList.item(i).getTextContent());
-    }
-});
+String xml = "<root><user id=\"7\"><name>Ada</name></user></root>";
+Element root = XmlHelper.getRoot(xml);
+Element user = (Element) root.getElementsByTagName("user").item(0);
+
+String id = XmlHelper.getNodeAttribute(user, "id");
+String inner = XmlHelper.getInnerXml(user); // <name>Ada</name>
+Map<String, String> attributes = XmlHelper.nodeAsMap(xml, "/root/user");
 ```
 
-### 4. `getRoot(String xml)`
+属性不存在时 `getNodeAttribute` 返回 `null`；它不区分“属性不存在”和“属性值为空”。`nodeAsMap` 仅处理属性，元素文本属于节点内容。XPath 使用 JDK XPath 实现；只有直接处理带命名空间的 DOM 文档时，才需要使用支持命名空间的 builder。
 
-检索 XML 字符串的根元素。
+## 转换边界
 
-* **参数说明：**
-    * `xml`: XML 内容的字符串。
-* **返回值:** 根元素。
+`mapToXml`、`xmlToMap` 和 `xmlToMultiValueMap` 是约定明确的简单转换工具，并非通用 XML 绑定框架。它们不保留任意混合内容、命名空间语义、注释、处理指令、Schema 约束或所有 Java 对象图。需要这些能力时，应使用专门的数据绑定库。
 
-**示例:**
+## 实现原理与取舍
 
-```java
-String xmlContent = "<root><child>Content</child></root>";
-Element root = XmlHelper.getRoot(xmlContent);
-// root 将是 <root> 元素
-```
+解析器基于 JDK DOM API 构建。解析前，`XmlHelper` 会在工厂和 builder 配置上关闭常见 XXE 入口：DTD 处理、外部通用/参数实体、外部 DTD/Schema 访问、XInclude 和实体展开。这是面向普通 XML 输入的纵深防御；处理超大文档时，仍不能替代资源上限或可信输入策略。
 
-### 5. `nodeAsMap(String xml, String xpath)`
-
-将节点的属性转换为映射。
-
-* **参数说明：**
-    * `xml`: XML 文件的路径。
-    * `xpath`: 用于定位节点的 XPath 表达式。
-* **返回值:** 节点属性的映射。
-
-**示例:**
-
-```java
-Map<String, String> attributes = XmlHelper.nodeAsMap("path/to/xml/file.xml", "/root/element");
-// attributes 将包含 <element> 节点的属性
-```
-
-节点没有属性集合或指定属性不存在时，`getNodeAttribute(Node, String)` 返回 `null`。
+XPath 选择在解析后的 DOM 上执行，并将结果节点交给消费者。Map 转换会遍历 DOM 的直接元素；由于普通 Map 无法表示重复元素名而不丢失数据，才提供了 `xmlToMultiValueMap`。

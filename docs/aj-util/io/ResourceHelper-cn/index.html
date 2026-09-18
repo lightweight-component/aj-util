@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,12 +50,10 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <label for="project-select">选择工程</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/cn/" selected>aj-util</option>
     
@@ -87,7 +91,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -126,6 +130,7 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 
@@ -140,6 +145,65 @@ Properties properties = new ResourceHelper(&quot;config/application.properties&q
 InputStream stream = new ResourceHelper(&quot;config.properties&quot;, MyService.class).getStream();
 </code></pre>
 <p><code>getStream()</code> 可读取打包在 JAR 内的资源。<code>getPath(boolean)</code> 和 <code>list(Consumer&lt;File&gt;)</code> 需要资源实际位于文件系统中，对 <code>jar:</code> URL 不一定可用。<code>getJarDir()</code> 在运行位置可确定时返回 JAR 所在目录。调用方需要自行关闭 <code>getStream()</code> 返回的流。</p>
+<h2>如何选择资源名</h2>
+<p>两个构造器的查找根目录不同。这正是资源明明在 <code>src/test/resources</code> 中、运行时却找不到的常见原因。</p>
+<table>
+<thead>
+<tr>
+<th>构造方式</th>
+<th>资源名</th>
+<th>查找位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>new ResourceHelper(&quot;a/b.txt&quot;)</code></td>
+<td>无前导斜线</td>
+<td>classpath 根目录：<code>a/b.txt</code></td>
+</tr>
+<tr>
+<td><code>new ResourceHelper(&quot;file.txt&quot;, MyService.class)</code></td>
+<td>无前导斜线</td>
+<td><code>MyService</code> 所在包</td>
+</tr>
+<tr>
+<td><code>new ResourceHelper(&quot;/file.txt&quot;, MyService.class)</code></td>
+<td>有前导斜线</td>
+<td>classpath 根目录：<code>file.txt</code></td>
+</tr>
+</tbody>
+</table>
+<p>例如，若测试资源位于
+<code>src/test/resources/com/ajaxjs/util/io/test.txt</code>，可相对于测试类读取：</p>
+<pre><code class="language-java">try (InputStream in = new ResourceHelper(&quot;test.txt&quot;, MyIoTest.class).getStream()) {
+    byte[] bytes = new DataReader(in).readAsBytes();
+    String text = new String(bytes, StandardCharsets.UTF_8);
+}
+
+// 同一个构造器中，加上前导斜线后会改为从 classpath 根目录查找。
+String rootText = new ResourceHelper(&quot;/test.txt&quot;, MyIoTest.class).toString();
+</code></pre>
+<p>当资源不存在时，<code>getStream()</code>、<code>toString()</code> 与 <code>getProperties()</code> 会抛出 <code>IllegalArgumentException</code>。这样可以在
+定位资源的位置立即暴露必需配置缺失的问题，而不是在后面以 <code>NullPointerException</code> 的形式失败。</p>
+<h2>读取文本和 properties</h2>
+<p><code>toString()</code> 委托给 <code>DataReader</code>：以 UTF-8 解码、把换行规范化为当前平台分隔符，并关闭流。<code>getProperties()</code>
+加载标准 Java <code>Properties</code> 文件，也会关闭流。</p>
+<pre><code class="language-java">Properties db = new ResourceHelper(&quot;test-demo.properties&quot;).getProperties();
+String username = db.getProperty(&quot;database.username&quot;);
+
+String json = new ResourceHelper(&quot;fixtures/request.json&quot;).toString();
+</code></pre>
+<p>当图片解码器、证书解析器等下游 API 需要流时，请使用 <code>getStream()</code>。此时由调用方负责关闭，且不要在下游 API
+尚未读取完之前提前关闭它。</p>
+<h2>文件系统与打包资源的边界</h2>
+<p>classpath 查找返回的是 URL，并不一定对应一个 <code>File</code>。开发环境通常是 <code>file:</code> URL；部署后的应用常常是 <code>jar:</code>
+URL。<code>getPath(true)</code> 只能把前者转换为可用的文件系统路径，因此它适用于测试或未打包应用，却不适合必须从可执行
+JAR 内读取的资源。<code>list(Consumer&lt;File&gt;)</code> 也有同样的 <code>file:</code> 限制，并且枚举的是 classpath 根目录。</p>
+<p><code>getJarDir()</code> 用来定位运行产物旁边的文件，不是用于查找产物内部资源。<code>getClassName(File, String)</code> 根据 <code>.class</code>
+文件名与包前缀生成二进制类名，并会拒绝非 <code>.class</code> 文件。</p>
+<h2>实现原理与取舍</h2>
+<p>该类不会把资源复制到临时目录，而是优先保留 classpath 的抽象并暴露流。因此，<code>getStream()</code> 能可靠读取 JAR 内
+资源，而面向文件的 API 则不能保证可用。除非外部 API 确实要求 <code>Path</code> 或 <code>File</code>，否则优先使用流。</p>
 
             </article>
         </div>

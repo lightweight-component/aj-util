@@ -1,6 +1,6 @@
 ---
 title: XmlHelper
-description: Utility methods for XML parsing, creation, and node manipulation
+description: Secure XML parsing, XPath queries, and XML/Map conversion.
 tags:
   - XML
   - parsing
@@ -10,101 +10,64 @@ layout: layouts/aj-util.njk
 
 # XmlHelper
 
-The `XmlHelper` class provides methods for parsing XML documents, retrieving elements, and converting nodes to maps.
-These methods can be used for processing and manipulating XML data.
+`XmlHelper` parses XML strings, queries DOM nodes, and converts simple XML structures to and from maps. It does not read file paths: every `xml` argument is XML content.
 
-All builders created by `initBuilder()` apply security restrictions that disable DTD declarations, external
-entities, external DTD/schema access, XInclude, and entity-reference expansion. Consequently, `getRoot`,
-`parseXML`, `xPath`, and `MapTool.xmlToMap` reject XXE payloads. Parse failures use sanitized messages and
-never append the complete XML input.
+## Secure parsing and queries
 
-## Methods
-
-### 1. `initBuilder()`
-
-Initializes a `DocumentBuilder` for XML parsing.
-
-* **Returns:** A `DocumentBuilder` instance.
-
-**Example:**
+`initBuilder()` creates a `DocumentBuilder` with DTD declarations, external entities, external DTD/schema access, XInclude, and entity expansion disabled. `initBuilder(boolean namespaceAware)` controls namespace awareness while retaining these security settings. Parsing failures use sanitized messages and do not append the full XML input.
 
 ```java
-DocumentBuilder builder = XmlHelper.initBuilder();
-// builder will be a new DocumentBuilder instance
+String xml = "<root><item id=\"7\">value</item></root>";
+
+Element root = XmlHelper.getRoot(xml);
+XmlHelper.xPath(xml, "/root/item", node -> System.out.println(node.getTextContent()));
+XmlHelper.parseXML(xml, rootNode -> System.out.println(rootNode.getNodeName()));
 ```
 
-### 2. `xPath(String xml, String xpath, Consumer<Node> fn)`
+`xPath` invokes the consumer for each selected node. `parseXML` invokes its `Consumer<Node>` once with the root element. `nodeAsMap(xml, xpath)` returns the selected node's attributes; `getNodeAttribute(node, name)` returns `null` if the attribute is absent or the node has no attributes. `getInnerXml(node)` returns the node's child markup.
 
-Retrieves nodes from an XML document using an XPath expression and processes them with a given function.
-
-* **Parameters:**
-    * `xml`: The path to the XML file.
-    * `xpath`: The XPath expression to locate nodes.
-    * `fn`: A function to process the nodes.
-* **Returns:** None.
-
-**Example:**
+## Map and bean conversion
 
 ```java
-XmlHelper.xPath("path/to/xml/file.xml", "/root/element", node -> {
-    // Process the node
-    System.out.println(node.getTextContent());
-});
+String generated = XmlHelper.mapToXml(Collections.singletonMap("name", "Ada"));
+Map<String, String> values = XmlHelper.xmlToMap("<xml><name>Ada</name></xml>");
+Map<String, Object> repeated = XmlHelper.xmlToMultiValueMap(
+        "<xml><tag>a</tag><tag>b</tag></xml>");
 ```
 
-### 3. `parseXML(String xml, BiConsumer<Node, NodeList> fn)`
+`mapToXml` produces an `<xml>` root and serializes map entries as elements. `xmlToMap` keeps one value per element name; `xmlToMultiValueMap` preserves repeated names as collections. `beanToXml` serializes JavaBean properties. XML element names must be valid; these helpers are for simple data exchange rather than arbitrary XML schema processing.
 
-Parses an XML string and processes the root element and its children with a given function.
-
-* **Parameters:**
-    * `xml`: The XML content as a string.
-    * `fn`: A function to process the root element and its children.
-* **Returns:** None.
-
-**Example:**
+## Node-level operations
 
 ```java
-String xmlContent = "<root><child>Content</child></root>";
-XmlHelper.parseXML(xmlContent, (node, nodeList) -> {
-    // Process the root element and its children
-    System.out.println(node.getNodeName());
-    for (int i = 0; i < nodeList.getLength(); i++) {
-        System.out.println(nodeList.item(i).getTextContent());
-    }
-});
+String xml = "<root><user id=\"7\"><name>Ada</name></user></root>";
+Element root = XmlHelper.getRoot(xml);
+Element user = (Element) root.getElementsByTagName("user").item(0);
+
+String id = XmlHelper.getNodeAttribute(user, "id");
+String inner = XmlHelper.getInnerXml(user); // <name>Ada</name>
+Map<String, String> attributes = XmlHelper.nodeAsMap(xml, "/root/user");
 ```
 
-### 4. `getRoot(String xml)`
+`getNodeAttribute` returns `null` for a missing attribute; it does not distinguish a missing attribute from an
+attribute whose value is absent. `nodeAsMap` is useful for attributes only—element text belongs to the node content.
+XPath expressions use the JDK XPath implementation; pass a namespace-aware builder only when directly working with
+namespaced DOM documents.
 
-Retrieves the root element of an XML string.
+## Conversion limits
 
-* **Parameters:**
-    * `xml`: The XML content as a string.
-* **Returns:** The root element.
+`mapToXml`, `xmlToMap`, and `xmlToMultiValueMap` are deliberately simple conventions rather than a general XML
+binding framework. They do not preserve arbitrary mixed content, namespace semantics, comments, processing
+instructions, schema constraints, or every possible Java object graph. Use a dedicated binding library when those
+features are required.
 
-**Example:**
+## Implementation notes
 
-```java
-String xmlContent = "<root><child>Content</child></root>";
-Element root = XmlHelper.getRoot(xmlContent);
-// root will be the <root> element
-```
+The parser is built from the JDK DOM APIs. Before parsing, `XmlHelper` disables known XXE entry points on the factory
+and builder configuration: DTD processing, external general/parameter entities, external DTD/schema access, XInclude,
+and entity expansion. This is defense in depth for ordinary XML input, not a substitute for resource limits or a
+trusted-input policy when processing very large documents.
 
-### 5. `nodeAsMap(String xml, String xpath)`
-
-Converts the attributes of a node to a map.
-
-* **Parameters:**
-    * `xml`: The path to the XML file.
-    * `xpath`: The XPath expression to locate the node.
-* **Returns:** A map of the node's attributes.
-
-**Example:**
-
-```java
-Map<String, String> attributes = XmlHelper.nodeAsMap("path/to/xml/file.xml", "/root/element");
-// attributes will contain the attributes of the <element> node
-```
-
-`getNodeAttribute(Node, String)` returns `null` when the node has no attribute map or when the requested attribute is
-absent.
+XPath selection evaluates against the parsed DOM and passes the resulting nodes to the consumer. Map conversion walks
+the DOM's direct elements; `xmlToMultiValueMap` exists because a plain map cannot otherwise represent repeated element
+names without losing data.

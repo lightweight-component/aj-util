@@ -1,6 +1,6 @@
 ---
 title: JsonUtil
-description: Utility methods for JSON conversion between JSON, Map, Bean, and List
+description: JSON conversion through a pluggable JSON engine
 tags:
   - JSON
   - serialization
@@ -10,13 +10,14 @@ layout: layouts/aj-util.njk
 
 # JsonUtil Tutorial
 
-This tutorial provides an overview of the `JsonUtil` class, which is part of the `lightweight-component/aj-util`
-library. The `JsonUtil` class provides utility methods for working with JSON data in Java applications.
+`JsonUtil` is a static facade for JSON serialization, parsing, and object conversion. It delegates work to a
+`JsonEngine`, so callers do not need to expose implementation-specific types such as Jackson `ObjectMapper` or
+`JsonNode`.
 
 ## Introduction
 
-The `JsonUtil` class contains static methods for common JSON operations using Jackson library, including conversion
-between JSON strings, Java objects, Maps, and Lists.
+`JsonUtil` provides common JSON operations between JSON strings, Java objects, Maps, and Lists through the configured
+JSON engine.
 
 ## Main Features
 
@@ -24,9 +25,8 @@ between JSON strings, Java objects, Maps, and Lists.
 - Parse JSON strings into Java objects
 - Convert between JSON and Maps/Lists
 - Type-safe JSON processing
-- Java 8 date/time support
-- Strict duplicate detection
-- Lazily initialized, safely published shared `JsonEngine`
+- A lazily initialized, safely published shared `JsonEngine`
+- An implementation-independent JSON tree returned as `Object`
 
 ## Methods
 
@@ -60,7 +60,7 @@ between JSON strings, Java objects, Maps, and Lists.
 
 ### 6. JSON Tree Model
 
-1. `json2Node(String jsonStr)` - Parse JSON to JsonNode tree
+1. `json2Node(String jsonStr)` - Parse JSON to an engine-specific tree object
 
 ## Usage Examples
 
@@ -105,14 +105,57 @@ String jsonArray = "[{\"name\":\"John\"}, {\"name\":\"Alice\"}]";
 List<User> users = JsonUtil.json2list(jsonArray, User.class);
 ```
 
-## Configuration
+## Engine configuration
 
-The `JsonUtil` class is pre-configured with:
+On first use, `JsonUtil.getEngine()` loads `JsonEngineProvider` implementations through Java `ServiceLoader` and
+selects the provider with the highest priority. The project provides a Jackson 2 engine when its optional Jackson
+dependencies are present, but the facade itself is not tied to Jackson.
 
-- Java 8 date/time support
-- Strict duplicate detection
-- Asia/Shanghai timezone
-- Default ObjectMapper instance
+An application may set an engine explicitly before its first conversion:
+
+```java
+JsonUtil.setEngine(myJsonEngine);
+```
+
+`setEngine(null)` is rejected. Replacing the engine changes subsequent calls globally, so configure it during
+application startup rather than concurrently with ordinary JSON work. Date support, duplicate-key handling, time zone
+behavior, and the concrete tree-model type are engine-specific rather than guarantees of `JsonUtil`.
+
+## Map, bean, and tree examples
+
+```java
+Map<String, Object> source = new LinkedHashMap<>();
+source.put("name", "Ada");
+source.put("age", 36);
+
+String json = JsonUtil.toJson(source);
+Map<String, String> strings = JsonUtil.json2StrMap(json);
+Map<String, Object> values = JsonUtil.json2map(json);
+User user = JsonUtil.map2pojo(values, User.class);
+Map<String, Object> userValues = JsonUtil.pojo2map(user);
+```
+
+`json2sortMap` requests a `LinkedHashMap` so parsed key order is retained. `convertValue` delegates to the selected
+engine's object-conversion facility and is useful when the desired target type is known at runtime. `json2Node` is for
+engine-specific tree traversal; cast its result only when the chosen engine is known.
+
+## Lifecycle and failures
+
+The first engine is cached in a volatile field after lazy creation. If no `JsonEngineProvider` is visible to the
+runtime class loader, `getEngine()` throws `IllegalStateException`. `fromJson` wraps parser/mapper failures in a
+`RuntimeException` with the original cause. Other methods delegate directly and may expose provider-specific
+exceptions. Do not log untrusted raw JSON merely because a conversion failed.
+
+## Implementation notes
+
+`JsonUtil` keeps the selected engine in a `volatile` field and uses synchronized double-checked initialization. This
+means normal calls avoid locking after startup while still publishing a fully created engine safely. Providers are
+discovered through Java's standard `ServiceLoader`, then compared by their declared priority; this lets applications
+replace the JSON backend without changing `JsonUtil` callers.
+
+The facade deliberately exposes `Object` for `json2Node`: returning a library-specific tree type here would make the
+common module permanently depend on that library. The trade-off is that tree processing code must know which provider
+is active.
 
 ## Conclusion
 

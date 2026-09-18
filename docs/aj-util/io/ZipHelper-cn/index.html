@@ -14,8 +14,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
         <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script defer src="/asset/js/common.js"></script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -35,6 +40,7 @@
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
                    | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
                     <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
@@ -44,12 +50,10 @@
                 </h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <label for="project-select">选择工程</label>
-<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
-                                                                                                                                                 border-radius: 5px;
-                                                                                                                                                 border: 1px solid #d9d9d9;">
+<select id="project-select" onchange="window.location.assign(this.value)">
     
     <option value="/aj-util/cn/" selected>aj-util</option>
     
@@ -87,7 +91,7 @@
                     <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
                     <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
                     <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
-                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
                     <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
                     <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
                     <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
@@ -126,6 +130,7 @@
                 <h3>其他</h3>
                <ul>
                 <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
                 
@@ -150,6 +155,57 @@ files.zip();
 </code></pre>
 <p>默认使用 <code>DEFLATED</code>。调用 <code>setUseStore(true)</code> 后使用 <code>STORED</code> 模式；该模式会先计算文件大小与 CRC32，因此打包过程中源文件不应发生变化。多个文件会放在 ZIP 根目录，文件名必须互不重复。</p>
 <p>生成过程先写入目标文件同目录下的临时文件，成功后再替换目标文件。I/O 失败会抛出 <code>UncheckedIOException</code>。</p>
+<h2>压缩包目录结构示例</h2>
+<p>目录输入在 ZIP 中以所选源目录为相对根，而不会包含源目录自身的名字。无论 ZIP 在 Windows 还是其他系统生成，条目
+分隔符都统一使用 <code>/</code>。</p>
+<table>
+<thead>
+<tr>
+<th>源文件</th>
+<th>ZIP 内条目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C:/work/source/root.txt</code></td>
+<td><code>root.txt</code></td>
+</tr>
+<tr>
+<td><code>C:/work/source/a/b/nested.txt</code></td>
+<td><code>a/b/nested.txt</code></td>
+</tr>
+<tr>
+<td><code>C:/work/source/empty</code></td>
+<td><code>empty/</code></td>
+</tr>
+<tr>
+<td><code>new File[]{a.txt, b.txt}</code></td>
+<td><code>a.txt</code>、<code>b.txt</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-java">Path source = Paths.get(&quot;C:/work/source&quot;);
+new ZipHelper(source.toString(), &quot;C:/out/source.zip&quot;).zip();
+
+// 两个文件都位于 ZIP 根目录；同名基础文件会被拒绝。
+new ZipHelper(new File[]{new File(&quot;logs/app.log&quot;), new File(&quot;report.csv&quot;)},
+        &quot;C:/out/files.zip&quot;).zip();
+</code></pre>
+<p>目录遍历会显式记录目录条目，因此解压后空目录仍然存在。这对于应用模板或目录结构本身具有意义的备份很重要。</p>
+<h2>压缩模式的选择</h2>
+<p><code>DEFLATED</code> 是常规选择：ZIP 写入时同步压缩。<code>STORED</code> 则写入原始文件字节；ZIP 要求在写入前就提供精确大小和
+CRC32。因此 <code>ZipHelper</code> 会先读取每个文件计算元数据，再读取一次写入压缩包。</p>
+<p>只在确实不需要压缩时使用 <code>STORED</code>，例如已经压缩过的媒体文件且接收方兼容该模式。两次读取之间不要修改源文件，
+否则记录的 CRC 或长度可能与实际归档字节不一致。</p>
+<h2>安全性与失败行为</h2>
+<p>该工具会拒绝符号链接与非普通文件，避免意外把源目录之外的文件打进包内；也拒绝把目标 ZIP 放在源目录内，避免归档
+递归包含自己。目标父目录不存在时会自动创建。</p>
+<p>它先写入目标同目录的临时文件，成功后才替换目标，降低失败时留下半成品目标文件的概率。这并不是跨所有文件系统的
+事务：进程崩溃或不支持原子移动时，仍应按普通文件系统故障方式处理。需要向用户提示或重试备份时，请捕获
+<code>UncheckedIOException</code>。</p>
+<h2>实现原理与取舍</h2>
+<p><code>ZipHelper</code> 只负责创建压缩包，本身并不保证解压安全。处理不可信 ZIP 时请使用
+<a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a>，并保留其目标路径校验，以防止 <code>../../outside.txt</code> 这类路径穿越条目。</p>
 
             </article>
         </div>
