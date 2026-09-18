@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - 加解密流程与密钥处理</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | 🚀<a href="/aj-util/">英语版本</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
+                                                                                                                                                 border-radius: 5px;
+                                                                                                                                                 border: 1px solid #d9d9d9;">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+    <option value="/image-combiner/cn/">image-combiner</option>
+    
+    <option value="/aj-parent/cn/">aj-parent</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpUtils-cn/">RegExpUtils</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>DoCipher 与 CipherResult</h1>
+<p><code>new DoCipher(transformation, Key)</code> 保存配置，不保存输入或 JCE cipher 引擎。每次操作创建新的 <code>Cipher</code>。当前 API 没有 mode/data setter，也没有无参数 <code>doCipher()</code>。</p>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.CipherResult;
+import com.ajaxjs.util.cryptography.DoCipher;
+import com.ajaxjs.util.cryptography.SecretKeyMgr;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+
+SecretKey key = SecretKeyMgr.getSecretKey(&quot;AES&quot;, 128, new SecureRandom());
+DoCipher cipher = new DoCipher(&quot;AES/GCM/NoPadding&quot;, key);
+byte[] nonce = DoCipher.randomBytes(12);
+byte[] aad = &quot;record:v1&quot;.getBytes(StandardCharsets.UTF_8);
+GCMParameterSpec parameters = new GCMParameterSpec(128, nonce);
+CipherResult encrypted = cipher.doCipher(Cipher.ENCRYPT_MODE, &quot;hello&quot;, parameters, aad);
+CipherResult decrypted = cipher.doCipherFromBase64(
+        Cipher.DECRYPT_MODE, encrypted.toBase64(), parameters, aad);
+String plaintext = decrypted.toUtf8();
+</code></pre>
+<p>上面的 nonce <strong>只能用于一次加密</strong>。需要自动生成 nonce 时使用 <a href="/aj-util/cryptography/Cryptography-cn/">AesGcm</a>。通用 <code>DoCipher</code> 不打包或返回提供者自动生成的 IV；请显式指定所需参数并自行保存。</p>
+<h2>输入、输出与错误</h2>
+<ul>
+<li><code>doCipher(int, byte[], AlgorithmParameterSpec, byte[])</code> 处理原始字节；String 重载按 UTF-8 编码。<code>doCipherFromBase64(...)</code> 先解码二进制输入。不支持 AAD 的算法传 null。</li>
+<li><code>CipherResult.getResult()</code> 返回原始字节；<code>toBase64()</code> 和大写 <code>toHex()</code> 用于表示二进制密文。<code>toUtf8()</code> 用于解密后的 UTF-8 明文，不适合任意密文。</li>
+<li>结果数组<strong>没有防御性复制</strong>。<code>AesCipherResult</code> 还有可变的 <code>CipherResult nonce</code> 属性，手动创建时初始为 null。不要修改共享输入/结果数组，也不要把这些容器当成不可变安全记录。</li>
+<li>转换名为空、模式不是 ENCRYPT/DECRYPT、密钥或 byte 输入为 null，抛出 <code>IllegalStateException</code>。String/Base64 输入为 null 时抛出 <code>NullPointerException</code>。</li>
+<li>不支持的转换、非法密钥/参数、块长度、填充和 GCM 认证失败包装为带 cause 的 <code>IllegalArgumentException</code>。认证失败必须停止处理，不得接受未认证输出或回退弱模式。</li>
+</ul>
+<p>与旧的有状态 API 不同，<code>DoCipher</code> 和 AES 封装每次调用创建新引擎，只保留密钥/配置。但不能据此对调用方传入的 Key、可变结果或数组做全面线程安全保证。没有自动销毁密钥功能，应控制密钥生命周期，禁止记录秘密信息。</p>
+<h2>SecretKeyMgr</h2>
+<p><code>getSecretKey(&quot;AES&quot;, bits, secureRandom)</code> 生成随机密钥。正数显式初始化长度；当前方法体对零<strong>或负数</strong>都使用提供者默认长度（不能假定负数会被拒绝）。<code>getSecretKey(SecureRandom)</code> 选择 AES-128。原始 AES 密钥通常为 16/24/32 字节，使用时由提供者校验。</p>
+<p><code>getSecretKey(algorithm, KeySpec)</code> 委托给 <code>SecretKeyFactory</code>；<code>getSecretKey(KeySpec)</code> 选择 <code>PBKDF2WithHmacSHA256</code>。原始 AES 字节使用 <code>new SecretKeySpec(bytes, &quot;AES&quot;)</code> 或 AES 封装类，不要把普通密码字符串当作原始密钥。<code>getSecretKeyAsStr(algorithm, bits, random)</code> <strong>生成另一个新密钥</strong>并返回 Base64，不是编码先前生成的密钥。不可导出的密钥不能这样编码。</p>
+<p><code>getRandom(algorithm, text)</code> / <code>getRandom(text)</code>（默认 <code>SHA1PRNG</code>）以 UTF-8 文本调用 <code>SecureRandom.setSeed</code>。这只是补充内部状态，<strong>不是</strong>可移植、确定性的密码 KDF。密码加密使用 <code>AesPbe</code>。<code>DoCipher.randomBytes(length)</code> 使用 <code>RandomTools.RANDOM</code>（<code>SecureRandom</code>），要求长度为正；其他 <code>RandomTools</code> 随机字符串/数字方法不能替代它。</p>
+<p>依据：<code>DoCipher</code>、<code>CipherResult</code>、<code>SecretKeyMgr</code>、<code>aes/AesCipherResult</code>、<code>TestDoCipher</code>、<code>TestCipherResult</code>、<code>TestSecretKeyMgr</code>。方法体优先于过时的异常注释，尤其是负密钥长度的处理。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

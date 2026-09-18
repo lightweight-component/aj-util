@@ -1,0 +1,4 @@
+interface:
+  display_name: "AJ HTTP"
+  short_description: "Develop and review Java 8 HTTP clients with aj-http"
+  default_prompt: "Use $aj-http to implement or review HTTP requests, uploads, downloads and proxies with current aj-http APIs."

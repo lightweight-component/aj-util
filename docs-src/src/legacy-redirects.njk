@@ -1,0 +1,19 @@
+---
+pagination:
+  data: legacyRoutes
+  size: 1
+  alias: redirect
+permalink: "{{ redirect.from }}"
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Documentation moved</title>
+    <meta http-equiv="refresh" content="0; url={{ redirect.to }}">
+    <link rel="canonical" href="https://aj-util.ajaxjs.com{{ redirect.to }}">
+    <script>window.location.replace('{{ redirect.to }}' + window.location.search + window.location.hash);</script>
+</head>
+<body><a href="{{ redirect.to }}">Documentation moved / 文档已迁移</a></body>
+</html>

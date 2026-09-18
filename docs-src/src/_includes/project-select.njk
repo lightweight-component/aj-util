@@ -1,0 +1,8 @@
+<label for="project-select">{% if isChinese %}选择工程{% else %}Project{% endif %}</label>
+<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
+                                                                                                                                                 border-radius: 5px;
+                                                                                                                                                 border: 1px solid #d9d9d9;">
+    {% for item in projects %}
+    <option value="/{{ item }}/{% if isChinese %}cn/{% endif %}"{% if item == project %} selected{% endif %}>{{ item }}</option>
+    {% endfor %}
+</select>

@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-http - Request Lifecycle and Responses</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script>
+            // 获取用户的默认语言
+            var userLang = navigator.language || navigator.userLanguage;
+
+            // 检查是否为中文环境（包括简体和繁体）
+            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
+                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/aj-http/cn/');  // 如果是中文，则弹出提示
+            }
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | 🚀 <a href="/aj-http/cn/">Chinese Version</a>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-http
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)" style="display: block; width: 100%; margin: 8px 0 20px; padding: 6px;background-color: #eee;
+                                                                                                                                                 border-radius: 5px;
+                                                                                                                                                 border: 1px solid #d9d9d9;">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/" selected>aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+    <option value="/image-combiner/">image-combiner</option>
+    
+    <option value="/aj-parent/">aj-parent</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-http/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/aj-http/http_request/Base/">Lifecycle and Responses</a></li>
+                    <li><a href="/aj-http/http_request/Get/">HTTP Method Helpers</a></li>
+                    <li><a href="/aj-http/http_request/advanced-usage/">Uploads, Downloads and Proxies</a></li>
+                </ul>
+                
+            </menu>
+            <article class="aj-text">
+                <h1>Request lifecycle</h1>
+<p>Install <a href="/aj-http/">AJ HTTP</a>, not just AJ Util. <code>Request</code> is in <code>com.ajaxjs.util.httpremote</code>; <code>Response</code>, <code>HttpMethod</code>, <code>HttpConstant</code> and <code>PayloadType</code> are in <code>com.ajaxjs.util.httpremote.model</code>.</p>
+<ol>
+<li>Construct <code>new Request(HttpMethod.GET, url)</code> (or a method class's <code>(HttpMethod, String)</code> constructor). Construction does <strong>not</strong> send.</li>
+<li>Set content type, body and timeouts before <code>init()</code>. Defaults are 10,000 ms connect / 15,000 ms read.</li>
+<li><code>init(Consumer&lt;HttpURLConnection&gt;)</code> creates/configures the connection. The callback should only configure headers, timeouts, redirects, etc., not start I/O. Only HTTP/HTTPS URLs are accepted.</li>
+<li>For a body, call <code>initData()</code> after <code>init()</code> and before <code>connect()</code>.</li>
+<li><code>connect()</code> reads status and response. Consume the response, then disconnect the connection in <code>finally</code> when managing this lifecycle yourself.</li>
+</ol>
+<p><code>Get(String, Consumer)</code>, <code>Delete(String, Consumer)</code> and the data-taking <code>Post</code>/<code>Put</code> constructors send immediately. In contrast, <code>Head(String)</code> only configures an object: call <code>init()</code> and <code>connect()</code>. Do not send a second time after an auto-sending constructor. Requests are mutable; do not share across concurrent operations.</p>
+<h2>JSON POST with explicit lifecycle</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.Request;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
+import com.ajaxjs.util.httpremote.model.Response;
+import java.net.HttpURLConnection;
+import java.util.Collections;
+
+Request request = new Request(HttpMethod.POST, &quot;https://example.com/api&quot;);
+request.setContentType(HttpConstant.CONTENT_TYPE_JSON);
+request.setData(Collections.&lt;String, Object&gt;singletonMap(&quot;name&quot;, &quot;Ada&quot;));
+HttpURLConnection connection = request.init();
+try {
+    request.initData();
+    Response response = request.connect();
+    if (!response.isOk()) {
+        throw new IllegalStateException(&quot;HTTP request failed: &quot; + response.getHttpCode(), response.getEx());
+    }
+    // Parse only if this endpoint promises a JSON object.
+    java.util.Map&lt;String, Object&gt; result = response.responseAsJson();
+} finally {
+    connection.disconnect();
+}
+</code></pre>
+<h3>Body conversion</h3>
+<ul>
+<li><code>setData(byte[])</code> sends exact bytes without conversion. Set an appropriate content type separately; use bytes for arbitrary text, XML or binary data.</li>
+<li><code>setData(String)</code> accepts JSON-looking text (a leading <code>{</code> or <code>[</code> after trimming, not full validation). For JSON it sends UTF-8 unchanged; for form data it parses an object then joins fields.</li>
+<li><code>setDataStr(String)</code> accepts an already formed <code>a=1&amp;b=2</code> string. With form content type it sends UTF-8 unchanged; with JSON it converts via <code>MapTool.toMap</code>.</li>
+<li><code>setData(Map&lt;String,Object&gt;)</code> / <code>setData(Object)</code> serialize JSON or form fields. Form conversion encodes <strong>values</strong>, not keys. Use simple field names; this is not a general query builder.</li>
+<li>Set content type first for non-byte overloads. Multipart Map conversion here throws <code>UnsupportedOperationException</code>; use <code>MultipartPost</code> instead.</li>
+<li>Auto-sending <code>BasePost</code> constructors dispatch String bodies only when they look like JSON without surrounding whitespace or contain <code>=</code>. Other strings can silently produce no body. Prefer an explicit Map or UTF-8 byte array.</li>
+</ul>
+<h2>Responses and failures</h2>
+<p><code>Response.isOk()</code> means 200–299. Other statuses use the error stream, if any; a 3xx with redirects disabled may have no text. Normal <code>HttpURLConnection</code> redirect behavior applies unless configured otherwise. <code>Response.isOk(Map)</code> is a different, AJ-Spring-specific helper checking whether <code>status.toString()</code> equals <code>&quot;1&quot;</code>.</p>
+<ul>
+<li><code>connect()</code> catches checked <code>IOException</code>, sets <code>isOk=false</code> and <code>ex</code>; HTTP errors usually have no exception. <code>httpCode</code> can be null if no status was received.</li>
+<li>Initialization errors, write failures (<code>UncheckedIOException</code>) and callback/runtime/JSON parsing errors can propagate. The local <code>DataReader</code> also wraps read failures as <code>UncheckedIOException</code>, outside <code>connect()</code>'s checked-I/O catch. Do not assume every failure becomes <code>Response.ex</code>.</li>
+<li><code>responseAsJson()</code> returns a Map or null for empty text, without checking status or content type. <code>responseAsJsonList()</code> checks content type using a case-sensitive header-map lookup. <code>responseAsBean(Class)</code> returns null for non-success; <code>responseAsXML()</code> parses nonempty text regardless of status. Malformed data can throw.</li>
+<li>Default text reading uses <code>DataReader</code> (UTF-8), normalizes line endings and appends a final platform separator. Current <code>Request</code> does <strong>not</strong> trim the stored text. It is not byte-preserving and does not automatically decompress gzip.</li>
+<li><code>setInputStreamConsumer(...)</code> bypasses text conversion; read synchronously inside the callback. The input is closed after the callback, including error streams. <code>Response.in</code> is not populated by <code>Request</code>. <code>initData()</code> flushes/closes its output; <code>Request.connect()</code> does not disconnect.</li>
+</ul>
+<p>Source: <code>Request.java</code>, <code>BasePost.java</code>, <code>model/Response.java</code> and AJ Util <code>io/DataReader.java</code>. Some <code>TestMultipartPost</code> assertions expect text without a trailing newline; that disagrees with the local reader. The HTTP POM resolves a versioned AJ Util dependency, so check the resolved artifact before assuming identical text behavior.</p>
+<p>Continue with <a href="/aj-http/http_request/Get/">method helpers</a> and <a href="/aj-http/http_request/advanced-usage/">streaming/security</a>.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-http, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+[
+  "aj-util",
+  "aj-http",
+  "aj-s3client",
+  "aj-ftp",
+  "aj-json",
+  "aj-image",
+  "aj-qrcode",
+  "image-combiner",
+  "aj-parent"
+]
