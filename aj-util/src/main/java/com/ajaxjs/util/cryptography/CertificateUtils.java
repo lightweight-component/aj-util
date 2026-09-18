@@ -2,6 +2,7 @@ package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.StringBytes;
+import com.ajaxjs.util.cryptography.aes.AesGcm;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -70,8 +71,8 @@ public class CertificateUtils {
      */
     @SuppressWarnings("unchecked")
     public static Map<BigInteger, X509Certificate> deserializeToCerts(String apiV3Key, Map<String, Object> pMap) {
-        if (apiV3Key == null)
-            throw new IllegalArgumentException("ApiV3Key must not be null.");
+        Objects.requireNonNull(pMap, "deserializeToCerts.pMap");
+        Objects.requireNonNull(apiV3Key, "deserializeToCerts.apiV3Key");
 
         byte[] apiV3KeyByte = new StringBytes(apiV3Key).getUTF8_Bytes();
 
@@ -88,12 +89,17 @@ public class CertificateUtils {
 
         if (!ObjectHelper.isEmpty(list)) {
             for (Map<String, Object> map : list) {
-                Map<String, Object> certificate = (Map<String, Object>) map.get("encrypt_certificate");
+                Object encryptedCertificate = map.get("encrypt_certificate");
+
+                if (!(encryptedCertificate instanceof Map))
+                    throw new IllegalArgumentException("Certificate response field 'encrypt_certificate' must be an object.");
+
+                Map<String, Object> certificate = (Map<String, Object>) encryptedCertificate;
                 String _data = remove(certificate.get("ciphertext"));
                 byte[] nonce = removeAsByte(certificate.get("nonce")),
                         associatedData = removeAsByte(certificate.get("associated_data"));
 
-                String cert = Aes.aesDecrypt(_data, apiV3KeyByte, nonce, associatedData);
+                String cert = new AesGcm(apiV3KeyByte).decrypt(_data, nonce, associatedData);
 
                 X509Certificate x509Cert = getCert(new ByteArrayInputStream(new StringBytes(cert).getUTF8_Bytes()));
                 newCertList.put(x509Cert.getSerialNumber(), x509Cert);

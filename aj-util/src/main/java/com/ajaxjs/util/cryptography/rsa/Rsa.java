@@ -198,7 +198,7 @@ public class Rsa {
      *                                  parameters are invalid
      */
     public byte[] encryptWithPublicKey(PublicKey publicKey) {
-        return new DoCipher(RSA_CIPHER, Cipher.ENCRYPT_MODE, publicKey).doCipher(data, OAEP_SPEC, null).getResult();
+        return new DoCipher(RSA_CIPHER, publicKey).doCipher(Cipher.ENCRYPT_MODE, data, OAEP_SPEC, null).getResult();
     }
 
     /**
@@ -240,7 +240,7 @@ public class Rsa {
      *                                  if the OAEP parameters do not match
      */
     public byte[] decryptWithPrivateKey(PrivateKey privateKey) {
-        return new DoCipher(RSA_CIPHER, Cipher.DECRYPT_MODE, privateKey).doCipher(data, OAEP_SPEC, null).getResult();
+        return new DoCipher(RSA_CIPHER, privateKey).doCipher(Cipher.DECRYPT_MODE, data, OAEP_SPEC, null).getResult();
     }
 
     /**
@@ -339,9 +339,9 @@ public class Rsa {
      *                                  plaintext is too large for the key
      */
     public static String encryptOAEP(String message, X509Certificate certificate) {
-        DoCipher cryptography = new DoCipher(RSAES_OAEP, Cipher.ENCRYPT_MODE, certificate.getPublicKey());
+        DoCipher cryptography = new DoCipher(RSAES_OAEP, certificate.getPublicKey());
 
-        return cryptography.doCipher(message, null, null).toBase64();
+        return cryptography.doCipher(Cipher.ENCRYPT_MODE, message, null, null).toBase64();
     }
 
     /**
@@ -359,8 +359,8 @@ public class Rsa {
      *                                  does not use the expected OAEP scheme
      */
     public static String decryptOAEP(String cipherText, PrivateKey privateKey) {
-        DoCipher cryptography = new DoCipher(RSAES_OAEP, Cipher.DECRYPT_MODE, privateKey);
+        DoCipher cryptography = new DoCipher(RSAES_OAEP, privateKey);
 
-        return cryptography.doCipherFromBase64(cipherText, null, null).toUtf8();
+        return cryptography.doCipherFromBase64(Cipher.DECRYPT_MODE, cipherText, null, null).toUtf8();
     }
 }

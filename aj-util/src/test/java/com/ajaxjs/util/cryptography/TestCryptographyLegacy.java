@@ -1,6 +1,7 @@
 package com.ajaxjs.util.cryptography;
 
 import com.ajaxjs.util.StringBytes;
+import com.ajaxjs.util.cryptography.aes.AesPbe;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.Cipher;
@@ -57,9 +58,9 @@ class TestCryptographyLegacy {
             keySpec.clearPassword();
         }
 
-        DoCipher cipher = new DoCipher(PBE_LEGACY, Cipher.DECRYPT_MODE, secretKey);
+        DoCipher cipher = new DoCipher(PBE_LEGACY, secretKey);
 
-        return cipher.doCipher(data, new PBEParameterSpec(salt, iterationCount), null).toUtf8();
+        return cipher.doCipher(Cipher.DECRYPT_MODE, data, new PBEParameterSpec(salt, iterationCount), null).toUtf8();
     }
 
     /**
@@ -75,9 +76,9 @@ class TestCryptographyLegacy {
     @Deprecated
     public static String DES_encode(String data, String key) {
         SecretKey secretKey = SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(key));
-        DoCipher cipher = new DoCipher(DES, Cipher.ENCRYPT_MODE, secretKey);
+        DoCipher cipher = new DoCipher(DES, secretKey);
 
-        return cipher.doCipher(data, null, null).toHex();
+        return cipher.doCipher(Cipher.ENCRYPT_MODE, data, null, null).toHex();
     }
 
     /**
@@ -93,9 +94,9 @@ class TestCryptographyLegacy {
     @Deprecated
     public static String DES_decode(String data, String key) {
         SecretKey secretKey = SecretKeyMgr.getSecretKey(DES, 0, SecretKeyMgr.getRandom(key));
-        DoCipher cipher = new DoCipher(DES, Cipher.DECRYPT_MODE, secretKey);
+        DoCipher cipher = new DoCipher(DES, secretKey);
 
-        return cipher.doCipher(StringBytes.hexToBytes(data), null, null).toUtf8();
+        return cipher.doCipher(Cipher.DECRYPT_MODE, StringBytes.hexToBytes(data), null, null).toUtf8();
     }
 
     /**
@@ -109,9 +110,9 @@ class TestCryptographyLegacy {
      */
     @Deprecated
     public static byte[] tripleDES_encode(String data, byte[] key) {
-        DoCipher cipher = new DoCipher(TRIPLE_DES, Cipher.ENCRYPT_MODE, new SecretKeySpec(key, TRIPLE_DES));
+        DoCipher cipher = new DoCipher(TRIPLE_DES, new SecretKeySpec(key, TRIPLE_DES));
 
-        return cipher.doCipher(data, null, null).getResult();
+        return cipher.doCipher(Cipher.ENCRYPT_MODE, data, null, null).getResult();
     }
 
     /**
@@ -136,19 +137,13 @@ class TestCryptographyLegacy {
      */
     @Deprecated
     public static String tripleDES_decode(byte[] data, byte[] key) {
-        DoCipher cipher = new DoCipher(TRIPLE_DES, Cipher.DECRYPT_MODE, new SecretKeySpec(key, TRIPLE_DES));
+        DoCipher cipher = new DoCipher(TRIPLE_DES, new SecretKeySpec(key, TRIPLE_DES));
 
-        return cipher.doCipher(data, null, null).toUtf8();
+        return cipher.doCipher(Cipher.DECRYPT_MODE, data, null, null).toUtf8();
     }
 
     final String key = "abc";
     final String word = "123";
-
-    @Test
-    void testAES() {
-        String encWord = Aes.aesEncryptLegacy(word, key);
-        assertEquals(word, Aes.aesDecryptLegacy(encWord, key));
-    }
 
     @Test
     void testDES() {
@@ -174,10 +169,11 @@ class TestCryptographyLegacy {
 
     @Test
     void testPBE() {
-        byte[] salt = Aes.randomBytes(Aes.PBE_SALT_LENGTH);
-        byte[] encData = Aes.pbeEncrypt(word, key, salt, Aes.MIN_PBE_ITERATIONS);
+        byte[] salt = DoCipher.randomBytes(AesPbe.PBE_SALT_LENGTH);
+        AesPbe aesPbe = new AesPbe(key, salt, AesPbe.MIN_PBE_ITERATIONS);
+        byte[] encData = aesPbe.encrypt(word);
 
-        assertEquals(word, Aes.pbeDecrypt(encData, key, salt, Aes.MIN_PBE_ITERATIONS));
+        assertEquals(word, aesPbe.decrypt(encData));
     }
 
     @Test
@@ -202,7 +198,6 @@ class TestCryptographyLegacy {
         String password = "compatibility-password";
         byte[] tripleDesKey = "123456789012345678901234".getBytes(StandardCharsets.US_ASCII);
 
-        assertEquals(text, Aes.aesDecryptLegacy(Aes.aesEncryptLegacy(text, password), password));
         assertEquals(text, DES_decode(DES_encode(text, password), password));
         assertEquals(text, tripleDES_decode(tripleDES_encode(text, tripleDesKey), tripleDesKey));
     }

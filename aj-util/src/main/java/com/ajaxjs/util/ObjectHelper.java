@@ -244,15 +244,19 @@ public class ObjectHelper {
     }
 
     /**
-     * 合并两个字节数组
+     * Concatenates two byte arrays.
      *
-     * @param a 数组a
-     * @param b 数组b
-     * @return 新合并的数组
+     * <p>The returned array contains all bytes from {@code a}, followed by
+     * all bytes from {@code b}. The input arrays are not modified.</p>
+     *
+     * @param a the first byte array
+     * @param b the second byte array
+     * @return a new array containing {@code a} followed by {@code b}
+     * @throws NullPointerException if either array is {@code null}
      */
     public static byte[] concat(byte[] a, byte[] b) {
-        Objects.requireNonNull(a, "a");
-        Objects.requireNonNull(b, "b");
+        Objects.requireNonNull(a, "concat.a");
+        Objects.requireNonNull(b, "concat.b");
 
         byte[] c = new byte[a.length + b.length];
         System.arraycopy(a, 0, c, 0, a.length);

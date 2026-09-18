@@ -139,7 +139,7 @@ public class SecretKeyMgr {
     /**
      * Advanced Encryption Standard algorithm name.
      */
-    final static String AES = "AES";
+    public final static String AES = "AES";
 
     public static SecretKey getSecretKey(SecureRandom secure) {
         return getSecretKey(AES, 128, secure);
@@ -201,7 +201,7 @@ public class SecretKeyMgr {
      *
      * <p><strong>Important:</strong> {@code setSeed(...)} supplements the
      * current internal random state. It does not necessarily replace or reset
-     * the existing seed. Therefore callers must not assume that the same input
+     * the existing seed. Therefore, callers must not assume that the same input
      * string always produces the same random byte sequence across different
      * JVM versions, operating systems, providers, or runtime instances.</p>
      *
