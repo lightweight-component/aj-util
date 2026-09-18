@@ -11,10 +11,10 @@ Jackson databind and datatype-jsr310 are declared with provided scope; applicati
 | root | StrUtil, StringBytes (including hex), Base64Utils, UrlCodec, ConvertBasicValue, ObjectHelper, MapTool, RegExpUtils, RegExpHelper, RandomTools, HashHelper, JsonUtil, XmlHelper, CommonConstant |
 | date | DateTools, DateTypeConvert, Formatter |
 | io | DataReader, DataWriter, FileHelper, ResourceHelper, ZipHelper, UnzipHelper |
-| httpremote | Get, Post, Put, Delete, Head, BasePost, BatchDownload, FileUpload, SkipSSL |
-| httpremote.model | Request, Response, HttpConstant, HttpMethod, PayloadType |
 | reflect | Clazz, Fields, Methods, Types, NewInstance |
-| cryptography | Cryptography, SecretKeyMgr, CertificateUtils, Constant; rsa contains KeyMgr, DoSignature, DoVerify |
+| cryptography | DoCipher, CipherResult, SecretKeyMgr, CertificateUtils |
+| cryptography.aes | AesGcm, AesCbc, AesPbe, AesLegacy, AesCipherResult |
+| cryptography.rsa | Rsa, DoSignature, DoVerify, RestoreKey, PemUtils |
 | json | JSON engine abstraction and Jackson 2 implementation |
 | log | Trace, TextBox, EnableOperationLog |
 
@@ -27,13 +27,16 @@ Jackson databind and datatype-jsr310 are declared with provided scope; applicati
 | Resources | ResourceHelper |
 | ZipHelper extraction | new UnzipHelper(...).extract() |
 | ZIP compression | new ZipHelper(...).zip() |
-| httpremote.Request / Response / related models | httpremote.model package |
+| httpremote (formerly in aj-util) | Owned by aj-http; Request stays in httpremote, Response/enums/constants in httpremote.model |
+| Cryptography / rsa.KeyMgr | DoCipher and algorithm-specific aes/rsa classes; see cryptography.md |
 | MapTool XML conversion | XmlHelper.xmlToMap / mapToXml |
 | RandomTools.uuid / uuidStr | uuidV7() or uuidV7(boolean withHyphen) |
 | ReflectMethod | Methods |
 
 Do not generate examples using removed README names such as CollUtils, DateHelper, EncodeTools or MessageDigestHelper.
 Hashing is handled by HashHelper, not an encryption API.
+
+HTTP client code now lives under `aj-http/src/main/java/com/ajaxjs/util/httpremote/`, despite retaining the util namespace. Use `skills/aj-http/`; its current POM artifact is `com.ajaxjs:aj-net:2.1`, not `aj-http`. HTTP guides live at `docs-src/src/aj-http/http_request/`.
 
 ## Navigation
 

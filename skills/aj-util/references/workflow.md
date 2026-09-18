@@ -25,8 +25,9 @@ Run Java 8 separately before claiming Java 8 runtime verification.
 ## Documentation
 
 - Keep aj-util/README.md and aj-util/README.zh-CN.md semantically aligned, including POM version, current class names and examples.
-- Detailed docs under docs-src/src generally pair name.md and name-cn.md; locate the actual pages first.
+- AJ Util details under docs-src/src/aj-util pair name.md and name-cn.md; cryptography retains its page URLs after the API refactor. HTTP client guides belong to docs-src/src/aj-http and the aj-http skill.
+- For site changes run npm test and npm run build from docs-src, then git diff --check. Do not publish repository-level docs/ output unless explicitly requested.
 - Update aj-util/to_fix.md by removing or marking resolved findings only when source/test evidence supports it. Preserve unresolved findings and record new regression or test-maintenance work separately.
 - Avoid hard-coded coverage/JAR-size claims without measurement. Do not call the local POM version the latest published version without release evidence.
 - Keep identifiers untranslated and examples compilable. Distinguish current behavior from proposed contracts.
-- For skill updates keep SKILL.md concise, route details to references, and run the skill-creator quick_validate.py against skills/aj-util.
+- For skill updates keep SKILL.md concise, route details to references, and run the skill-creator quick_validate.py against each changed skill (skills/aj-util and skills/aj-http when both are affected). If Python/tooling is unavailable, report it and distinguish structural/link checks from the official validator.

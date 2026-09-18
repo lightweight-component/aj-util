@@ -30,19 +30,18 @@ Consult `aj-util/to_fix.md` before relying on edge cases.
 - UnzipHelper takes a ZIP path, optional target directory and optional ExtractionLimits. Call extract(); setCharset(Charset) is a separate setter for archives such as GBK ZIPs. Null target uses the archive's sibling stem directory.
 - Extraction defaults: 10,000 entries, 1 GiB per entry, 10 GiB total, ratio 100. Extraction checks traversal, symlinks and limits, but custom ExtractionLimits lack validation (including NaN ratios). Do not claim arbitrary custom policies are safe.
 
-## HTTP, dates and reflection
+## HTTP ownership, dates and reflection
 
-- Request/Response and HTTP enums/constants live under httpremote.model.
-- Request requires init before connect, considers status < 400 successful, and modifies response text via readAsString plus trim. BatchDownload has unbounded per-URL threads and incomplete timeout/error reporting.
-- SkipSSL changes global JVM TLS defaults; do not recommend it for production. HTTP and JSON logs need sensitive-data review.
+- HTTP client APIs moved to aj-http without changing the com.ajaxjs.util.httpremote namespace. Use the aj-http skill and its source/contracts; do not infer Request's package or success semantics from older AJ Util docs.
+- JSON logs still need sensitive-data review.
 - Date parsing is restricted to years 1900–2099. Variable-width parsing and skipped start-of-day policy remain unresolved; state charset, timezone and DST policy explicitly.
 - NewInstance searches public constructors by exact runtime types, not general compatible overloads. Methods compatibility does not resolve all ambiguities, numeric widening or varargs. executeDefault is currently incompatible with the tested JDK 17 private Lookup constructor.
 - Declared-method traversal intentionally excludes Object.
 
 ## Cryptography
 
-Prefer explicit authenticated encryption with Cryptography's GCM facilities after checking current signatures. Legacy AES/DES/3DES convenience methods and bare RSA transformations retain unsafe or provider-dependent defaults; successful round-trip tests do not prove security.
-PBE uses PBKDF2 and AES-GCM, but salt and iteration settings must be stored externally alongside nonce/ciphertext/tag.
-Mutable crypto objects and array accessors should not be shared across threads or requests.
-Certificate parsing and validity-date checks are not trust-chain or hostname verification. getCert(InputStream) closes the supplied stream.
+Read [cryptography.md](cryptography.md) for current signatures and format/security boundaries. Prefer AesGcm; DoCipher takes transformation/key at construction and operation inputs per call. AES wrappers create a fresh engine per call, but result arrays/nonce holders are mutable and not copied.
+AesPbe uses PBKDF2-HMAC-SHA256 and AES-128-GCM, prepends its nonce, and requires external salt/iteration metadata. Rsa uses explicit OAEP-SHA256/MGF1-SHA256; only its protocol-specific OAEP helpers use SHA-1. AesLegacy explicitly uses AES/ECB/PKCS5Padding and seeded random key generation, not a portable password KDF.
+Removed Cryptography/KeyMgr APIs and DES/3DES helpers in test code are not public library APIs. Round trips do not prove security.
+Certificate parsing and validity-date checks are not trust-chain or hostname verification. getCert(InputStream) and RestoreKey.loadPrivateKey(InputStream) close the supplied stream.
 Never log keys, passwords, plaintext or full sensitive payloads.

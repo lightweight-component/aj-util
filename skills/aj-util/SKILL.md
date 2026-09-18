@@ -1,6 +1,6 @@
 ---
 name: aj-util
-description: Use and maintain the aj-util Java 8 utility library. Trigger for questions, implementation, debugging, review, tests, or documentation involving com.ajaxjs.util APIs, including strings, conversion, JSON/XML, URL encoding, date/time, reflection, I/O/ZIP, HTTP helpers, hashing, random values, and cryptography.
+description: Use and maintain the aj-util Java 8 utility library. Trigger for questions, implementation, debugging, review, tests, or documentation involving com.ajaxjs.util APIs, including strings, conversion, JSON/XML, URL encoding, date/time, reflection, I/O/ZIP, hashing, random values, and cryptography. HTTP client APIs in com.ajaxjs.util.httpremote belong to the separate aj-http skill.
 ---
 
 # AJ Util
@@ -22,9 +22,11 @@ for package navigation and ask for the project or dependency version when exact 
 
 - For package and documentation paths, read [references/modules.md](references/modules.md).
 - For behavioral contracts and security-sensitive APIs, read [references/contracts.md](references/contracts.md).
+- For refactored AES/RSA, signatures, key restoration and certificates, read [references/cryptography.md](references/cryptography.md).
+- For `com.ajaxjs.util.httpremote`, use [AJ HTTP](../aj-http/SKILL.md): source is in `aj-http/`, documentation in `docs-src/src/aj-http/`, not this module.
 - For implementation, testing, and documentation conventions, read [references/workflow.md](references/workflow.md).
 
-Load only the reference relevant to the task. For cross-package reviews or broad changes, read all three.
+Load only the references relevant to the task. For cross-package reviews or broad changes, read the module map, contracts and workflow, plus cryptography when applicable.
 
 ## Work on code
 
