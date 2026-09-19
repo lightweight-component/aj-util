@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-http - 上传与下载</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-http/http_request/Transfer/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-http
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/" selected>aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-http/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/aj-http/http_request/Base-cn/">生命周期与响应</a></li>
+                    <li><a href="/aj-http/http_request/Get-cn/">HTTP 方法辅助类</a></li>
+                    <li><a href="/aj-http/http_request/Transfer-cn/">上传与下载</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity-cn/">代理、流与 TLS</a></li>
+                </ul>
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>上传与下载</h1>
+<p><code>MultipartPost</code> 用于 <code>multipart/form-data</code> 上传，<code>HttpFileDownload</code> 用于接收 HTTP 服务器提供的文件。两者都以流方式传输，不会先把整个文件收集到 Java 字节数组中。</p>
+<h2>Multipart 上传</h2>
+<p><code>MultipartPost.upload(...)</code> 接收一个同时包含文本和 <code>File</code> 值的 Map，且 Map 不能为空。回调只用于配置连接；不要在其中连接、读取或写入。</p>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.MultipartPost;
+import com.ajaxjs.util.httpremote.model.Response;
+import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+Map&lt;String, Object&gt; parts = new LinkedHashMap&lt;&gt;();
+parts.put(&quot;title&quot;, &quot;季度报告&quot;);
+parts.put(&quot;document&quot;, new File(&quot;reports/q1.pdf&quot;));
+
+Response response = MultipartPost.upload(&quot;https://example.com/upload&quot;, parts, connection -&gt; {
+    connection.setConnectTimeout(5_000);
+    connection.setReadTimeout(30_000);
+    connection.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer &quot; + token);
+});
+
+if (!response.isOk())
+    throw new IllegalStateException(&quot;Upload failed: &quot; + response.getHttpCode(), response.getEx());
+</code></pre>
+<p>单个文件可使用 <code>uploadFile</code>，支持 <code>File</code>、<code>byte[]</code> 与 <code>InputStream</code>：</p>
+<pre><code class="language-java">Response response = MultipartPost.uploadFile(
+        &quot;https://example.com/avatar&quot;, &quot;avatar&quot;, &quot;me.png&quot;, imageBytes, null);
+
+try (InputStream content = Files.newInputStream(Paths.get(&quot;large-video.mp4&quot;))) {
+    // MultipartPost 不关闭传入的流；由这个 try 块负责关闭。
+    response = MultipartPost.uploadFile(
+            &quot;https://example.com/video&quot;, &quot;video&quot;, &quot;large-video.mp4&quot;, content, null);
+}
+</code></pre>
+<p>该工具会创建新的 boundary，在回调之后重新写入匹配的 <code>Content-Type</code>，启用 8 KiB 分块传输，关闭请求输出，读取并关闭响应流，最后在 <code>finally</code> 断开连接。它有意禁用重定向：把可能很大的上传自动重放到未经审核的地址并不安全。非 2xx 状态返回失败的 <code>Response</code>；校验、回调、正文写入和运行时错误仍可能直接抛出。</p>
+<h2>由既有连接持有输出流时：MultipartWriter</h2>
+<p><code>MultipartWriter</code> 只序列化完整的 multipart 正文，不创建 HTTP 连接、不刷新/关闭输出流，也不关闭调用方传入的输入流。请求头应使用 <code>getContentType()</code>。</p>
+<pre><code class="language-java">String boundary = &quot;upload-2026&quot;;
+MultipartWriter writer = new MultipartWriter(connection.getOutputStream(), boundary);
+connection.setRequestProperty(&quot;Content-Type&quot;, writer.getContentType());
+
+Map&lt;String, Object&gt; parts = new LinkedHashMap&lt;&gt;();
+parts.put(&quot;comment&quot;, &quot;hello&quot;);
+parts.put(&quot;file&quot;, new File(&quot;notes.txt&quot;));
+writer.write(parts);             // 一次调用会写入结束 boundary
+connection.getOutputStream().flush();
+</code></pre>
+<p>每次 <code>write(...)</code> 都会以结束 boundary 收尾。所有字段和文件应放在一个 Map 中并只调用一次；多次调用不能再追加合法条目。boundary 必须匹配 <code>[A-Za-z0-9_-]{1,70}</code>。头部和文本使用 UTF-8；null 文本值会成为空文本，名称中的 CR/LF 会被拒绝，引号和反斜杠会转义。需要文件名的字节数组/流请使用专用重载；内部使用的 Map key 编码不是公开协议。</p>
+<h2>下载文件</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.HttpFileDownload;
+
+new HttpFileDownload(&quot;https://example.com/files/report.pdf&quot;, &quot;downloads/report.pdf&quot;)
+        .download();
+
+new HttpFileDownload(new String[] {
+        &quot;https://example.com/a.pdf&quot;,
+        &quot;https://example.com/b.pdf&quot;
+}, &quot;downloads&quot;).downloadAllAsync().join();
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>download()</code></td>
+<td>在当前线程下载一个 URL。</td>
+</tr>
+<tr>
+<td><code>downloadAsync()</code></td>
+<td>返回一个下载任务的 future。</td>
+</tr>
+<tr>
+<td><code>downloadAll()</code></td>
+<td>按顺序下载传入的 URL。</td>
+</tr>
+<tr>
+<td><code>downloadAllAsync()</code></td>
+<td>返回代表所有排队下载任务的 <code>CompletableFuture&lt;Void&gt;</code>。</td>
+</tr>
+</tbody>
+</table>
+<p>异步任务使用共享的四线程守护线程池与无界队列。必须 <code>join</code>、<code>get</code> 或以其他方式处理返回的 future；<code>join()</code> 会以 <code>CompletionException</code> 报告任务失败。没有公开执行器、取消策略或结果文件名列表。批量构造器保留传入的 URL 数组，使用期间不要修改它。</p>
+<h2>目标名称、覆盖与信任边界</h2>
+<p>显式指定文件目标时该目标优先。目录目标的文件名顺序为 <code>Content-Disposition</code>（优先 <code>filename*</code>）、URL 路径、生成的后备名。服务端/路径名称会被压缩为 basename 并移除控制字符。以 <code>/</code> 或 <code>\\</code> 结尾的 String，或一个已存在的目录，视为目录目标；尚不存在的 <code>Path</code> 视为文件；批量目标总是目录。</p>
+<p>仅接受 HTTP/HTTPS URL 和 2xx 响应。下载器使用固定的 10 秒连接、30 秒读取超时，跟随重定向，流式写入同目录临时文件后再替换目标。它会关闭流、断开连接，并尝试清理临时文件；这降低了半成品概率，但<strong>不保证原子移动</strong>。</p>
+<p>没有下载大小上限、目标沙箱或重名策略。已有文件可能被覆盖；并发下载得到相同名称时可能竞争。请使用可信目标目录，并校验不可信 URL/重定向，避免 SSRF 或访问不希望暴露的内网地址。</p>
+<h2>实现原理与取舍</h2>
+<p>普通 <code>Request.setData(Map)</code> 有意不实现 multipart 转换，面对 multipart 内容类型会抛出异常。将正文编码放在 <code>MultipartWriter</code>、传输生命周期放在 <code>MultipartPost</code>，让流所有权清晰可见，并避免隐藏的全量内存缓冲。</p>
+<p>继续阅读<a href="/aj-http/http_request/ProxySecurity-cn/">注解代理、流与 TLS</a>，或返回<a href="/aj-http/http_request/Base-cn/">请求生命周期</a>。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-http，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

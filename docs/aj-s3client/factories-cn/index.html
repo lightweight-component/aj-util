@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-s3client - 厂商 Factory</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-s3client/factories/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-s3client
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/" selected>aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-s3client/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                <h3>S3 客户端</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4-cn/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2-cn/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories-cn/">厂商 Factory</a></li>
+                    <li><a href="/aj-s3client/api-cn/">API 与限制</a></li>
+                </ul>
+                
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>厂商 Factory</h1>
+<p><code>com.ajaxjs.s3client.factory</code> 包放置的是具体客户端，而不是 Factory Method API。应直接实例化厂商类，创建 <code>Config</code> 后调用 <code>setConfig</code>。</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>基类</th>
+<th>URL 风格</th>
+<th>厂商特有行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CloudflareR2</code></td>
+<td><code>BaseS3ClientSigV4</code></td>
+<td>路径式</td>
+<td>通用 SigV4 实现；R2 通常使用 <code>auto</code> 区域。</td>
+</tr>
+<tr>
+<td><code>Backblaze</code></td>
+<td><code>CloudflareR2</code></td>
+<td>路径式</td>
+<td>在签名和实际请求头中启用 <code>Host</code>。</td>
+</tr>
+<tr>
+<td><code>Scaleway</code></td>
+<td><code>CloudflareR2</code></td>
+<td>路径式</td>
+<td>每次对象上传都发送并签名 <code>x-amz-acl: public-read</code>。</td>
+</tr>
+<tr>
+<td><code>AliyunOSS</code></td>
+<td><code>BaseS3ClientSigV2</code></td>
+<td>虚拟主机式</td>
+<td>使用带 <code>OSS</code> 前缀的 HMAC-SHA1/Base64 授权。</td>
+</tr>
+<tr>
+<td><code>NeteaseOSS</code></td>
+<td><code>BaseS3ClientSigV2</code></td>
+<td>虚拟主机式</td>
+<td>使用带 <code>NOS</code> 前缀的旧版 HMAC-SHA256 授权，以及 MD5/ETag 上传校验。</td>
+</tr>
+</tbody>
+</table>
+<h2>CloudflareR2</h2>
+<p>该类实现模块默认的路径式 SigV4 流程。所有存储桶方法使用 <code>https://endpoint/bucket</code>，对象方法在其后添加编码后的键名；没有厂商专属 ACL 或 Host 覆盖行为。</p>
+<h2>Backblaze</h2>
+<p><code>Backblaze</code> 是启用 <code>isSetHost</code> 的 <code>CloudflareR2</code>。签名构建器会加入 <code>host</code>，请求回调也会实际发送该头。应显式设置厂商区域。除非已验证目标服务精确的签名要求，不要仅为强制 <code>Host</code> 请求头而将其他服务套用此子类。</p>
+<h2>Scaleway</h2>
+<p><code>Scaleway.putObject</code> 与其他 SigV4 上传有实质差异：它总会设置 <code>x-amz-acl: public-read</code>，将该头加入规范签名，并在厂商支持 canned ACL 时使上传对象公开可读。此策略针对每次上传，不能通过 <code>Config</code> 关闭；不接受公开读取时请改用其他客户端。</p>
+<h2>AliyunOSS 与 NeteaseOSS</h2>
+<p>这两个类采用存储桶作为主机名的寻址方式，因此配置端点会转为 <code>https://{bucket}.{endpoint}</code>。<code>remark</code> 必须设置为精确前缀（<code>OSS</code> 或 <code>NOS</code>）。<code>NeteaseOSS</code> 是明确标注的旧兼容代码；其严格 MD5 ETag 校验仅适用于此处实现的单段、未加密请求路径。</p>
+<h2>选择客户端</h2>
+<p>应依据服务及其所需请求模型选择，而不是只看“S3 兼容”声明。至少确认签名版本、端点 URL 形状、必需区域、Host 请求头行为、canned ACL 策略，以及虚拟主机式存储桶 DNS 是否可用。本包不含通用 AWS S3 客户端，也不提供自动识别厂商的能力。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-s3client，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

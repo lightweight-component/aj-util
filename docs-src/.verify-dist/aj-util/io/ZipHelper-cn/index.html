@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - ZipHelper</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  将目录、单个文件或多个文件打包为 ZIP" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/io/ZipHelper/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>ZipHelper</h1>
+<p><code>ZipHelper</code> 用于创建 ZIP 文件。通过目录、单个 <code>File</code> 或 <code>File[]</code> 构造对象后调用 <code>zip()</code>。解压功能由独立的 <a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a> 提供。</p>
+<pre><code class="language-java">import com.ajaxjs.util.io.ZipHelper;
+
+ZipHelper backup = new ZipHelper(&quot;C:/data&quot;, &quot;C:/backup.zip&quot;);
+backup.zip();
+</code></pre>
+<h2>数据源与压缩模式</h2>
+<p>目录会被递归遍历，保留相对路径和空目录；符号链接与非普通文件会被拒绝。目标 ZIP 不能位于源目录内部。</p>
+<pre><code class="language-java">ZipHelper single = new ZipHelper(new File(&quot;report.csv&quot;), &quot;report.zip&quot;);
+single.zip();
+
+ZipHelper files = new ZipHelper(new File[]{new File(&quot;a.txt&quot;), new File(&quot;b.txt&quot;)}, &quot;files.zip&quot;);
+files.setUseStore(true); // STORED：不压缩
+files.zip();
+</code></pre>
+<p>默认使用 <code>DEFLATED</code>。调用 <code>setUseStore(true)</code> 后使用 <code>STORED</code> 模式；该模式会先计算文件大小与 CRC32，因此打包过程中源文件不应发生变化。多个文件会放在 ZIP 根目录，文件名必须互不重复。</p>
+<p>生成过程先写入目标文件同目录下的临时文件，成功后再替换目标文件。I/O 失败会抛出 <code>UncheckedIOException</code>。</p>
+<h2>压缩包目录结构示例</h2>
+<p>目录输入在 ZIP 中以所选源目录为相对根，而不会包含源目录自身的名字。无论 ZIP 在 Windows 还是其他系统生成，条目
+分隔符都统一使用 <code>/</code>。</p>
+<table>
+<thead>
+<tr>
+<th>源文件</th>
+<th>ZIP 内条目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C:/work/source/root.txt</code></td>
+<td><code>root.txt</code></td>
+</tr>
+<tr>
+<td><code>C:/work/source/a/b/nested.txt</code></td>
+<td><code>a/b/nested.txt</code></td>
+</tr>
+<tr>
+<td><code>C:/work/source/empty</code></td>
+<td><code>empty/</code></td>
+</tr>
+<tr>
+<td><code>new File[]{a.txt, b.txt}</code></td>
+<td><code>a.txt</code>、<code>b.txt</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-java">Path source = Paths.get(&quot;C:/work/source&quot;);
+new ZipHelper(source.toString(), &quot;C:/out/source.zip&quot;).zip();
+
+// 两个文件都位于 ZIP 根目录；同名基础文件会被拒绝。
+new ZipHelper(new File[]{new File(&quot;logs/app.log&quot;), new File(&quot;report.csv&quot;)},
+        &quot;C:/out/files.zip&quot;).zip();
+</code></pre>
+<p>目录遍历会显式记录目录条目，因此解压后空目录仍然存在。这对于应用模板或目录结构本身具有意义的备份很重要。</p>
+<h2>压缩模式的选择</h2>
+<p><code>DEFLATED</code> 是常规选择：ZIP 写入时同步压缩。<code>STORED</code> 则写入原始文件字节；ZIP 要求在写入前就提供精确大小和
+CRC32。因此 <code>ZipHelper</code> 会先读取每个文件计算元数据，再读取一次写入压缩包。</p>
+<p>只在确实不需要压缩时使用 <code>STORED</code>，例如已经压缩过的媒体文件且接收方兼容该模式。两次读取之间不要修改源文件，
+否则记录的 CRC 或长度可能与实际归档字节不一致。</p>
+<h2>安全性与失败行为</h2>
+<p>该工具会拒绝符号链接与非普通文件，避免意外把源目录之外的文件打进包内；也拒绝把目标 ZIP 放在源目录内，避免归档
+递归包含自己。目标父目录不存在时会自动创建。</p>
+<p>它先写入目标同目录的临时文件，成功后才替换目标，降低失败时留下半成品目标文件的概率。这并不是跨所有文件系统的
+事务：进程崩溃或不支持原子移动时，仍应按普通文件系统故障方式处理。需要向用户提示或重试备份时，请捕获
+<code>UncheckedIOException</code>。</p>
+<h2>实现原理与取舍</h2>
+<p><code>ZipHelper</code> 只负责创建压缩包，本身并不保证解压安全。处理不可信 ZIP 时请使用
+<a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a>，并保留其目标路径校验，以防止 <code>../../outside.txt</code> 这类路径穿越条目。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

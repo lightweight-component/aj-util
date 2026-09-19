@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-http - Annotation Proxy, Streams and TLS</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-http/http_request/ProxySecurity-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-http
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/" selected>aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-http/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/aj-http/http_request/Base/">Lifecycle and Responses</a></li>
+                    <li><a href="/aj-http/http_request/Get/">HTTP Method Helpers</a></li>
+                    <li><a href="/aj-http/http_request/Transfer/">Uploads and Downloads</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity/">Proxy, Streams and TLS</a></li>
+                </ul>
+                
+                
+                
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>Annotation proxy, streams and TLS</h1>
+<p>The annotation proxy is a small convenience layer over the direct HTTP API. It is useful for simple JSON/form endpoints, but it does not expose the full request lifecycle, raw status handling, or every annotation declared in the package. Prefer <code>Request</code> for critical integrations.</p>
+<h2>A supported proxy interface</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.call.CallHandler;
+import com.ajaxjs.util.httpremote.call.annotation.GET;
+import com.ajaxjs.util.httpremote.call.annotation.POST;
+import com.ajaxjs.util.httpremote.call.annotation.Url;
+import java.util.Map;
+
+@Url(&quot;https://example.com/api&quot;)
+public interface ExampleApi {
+    @GET(&quot;/health&quot;)
+    String health();
+
+    @POST(&quot;/users&quot;)
+    Map&lt;String, Object&gt; createUser(Map&lt;String, Object&gt; body);
+}
+
+ExampleApi api = CallHandler.create(ExampleApi.class);
+String health = api.health();
+Map&lt;String, Object&gt; created = api.createUser(user);
+</code></pre>
+<p><code>CallHandler</code> currently dispatches <code>@GET</code>, <code>@POST</code>, <code>@PUT</code>, and <code>@DELETE</code>. Return types are limited to <code>String</code>, raw <code>Map</code>, or a bean class. For POST/PUT it selects the <strong>first <code>Map</code> argument</strong> as the request body. POST defaults to form data; PUT defaults to JSON. A method-level connection initializer runs after the class-level <code>@Url.initConnection</code> initializer. Initializer instances are cached, so they need a public no-argument constructor and must be safe to reuse.</p>
+<h2>Path variables and configuration limits</h2>
+<pre><code class="language-java">@GET(&quot;/users/{id}&quot;)
+Map&lt;String, Object&gt; find(String id);
+</code></pre>
+<p>Path replacement uses the compiled Java parameter name and <code>toString()</code> directly. Compile the interface with <code>-parameters</code>; otherwise the runtime parameter name can be <code>arg0</code>, which will not match <code>{id}</code>. Values are <strong>not URL-encoded</strong>, and joining is only simple string concatenation. Encode and validate path data yourself before invoking the proxy.</p>
+<p>The package contains more annotations/interfaces than the dispatcher currently implements. Do not infer support from their presence:</p>
+<table>
+<thead>
+<tr>
+<th>Present API</th>
+<th>Current behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@HEAD</code>, <code>@Header</code>, <code>@RawBody</code>, <code>@FormData</code></td>
+<td>Not dispatched by <code>CallHandler</code>.</td>
+</tr>
+<tr>
+<td><code>@Url.config</code> / <code>HttpApiConfig</code></td>
+<td>Not consumed by the current dispatcher.</td>
+</tr>
+<tr>
+<td><code>PayloadType.FILE_UPLOAD</code></td>
+<td>Reaches the unsupported regular multipart Map path; use <code>MultipartPost</code>.</td>
+</tr>
+<tr>
+<td><code>create2()</code> / <code>BaseCall.init()</code></td>
+<td>Not a reliable initialization lifecycle; default-method dispatch is absent.</td>
+</tr>
+<tr>
+<td>Collection/generic returns and Object methods</td>
+<td>No dedicated proxy behavior.</td>
+</tr>
+</tbody>
+</table>
+<p>Proxy calls do not return a status-aware raw <code>Response</code> or an explicit connection handle. Use the <a href="/aj-http/http_request/Base/">direct lifecycle</a> when status, retry policy, request headers, or resource cleanup are part of correctness.</p>
+<h2>Streaming and gzip</h2>
+<p>For binary responses, install a stream consumer before connecting. Read the stream synchronously within the callback: <code>Request</code> closes it when the callback returns.</p>
+<pre><code class="language-java">Request request = new Request(HttpMethod.GET, downloadUrl);
+request.setInputStreamConsumer(in -&gt; {
+    try (OutputStream out = Files.newOutputStream(Paths.get(&quot;download.bin&quot;))) {
+        byte[] buffer = new byte[8192];
+        for (int size; (size = in.read(buffer)) != -1; )
+            out.write(buffer, 0, size);
+    } catch (IOException e) {
+        throw new UncheckedIOException(e);
+    }
+});
+
+HttpURLConnection connection = request.init();
+try {
+    Response response = request.connect();
+    if (!response.isOk())
+        throw new IllegalStateException(&quot;Download failed: &quot; + response.getHttpCode(), response.getEx());
+} finally {
+    connection.disconnect();
+}
+</code></pre>
+<p><code>Head.gzip(connection, in)</code> wraps only one, case-insensitive <code>gzip</code> content-encoding token; absent or chained encodings return the original stream. Gzip is not automatic. An error while creating <code>GZIPInputStream</code> becomes <code>UncheckedIOException</code>; later reads may still throw <code>IOException</code> for corrupt/truncated data.</p>
+<h2>TLS and logging boundaries</h2>
+<p>Keep the JDK's normal certificate and hostname validation in production. <code>SkipSSL.init()</code> changes JVM-wide defaults to trust every server certificate and hostname. <code>SkipSSL.setSSL_Ignore(...)</code> disables both checks for one HTTPS connection. These methods are suitable only for controlled local diagnostics, never as a production certificate workaround. <code>getSocketFactory(...)</code> also trusts all server certificates even if client key managers are supplied; <code>loadCert</code> is package-private, not a public client-certificate API.</p>
+<p><code>Request.printLog</code> writes the URL, UTF-8 request body, HTTP status, and up to 460 response characters at info level, and stores formatted text in MDC. Response truncation is not redaction. Avoid logging credentials, bearer tokens, cookies, personal information, signed URLs, or private response fields.</p>
+<h2>Implementation notes</h2>
+<p>This module intentionally stays on Java 8's <code>HttpURLConnection</code>. The convenience proxy favors a compact API over a full declarative-client feature set; direct request objects remain the escape hatch for streaming, status-aware decisions, connection configuration, and safer integration policy.</p>
+<p>See <a href="/aj-http/http_request/Transfer/">uploads and downloads</a> for file transfer, or <a href="/aj-http/http_request/Get/">method helpers</a> for normal API calls.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-http, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

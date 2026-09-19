@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-ftp - aj-ftp</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-ftp/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-ftp
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/" selected>aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-ftp/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>aj-ftp</h1>
+<p><code>aj-ftp</code> 是一个面向 Java 8 及以上环境的轻量级纯 FTP 客户端，用于连接、认证、上传和下载文件；如有特殊协议需求，也可使用其底层 FTP API。</p>
+<blockquote>
+<p>aj-ftp 仅实现 FTP，不支持 FTPS 或 SFTP。</p>
+</blockquote>
+<h2>添加依赖</h2>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-ftp&lt;/artifactId&gt;
+    &lt;version&gt;1.5&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2>上传文件</h2>
+<p>使用 FTP 主机和端口创建 <code>SimpleFtpClient</code>，登录后即可将本地文件上传到远端路径。客户端实现了 <code>Closeable</code>，建议使用 try-with-resources，确保传输失败时连接也能被关闭。</p>
+<pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
+
+try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
+    ftp.login(&quot;username&quot;, &quot;password&quot;);
+    ftp.enableUtf8(); // 服务端支持 UTF-8 文件名时启用
+    ftp.upload(&quot;C:/exports/report.zip&quot;, &quot;/incoming/report.zip&quot;);
+}
+</code></pre>
+<p><code>upload(本地路径, 远端路径)</code> 以二进制模式传输，并在返回前等待服务端的最终 FTP 响应。发生网络或传输错误时会抛出 <code>IOException</code>。</p>
+<h2>下载文件</h2>
+<pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
+
+try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
+    ftp.login(&quot;username&quot;, &quot;password&quot;);
+    ftp.getFile(&quot;/releases/client.zip&quot;, &quot;C:/downloads/client.zip&quot;);
+}
+</code></pre>
+<p>下载内容会先写入目标文件同目录的临时文件；只有在数据流关闭且服务端确认传输完成后，才会将临时文件移动为最终文件。传输失败时，已有的目标文件不会被覆盖，临时文件也会被清理。</p>
+<h2>连接与传输说明</h2>
+<ul>
+<li>对允许匿名访问的服务器使用 <code>anonymousLogin()</code>。</li>
+<li>文件名包含非 ASCII 字符且服务端支持 UTF-8 时，应在登录后调用 <code>enableUtf8()</code>。</li>
+<li>使用 <code>setConnectTimeout(毫秒)</code> 和 <code>setReadTimeout(毫秒)</code> 配置连接与读取超时。</li>
+<li>文件传输使用二进制模式；内置 <code>ProgressListener</code> 会通过已配置的 SLF4J 日志输出已传输字节数。</li>
+<li>一个 <code>SimpleFtpClient</code> 实例应只由一个调用方使用，不要在多个线程之间共享。</li>
+</ul>
+<h2>底层 API</h2>
+<p><code>SimpleFtpClient</code> 继承自 <code>com.ajaxjs.net.ftp.sun.ftp.FtpClient</code>。常规业务优先使用 <code>upload</code> 和 <code>getFile</code>。如果调用返回数据流的底层方法，必须完成读写并关闭数据流，再调用 <code>completePendingCommand()</code> 检查服务端最终响应。</p>
+<h2>相关资源</h2>
+<ul>
+<li><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-ftp">源代码</a></li>
+<li><a href="https://central.sonatype.com/artifact/com.ajaxjs/aj-ftp">Maven Central</a></li>
+<li><a href="https://javadoc.io/doc/com.ajaxjs/ajaxjs-ftp">Javadoc</a></li>
+</ul>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-ftp，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

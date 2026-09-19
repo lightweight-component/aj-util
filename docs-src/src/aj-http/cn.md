@@ -50,7 +50,8 @@ try {
 
 - [生命周期、正文与错误](/aj-http/http_request/Base-cn/)
 - [GET、POST、PUT、DELETE 和 HEAD](/aj-http/http_request/Get-cn/)
-- [上传、下载、代理与 TLS 限制](/aj-http/http_request/advanced-usage-cn/)
+- [上传与下载](/aj-http/http_request/Transfer-cn/)
+- [注解代理、流与 TLS 限制](/aj-http/http_request/ProxySecurity-cn/)
 
 源码：`aj-http/src/main/java/com/ajaxjs/util/httpremote/`；测试：`aj-http/src/test/java/com/ajaxjs/util/httpremote/`。`TestMultipartPost`、`TestMultipartWriter` 和 `TestHttpIoHelpers` 使用本地服务或内存测试；其他部分测试访问公网，不能视为离线验证。
 

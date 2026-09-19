@@ -19,7 +19,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -38,7 +38,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                   | 🚀<a href="/{{ project }}/">英语版本</a>
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="{% if alternate %}/{{ project }}{{ alternate }}{% else %}/{{ project }}/{% endif %}" aria-label="Switch language to English" title="Switch to English">EN</button>
                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
@@ -116,8 +116,38 @@
                 <ul>
                     <li><a href="/aj-http/http_request/Base-cn/">生命周期与响应</a></li>
                     <li><a href="/aj-http/http_request/Get-cn/">HTTP 方法辅助类</a></li>
-                    <li><a href="/aj-http/http_request/advanced-usage-cn/">上传、下载与代理</a></li>
+                    <li><a href="/aj-http/http_request/Transfer-cn/">上传与下载</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity-cn/">代理、流与 TLS</a></li>
                 </ul>
+                {% endif %}
+                {% if project == "aj-qrcode" %}
+                <h3>二维码</h3>
+                <ul>
+                    <li><a href="/aj-qrcode/getting-started-cn/">快速开始</a></li>
+                    <li><a href="/aj-qrcode/rendering-cn/">PNG 与 SVG 渲染</a></li>
+                    <li><a href="/aj-qrcode/segments-cn/">文本、字节与分段</a></li>
+                    <li><a href="/aj-qrcode/advanced-cn/">高级编码与限制</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-s3client" %}
+                <h3>S3 客户端</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4-cn/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2-cn/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories-cn/">厂商 Factory</a></li>
+                    <li><a href="/aj-s3client/api-cn/">API 与限制</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-ftp" %}
+                <h3>文件传输</h3>
+                <ul>
+                    <li><a href="/aj-ftp/upload-cn/">上传文件</a></li>
+                    <li><a href="/aj-ftp/download-cn/">下载文件</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-json" %}
+                <h3>学习 JSON 解析</h3>
+                <ul><li><a href="/aj-json/parse-cn/">动手解析 JSON</a></li><li><a href="/aj-json/how-it-works-cn/">解析器如何工作</a></li></ul>
                 {% endif %}
             </menu>
             <article class="aj-text chinese">

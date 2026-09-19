@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-http - HTTP 方法辅助类</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-http/http_request/Get/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-http
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/" selected>aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-http/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                <h3>HTTP 请求</h3>
+                <ul>
+                    <li><a href="/aj-http/http_request/Base-cn/">生命周期与响应</a></li>
+                    <li><a href="/aj-http/http_request/Get-cn/">HTTP 方法辅助类</a></li>
+                    <li><a href="/aj-http/http_request/Transfer-cn/">上传与下载</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity-cn/">代理、流与 TLS</a></li>
+                </ul>
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>GET、POST、PUT、DELETE 和 HEAD</h1>
+<p>以下类均位于 <code>com.ajaxjs.util.httpremote</code>。使用快捷方法前请阅读<a href="/aj-http/http_request/Base-cn/">生命周期与错误</a>：文本/Map 方法不会强制检查 HTTP 成功，也不暴露连接供显式清理。需要状态、流式处理或确定性断开连接时使用 <code>Request</code>。</p>
+<h2>GET 快捷方法</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.Get;
+import java.util.Map;
+
+String text = Get.text(&quot;https://example.com/&quot;);
+Map&lt;String, Object&gt; json = Get.api(&quot;https://example.com/api&quot;, connection -&gt; {
+    connection.setConnectTimeout(5_000);
+    connection.setReadTimeout(10_000);
+    connection.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+});
+Map&lt;String, String&gt; xml = Get.apiXml(&quot;https://example.com/data.xml&quot;,
+        connection -&gt; connection.setRequestProperty(&quot;Accept&quot;, &quot;application/xml&quot;));
+</code></pre>
+<p><code>Get.api(url, token)</code> 添加 <code>Authorization: Bearer &lt;token&gt;</code>。Bean 版本为 <code>Get.api(url, MyBean.class)</code>，也有带 token 或回调的重载。请使用实际 Bean 类；非成功状态返回 null。<code>new Get(url, callback)</code> 立即发送，不存在单参数 <code>Get(String)</code> 构造函数。手动配置使用 <code>new Get(HttpMethod.GET, url)</code>。</p>
+<h2>POST 与 PUT</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.Post;
+import com.ajaxjs.util.httpremote.Put;
+import com.ajaxjs.util.httpremote.model.Response;
+import java.util.Collections;
+import java.util.Map;
+
+Map&lt;String, Object&gt; body = Collections.&lt;String, Object&gt;singletonMap(&quot;name&quot;, &quot;Ada&quot;);
+Map&lt;String, Object&gt; posted = Post.api(&quot;https://example.com/api&quot;, body);
+Map&lt;String, Object&gt; form = Post.form(&quot;https://example.com/form&quot;, body, null);
+Response updated = Put.api(&quot;https://example.com/api/1&quot;, body);
+</code></pre>
+<p><code>Post.api</code> 返回解析后的 Map；<code>Put.api</code> 返回 <code>Response</code>。两者都有回调重载。<code>new Post(url, data, contentType, callback)</code> 及对应 <code>Put</code> 构造函数立即发送；内容类型为 null 时默认 JSON。三参数构造函数省略回调。表单正文使用 <code>HttpConstant.CONTENT_TYPE_FORM</code>。上传请使用 <a href="/aj-http/http_request/advanced-usage-cn/">MultipartPost</a>，不是普通 Map 正文转换器。</p>
+<h2>DELETE</h2>
+<p><code>Delete.api(url, token)</code> 和 <code>Delete.api(url, callback)</code> 返回 Map。Bean 重载接受 <code>(url, Class&lt;T&gt;, token/callback)</code>。不存在 <code>Delete.api(url)</code>。需要状态和错误处理时，手动管理 <code>Request(HttpMethod.DELETE, url)</code> 或 <code>Delete(HttpMethod.DELETE, url)</code> 生命周期。</p>
+<h2>HEAD 与连接辅助方法</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.Head;
+import com.ajaxjs.util.httpremote.model.Response;
+import java.net.HttpURLConnection;
+
+Head head = new Head(&quot;https://example.com/file.pdf&quot;);
+HttpURLConnection connection = head.init();
+try {
+    Response response = head.connect();
+    if (response.getEx() != null) {
+        throw new IllegalStateException(&quot;HEAD failed&quot;, response.getEx());
+    }
+    boolean missing = head.is404();
+    long size = head.getFileSize();
+    String location = head.get302redirect();
+} finally {
+    connection.disconnect();
+}
+</code></pre>
+<p><code>Head</code> 禁止自动重定向，除非 init 回调覆盖此设置。<code>get302redirect()</code> 直接读取 <code>Location</code>，不检查状态是否为 302。<code>getFileSize()</code> 虽返回 <code>long</code>，内部调用的是 int 版本 <code>getContentLength()</code>，未知或过大的长度可能为 <code>-1</code>。<code>is404()</code> 可能因 I/O 错误抛异常。这些都是<strong>实例</strong>方法，不是接受 URL 的静态工具。</p>
+<p><code>Head.map2header(map)</code>、<code>Head.json</code> 和 <code>Head.setBearerToken(token)</code> 返回连接配置回调。<code>map2header</code> 的值不能为 null。<code>HttpConstant.SET_USER_AGENT_DEFAULT</code> 也是回调；Cookie 和 Referer 请通过普通 <code>setRequestProperty</code> 设置，不存在专门的 Cookie 工具。</p>
+<p>依据：<code>Get</code>、<code>Post</code>、<code>Put</code>、<code>Delete</code>、<code>Head</code> 及对应的 <code>Test*</code> 类。公网测试展示调用方式，不保证外部服务可用或覆盖全部边界。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-http，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

@@ -112,26 +112,6 @@
         </url>
     
         <url>
-            <loc>https://aj-util.ajaxjs.com/aj-parent/cn/</loc>
-            <lastmod>2026-09-18T11:38:22.118Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/aj-parent/</loc>
-            <lastmod>2026-09-18T11:38:22.118Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/aj-qrcode/cn/</loc>
-            <lastmod>2026-09-18T11:38:22.119Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/aj-qrcode/</loc>
-            <lastmod>2026-09-18T11:38:22.119Z</lastmod>
-        </url>
-    
-        <url>
             <loc>https://aj-util.ajaxjs.com/aj-s3client/cn/</loc>
             <lastmod>2026-09-18T11:38:22.120Z</lastmod>
         </url>
@@ -377,16 +357,6 @@
         </url>
     
         <url>
-            <loc>https://aj-util.ajaxjs.com/image-combiner/cn/</loc>
-            <lastmod>2026-09-18T11:38:22.163Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://aj-util.ajaxjs.com/image-combiner/</loc>
-            <lastmod>2026-09-18T11:38:22.164Z</lastmod>
-        </url>
-    
-        <url>
             <loc>https://aj-util.ajaxjs.com/aj-util/common/RegExpHelper/</loc>
             <lastmod>2026-09-18T14:08:59.558Z</lastmod>
         </url>
@@ -444,6 +414,156 @@
         <url>
             <loc>https://aj-util.ajaxjs.com/aj-util/common/RandomTools-cn/</loc>
             <lastmod>2026-09-18T14:19:35.794Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-http/http_request/Transfer-cn/</loc>
+            <lastmod>2026-09-19T14:40:04.830Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-http/http_request/Transfer/</loc>
+            <lastmod>2026-09-19T14:40:04.830Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-http/http_request/ProxySecurity/</loc>
+            <lastmod>2026-09-19T14:40:59.257Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-http/http_request/ProxySecurity-cn/</loc>
+            <lastmod>2026-09-19T14:40:59.258Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/signature-v4/</loc>
+            <lastmod>2026-09-19T14:49:45.303Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/signature-v2/</loc>
+            <lastmod>2026-09-19T14:49:45.304Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/factories/</loc>
+            <lastmod>2026-09-19T14:49:45.305Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/api/</loc>
+            <lastmod>2026-09-19T14:49:45.306Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-ftp/upload/</loc>
+            <lastmod>2026-09-19T14:50:48.481Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-ftp/upload-cn/</loc>
+            <lastmod>2026-09-19T14:50:48.482Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/signature-v4-cn/</loc>
+            <lastmod>2026-09-19T14:50:53.916Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/signature-v2-cn/</loc>
+            <lastmod>2026-09-19T14:50:53.917Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/factories-cn/</loc>
+            <lastmod>2026-09-19T14:50:53.918Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-s3client/api-cn/</loc>
+            <lastmod>2026-09-19T14:50:53.920Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-ftp/download/</loc>
+            <lastmod>2026-09-19T14:51:26.494Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-ftp/download-cn/</loc>
+            <lastmod>2026-09-19T14:51:26.495Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/</loc>
+            <lastmod>2026-09-19T14:58:39.359Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/cn/</loc>
+            <lastmod>2026-09-19T14:58:39.360Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/getting-started/</loc>
+            <lastmod>2026-09-19T14:59:23.715Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/rendering/</loc>
+            <lastmod>2026-09-19T14:59:23.719Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/segments/</loc>
+            <lastmod>2026-09-19T14:59:23.719Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/advanced/</loc>
+            <lastmod>2026-09-19T14:59:23.720Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/getting-started-cn/</loc>
+            <lastmod>2026-09-19T15:00:10.267Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/rendering-cn/</loc>
+            <lastmod>2026-09-19T15:00:10.268Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/segments-cn/</loc>
+            <lastmod>2026-09-19T15:00:10.269Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-qrcode/advanced-cn/</loc>
+            <lastmod>2026-09-19T15:00:10.270Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-json/parse/</loc>
+            <lastmod>2026-09-19T15:04:06.445Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-json/parse-cn/</loc>
+            <lastmod>2026-09-19T15:04:06.446Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-json/how-it-works/</loc>
+            <lastmod>2026-09-19T15:04:59.819Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://aj-util.ajaxjs.com/aj-json/how-it-works-cn/</loc>
+            <lastmod>2026-09-19T15:04:59.823Z</lastmod>
         </url>
     
 </urlset>

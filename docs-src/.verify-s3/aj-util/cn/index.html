@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - AJ Utilities 简介</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  面向 Java 8 及以上版本的轻量级、面向对象工具库" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, AJ Utilities,Java 工具库,中文文档" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>AJ Utilities 简介</h1>
+<p>轻量级 Java 8+ 工具库。在需要保存配置或状态的场景中，API 采用小而清晰的对象；无状态操作则保持简洁。项目提供源码、Javadoc 与单元测试。</p>
+<table>
+<thead>
+<tr>
+<th>领域</th>
+<th>主要 API</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编码与摘要</td>
+<td><code>Base64Utils</code>、<code>StringBytes</code>、<code>UrlCodec</code>、<code>HashHelper</code></td>
+<td>Base64、十六进制、URL 参数、消息摘要与 HMAC。</td>
+</tr>
+<tr>
+<td>常用工具</td>
+<td><code>ConvertBasicValue</code>、<code>ObjectHelper</code>、<code>MapTool</code>、<code>RandomTools</code>、<code>StrUtil</code>、<code>RegExpHelper</code></td>
+<td>类型转换、对象、Map、随机值、字符串与带缓存的正则表达式。</td>
+</tr>
+<tr>
+<td>结构化数据</td>
+<td><code>JsonUtil</code>、<code>XmlHelper</code></td>
+<td>可替换 JSON 引擎与安全的 XML 工具。</td>
+</tr>
+<tr>
+<td>日期时间</td>
+<td><code>DateTools</code>、<code>DateTypeConvert</code>、<code>Formatter</code></td>
+<td>Java 8 时间格式化、严格解析和新旧日期类型转换。</td>
+</tr>
+<tr>
+<td>I/O</td>
+<td><code>FileHelper</code>、<code>ResourceHelper</code>、<code>DataReader</code>、<code>DataWriter</code>、<code>ZipHelper</code>、<code>UnzipHelper</code></td>
+<td>文件、类路径资源、流、ZIP 压缩和带保护的 ZIP 解压。</td>
+</tr>
+<tr>
+<td>密码学</td>
+<td><code>DoCipher</code>、<code>AesGcm</code>、<code>AesCbc</code>、<code>AesPbe</code>、<code>AesLegacy</code>、<code>Rsa</code>、<code>SecretKeyMgr</code>、<code>RestoreKey</code>、<code>PemUtils</code>、<code>DoSignature</code>、<code>DoVerify</code></td>
+<td>AES、基于密码的加密、RSA-OAEP、密钥与签名；详见<a href="/aj-util/cryptography/intro-cn/">密码学指南</a>。</td>
+</tr>
+<tr>
+<td>反射</td>
+<td><code>Clazz</code>、<code>Fields</code>、<code>Methods</code>、<code>NewInstance</code>、<code>Types</code></td>
+<td>类加载、成员查找、对象构造与泛型类型检查。</td>
+</tr>
+<tr>
+<td>日志</td>
+<td><code>Trace</code>、<code>TextBox</code>、<code>EnableOperationLog</code></td>
+<td>MDC 链路上下文、格式化文本框与操作日志标记注解。</td>
+</tr>
+</tbody>
+</table>
+<p>HTTP 请求、上传、下载和注解代理现属于独立的 <a href="/aj-http/cn/">AJ HTTP 工程</a>。Java 包名仍为 <code>com.ajaxjs.util.httpremote</code>，但需要单独依赖；请参阅 AJ HTTP 安装指南。</p>
+<h2>源代码</h2>
+<p><a href="https://github.com/lightweight-component/aj-util">GitHub</a> | <a href="https://gitcode.com/lightweight-component/aj-util">GitCode</a> | <a href="https://gitee.com/lightweight-components/aj-util">Gitee</a></p>
+<h2>链接</h2>
+<p><a href="https://aj-util.ajaxjs.com">用户手册</a> |  <a href="https://deepwiki.com/lightweight-component/aj-util">Ask DeepWiki</a> | <a href="https://javadoc.io/doc/com.ajaxjs/ajaxjs-util">Java 文档</a></p>
+<h2>安装</h2>
+<p>需要 Java 8+ 或以上。Maven 坐标：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;ajaxjs-util&lt;/artifactId&gt;
+    &lt;version&gt;1.3.8&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><a href="https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util"><img src="https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release" alt="Maven Central"></a></p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

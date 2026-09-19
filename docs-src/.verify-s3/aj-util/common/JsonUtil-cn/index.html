@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - JsonUtil</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  基于可替换 JSON 引擎的 JSON 转换工具" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, JSON,序列化,Java" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>JsonUtil 教程</h1>
+<p><code>JsonUtil</code> 是 JSON 序列化、解析和对象转换的静态门面。它将工作委托给 <code>JsonEngine</code>，调用方无需暴露 Jackson <code>ObjectMapper</code>、
+<code>JsonNode</code> 等实现特定类型。</p>
+<h2>简介</h2>
+<p><code>JsonUtil</code> 通过当前配置的 JSON 引擎提供 JSON 字符串、Java 对象、Map 和 List 之间的常见转换。</p>
+<h2>主要特性</h2>
+<ul>
+<li>将 Java 对象转换为 JSON 字符串（美化或紧凑格式）</li>
+<li>将 JSON 字符串解析为 Java 对象</li>
+<li>JSON 与 Map/List 之间的转换</li>
+<li>类型安全的 JSON 处理</li>
+<li>延迟初始化并安全发布共享 <code>JsonEngine</code></li>
+<li>以 <code>Object</code> 返回实现无关的 JSON 树模型</li>
+</ul>
+<h2>方法</h2>
+<h3>1. 序列化 (转 JSON)</h3>
+<ol>
+<li><code>toJson(Object obj)</code> - 将对象转换为 JSON 字符串</li>
+<li><code>toJsonPretty(Object obj)</code> - 将对象转换为美化格式的 JSON</li>
+</ol>
+<h3>2. 反序列化 (从 JSON)</h3>
+<ol>
+<li><code>fromJson(String jsonStr, Class&lt;T&gt; valueType)</code> - 将 JSON 解析为指定类型</li>
+</ol>
+<h3>3. JSON ↔ Map 转换</h3>
+<ol>
+<li><code>json2map(String jsonStr)</code> - JSON 转 Map&lt;String, Object&gt;</li>
+<li><code>json2map(String jsonStr, Class&lt;T&gt; clazz)</code> - JSON 转带类型值的 Map</li>
+<li><code>json2sortMap(String jsonStr, Class&lt;T&gt; clazz)</code> - JSON 转保留顺序的 LinkedHashMap</li>
+<li><code>json2StrMap(String jsonStr)</code> - JSON 转 Map&lt;String, String&gt;</li>
+</ol>
+<h3>4. JSON ↔ List 转换</h3>
+<ol>
+<li><code>json2list(String jsonArrayStr, Class&lt;T&gt; clazz)</code> - JSON 数组转 List<T></li>
+<li><code>json2mapList(String jsonArrayStr)</code> - JSON 数组转 List<Map></li>
+</ol>
+<h3>5. 对象转换</h3>
+<ol>
+<li><code>convertValue(Object obj, Class&lt;T&gt; clazz)</code> - 转换对象类型</li>
+<li><code>pojo2map(Object obj)</code> - POJO 转 Map</li>
+<li><code>pojo2map(Object obj, Class&lt;T&gt; clazz)</code> - POJO 转带类型的 Map</li>
+<li><code>map2pojo(Map&lt;String, Object&gt; map, Class&lt;T&gt; clazz)</code> - Map 转 POJO</li>
+</ol>
+<h3>6. JSON 树模型</h3>
+<ol>
+<li><code>json2Node(String jsonStr)</code> - 将 JSON 解析为引擎特定的树对象</li>
+</ol>
+<h2>使用示例</h2>
+<h3>基本序列化</h3>
+<pre><code class="language-java">User user = new User(&quot;John&quot;, 30);
+String json = JsonUtil.toJson(user); 
+// {&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}
+
+String prettyJson = JsonUtil.toJsonPretty(user);
+/*
+{
+  &quot;name&quot; : &quot;John&quot;,
+  &quot;age&quot; : 30
+}
+*/
+</code></pre>
+<h3>基本反序列化</h3>
+<pre><code class="language-java">String json = &quot;{\&quot;name\&quot;:\&quot;John\&quot;,\&quot;age\&quot;:30}&quot;;
+User user = JsonUtil.fromJson(json, User.class);
+</code></pre>
+<h3>Map 转换</h3>
+<pre><code class="language-java">Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+map.put(&quot;name&quot;, &quot;John&quot;);
+map.put(&quot;age&quot;, 30);
+
+String json = JsonUtil.toJson(map);
+Map&lt;String, Object&gt; map2 = JsonUtil.json2map(json);
+</code></pre>
+<h3>List 转换</h3>
+<pre><code class="language-java">String jsonArray = &quot;[{\&quot;name\&quot;:\&quot;John\&quot;}, {\&quot;name\&quot;:\&quot;Alice\&quot;}]&quot;;
+List&lt;User&gt; users = JsonUtil.json2list(jsonArray, User.class);
+</code></pre>
+<h2>引擎配置</h2>
+<p>首次使用时，<code>JsonUtil.getEngine()</code> 会通过 Java <code>ServiceLoader</code> 加载 <code>JsonEngineProvider</code> 实现，并选择优先级最高的提供者。
+工程在可选的 Jackson 依赖存在时提供 Jackson 2 引擎，但门面 API 本身不绑定 Jackson。</p>
+<p>应用可在首次转换之前显式设置引擎：</p>
+<pre><code class="language-java">JsonUtil.setEngine(myJsonEngine);
+</code></pre>
+<p><code>setEngine(null)</code> 会被拒绝。替换引擎会全局影响后续调用，应在应用启动阶段配置，而不是与普通 JSON 操作并发执行。日期支持、重复键处理、时区行为和具体树模型类型取决于引擎，并非 <code>JsonUtil</code> 的统一保证。</p>
+<h2>Map、Bean 和树模型示例</h2>
+<pre><code class="language-java">Map&lt;String, Object&gt; source = new LinkedHashMap&lt;&gt;();
+source.put(&quot;name&quot;, &quot;Ada&quot;);
+source.put(&quot;age&quot;, 36);
+
+String json = JsonUtil.toJson(source);
+Map&lt;String, String&gt; strings = JsonUtil.json2StrMap(json);
+Map&lt;String, Object&gt; values = JsonUtil.json2map(json);
+User user = JsonUtil.map2pojo(values, User.class);
+Map&lt;String, Object&gt; userValues = JsonUtil.pojo2map(user);
+</code></pre>
+<p><code>json2sortMap</code> 请求 <code>LinkedHashMap</code>，以保留解析后的键顺序。<code>convertValue</code> 委托给所选引擎的对象转换能力，适合目标类型在运行时才确定的场景。<code>json2Node</code> 用于引擎特定的树遍历，只有在确定所选引擎时才应强制转换其结果。</p>
+<h2>生命周期与失败处理</h2>
+<p>首次创建完成后，引擎会缓存在 volatile 字段中。运行时类加载器中没有可见的 <code>JsonEngineProvider</code> 时，<code>getEngine()</code> 抛出 <code>IllegalStateException</code>。<code>fromJson</code> 将解析/映射失败包装为带原始 cause 的 <code>RuntimeException</code>；其他方法直接委托，可能暴露提供者特定异常。转换失败时，也不应因此记录不受信任的原始 JSON 内容。</p>
+<h2>实现原理与取舍</h2>
+<p><code>JsonUtil</code> 将选中的引擎保存于 <code>volatile</code> 字段，并通过 synchronized 的双重检查完成延迟初始化。这样启动后的普通调用无需加锁，同时能安全发布已完整创建的引擎。提供者使用 Java 标准 <code>ServiceLoader</code> 发现，再按声明的优先级比较；应用无需改动 <code>JsonUtil</code> 调用方即可替换 JSON 后端。</p>
+<p>门面刻意让 <code>json2Node</code> 返回 <code>Object</code>：若在此处返回某个库特定的树类型，通用模块将永久依赖该库。代价是处理树模型的代码必须知道当前激活的提供者。</p>
+<h2>结论</h2>
+<p><code>JsonUtil</code> 类提供了全面的实用方法，用于处理 JSON 数据，使序列化、反序列化以及 JSON 与 Java 对象之间的转换更加容易。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

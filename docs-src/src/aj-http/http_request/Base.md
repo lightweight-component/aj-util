@@ -1,6 +1,7 @@
 ---
 title: Request Lifecycle and Responses
 layout: layouts/aj-util.njk
+alternate: /http_request/Base-cn/
 ---
 
 # Request lifecycle

@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-ftp - Upload files</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-ftp/upload-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-ftp
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/" selected>aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-ftp/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                <h3>File transfer</h3>
+                <ul>
+                    <li><a href="/aj-ftp/upload/">Upload files</a></li>
+                    <li><a href="/aj-ftp/download/">Download files</a></li>
+                </ul>
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>Upload files</h1>
+<p><code>SimpleFtpClient.upload(localPath, remotePath)</code> sends one local file with the FTP <code>STOR</code> command. It selects binary mode, streams the file to the data connection, closes that connection, and checks the final FTP reply before reporting success.</p>
+<h2>Basic upload</h2>
+<pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
+
+try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
+    ftp.login(&quot;deploy&quot;, System.getenv(&quot;FTP_PASSWORD&quot;));
+    ftp.upload(&quot;C:/build/app.zip&quot;, &quot;/releases/app-1.5.zip&quot;);
+}
+</code></pre>
+<p>The first argument must identify a readable local file. The second is the server-side filename and path as understood by the FTP server. Ensure the destination directory already exists and that the account has write permission; <code>upload</code> does not create remote directories.</p>
+<h2>Paths, names, and encoding</h2>
+<p>Use <code>/</code> in remote paths unless the target server documents a different convention. On a server that supports UTF-8, call <code>enableUtf8()</code> after login and before sending non-ASCII path names:</p>
+<pre><code class="language-java">ftp.login(&quot;deploy&quot;, password);
+ftp.enableUtf8();
+ftp.upload(&quot;C:/exports/季度报告.zip&quot;, &quot;/incoming/季度报告.zip&quot;);
+</code></pre>
+<p>If the server rejects <code>OPTS UTF8 ON</code>, <code>enableUtf8()</code> throws <code>IOException</code>; do not assume a different encoding is safe without confirming the server's configuration.</p>
+<h2>Completion and failure handling</h2>
+<p>An FTP transfer has a data connection and a final control-channel reply. <code>upload</code> handles both: it closes the data stream and calls <code>completePendingCommand()</code> internally. A return from <code>upload</code> therefore means the client received a successful final reply, not merely that it finished reading the local file.</p>
+<p><code>IOException</code> can indicate an unreadable local file, failed data connection, permission problem, lost connection, or negative FTP reply. Treat it as an incomplete upload. The server may retain a partial remote file, so use a remote temporary name and rename it only after upload succeeds when consumers must never see partial content:</p>
+<pre><code class="language-java">String finalName = &quot;/releases/app.zip&quot;;
+String temporaryName = finalName + &quot;.part&quot;;
+
+try (SimpleFtpClient ftp = new SimpleFtpClient(host, 21)) {
+    ftp.login(user, password);
+    ftp.upload(localFile, temporaryName);
+    ftp.rename(temporaryName, finalName);
+}
+</code></pre>
+<p><code>rename</code> needs server-side permission and may not be atomic on every FTP server. Clean up failed temporary uploads according to the server's retention policy.</p>
+<h2>Progress and timeouts</h2>
+<p>The built-in <code>ProgressListener</code> logs byte counts through SLF4J while copying data. It is not an application callback API. Configure your SLF4J backend if transfer progress should be retained or displayed.</p>
+<p>Set appropriate timeouts before long-running work. <code>setConnectTimeout</code> controls new socket connections; <code>setReadTimeout</code> controls socket reads. A timeout must account for the expected file size and network speed:</p>
+<pre><code class="language-java">ftp.setConnectTimeout(10_000);
+ftp.setReadTimeout(120_000);
+</code></pre>
+<h2>Low-level upload streams</h2>
+<p>Use <code>put(remotePath)</code> only when custom streaming is required. The caller owns the returned stream and must close it, then call <code>completePendingCommand()</code>; otherwise a successful byte write can be mistaken for a completed upload.</p>
+<pre><code class="language-java">ftp.binary();
+try (OutputStream remote = ftp.put(&quot;/incoming/data.bin&quot;)) {
+    // Write application data to remote.
+}
+ftp.completePendingCommand();
+</code></pre>
+<p>Return to the <a href="/aj-ftp/">aj-ftp overview</a> or continue to <a href="/aj-ftp/download/">download files</a>.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-ftp, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

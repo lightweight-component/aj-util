@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-json - 动手解析 JSON</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-json/parse/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-json
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/" selected>aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-json/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                
+                <h3>学习 JSON 解析</h3>
+                <ul><li><a href="/aj-json/parse-cn/">动手解析 JSON</a></li><li><a href="/aj-json/how-it-works-cn/">解析器如何工作</a></li></ul>
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>动手解析 JSON</h1>
+<p>用于学习的公开入口是 <code>FMS</code>。将一段 JSON（或接近 JSON 的文本）交给它，再调用 <code>parse()</code>。</p>
+<pre><code class="language-java">import com.ajaxjs.jsonparser.syntax.FMS;
+import java.util.List;
+import java.util.Map;
+
+String text = &quot;{name: 'Ada', active: true, scores: [95, 88]}&quot;;
+Object result = new FMS(text).parse();
+
+Map&lt;String, Object&gt; person = (Map&lt;String, Object&gt;) result;
+System.out.println(person.get(&quot;name&quot;));       // Ada
+System.out.println(person.get(&quot;active&quot;));     // true
+
+List&lt;Object&gt; scores = (List&lt;Object&gt;) person.get(&quot;scores&quot;);
+System.out.println(scores.get(0));             // 95
+</code></pre>
+<p>之所以需要类型转换，是因为 <code>parse()</code> 可能返回多种 Java 值。不完全确定输入内容时，应先判断根节点类型，再进行转换。</p>
+<h2>会得到哪些 Java 值？</h2>
+<table>
+<thead>
+<tr>
+<th>写入的文本</th>
+<th>得到的 Java 值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{...}</code></td>
+<td><code>HashMap</code></td>
+</tr>
+<tr>
+<td><code>[...]</code></td>
+<td><code>ArrayList</code></td>
+</tr>
+<tr>
+<td><code>&quot;hello&quot;</code> 或 <code>'hello'</code></td>
+<td><code>String</code></td>
+</tr>
+<tr>
+<td><code>true</code> / <code>false</code></td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>12</code></td>
+<td><code>Integer</code>；超过 <code>Integer</code> 范围时为 <code>Long</code></td>
+</tr>
+<tr>
+<td><code>3.14</code></td>
+<td><code>Double</code></td>
+</tr>
+</tbody>
+</table>
+<p>对象和数组可以嵌套：嵌套对象仍然是 <code>Map</code>，嵌套数组仍然是 <code>List</code>。</p>
+<h2>标准 JSON 与这个学习解析器</h2>
+<p>标准 JSON 要求键和字符串使用双引号：</p>
+<pre><code class="language-json">{&quot;name&quot;:&quot;Ada&quot;,&quot;active&quot;:true}
+</code></pre>
+<p>aj-json 还接受下面这种更好输入的写法，方便观察词法分析过程，但它不是可互通的标准 JSON：</p>
+<pre><code class="language-text">{name: 'Ada', active: true}
+</code></pre>
+<p>学习时可以分别尝试两种写法，再观察 token 的差异。真实接口里始终应收发标准 JSON，并交给成熟的 JSON 库处理。</p>
+<h2>出错也是学习的一部分</h2>
+<p>格式不正确时通常会抛出 <code>JsonParseException</code>。异常信息会带上字符位置、行和列，帮助定位解析器在哪个地方无法继续。</p>
+<pre><code class="language-java">try {
+    new FMS(&quot;{name: }&quot;).parse();
+} catch (RuntimeException e) {
+    System.out.println(e.getMessage());
+}
+</code></pre>
+<p>这个示例用于理解语法错误如何出现，不应把异常文案当作稳定的生产接口。</p>
+<p>下一步阅读<a href="/aj-json/how-it-works-cn/">解析器如何工作</a>。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-json，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

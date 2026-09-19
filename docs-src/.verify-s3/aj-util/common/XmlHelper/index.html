@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - XmlHelper</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Secure XML parsing, XPath queries, and XML/Map conversion." />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, XML,parsing,Java" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/" selected>aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/">Home</a>
+                    </li>
+                </ul>
+                
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
+                </ul>
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro/">Introduction</a></li>
+                    <li><a href="/aj-util/date/convert/">Date Converter</a></li>
+                    <li><a href="/aj-util/date/formatter/">Date Formatter</a></li>
+                </ul>
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields/">Fields</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper/">UnzipHelper</a></li>
+                </ul>
+
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/aj-util/cryptography/intro/">Introduction</a></li>
+                <li><a href="/aj-util/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/aj-util/cryptography/Cryptography/">Symmetric encryption</a></li>
+                <li><a href="/aj-util/cryptography/Rsa/">RSA</a></li>
+               </ul>
+               <h3>Misc.</h3>
+               <ul>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
+                <li><a href="/aj-util/misc/contact/">Contact</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>XmlHelper</h1>
+<p><code>XmlHelper</code> parses XML strings, queries DOM nodes, and converts simple XML structures to and from maps. It does not read file paths: every <code>xml</code> argument is XML content.</p>
+<h2>Secure parsing and queries</h2>
+<p><code>initBuilder()</code> creates a <code>DocumentBuilder</code> with DTD declarations, external entities, external DTD/schema access, XInclude, and entity expansion disabled. <code>initBuilder(boolean namespaceAware)</code> controls namespace awareness while retaining these security settings. Parsing failures use sanitized messages and do not append the full XML input.</p>
+<pre><code class="language-java">String xml = &quot;&lt;root&gt;&lt;item id=\&quot;7\&quot;&gt;value&lt;/item&gt;&lt;/root&gt;&quot;;
+
+Element root = XmlHelper.getRoot(xml);
+XmlHelper.xPath(xml, &quot;/root/item&quot;, node -&gt; System.out.println(node.getTextContent()));
+XmlHelper.parseXML(xml, rootNode -&gt; System.out.println(rootNode.getNodeName()));
+</code></pre>
+<p><code>xPath</code> invokes the consumer for each selected node. <code>parseXML</code> invokes its <code>Consumer&lt;Node&gt;</code> once with the root element. <code>nodeAsMap(xml, xpath)</code> returns the selected node's attributes; <code>getNodeAttribute(node, name)</code> returns <code>null</code> if the attribute is absent or the node has no attributes. <code>getInnerXml(node)</code> returns the node's child markup.</p>
+<h2>Map and bean conversion</h2>
+<pre><code class="language-java">String generated = XmlHelper.mapToXml(Collections.singletonMap(&quot;name&quot;, &quot;Ada&quot;));
+Map&lt;String, String&gt; values = XmlHelper.xmlToMap(&quot;&lt;xml&gt;&lt;name&gt;Ada&lt;/name&gt;&lt;/xml&gt;&quot;);
+Map&lt;String, Object&gt; repeated = XmlHelper.xmlToMultiValueMap(
+        &quot;&lt;xml&gt;&lt;tag&gt;a&lt;/tag&gt;&lt;tag&gt;b&lt;/tag&gt;&lt;/xml&gt;&quot;);
+</code></pre>
+<p><code>mapToXml</code> produces an <code>&lt;xml&gt;</code> root and serializes map entries as elements. <code>xmlToMap</code> keeps one value per element name; <code>xmlToMultiValueMap</code> preserves repeated names as collections. <code>beanToXml</code> serializes JavaBean properties. XML element names must be valid; these helpers are for simple data exchange rather than arbitrary XML schema processing.</p>
+<h2>Node-level operations</h2>
+<pre><code class="language-java">String xml = &quot;&lt;root&gt;&lt;user id=\&quot;7\&quot;&gt;&lt;name&gt;Ada&lt;/name&gt;&lt;/user&gt;&lt;/root&gt;&quot;;
+Element root = XmlHelper.getRoot(xml);
+Element user = (Element) root.getElementsByTagName(&quot;user&quot;).item(0);
+
+String id = XmlHelper.getNodeAttribute(user, &quot;id&quot;);
+String inner = XmlHelper.getInnerXml(user); // &lt;name&gt;Ada&lt;/name&gt;
+Map&lt;String, String&gt; attributes = XmlHelper.nodeAsMap(xml, &quot;/root/user&quot;);
+</code></pre>
+<p><code>getNodeAttribute</code> returns <code>null</code> for a missing attribute; it does not distinguish a missing attribute from an
+attribute whose value is absent. <code>nodeAsMap</code> is useful for attributes only—element text belongs to the node content.
+XPath expressions use the JDK XPath implementation; pass a namespace-aware builder only when directly working with
+namespaced DOM documents.</p>
+<h2>Conversion limits</h2>
+<p><code>mapToXml</code>, <code>xmlToMap</code>, and <code>xmlToMultiValueMap</code> are deliberately simple conventions rather than a general XML
+binding framework. They do not preserve arbitrary mixed content, namespace semantics, comments, processing
+instructions, schema constraints, or every possible Java object graph. Use a dedicated binding library when those
+features are required.</p>
+<h2>Implementation notes</h2>
+<p>The parser is built from the JDK DOM APIs. Before parsing, <code>XmlHelper</code> disables known XXE entry points on the factory
+and builder configuration: DTD processing, external general/parameter entities, external DTD/schema access, XInclude,
+and entity expansion. This is defense in depth for ordinary XML input, not a substitute for resource limits or a
+trusted-input policy when processing very large documents.</p>
+<p>XPath selection evaluates against the parsed DOM and passes the resulting nodes to the consumer. Map conversion walks
+the DOM's direct elements; <code>xmlToMultiValueMap</code> exists because a plain map cannot otherwise represent repeated element
+names without losing data.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

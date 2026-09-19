@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-qrcode - Advanced encoding and limits</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-qrcode/aj-qrcode/advanced-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-qrcode
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/" selected>aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-qrcode/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                
+                <h3>QR Code</h3>
+                <ul>
+                    <li><a href="/aj-qrcode/getting-started/">Getting started</a></li>
+                    <li><a href="/aj-qrcode/rendering/">PNG and SVG rendering</a></li>
+                    <li><a href="/aj-qrcode/segments/">Text, bytes, and segments</a></li>
+                    <li><a href="/aj-qrcode/advanced/">Advanced encoding and limits</a></li>
+                </ul>
+                
+                
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>Advanced encoding and limits</h1>
+<p><code>QrSegmentAdvanced.makeSegmentsOptimally()</code> searches numeric, alphanumeric, UTF-8 byte, and Kanji modes to minimize encoded bits within a requested ECL and version range. It is helpful for long mixed Japanese/ASCII data.</p>
+<pre><code class="language-java">import com.ajaxjs.qr_code.QrSegmentAdvanced;
+import java.util.List;
+
+List&lt;QrSegment&gt; segments = QrSegmentAdvanced.makeSegmentsOptimally(
+        &quot;A-2026 漢字 12345&quot;, Ecc.MEDIUM, 1, 20);
+QrCode qr = QrCode.encodeSegments(segments, Ecc.MEDIUM, 1, 20, -1, true);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th><code>encodeSegments()</code> parameter</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minVersion</code>, <code>maxVersion</code></td>
+<td>Allowed versions within 1–40; the smallest fitting version is chosen.</td>
+</tr>
+<tr>
+<td><code>mask</code></td>
+<td><code>-1</code> evaluates all eight masks and selects the lowest penalty; <code>0</code>–<code>7</code> forces reproducible output.</td>
+</tr>
+<tr>
+<td><code>boostEcl</code></td>
+<td>Raises ECL only if this does not require a larger version.</td>
+</tr>
+</tbody>
+</table>
+<p>Manual masks and low-level codewords are specialized interoperability/testing features. Prefer automatic masks and high-level methods unless an external format requires otherwise.</p>
+<h2>Fast encoder</h2>
+<p><code>com.ajaxjs.qr_code.fast</code> has parallel classes such as <code>QrCodeFast</code>. They store module/template data compactly and memoize templates and Reed–Solomon generators for repeated workloads. Use the regular API by default: <code>Utils.toImage()</code> and <code>Utils.toSvgString()</code> accept <code>QrCode</code>, not <code>QrCodeFast</code>. Profile before adopting the fast package, render its <code>getModule(x, y)</code> data yourself, and never mix normal and fast segment types.</p>
+<h2>Failure and security boundaries</h2>
+<ul>
+<li>Data that does not fit the chosen version range/ECL throws <code>DataTooLongException</code>. Shorten data, lower ECL, or allow a larger version; never silently truncate URLs, tokens, or business data.</li>
+<li>Invalid ranges, masks, borders, scales, and segment content throw <code>IllegalArgumentException</code>; <code>null</code> generally throws <code>NullPointerException</code>.</li>
+<li>QR content is readable by every scanner. Do not encode passwords, persistent bearer tokens, private personal data, or unprotected internal URLs. Enforce expiry and authorization on the server; QR encoding is not encryption.</li>
+</ul>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-qrcode, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

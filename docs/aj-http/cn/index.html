@@ -19,7 +19,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -38,7 +38,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                   | 🚀<a href="/aj-http/">英语版本</a>
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-http/" aria-label="Switch language to English" title="Switch to English">EN</button>
                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
@@ -68,10 +68,6 @@
     
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
-    <option value="/image-combiner/cn/">image-combiner</option>
-    
-    <option value="/aj-parent/cn/">aj-parent</option>
-    
 </select>
 
                 <ul>
@@ -85,8 +81,13 @@
                 <ul>
                     <li><a href="/aj-http/http_request/Base-cn/">生命周期与响应</a></li>
                     <li><a href="/aj-http/http_request/Get-cn/">HTTP 方法辅助类</a></li>
-                    <li><a href="/aj-http/http_request/advanced-usage-cn/">上传、下载与代理</a></li>
+                    <li><a href="/aj-http/http_request/Transfer-cn/">上传与下载</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity-cn/">代理、流与 TLS</a></li>
                 </ul>
+                
+                
+                
+                
                 
             </menu>
             <article class="aj-text chinese">
@@ -126,7 +127,8 @@ try {
 <ul>
 <li><a href="/aj-http/http_request/Base-cn/">生命周期、正文与错误</a></li>
 <li><a href="/aj-http/http_request/Get-cn/">GET、POST、PUT、DELETE 和 HEAD</a></li>
-<li><a href="/aj-http/http_request/advanced-usage-cn/">上传、下载、代理与 TLS 限制</a></li>
+<li><a href="/aj-http/http_request/Transfer-cn/">上传与下载</a></li>
+<li><a href="/aj-http/http_request/ProxySecurity-cn/">注解代理、流与 TLS 限制</a></li>
 </ul>
 <p>源码：<code>aj-http/src/main/java/com/ajaxjs/util/httpremote/</code>；测试：<code>aj-http/src/test/java/com/ajaxjs/util/httpremote/</code>。<code>TestMultipartPost</code>、<code>TestMultipartWriter</code> 和 <code>TestHttpIoHelpers</code> 使用本地服务或内存测试；其他部分测试访问公网，不能视为离线验证。</p>
 <p><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-http">源码仓库</a></p>

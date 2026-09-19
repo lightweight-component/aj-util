@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-s3client - API 与限制</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-s3client/api/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-s3client
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/" selected>aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-s3client/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                <h3>S3 客户端</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4-cn/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2-cn/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories-cn/">厂商 Factory</a></li>
+                    <li><a href="/aj-s3client/api-cn/">API 与限制</a></li>
+                </ul>
+                
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>API 与限制</h1>
+<p><code>S3Client</code> 是公开操作接口。<code>BaseS3Client</code> 提供配置校验、URL 编码、默认存储桶重载与 HTTP 2xx 结果校验；两个签名基类再实现具体 HTTP 操作。</p>
+<h2>操作约定</h2>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>请求目标</th>
+<th>返回结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listBucket()</code></td>
+<td>配置端点根路径</td>
+<td>厂商原始 XML 响应。</td>
+</tr>
+<tr>
+<td><code>listBucketXml()</code></td>
+<td>配置端点根路径</td>
+<td>转为 <code>Map&lt;String, String&gt;</code> 的厂商 XML。</td>
+</tr>
+<tr>
+<td><code>createBucket(bucket)</code></td>
+<td>指定存储桶</td>
+<td>HTTP 2xx 时为 <code>true</code>。</td>
+</tr>
+<tr>
+<td><code>deleteBucket(bucket)</code></td>
+<td>指定存储桶</td>
+<td>HTTP 2xx 时为 <code>true</code>。</td>
+</tr>
+<tr>
+<td><code>putObject(bucket, key, bytes)</code></td>
+<td>指定对象</td>
+<td>上传字节，成功时为 <code>true</code>。</td>
+</tr>
+<tr>
+<td><code>getObject(bucket, key)</code></td>
+<td>指定对象</td>
+<td>发起 GET、丢弃响应内容，并返回是否成功。</td>
+</tr>
+<tr>
+<td><code>deleteObject(bucket, key)</code></td>
+<td>指定对象</td>
+<td>HTTP 2xx 时为 <code>true</code>。</td>
+</tr>
+</tbody>
+</table>
+<p>不带存储桶的重载使用 <code>Config.bucketName</code>，未配置默认存储桶时会被拒绝。<code>listBucket</code> 不接收存储桶或前缀参数，因此此版本公开 API 只请求服务根路径，并不是针对指定存储桶的对象列举 API。</p>
+<h2>校验与 URL 规则</h2>
+<p><code>Config</code> 必须提供端点、访问密钥、私钥和区域。端点仅接受 HTTPS，可省略 <code>https://</code>，但不能含用户信息、查询参数、片段或非根路径。存储桶名称不能为空，不能含 <code>/</code>、<code>\\</code> 或控制字符；对象键不能为空，不能含控制字符。</p>
+<p><code>BaseS3ClientSigV4</code> 构建路径式 URL，<code>BaseS3ClientSigV2</code> 构建虚拟主机式 URL。两者都会由客户端对键名编码一次；应输入原始对象键，而不是已 URL 转义的值。</p>
+<h2>错误模型</h2>
+<p>配置错误会在发送请求前抛出 <code>IllegalStateException</code> 或 <code>IllegalArgumentException</code>。底层 HTTP 层无法完成请求时也可能抛出运行时异常。获得响应后，<code>check(response)</code> 将 200 至 299 的任意状态视为成功，不解析厂商错误 XML。</p>
+<p>因此，若调用方需要响应正文、状态码、错误码、重试策略、超时控制、流式上传/下载或可观测性，应使用或扩展更底层的实现，而不能仅依赖这些布尔方法。</p>
+<h2>不在范围内的能力</h2>
+<ul>
+<li>AWS SDK 常见能力：分片上传、拷贝、预签名 URL、版本、标签、生命周期配置和 STS 凭据。</li>
+<li>按存储桶、前缀、分隔符或 continuation token 列举对象。</li>
+<li>下载或返回对象内容。</li>
+<li>单次请求的 Content-Type、元数据、加密选项、自定义 ACL 与通用请求头。</li>
+<li>自动重试、幂等性处理、并发控制和凭据刷新。</li>
+</ul>
+<p>不要因厂商宣称 S3 兼容而假定上述能力可用；它们并不属于本模块 API。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-s3client，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

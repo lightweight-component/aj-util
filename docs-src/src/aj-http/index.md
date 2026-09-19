@@ -50,7 +50,8 @@ Use one mutable request object per operation. Success means HTTP **200–299**, 
 
 - [Lifecycle, bodies and errors](/aj-http/http_request/Base/)
 - [GET, POST, PUT, DELETE and HEAD](/aj-http/http_request/Get/)
-- [Uploads, downloads, proxies and TLS limits](/aj-http/http_request/advanced-usage/)
+- [Uploads and downloads](/aj-http/http_request/Transfer/)
+- [Annotation proxy, streams and TLS limits](/aj-http/http_request/ProxySecurity/)
 
 Source: `aj-http/src/main/java/com/ajaxjs/util/httpremote/`; tests: `aj-http/src/test/java/com/ajaxjs/util/httpremote/`. `TestMultipartPost`, `TestMultipartWriter` and `TestHttpIoHelpers` exercise local-server or in-memory behavior; several other tests contact public services and are not offline checks.
 

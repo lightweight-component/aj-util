@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-qrcode - 高级编码与限制</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-qrcode/aj-qrcode/advanced/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-qrcode
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/" selected>aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-qrcode/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                <h3>二维码</h3>
+                <ul>
+                    <li><a href="/aj-qrcode/getting-started-cn/">快速开始</a></li>
+                    <li><a href="/aj-qrcode/rendering-cn/">PNG 与 SVG 渲染</a></li>
+                    <li><a href="/aj-qrcode/segments-cn/">文本、字节与分段</a></li>
+                    <li><a href="/aj-qrcode/advanced-cn/">高级编码与限制</a></li>
+                </ul>
+                
+                
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>高级编码与限制</h1>
+<p><code>QrSegmentAdvanced.makeSegmentsOptimally()</code> 会在数字、字母数字、UTF-8 字节和 Kanji 模式之间搜索，在指定纠错等级、版本范围内最小化编码位数。它适合较长的日文/ASCII 混合内容。</p>
+<pre><code class="language-java">import com.ajaxjs.qr_code.QrSegmentAdvanced;
+import java.util.List;
+
+List&lt;QrSegment&gt; segments = QrSegmentAdvanced.makeSegmentsOptimally(
+        &quot;A-2026 漢字 12345&quot;, Ecc.MEDIUM, 1, 20);
+QrCode qr = QrCode.encodeSegments(segments, Ecc.MEDIUM, 1, 20, -1, true);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th><code>encodeSegments()</code> 参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minVersion</code>、<code>maxVersion</code></td>
+<td>可选版本范围，必须为 1–40；会选择容纳数据的最小版本。</td>
+</tr>
+<tr>
+<td><code>mask</code></td>
+<td><code>-1</code> 评估全部 8 种掩码并选择惩罚分最低者；<code>0</code>–<code>7</code> 强制指定以获得可复现输出。</td>
+</tr>
+<tr>
+<td><code>boostEcl</code></td>
+<td>仅在不增大版本时提高纠错等级。</td>
+</tr>
+</tbody>
+</table>
+<p>手工掩码和底层码字属于特殊互操作/测试能力。除非外部格式明确要求，否则应使用自动掩码和高层 API。</p>
+<h2>fast 编码器</h2>
+<p><code>com.ajaxjs.qr_code.fast</code> 包提供 <code>QrCodeFast</code> 等平行实现，以更紧凑的方式保存模块/模板，并缓存模板和 Reed–Solomon 生成器，适合反复生成。默认应使用常规 API：<code>Utils.toImage()</code>、<code>Utils.toSvgString()</code> 接收 <code>QrCode</code>，不接收 <code>QrCodeFast</code>。应先性能分析，再使用 fast 包；其结果通过 <code>getModule(x, y)</code> 自行绘制，且不要混用两套分段类型。</p>
+<h2>异常和安全边界</h2>
+<ul>
+<li>数据放不进当前版本范围/纠错等级时会抛出 <code>DataTooLongException</code>。应缩短数据、降低纠错或允许更大版本，不能静默截断 URL、令牌或业务内容。</li>
+<li>非法版本范围、掩码、边框、缩放值和分段内容会抛出 <code>IllegalArgumentException</code>；<code>null</code> 通常抛出 <code>NullPointerException</code>。</li>
+<li>二维码内容可被任何扫码器读取。不要编码密码、长期 Bearer Token、私密信息或未保护的内网 URL。有效期和授权必须由服务端控制；二维码编码不是加密。</li>
+</ul>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-qrcode，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

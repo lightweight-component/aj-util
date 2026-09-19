@@ -15,16 +15,8 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
-            // 获取用户的默认语言
-            var userLang = navigator.language || navigator.userLanguage;
-
-            // 检查是否为中文环境（包括简体和繁体）
-            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
-                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/aj-qrcode/cn/');  // 如果是中文，则弹出提示
-            }
-
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -41,7 +33,7 @@
                     <a href="/">🏠 Home</a>
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/aj-qrcode/cn/">Chinese Version</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-qrcode/aj-qrcode/cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
                     | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
@@ -70,10 +62,6 @@
     
     <option value="/aj-qrcode/" selected>aj-qrcode</option>
     
-    <option value="/image-combiner/">image-combiner</option>
-    
-    <option value="/aj-parent/">aj-parent</option>
-    
 </select>
 
                 <ul>
@@ -83,11 +71,59 @@
                 </ul>
                 
                 
+                
+                <h3>QR Code</h3>
+                <ul>
+                    <li><a href="/aj-qrcode/getting-started/">Getting started</a></li>
+                    <li><a href="/aj-qrcode/rendering/">PNG and SVG rendering</a></li>
+                    <li><a href="/aj-qrcode/segments/">Text, bytes, and segments</a></li>
+                    <li><a href="/aj-qrcode/advanced/">Advanced encoding and limits</a></li>
+                </ul>
+                
+                
+                
+                
             </menu>
             <article class="aj-text">
                 <h1>aj-qrcode</h1>
-<p>Welcome to the aj-qrcode documentation. Detailed documentation is coming soon.</p>
-<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-qrcode">Source code</a></p>
+<p><code>aj-qrcode</code> is a dependency-free, Java 8 compatible encoder for QR Code Model 2. It is based on <a href="https://github.com/nayuki/QR-Code-generator">Nayuki's QR Code generator</a>, supports versions 1–40 and all four error-correction levels, and offers both a normal API and a compact <code>fast</code> encoder.</p>
+<p>The module generates symbols only. It does not scan/decode QR codes, create web responses, write SVG files automatically, or overlay logos.</p>
+<h2>Dependency</h2>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-qrcode&lt;/artifactId&gt;
+    &lt;version&gt;1.4&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2>Documentation map</h2>
+<table>
+<thead>
+<tr>
+<th>Guide</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/aj-qrcode/getting-started/">Getting started</a></td>
+<td>Create a first QR code, select error correction, and inspect the result.</td>
+</tr>
+<tr>
+<td><a href="/aj-qrcode/rendering/">PNG and SVG rendering</a></td>
+<td>Raster/vector output, colors, quiet zones, and safe file writing.</td>
+</tr>
+<tr>
+<td><a href="/aj-qrcode/segments/">Text, bytes, and segments</a></td>
+<td>Byte payloads, numeric/alphanumeric modes, ECI, and efficient mixed text.</td>
+</tr>
+<tr>
+<td><a href="/aj-qrcode/advanced/">Advanced encoding and limits</a></td>
+<td>Optimized segmentation, version/mask controls, fast implementation, and failures.</td>
+</tr>
+</tbody>
+</table>
+<p>For a basic PNG, begin with <a href="/aj-qrcode/getting-started/">getting started</a>. For a server-rendered document or browser asset, see <a href="/aj-qrcode/rendering/">rendering</a>.</p>
+<p><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-qrcode">Source code</a> · <a href="https://javadoc.io/doc/com.ajaxjs/aj-qrcode">Javadoc</a></p>
 
             </article>
         </div>

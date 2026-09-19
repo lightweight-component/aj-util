@@ -15,16 +15,8 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
-            // 获取用户的默认语言
-            var userLang = navigator.language || navigator.userLanguage;
-
-            // 检查是否为中文环境（包括简体和繁体）
-            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
-                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/aj-s3client/cn/');  // 如果是中文，则弹出提示
-            }
-
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -41,7 +33,7 @@
                     <a href="/">🏠 Home</a>
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/aj-s3client/cn/">Chinese Version</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-s3client/cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
                     | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
@@ -70,10 +62,6 @@
     
     <option value="/aj-qrcode/">aj-qrcode</option>
     
-    <option value="/image-combiner/">image-combiner</option>
-    
-    <option value="/aj-parent/">aj-parent</option>
-    
 </select>
 
                 <ul>
@@ -83,11 +71,125 @@
                 </ul>
                 
                 
+                
+                
+                <h3>S3 client</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories/">Provider factories</a></li>
+                    <li><a href="/aj-s3client/api/">API and limitations</a></li>
+                </ul>
+                
+                
+                
             </menu>
             <article class="aj-text">
                 <h1>aj-s3client</h1>
-<p>Welcome to the aj-s3client documentation. Detailed documentation is coming soon.</p>
-<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-s3client">Source code</a></p>
+<p><code>aj-s3client</code> is a small Java 8+ client for a focused set of S3-compatible object-storage operations. It signs requests with either Signature Version 4 or the legacy Signature Version 2 scheme, depending on the selected provider client.</p>
+<blockquote>
+<p>The module is not a general AWS SDK. It does not implement multipart upload, presigned URLs, object metadata/ACL management (apart from Scaleway's upload ACL), pagination, or a download API that returns or saves object bytes.</p>
+</blockquote>
+<h2>Add the dependency</h2>
+<p>The module's current POM coordinates are <code>com.ajaxjs:aj-s3client:1.6</code>. It brings in <code>com.ajaxjs:aj-net:2.1</code> for HTTP transport.</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-s3client&lt;/artifactId&gt;
+    &lt;version&gt;1.6&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2>Configure a client</h2>
+<p>Choose a provider implementation, then give it a <code>Config</code>. The endpoint must be an HTTPS origin: a scheme is optional, but paths, credentials, query strings, and fragments are rejected. Do not commit or log the access or secret key.</p>
+<pre><code class="language-java">import com.ajaxjs.s3client.Config;
+import com.ajaxjs.s3client.factory.CloudflareR2;
+
+Config config = new Config();
+config.setEndPoint(&quot;&lt;account-id&gt;.r2.cloudflarestorage.com&quot;);
+config.setAccessKey(System.getenv(&quot;R2_ACCESS_KEY_ID&quot;));
+config.setSecretKey(System.getenv(&quot;R2_SECRET_ACCESS_KEY&quot;));
+config.setBucketName(&quot;reports&quot;);
+// Config defaults region to &quot;auto&quot;, which is suitable for R2.
+
+CloudflareR2 client = new CloudflareR2();
+client.setConfig(config);
+</code></pre>
+<p><code>bucketName</code> is used by the overloads that accept only an object key. Bucket names must not contain <code>/</code> or <code>\\</code>; object keys must be nonblank and cannot contain control characters. Object keys are path-encoded before they are signed and sent.</p>
+<h2>Upload, list, and remove objects</h2>
+<p>The common operations return <code>true</code> only for an HTTP 2xx response. Read the source bytes before calling <code>putObject</code>; the client does not own a stream or implement <code>Closeable</code>.</p>
+<pre><code class="language-java">import java.nio.charset.StandardCharsets;
+
+boolean uploaded = client.putObject(
+        &quot;2026-09/summary.txt&quot;,
+        &quot;completed&quot;.getBytes(StandardCharsets.UTF_8));
+if (!uploaded) {
+    throw new IllegalStateException(&quot;Object upload was rejected&quot;);
+}
+
+String listXml = client.listBucket();
+boolean removed = client.deleteObject(&quot;2026-09/summary.txt&quot;);
+</code></pre>
+<p>Use the two-argument overloads when the target is not the configured default bucket:</p>
+<pre><code class="language-java">boolean uploaded = client.putObject(&quot;archive&quot;, &quot;exports/report.csv&quot;, csvBytes);
+boolean deleted = client.deleteObject(&quot;archive&quot;, &quot;exports/report.csv&quot;);
+</code></pre>
+<p><code>listBucket()</code> returns the provider's raw XML response; <code>listBucketXml()</code> converts the XML to a <code>Map&lt;String, String&gt;</code>. <code>getObject(...)</code> sends a signed GET and reports only whether its response was successful—it does not return the object body or save a file. Creating and deleting buckets are available through <code>createBucket(name)</code> and <code>deleteBucket(name)</code>.</p>
+<h2>Provider clients and signing</h2>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Signing</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CloudflareR2</code></td>
+<td>SigV4</td>
+<td>Uses path-style object URLs; <code>region</code> defaults to <code>auto</code>.</td>
+</tr>
+<tr>
+<td><code>Backblaze</code></td>
+<td>SigV4</td>
+<td>Adds <code>Host</code> to the signed headers; configure the provider's region.</td>
+</tr>
+<tr>
+<td><code>Scaleway</code></td>
+<td>SigV4</td>
+<td>Adds the signed <code>x-amz-acl: public-read</code> header to every upload. Configure the provider's region.</td>
+</tr>
+<tr>
+<td><code>AliyunOSS</code></td>
+<td>SigV2</td>
+<td>Requires <code>config.setRemark(&quot;OSS&quot;)</code>; uses virtual-hosted-style URLs.</td>
+</tr>
+<tr>
+<td><code>NeteaseOSS</code></td>
+<td>SigV2</td>
+<td>Legacy compatibility client; requires <code>config.setRemark(&quot;NOS&quot;)</code> and uses virtual-hosted-style URLs.</td>
+</tr>
+</tbody>
+</table>
+<p>For SigV4 clients, set <code>region</code> to the provider-required value when it is not <code>auto</code>. For SigV2 clients, <code>remark</code>, access key, secret key, endpoint, and region must still be nonblank; use the prefix shown above. Provider support is limited to these implementations and their request behavior—test credentials, endpoint format, bucket policy, and regional requirements with the chosen service before production use.</p>
+<h2>Documentation map</h2>
+<ul>
+<li><a href="/aj-s3client/signature-v4/">Signature Version 4: request construction and signing</a></li>
+<li><a href="/aj-s3client/signature-v2/">Signature Version 2: legacy provider behavior</a></li>
+<li><a href="/aj-s3client/factories/">Provider factories</a></li>
+<li><a href="/aj-s3client/api/">API, URL styles, results, and limitations</a></li>
+</ul>
+<h2>Security and operational notes</h2>
+<ul>
+<li>HTTPS is enforced for all configured endpoints; do not weaken TLS certificate validation in the underlying transport.</li>
+<li>Keep credentials in a secret manager or environment variables. The <code>Config</code> object is mutable, so avoid sharing and logging it.</li>
+<li><code>Scaleway.putObject</code> makes uploaded objects publicly readable. Use <code>CloudflareR2</code> or another appropriate client if that is not the intended policy.</li>
+<li>An ETag is not generally guaranteed to be an MD5 digest. Only the legacy NetEase upload path verifies a single-part, unencrypted ETag as MD5.</li>
+<li>Live provider tests are disabled because they require private credentials and remote resources. The unit tests for signing and URL encoding run without them.</li>
+</ul>
+<h2>Resources</h2>
+<ul>
+<li><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-s3client">Source code</a></li>
+</ul>
 
             </article>
         </div>

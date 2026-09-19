@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - RegExpHelper</title>
+        <meta name="description" content="Small Java utilities with many useful functions. Cached, object-oriented regular-expression matching." />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, regular expression,Java" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/" selected>aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/">Home</a>
+                    </li>
+                </ul>
+                
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
+                </ul>
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro/">Introduction</a></li>
+                    <li><a href="/aj-util/date/convert/">Date Converter</a></li>
+                    <li><a href="/aj-util/date/formatter/">Date Formatter</a></li>
+                </ul>
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields/">Fields</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper/">UnzipHelper</a></li>
+                </ul>
+
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/aj-util/cryptography/intro/">Introduction</a></li>
+                <li><a href="/aj-util/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/aj-util/cryptography/Cryptography/">Symmetric encryption</a></li>
+                <li><a href="/aj-util/cryptography/Rsa/">RSA</a></li>
+               </ul>
+               <h3>Misc.</h3>
+               <ul>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
+                <li><a href="/aj-util/misc/contact/">Contact</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>RegExpHelper</h1>
+<p><code>RegExpHelper</code> is the current regular-expression API. It owns one compiled <code>Pattern</code> and exposes matching operations through an object. <code>RegExpUtils</code> has been removed.</p>
+<h2>Create and reuse a helper</h2>
+<p>Creating from a regular-expression string uses a shared thread-safe compiled-pattern cache. Reuse a helper when performing several operations with the same expression.</p>
+<pre><code class="language-java">RegExpHelper email = new RegExpHelper(&quot;[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}&quot;);
+
+boolean found = email.contains(&quot;Contact a@ajaxjs.com&quot;);
+boolean exact = email.fullMatch(&quot;a@ajaxjs.com&quot;);
+</code></pre>
+<p><code>contains()</code> uses <code>Matcher.find()</code>; <code>fullMatch()</code> uses <code>Matcher.matches()</code> and therefore requires the entire input to match.</p>
+<h2>Extract matches</h2>
+<pre><code class="language-java">RegExpHelper number = new RegExpHelper(&quot;item-(\\d+)&quot;);
+
+String first = number.match(&quot;item-42&quot;, 1);  // &quot;42&quot;
+String lastGroup = number.match(&quot;item-42&quot;, -1); // last capture group
+String[] all = number.matchAll(&quot;item-1,item-2&quot;);
+</code></pre>
+<p><code>match(text)</code> returns group 0 of the first match. <code>match(text, -1)</code> returns the last capture group. Both return <code>null</code> when there is no match; an invalid group index follows the JDK <code>Matcher</code> exception behavior.</p>
+<p>You can also pass an already compiled <code>Pattern</code>. It is used as-is and is not added to the shared string-pattern cache.</p>
+<pre><code class="language-java">RegExpHelper helper = new RegExpHelper(Pattern.compile(&quot;\\d+&quot;));
+</code></pre>
+<p>For compatibility-style one-off calls, <code>RegExpHelper.match(regexp, text)</code> and <code>RegExpHelper.regMatch(regexp, text, groupIndex)</code> delegate to the object API and use the same cache.</p>
+<h2>Matcher access and edge cases</h2>
+<p><code>getMatcher(text)</code> exposes a fresh <code>Matcher</code> when cursor-level operations are needed. <code>Pattern</code> is immutable and may
+be shared; <code>Matcher</code> is stateful, so do not share a <code>Matcher</code> between threads or reuse it after changing its state.</p>
+<pre><code class="language-java">RegExpHelper helper = new RegExpHelper(&quot;a(b)&quot;);
+Matcher matcher = helper.getMatcher(&quot;zabz&quot;);
+
+if (matcher.find()) {
+    String whole = matcher.group();  // &quot;ab&quot;
+    String captured = matcher.group(1); // &quot;b&quot;
+}
+</code></pre>
+<p>The string-pattern cache is shared by all helpers and by <code>getPattern(String)</code>; two helpers constructed from the same
+text receive the same <code>Pattern</code> instance. It is intended for repeated expressions, not unbounded user-supplied
+expressions. Invalid regular expressions throw the JDK <code>PatternSyntaxException</code>; null input follows JDK null checks.</p>
+<p><code>matchAll</code> returns group 0 for every non-overlapping <code>find()</code> result. It does not return capture groups—call
+<code>getMatcher</code> when all groups from all matches are required.</p>
+<h2>Implementation notes</h2>
+<p>Regular-expression compilation is relatively expensive compared with creating a <code>Matcher</code>. <code>RegExpHelper</code> therefore
+stores patterns in a <code>ConcurrentHashMap</code> and obtains them with <code>computeIfAbsent</code>: concurrent callers requesting the
+same expression reuse a compiled <code>Pattern</code> without external locking. The cache deliberately stores only patterns
+created from strings; a caller-supplied <code>Pattern</code> remains wholly under that caller's control.</p>
+<p>Each matching method creates a new matcher because <code>Matcher</code> holds input and cursor state. This keeps normal helper
+operations independent even when the underlying compiled pattern is shared.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

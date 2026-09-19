@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-json - How the parser works</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-json/how-it-works-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-json
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/" selected>aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-json/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                
+                <h3>Learning JSON parsing</h3>
+                <ul><li><a href="/aj-json/parse/">Parse your first JSON</a></li><li><a href="/aj-json/how-it-works/">How the parser works</a></li></ul>
+                
+            </menu>
+            <article class="aj-text">
+                <h1>How the parser works</h1>
+<p>The easiest way to read aj-json is to think of it as a small assembly line. A string enters at one end; Java collections come out at the other.</p>
+<pre><code class="language-text">JSON text  →  Lexer  →  tokens  →  FMS state machine  →  Map / List / value
+</code></pre>
+<h2>Step 1: split text into meaningful pieces</h2>
+<p><code>Lexer</code> moves through the input one character at a time. It turns punctuation such as <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, <code>,</code>, and <code>:</code> into tokens. It also groups nearby characters into strings, numbers, and the words <code>true</code>, <code>false</code>, and <code>null</code>.</p>
+<p>For <code>{name: 7}</code>, the important pieces are roughly: object start, <code>name</code>, colon, <code>7</code>, object end. The lexer also records line and column information, so later errors can point back to the place that caused trouble.</p>
+<h2>Step 2: check the order</h2>
+<p>Seeing valid pieces is not enough. <code>{ name 7 }</code> has familiar pieces but is missing <code>:</code>. <code>FMS</code> is a finite-state machine: at each moment it knows what may come next. After an object key it expects <code>:</code>; after a value in an array it expects either <code>,</code> or <code>]</code>.</p>
+<p>This is the small compiler idea at the heart of the project: first recognise words, then check that their order forms a sentence.</p>
+<h2>Step 3: build values with stacks</h2>
+<p><code>Operator</code> keeps a few stacks while the state machine runs:</p>
+<ul>
+<li>an object stack for maps and lists currently being built;</li>
+<li>a key stack for object keys waiting for their value;</li>
+<li>a state stack for returning to the surrounding array or object.</li>
+</ul>
+<p>When it sees <code>{</code>, it starts a <code>HashMap</code>. When it sees <code>[</code>, it starts an <code>ArrayList</code>. When a nested value ends, it is placed into the collection that was being built around it. That is why arrays and objects can sit inside each other.</p>
+<h2>A useful experiment</h2>
+<p>Start with a tiny input, put a breakpoint in <code>Lexer.next()</code>, then step through calls to <code>FMS.parse()</code>:</p>
+<pre><code class="language-java">Object value = new FMS(&quot;{a:[1, true]}&quot;).parse();
+</code></pre>
+<p>Watch how each token changes the state and how the <code>Map</code> and <code>List</code> grow. Next, remove the comma or closing bracket and see where <code>JsonParseException</code> is produced. This is more useful than memorising the state table.</p>
+<h2>Why not use this design in an application?</h2>
+<p>The code is deliberately compact and educational. Production JSON processing needs strict standards behaviour, predictable numeric handling, security review, performance work, broad test coverage, streaming options, and long-term compatibility. aj-json does not aim to provide those things.</p>
+<p>Return to <a href="/aj-json/parse/">parse your first JSON</a> or the <a href="/aj-json/">overview</a>.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-json, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

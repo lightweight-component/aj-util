@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-s3client - API and limitations</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-s3client/api-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-s3client
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/" selected>aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-s3client/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                <h3>S3 client</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories/">Provider factories</a></li>
+                    <li><a href="/aj-s3client/api/">API and limitations</a></li>
+                </ul>
+                
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>API and limitations</h1>
+<p><code>S3Client</code> is the public operation interface. <code>BaseS3Client</code> supplies configuration validation, URL encoding, default-bucket overloads, and a shared HTTP 2xx result check. The two signing base classes then implement the concrete HTTP operations.</p>
+<h2>Operation contract</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Request target</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listBucket()</code></td>
+<td>Configured endpoint root</td>
+<td>Raw provider XML response.</td>
+</tr>
+<tr>
+<td><code>listBucketXml()</code></td>
+<td>Configured endpoint root</td>
+<td>Provider XML converted to <code>Map&lt;String, String&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>createBucket(bucket)</code></td>
+<td>Named bucket</td>
+<td><code>true</code> for any 2xx response.</td>
+</tr>
+<tr>
+<td><code>deleteBucket(bucket)</code></td>
+<td>Named bucket</td>
+<td><code>true</code> for any 2xx response.</td>
+</tr>
+<tr>
+<td><code>putObject(bucket, key, bytes)</code></td>
+<td>Named object</td>
+<td>Uploads bytes, then returns <code>true</code> for success.</td>
+</tr>
+<tr>
+<td><code>getObject(bucket, key)</code></td>
+<td>Named object</td>
+<td>Sends GET, discards response content, then returns success.</td>
+</tr>
+<tr>
+<td><code>deleteObject(bucket, key)</code></td>
+<td>Named object</td>
+<td><code>true</code> for any 2xx response.</td>
+</tr>
+</tbody>
+</table>
+<p>The overloads without a bucket use <code>Config.bucketName</code>; they reject a missing default bucket. The name <code>listBucket</code> does not accept a bucket or prefix argument, so this version's public API only requests the service root—it is not an object-listing API for a selected bucket.</p>
+<h2>Validation and URL rules</h2>
+<p><code>Config</code> must provide endpoint, access key, secret key, and region. The endpoint is HTTPS only, may omit the <code>https://</code> prefix, and must not contain user info, query, fragment, or a non-root path. A bucket name cannot be blank, contain <code>/</code> or <code>\\</code>, or include control characters. An object key cannot be blank or contain control characters.</p>
+<p><code>BaseS3ClientSigV4</code> creates path-style URLs. <code>BaseS3ClientSigV2</code> creates virtual-hosted-style URLs. In both cases, keys are encoded once by the client. Keep the original object key as input rather than a URL-escaped value.</p>
+<h2>Error model</h2>
+<p>Configuration mistakes throw <code>IllegalStateException</code> or <code>IllegalArgumentException</code> before a request is sent. The underlying HTTP layer can also throw a runtime exception when it cannot complete a request. Once a response is available, <code>check(response)</code> treats any status from 200 through 299 as success; it does not parse provider error XML.</p>
+<p>This means callers that need a response body, status code, error code, retry policy, timeout tuning, streaming upload/download, or observability must use/extend the lower-level implementation rather than relying solely on the boolean methods.</p>
+<h2>Out of scope</h2>
+<ul>
+<li>AWS SDK features such as multipart uploads, copy operations, presigned URLs, versions, tagging, lifecycle configuration, and STS credentials.</li>
+<li>Listing objects by bucket, prefix, delimiter, or continuation token.</li>
+<li>Downloading or returning object content.</li>
+<li>Per-request content type, metadata, encryption options, custom ACLs, and generic request headers.</li>
+<li>Automatic retries, idempotency handling, concurrency control, or credential refresh.</li>
+</ul>
+<p>Do not assume support for these features from a provider's S3 compatibility statement; they are not part of this module's API.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-s3client, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

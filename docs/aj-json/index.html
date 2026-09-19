@@ -15,16 +15,8 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
-            // 获取用户的默认语言
-            var userLang = navigator.language || navigator.userLanguage;
-
-            // 检查是否为中文环境（包括简体和繁体）
-            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
-                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/aj-json/cn/');  // 如果是中文，则弹出提示
-            }
-
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -41,7 +33,7 @@
                     <a href="/">🏠 Home</a>
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/aj-json/cn/">Chinese Version</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-json/cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
                     | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
@@ -70,10 +62,6 @@
     
     <option value="/aj-qrcode/">aj-qrcode</option>
     
-    <option value="/image-combiner/">image-combiner</option>
-    
-    <option value="/aj-parent/">aj-parent</option>
-    
 </select>
 
                 <ul>
@@ -83,11 +71,49 @@
                 </ul>
                 
                 
+                
+                
+                
+                
+                <h3>Learning JSON parsing</h3>
+                <ul><li><a href="/aj-json/parse/">Parse your first JSON</a></li><li><a href="/aj-json/how-it-works/">How the parser works</a></li></ul>
+                
             </menu>
             <article class="aj-text">
-                <h1>aj-json</h1>
-<p>Welcome to the aj-json documentation. Detailed documentation is coming soon.</p>
-<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-json">Source code</a></p>
+                <h1>aj-json: a JSON parser made for learning</h1>
+<p>aj-json is a small project created to learn how JSON parsing works and to explore a small piece of compiler theory. It is <strong>not a production-ready JSON library</strong>. Treat it as readable study material: run it, change it, and follow the code from characters to Java objects.</p>
+<p>For production systems, choose a maintained JSON library such as Jackson, Gson, or JSON-B. Do not use aj-json for untrusted input, compatibility-sensitive APIs, or data that must be handled without surprises.</p>
+<h2>What you can learn here</h2>
+<p>When a program receives JSON text, it needs to answer two simple questions:</p>
+<ol>
+<li>What does each piece of text mean? For example, <code>{</code> starts an object and <code>true</code> is a boolean.</li>
+<li>In what order may these pieces appear? For example, an object key must be followed by <code>:</code> and then a value.</li>
+</ol>
+<p>aj-json separates those jobs. <code>Lexer</code> reads the characters and produces small labels called tokens. <code>FMS</code> (the state machine) reads those tokens in order and builds ordinary Java values.</p>
+<h2>Important limits</h2>
+<ul>
+<li>There is no supported object-to-JSON serializer in the current source tree.</li>
+<li>The parser is intentionally small, not a complete implementation or a compatibility promise for the JSON standard.</li>
+<li>It accepts some relaxed input, including unquoted object keys and single-quoted strings. Those forms are not standard JSON.</li>
+<li>Object order is not preserved because parsed objects use <code>HashMap</code>.</li>
+<li>Numbers become <code>Integer</code>, <code>Long</code>, or <code>Double</code>; this is unsuitable when exact decimal precision matters.</li>
+<li>It is not designed, tested, or hardened for production traffic or hostile input.</li>
+</ul>
+<h2>Start here</h2>
+<p>Add the dependency only if you are following the example or reading the source:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-json&lt;/artifactId&gt;
+    &lt;version&gt;1.6&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Then continue to <a href="/aj-json/parse/">parse your first JSON</a>. When you are ready to see the moving parts, read <a href="/aj-json/how-it-works/">how the parser works</a>.</p>
+<h2>Source and references</h2>
+<ul>
+<li><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-json">Source code</a></li>
+<li><a href="https://central.sonatype.com/artifact/com.ajaxjs/aj-json">Maven Central</a></li>
+<li><a href="https://javadoc.io/doc/com.ajaxjs/aj-json">Javadoc</a></li>
+</ul>
 
             </article>
         </div>

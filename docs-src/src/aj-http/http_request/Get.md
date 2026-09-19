@@ -1,6 +1,7 @@
 ---
 title: HTTP Method Helpers
 layout: layouts/aj-util.njk
+alternate: /http_request/Get-cn/
 ---
 
 # GET, POST, PUT, DELETE and HEAD

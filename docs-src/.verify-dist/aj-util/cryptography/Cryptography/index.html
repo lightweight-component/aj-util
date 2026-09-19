@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - AES and Password-Based Encryption</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/" selected>aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/">Home</a>
+                    </li>
+                </ul>
+                
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
+                </ul>
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro/">Introduction</a></li>
+                    <li><a href="/aj-util/date/convert/">Date Converter</a></li>
+                    <li><a href="/aj-util/date/formatter/">Date Formatter</a></li>
+                </ul>
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields/">Fields</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper/">UnzipHelper</a></li>
+                </ul>
+
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/aj-util/cryptography/intro/">Introduction</a></li>
+                <li><a href="/aj-util/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/aj-util/cryptography/Cryptography/">Symmetric encryption</a></li>
+                <li><a href="/aj-util/cryptography/Rsa/">RSA</a></li>
+               </ul>
+               <h3>Misc.</h3>
+               <ul>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
+                <li><a href="/aj-util/misc/contact/">Contact</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>AES and password-based encryption</h1>
+<p>These classes live under <code>com.ajaxjs.util.cryptography.aes</code>. This URL is retained from the old <code>Cryptography</code> page; use the current classes below, not removed static convenience methods.</p>
+<h2>AesGcm: preferred for new data</h2>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.SecretKeyMgr;
+import com.ajaxjs.util.cryptography.aes.AesCipherResult;
+import com.ajaxjs.util.cryptography.aes.AesGcm;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+
+byte[] key = SecretKeyMgr.getSecretKey(&quot;AES&quot;, 128, new SecureRandom()).getEncoded();
+AesGcm aes = new AesGcm(key);
+byte[] aad = &quot;record:v1&quot;.getBytes(StandardCharsets.UTF_8);
+AesCipherResult encrypted = aes.encrypt(&quot;secret&quot;, aad);
+String ciphertextBase64 = encrypted.toBase64();
+byte[] nonce = encrypted.getNonce().getResult();
+String plaintext = aes.decrypt(ciphertextBase64, nonce, aad);
+</code></pre>
+<p><code>AesGcm(byte[])</code> accepts raw AES key bytes; <code>AesGcm(String)</code> accepts a <strong>Base64-encoded key</strong>, not a password. Keys are normally 16/24/32 bytes. <code>encrypt(String)</code> and <code>encrypt(String, byte[] associatedData)</code> generate a secure random <strong>12-byte nonce</strong> each time. The two-argument byte array is AAD, <strong>not the nonce</strong>. <code>encrypt(String, byte[] nonce, byte[] associatedData)</code> is for protocols managing a nonce explicitly and checks its length.</p>
+<p>The transformation is <code>AES/GCM/NoPadding</code> with a <strong>128-bit tag</strong>. <code>AesCipherResult</code> contains <code>[ciphertext][16-byte tag]</code>; its separate <code>getNonce()</code> holds the nonce. Base64 output does <strong>not</strong> include the nonce. Persist/transmit both, plus key identifier, format version and exact AAD (or a reproducible way to obtain it). AAD is authenticated, not encrypted, and is not stored in the result. Nonces are not secret but must never repeat for a key; random generation is not an enforced uniqueness registry.</p>
+<p><code>decrypt(String base64Ciphertext, byte[] nonce, byte[] associatedData)</code> returns UTF-8 plaintext. Wrong keys, nonces, AAD or tampering cause <code>IllegalArgumentException</code> on authentication failure. Never reuse a fixed demo nonce in production.</p>
+<h2>AesPbe: password-derived AES-GCM</h2>
+<p>This complete method receives the password from its caller; do not hard-code production passwords.</p>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.DoCipher;
+import com.ajaxjs.util.cryptography.aes.AesPbe;
+
+public class PasswordExample {
+    public static String roundTrip(String password) {
+        byte[] salt = DoCipher.randomBytes(AesPbe.PBE_SALT_LENGTH);
+        int iterations = AesPbe.MIN_PBE_ITERATIONS;
+        AesPbe pbe = new AesPbe(password, salt, iterations);
+        byte[] encrypted = pbe.encrypt(&quot;secret&quot;);
+        return new AesPbe(password, salt, iterations).decrypt(encrypted);
+    }
+}
+</code></pre>
+<p><code>AesPbe(String password, byte[] salt, int iterationCount)</code> derives <strong>AES-128</strong> using <code>PBKDF2WithHmacSHA256</code>. It rejects null/empty passwords, salt shorter than <strong>16 bytes</strong>, and iterations below <strong>100,000</strong>. Whitespace-only passwords are not rejected. This minimum is an implementation floor, not a universal current password-hardening recommendation: benchmark and choose an appropriate higher work factor for your deployment.</p>
+<p><code>encrypt(String)</code> returns raw <code>[12-byte nonce][ciphertext][16-byte tag]</code>; <code>decrypt(byte[])</code> expects this format and rejects null or fewer than 28 bytes. It is <strong>not</strong> the <code>AesGcm</code> separate-nonce format. Store the random salt, iteration count, KDF/format version and key policy externally. Use a fresh random salt for each independent derivation. Wrong password/salt/iterations or tampering fails authentication. No AAD convenience parameter is exposed by these PBE methods.</p>
+<p>The derived key is retained by the instance. The internal <code>PBEKeySpec</code> password is cleared, but the caller's immutable String and all key material are not automatically erased.</p>
+<h2>AesCbc: interoperability only</h2>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.SecretKeyMgr;
+import com.ajaxjs.util.cryptography.aes.AesCbc;
+import com.ajaxjs.util.cryptography.aes.AesCipherResult;
+import java.security.SecureRandom;
+
+AesCbc aes = new AesCbc(SecretKeyMgr.getSecretKey(&quot;AES&quot;, 128, new SecureRandom()).getEncoded());
+AesCipherResult encrypted = aes.encrypt(&quot;legacy protocol content&quot;);
+String plaintext = aes.decrypt(encrypted.toBase64(), encrypted.getNonce().toBase64());
+</code></pre>
+<p>CBC uses <code>AES/CBC/PKCS5Padding</code>. Raw/Base64 key constructors mirror GCM. <code>encrypt(String)</code> generates a random <strong>16-byte IV</strong>; <code>encrypt(String, byte[] iv)</code> requires exactly 16 bytes. Here <code>AesCipherResult.getNonce()</code> actually holds the IV. <code>decrypt(String, String)</code> expects <strong>Base64 ciphertext and Base64 IV</strong>, unlike GCM's byte-array nonce.</p>
+<p>CBC does not authenticate: successful padding/decryption does not prove integrity. Use only under an existing authenticated protocol with a fresh unpredictable IV; do not invent a CBC protocol or expose padding-error distinctions to attackers. Prefer GCM for new work.</p>
+<h2>AesLegacy and lifecycle</h2>
+<p><code>new AesLegacy(keyString).encrypt(text)</code> returns uppercase hex; <code>decrypt(hex)</code> returns UTF-8. The actual constructor selects <strong><code>AES/ECB/PKCS5Padding</code></strong>, despite older comments describing a bare <code>AES</code> transformation. It derives AES-128 via the legacy <code>SecretKeyMgr.getRandom</code> seeded-random mechanism, not a portable password KDF. Use only for historical data with verified provider compatibility; ECB leaks repeated blocks and has no authentication.</p>
+<p>All these wrappers delegate to a new cipher engine per call. Result arrays and the nonce holder are mutable and not copied; see <a href="/aj-util/cryptography/flow/">DoCipher/CipherResult</a>. They do not implement key rotation, secure storage, message envelopes or automatic destruction. Test evidence: <code>aes/TestAes</code>, <code>aes/TestAesCipherResult</code> and <code>TestDoCipher</code> cover parameter rejection, formats, AAD and tamper/wrong-password failures; fixed/zero keys in tests are not production examples.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

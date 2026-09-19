@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - MapTool</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  Map 的拼接、解析、转换与扁平化。" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, Map,转换,Java" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>MapTool</h1>
+<p><code>MapTool</code> 提供静态方法，用于简单字符串键 Map 的序列化、键值输入解析、Map 值转换和嵌套 Map 扁平化。XML 转换不属于 <code>MapTool</code>；XML 操作请使用 <code>XmlHelper</code>。</p>
+<h2>拼接 Map 条目</h2>
+<pre><code class="language-java">Map&lt;String, Object&gt; values = new LinkedHashMap&lt;&gt;();
+values.put(&quot;name&quot;, &quot;Ada&quot;);
+values.put(&quot;page&quot;, null);
+
+String queryLike = MapTool.join(values); // name=Ada&amp;page=
+String custom = MapTool.join(values, &quot;;&quot;, value -&gt; String.valueOf(value));
+</code></pre>
+<p><code>join</code> 按 Map 的迭代顺序写出 <code>key=value</code> 条目，默认分隔符为 <code>&amp;</code>，null 值转换为空字符串。它不会对键和值进行 URL 编码；生成 HTTP 查询串时应先使用 <code>UrlCodec</code> 编码。</p>
+<h2>由键值输入创建 Map</h2>
+<pre><code class="language-java">Map&lt;String, Object&gt; fromPairs = MapTool.toMap(
+        new String[]{&quot;id=42&quot;, &quot;page=3&quot;}, Integer::valueOf);
+
+Map&lt;String, Object&gt; fromColumns = MapTool.toMap(
+        new String[]{&quot;id&quot;, &quot;name&quot;}, new String[]{&quot;42&quot;, &quot;Ada&quot;}, null);
+
+Map&lt;String, String&gt; query = MapTool.toMap(&quot;name=Ada+Lovelace&amp;token=x%3D%3D&quot;);
+</code></pre>
+<p>数组键值对只以第一个 <code>=</code> 分隔键和值；<code>null</code> 条目会被忽略，缺少 <code>=</code> 的条目会被拒绝。并行键值数组必须等长。查询串重载通过 <code>UrlCodec</code> 解码表单编码，重复键以后一个值覆盖前一个值。</p>
+<h2>转换和扁平化值</h2>
+<pre><code class="language-java">Map&lt;String, Integer&gt; lengths = MapTool.as(values, value -&gt; value.toString().length());
+
+Map&lt;String, Object&gt; nested = new LinkedHashMap&lt;&gt;();
+nested.put(&quot;server&quot;, Collections.singletonMap(&quot;host&quot;, &quot;localhost&quot;));
+Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
+// {server.host=localhost}
+</code></pre>
+<p><code>as</code> 使用指定函数转换非 null 值，并保留 null 值。<code>flatten</code> 使用 <code>.</code> 连接嵌套层级：源键中的 <code>.</code> 会转义为 <code>\\.</code>，反斜杠会转义为 <code>\\\\</code>；空嵌套 Map 会保留为值。循环引用的 Map 会抛出 <code>IllegalArgumentException</code>。</p>
+<h2>详细解析行为</h2>
+<p>两类 <code>toMap</code> 在面对格式不完整的输入时，有意采用不同策略：</p>
+<pre><code class="language-java">Map&lt;String, Object&gt; strict = MapTool.toMap(
+        new String[]{&quot;token=header.payload=signature==&quot;}, null);
+// strict.get(&quot;token&quot;) 为 &quot;header.payload=signature==&quot;
+
+Map&lt;String, String&gt; lenient = MapTool.toMap(&quot;flag&amp;name=Ada&quot;);
+// &quot;flag&quot; 没有 '='，会被忽略；lenient 只包含 name=Ada
+</code></pre>
+<p>数组形式通常用于结构化配置，因此非 null 条目缺少 <code>=</code> 时会被拒绝；查询串形式更宽容，会忽略没有完整键值对的字段。两种形式都不会对 <code>join</code> 的输出做 URL 编码，也都不会保留同一键的多个值。</p>
+<p>扁平化后键会成为路径；除非调用方理解转义规则，否则不能简单地将它当作可逆的原始键：</p>
+<pre><code class="language-java">Map&lt;String, Object&gt; nested = new LinkedHashMap&lt;&gt;();
+nested.put(&quot;a.b&quot;, Collections.singletonMap(&quot;c&quot;, 42));
+
+Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
+// {a\\.b.c=42}
+</code></pre>
+<p><code>flatten(null)</code> 返回空的 <code>LinkedHashMap</code>。List、数组、基本值和 null 都是叶子节点，只有 <code>Map</code> 值会继续遍历。</p>
+<h2>实现原理与取舍</h2>
+<p><code>join</code> 直接遍历 <code>map.keySet()</code>，因此输出顺序取决于具体 Map 的迭代顺序；需要稳定序列化顺序时应使用 <code>LinkedHashMap</code>。解析器最多只切分一次（<code>split(&quot;=&quot;, 2)</code>），因此 Base64、类似 JWT 的字符串和包含 <code>=</code> 的签名能够保持完整。</p>
+<p><code>flatten</code> 使用深度优先递归，并使用基于对象身份的集合记录当前递归路径中的 Map。使用 identity 而非 <code>equals()</code>，可以识别真实对象环，而不会把两个内容相等但相互独立的 Map 误判为环。每个分支结束后都会移除当前路径，因此同一个非循环子 Map 可以在不同分支中复用。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

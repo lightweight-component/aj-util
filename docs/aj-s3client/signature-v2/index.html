@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-s3client - Signature Version 2</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-s3client/signature-v2-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-s3client
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/" selected>aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-s3client/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                <h3>S3 client</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories/">Provider factories</a></li>
+                    <li><a href="/aj-s3client/api/">API and limitations</a></li>
+                </ul>
+                
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>Signature Version 2</h1>
+<p><code>AliyunOSS</code> and the legacy <code>NeteaseOSS</code> clients extend <code>BaseS3ClientSigV2</code>. They use <strong>virtual-hosted-style</strong> URLs: a key in bucket <code>reports</code> is requested from <code>https://reports.endpoint/object-key</code>. The configured endpoint must therefore be the provider domain without a bucket name or path.</p>
+<h2>Required configuration</h2>
+<p>In addition to endpoint and credentials, SigV2 needs a provider authorization prefix in <code>Config.remark</code>. <code>AliyunOSS</code> requires <code>OSS</code>; <code>NeteaseOSS</code> requires <code>NOS</code>. The shared configuration validation also requires a nonblank region; its default value <code>auto</code> satisfies that requirement, although SigV2's authorization value does not include a region scope.</p>
+<pre><code class="language-java">Config config = new Config();
+config.setEndPoint(&quot;oss-cn-example.aliyuncs.com&quot;);
+config.setAccessKey(System.getenv(&quot;OSS_ACCESS_KEY&quot;));
+config.setSecretKey(System.getenv(&quot;OSS_SECRET_KEY&quot;));
+config.setRemark(&quot;OSS&quot;);
+config.setBucketName(&quot;reports&quot;);
+
+AliyunOSS client = new AliyunOSS();
+client.setConfig(config);
+</code></pre>
+<p>If a provider requires a different domain pattern for each bucket, configure the common endpoint only; <code>BaseS3ClientSigV2</code> constructs the bucket host itself.</p>
+<h2>Signature construction</h2>
+<p>Each request carries a GMT <code>Date</code> header. The canonical resource includes <code>/{bucket}/{encoded-object-key}</code>; object keys use the same UTF-8 path encoding as SigV4. The base class formats the authorization header as:</p>
+<pre><code class="language-text">{remark} {accessKey}:{signature}
+</code></pre>
+<p><code>AliyunOSS</code> applies HMAC-SHA1 and Base64 encodes the result. <code>NeteaseOSS</code> applies its legacy HMAC-SHA256 implementation. These details are factory behavior, not a generic promise that an arbitrary S3 SigV2 service will work.</p>
+<h2>Upload integrity behavior</h2>
+<p><code>AliyunOSS.putObject</code> accepts a successful HTTP status as the upload result. <code>NeteaseOSS.putObject</code> additionally sends <code>Content-MD5</code>, then accepts only a successful response whose unquoted, single-part ETag equals the content MD5. That check deliberately rejects multipart-style ETags (which contain <code>-</code>) and cannot be generalized to encrypted or transformed uploads.</p>
+<p>Neither client provides a caller-configurable content type or metadata map. Binary uploads use the shared HTTP file content type.</p>
+<h2>Operational cautions</h2>
+<ul>
+<li>Virtual-hosted bucket addressing depends on DNS and TLS certificates for <code>bucket.endpoint</code>; test bucket names with the actual provider.</li>
+<li><code>getObject</code> only performs the GET and returns whether it succeeded. It discards the body, so it is not a download facility.</li>
+<li>SigV2 is retained for the named provider clients. Prefer a SigV4 provider client when your object-storage service supports it and its request model matches this module.</li>
+<li>Do not interpret <code>true</code> as a durable replication, lifecycle, or business-level confirmation; it means the received HTTP status was 2xx.</li>
+</ul>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-s3client, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

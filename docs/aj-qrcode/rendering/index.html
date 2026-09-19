@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-qrcode - PNG and SVG rendering</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-qrcode/aj-qrcode/rendering-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-qrcode
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/" selected>aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-qrcode/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                
+                <h3>QR Code</h3>
+                <ul>
+                    <li><a href="/aj-qrcode/getting-started/">Getting started</a></li>
+                    <li><a href="/aj-qrcode/rendering/">PNG and SVG rendering</a></li>
+                    <li><a href="/aj-qrcode/segments/">Text, bytes, and segments</a></li>
+                    <li><a href="/aj-qrcode/advanced/">Advanced encoding and limits</a></li>
+                </ul>
+                
+                
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>PNG and SVG rendering</h1>
+<p><code>Utils.toImage(qr, scale, border)</code> renders a <code>QrCode</code> as <code>BufferedImage</code>. <code>scale</code> is pixels per module and must be positive; <code>border</code> is the light quiet-zone width in modules and must be non-negative. A border of four is the usual interoperable choice.</p>
+<pre><code class="language-java">QrCode qr = QrCode.encodeText(&quot;Invoice #2026-031&quot;, Ecc.QUARTILE);
+BufferedImage image = Utils.toImage(qr, 8, 4, 0xFFFFFF, 0x17365D);
+Utils.writePng(image, &quot;invoice-qr.png&quot;);
+</code></pre>
+<p>The colors are 24-bit <code>0xRRGGBB</code>. Ensure strong contrast. <code>writePng()</code> delegates to <code>ImageIO.write()</code> and can throw <code>IOException</code>; choose, validate, and authorize output locations in application code.</p>
+<h2>SVG</h2>
+<p><code>toSvgString()</code> returns XML rather than writing a file. SVG preserves sharp module edges at any scale and is usually suitable for documents or browser assets.</p>
+<pre><code class="language-java">import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+String svg = Utils.toSvgString(qr, 4, &quot;#FFFFFF&quot;, &quot;#111827&quot;);
+Files.write(Paths.get(&quot;invoice-qr.svg&quot;), svg.getBytes(StandardCharsets.UTF_8));
+</code></pre>
+<p>The SVG method inserts CSS color strings into its output; use fixed trusted values, not unsanitized request parameters. The helpers do not embed logos or modify encoded data. For custom canvas, PDF, or a <code>QrCodeFast</code> result, iterate <code>getModule(x, y)</code> and implement rendering in the caller.</p>
+<p>Return to <a href="/aj-qrcode/getting-started/">getting started</a> or read <a href="/aj-qrcode/advanced/">advanced encoding</a>.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-qrcode, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

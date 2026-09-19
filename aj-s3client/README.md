@@ -234,7 +234,7 @@ During the implementation of this client, I’ve gained the following insights:
    correct signature. Even a small mistake can lead to an invalid signature, causing the server to reject the request
    due to failed validation. Among the two versions, SigV2 is relatively simpler, while SigV4 involves more steps and
    stricter rules. So I found a great open-source implementation
-   called [aws-v4-signer-java](https://github.com/lucasweb78/aws-v4-signer-java) — it’s zero-dependency, which fit my
+   called [aws-v4-signer-java](https://github.com/lucasweb78/aws-v4-signer-java) — it’s zero-dependency, which fits my
    needs perfectly. I simplified and refactored a lot of its code to better suit this project. In addition, Alibaba
    Cloud's documentation on S3-compatible signing was also very clear and helpful. For more details, please refer to
    their [documentation](https://help.aliyun.com/zh/oss/developer-reference/recommend-to-use-signature-version-4?spm=a2c4g.11186623.0.0.398d28871Sob7M)

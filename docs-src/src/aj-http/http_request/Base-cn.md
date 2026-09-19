@@ -1,6 +1,7 @@
 ---
 title: 请求生命周期与响应
 layout: layouts/aj-util-cn.njk
+alternate: /http_request/Base/
 ---
 
 # 请求生命周期

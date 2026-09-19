@@ -111,6 +111,19 @@
     refreshLabel();
   }
 
+  /** Navigate documentation pages to their separately generated language counterpart. */
+  function bindDocumentationLanguageToggle(options) {
+    options = options || {};
+    var buttons = document.querySelectorAll(options.selector || "[data-document-language-toggle]");
+
+    buttons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var target = button.getAttribute("data-language-target");
+        if (target) window.location.assign(target);
+      });
+    });
+  }
+
   function onReady(callback) {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", callback, { once: true });
     else callback();
@@ -151,6 +164,7 @@
     applyLanguage: applyLanguage,
     initLanguage: initLanguage,
     bindLanguageToggle: bindLanguageToggle,
+    bindDocumentationLanguageToggle: bindDocumentationLanguageToggle,
     onReady: onReady,
     initSyntaxHighlighting: initSyntaxHighlighting,
     copyText: copyText

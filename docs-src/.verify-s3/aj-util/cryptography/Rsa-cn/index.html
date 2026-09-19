@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - RSA、签名、PEM 与证书</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>RSA 密钥与加密</h1>
+<p>使用 <code>com.ajaxjs.util.cryptography.rsa.Rsa</code>，而不是已移除的 <code>KeyMgr</code>。<code>generateKeyPair(int)</code> 仅接受 <strong>2048、3072 或 4096</strong> 位。此限制只用于生成，并不意味着每个恢复/导入的密钥都会检查最低强度。</p>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.rsa.Rsa;
+import java.security.KeyPair;
+
+KeyPair pair = Rsa.generateKeyPair(2048);
+byte[] encrypted = new Rsa(&quot;small secret&quot;).encryptWithPublicKey(pair.getPublic());
+String plaintext = new Rsa(encrypted).decryptToString(pair.getPrivate());
+</code></pre>
+<p>主要方法使用 <code>RSA/ECB/OAEPWithSHA-256AndMGF1Padding</code>，显式指定 <strong>OAEP 和 MGF1 均使用 SHA-256</strong>，label 为空。公钥加密、私钥解密。它不是旧的提供者默认 RSA/PKCS#1 方案，也不是以私钥“加密”模拟签名的 API。</p>
+<p><code>Rsa(byte[])</code> 复制输入。<code>Rsa(String)</code> 按 UTF-8 编码，<strong>不会 Base64 解码密文</strong>。<code>encryptWithPublicKeyToBase64(...)</code> 返回 Base64；创建解密用 <code>Rsa</code> 前须将其解码为字节（如 <code>new Base64Utils(text).decode()</code>）。加解密方法接受 Key 对象或支持的 PEM/Base64 密钥字符串。<code>decryptWithPrivateKey(...)</code> 返回原始字节，<code>decryptToString(...)</code> 仅适用于 UTF-8 明文。</p>
+<p>OAEP-SHA256 输入上限为 <code>modulusBytes - 2*32 - 2</code>：<strong>2048 位密钥为 190 字节</strong>，不是 190 个字符。没有分块处理。大数据应使用明确设计的混合协议：AES-GCM 加密正文，RSA 保护短对称密钥。超长输入、填充不匹配或非法密文/密钥会失败，不会返回部分明文。</p>
+<p>独立静态方法 <code>Rsa.encryptOAEP(String, X509Certificate)</code> / <code>decryptOAEP(String base64Ciphertext, PrivateKey)</code> 为外部协议兼容（如微信支付）使用 <strong>OAEP-SHA1</strong>。它们不能与主要 SHA-256 方法互换，也不验证证书信任。</p>
+<h2>签名与验签</h2>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.rsa.DoSignature;
+import com.ajaxjs.util.cryptography.rsa.DoVerify;
+import com.ajaxjs.util.cryptography.rsa.Rsa;
+import java.security.KeyPair;
+
+KeyPair pair = Rsa.generateKeyPair(2048);
+String signature = new DoSignature(pair.getPrivate()).signToBase64(&quot;message&quot;);
+boolean valid = new DoVerify(pair.getPublic()).verify(&quot;message&quot;, signature);
+if (!valid) {
+    throw new SecurityException(&quot;Invalid signature&quot;);
+}
+</code></pre>
+<p>默认算法为 <code>SHA256withRSA</code>（JCA 签名，不是 RSA cipher，也不是 RSA-PSS）。构造函数接受对应 Key 对象或 PEM/Base64 密钥字符串；生成的全参构造函数接受 <code>(String algorithmName, PrivateKey/PublicKey)</code>。<code>new DoSignature(String)</code> 把 String 解释为<strong>私钥</strong>，不是算法名。</p>
+<p><code>sign(byte[]/String)</code> 返回字节；<code>signToBase64(byte[]/String)</code> 返回文本。<code>verify</code> 接受数据字节或 UTF-8 文本，以及签名字节或 Base64。每次调用创建新的 <code>Signature</code>，没有链式输入/结果 setter。普通不匹配返回 false，但畸形签名可能引发 <code>IllegalStateException</code>（提供者 <code>SignatureException</code>）；非法 Base64/算法/密钥可能引发 <code>IllegalArgumentException</code>。null 行为随重载不同：签名 byte 输入/缺失密钥在签名时用 <code>IllegalStateException</code> 检查；null String 签名输入产生 <code>NullPointerException</code>；验签 byte 输入/签名校验使用 <code>IllegalArgumentException</code>。异常应按验签失败处理，不能视为通过。</p>
+<h2>RestoreKey 与 PemUtils</h2>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.rsa.PemUtils;
+import com.ajaxjs.util.cryptography.rsa.RestoreKey;
+import com.ajaxjs.util.cryptography.rsa.Rsa;
+import java.security.KeyPair;
+import java.security.PublicKey;
+import java.security.PrivateKey;
+
+KeyPair pair = Rsa.generateKeyPair(2048);
+String publicPem = PemUtils.publicKeyToPem(pair.getPublic());
+String privatePem = PemUtils.privateKeyToPem(pair.getPrivate());
+PublicKey publicKey = RestoreKey.restorePublicKey(publicPem);
+PrivateKey privateKey = RestoreKey.restorePrivateKey(privatePem);
+</code></pre>
+<ul>
+<li><code>restorePublicKey(String)</code> 接受 X.509 <strong>SubjectPublicKeyInfo</strong> DER 的 Base64，可使用 <code>BEGIN PUBLIC KEY</code> PEM 边界。这是密钥结构，不是 X.509 证书。</li>
+<li><code>restorePrivateKey(String)</code> 接受未加密的 <strong>PKCS#8</strong> DER/Base64 或 <code>BEGIN PRIVATE KEY</code> PEM，并移除空白。显式拒绝 PKCS#1 <code>RSA PUBLIC KEY</code> / <code>RSA PRIVATE KEY</code>；不支持加密私钥 PEM。</li>
+<li>格式错误抛 <code>IllegalArgumentException</code>，null 输入抛 <code>NullPointerException</code>，RSA factory 不可用抛 <code>IllegalStateException</code>。</li>
+<li><code>loadPrivateKey(InputStream)</code> 默认 UTF-8；字符集重载接受字符集名称。其 <code>DataWriter</code>/<code>DataReader</code> 路径<strong>会关闭传入输入流</strong>。String 重载加载文件路径。读取失败可能抛出非受检 I/O 异常。</li>
+<li><code>PemUtils.encodeKeyBase64(Key)</code> 编码 <code>getEncoded()</code>。PEM 辅助方法以 64 列折行封装公私钥，也接受 Base64 String；不验证 DER，不把 PKCS#1 转为 PKCS#8。编码工具不支持不可导出的密钥。私钥 PEM/Base64 仍是秘密明文密钥材料，须保护存储，禁止记录日志。</li>
+</ul>
+<h2>证书</h2>
+<p><code>com.ajaxjs.util.cryptography.CertificateUtils.getCert(String path/InputStream)</code> 解析 PEM/DER X.509 并调用 <code>checkValidity()</code>，会关闭传入流。非法/过期/尚未生效的证书产生 <code>RuntimeException</code>；文件/流 I/O 错误可能产生 <code>UncheckedIOException</code>。解析和日期检查<strong>不验证</strong>信任链、吊销、主机名、用途或来源真实性。使用证书公钥前须单独建立信任。</p>
+<p><code>deserializeToCerts(String apiV3Key, Map&lt;String,Object&gt; response)</code> 是特定协议工具：key 必须编码为 <strong>32 个 UTF-8 字节</strong>（不是 Base64）；<code>data</code> 必须为列表，每项包含 <code>encrypt_certificate</code> Map，字段为 <code>ciphertext</code>、<code>nonce</code>、<code>associated_data</code>。密文为 Base64；nonce 和 AAD 为 UTF-8 字符串（移除外围引号），GCM 要求 12 字节 nonce。该方法用 <code>AesGcm</code> 解密，解析并检查证书日期，返回以实际证书序列号（<code>BigInteger</code>）为键的 Map。缺失字段/非法参数可能抛 <code>IllegalArgumentException</code>，错误嵌套类型可能抛 <code>ClassCastException</code>。它不是通用证书信任验证器。</p>
+<p>依据：<code>Rsa</code>、<code>DoSignature</code>、<code>DoVerify</code>、<code>RestoreKey</code>、<code>PemUtils</code>、<code>CertificateUtils</code>；<code>rsa/TestRsa</code>、<code>rsa/TestVerify</code>、<code>rsa/TestRestoreKey</code>、<code>rsa/TestPemUtils</code>、<code>TestCertificateUtils</code>。现有证书测试夹具的有效期随时间变化，不要把旧夹具或网络响应当成当前可信证书。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

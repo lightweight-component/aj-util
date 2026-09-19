@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - UrlCodec</title>
+        <meta name="description" content="Small Java utilities with many useful functions. UrlCodec" />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/common/UrlCodec-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/" selected>aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/">Home</a>
+                    </li>
+                </ul>
+                
+                <h3>Common</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper/">XmlHelper</a></li>
+                </ul>
+                <h3>Date Handing</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro/">Introduction</a></li>
+                    <li><a href="/aj-util/date/convert/">Date Converter</a></li>
+                    <li><a href="/aj-util/date/formatter/">Date Formatter</a></li>
+                </ul>
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields/">Fields</a></li>
+                </ul>
+
+                <h3>IO</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper/">UnzipHelper</a></li>
+                </ul>
+
+               <h3>Cryptography</h3>
+               <ul>
+                <li><a href="/aj-util/cryptography/intro/">Introduction</a></li>
+                <li><a href="/aj-util/cryptography/flow/">Basic Flow</a></li>
+                <li><a href="/aj-util/cryptography/Cryptography/">Symmetric encryption</a></li>
+                <li><a href="/aj-util/cryptography/Rsa/">RSA</a></li>
+               </ul>
+               <h3>Misc.</h3>
+               <ul>
+               <li><a href="/aj-util/misc/jackson3/">Working with Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging/">Logging utilities</a></li>
+                <li><a href="/aj-util/misc/contact/">Contact</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>UrlCodec</h1>
+<p><code>com.ajaxjs.util.UrlCodec</code> operates on <strong>individual raw parameter values</strong>, not complete URLs. Constructors accept <code>String</code> or <code>String, Charset</code> (UTF-8 by default); arguments must be non-null.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Space</th>
+<th>Literal plus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>encodeForm()</code></td>
+<td><code>+</code></td>
+<td><code>%2B</code></td>
+</tr>
+<tr>
+<td><code>encodeQueryValue()</code></td>
+<td><code>%20</code></td>
+<td><code>%2B</code></td>
+</tr>
+<tr>
+<td><code>decodeForm()</code></td>
+<td>decodes <code>+</code> to space</td>
+<td>use <code>%2B</code></td>
+</tr>
+<tr>
+<td><code>decodeQueryValue()</code></td>
+<td>decodes <code>%20</code></td>
+<td>preserves <code>+</code></td>
+</tr>
+</tbody>
+</table>
+<p>Query encoding preserves <code>~</code> and escapes <code>*</code>. Existing percent escapes are encoded again. Malformed percent escapes fail with <code>IllegalArgumentException</code>.</p>
+<pre><code class="language-java">import com.ajaxjs.util.UrlCodec;
+import com.ajaxjs.util.MapTool;
+import java.util.Map;
+
+String form = new UrlCodec(&quot;a b+c&quot;).encodeForm(); // a+b%2Bc
+String query = new UrlCodec(&quot;a b+c&quot;).encodeQueryValue(); // a%20b%2Bc
+String value = new UrlCodec(&quot;a%20b+c&quot;).decodeQueryValue(); // a b+c
+Map&lt;String, String&gt; params = MapTool.toMap(&quot;name=a+b&amp;token=x%3D%3D&quot;);
+String url = UrlCodec.concatUrl(&quot;https://example.com/&quot;, &quot;/search&quot;) + &quot;?q=&quot; + query;
+</code></pre>
+<h2>Other operations</h2>
+<p><code>concatUrl(String, String)</code> only joins at the slash boundary. It is not URI resolution, validation or normalization and does not specially handle query strings/fragments.</p>
+<p><code>simpleGET(String)</code> opens a URL stream without explicit timeouts or headers, reads UTF-8 and normalizes line endings (including a trailing separator). It closes the stream. URL/open failures return null; read failures may throw <code>UncheckedIOException</code>. Use the <a href="/aj-http/http_request/Base/">AJ HTTP API</a> for controlled requests. Query parsing is <code>MapTool.toMap(String)</code>.</p>
+<h2>Encode values, then assemble the URL</h2>
+<p>Encode each key and value separately. Do not pass <code>?</code>, <code>&amp;</code>, <code>=</code> or an already-built URL to <code>encodeQueryValue()</code>; those
+characters are data in this API and will be escaped. This prevents ambiguous parameters and avoids accidental
+double-encoding.</p>
+<pre><code class="language-java">String q = new UrlCodec(&quot;Java 8 + streams&quot;).encodeQueryValue();
+String page = new UrlCodec(&quot;2&quot;).encodeQueryValue();
+String url = UrlCodec.concatUrl(&quot;https://example.com/api&quot;, &quot;search&quot;)
+        + &quot;?q=&quot; + q + &quot;&amp;page=&quot; + page;
+// https://example.com/api/search?q=Java%208%20%2B%20streams&amp;page=2
+</code></pre>
+<p>The class intentionally does not parse or build a multi-value query map. If a complete URL must be validated,
+resolved against a base URI, or composed from structured components, use <code>java.net.URI</code> (or a dedicated HTTP client)
+at that boundary.</p>
+<h2>Form semantics versus query-value semantics</h2>
+<p>HTML form bodies using <code>application/x-www-form-urlencoded</code> use <code>+</code> for spaces; <code>URLEncoder</code> and <code>URLDecoder</code> follow
+that convention. RFC 3986-style query values conventionally use <code>%20</code> for spaces, and a literal plus is preserved.
+This distinction is especially important for signed URLs and tokens.</p>
+<pre><code class="language-java">String form = new UrlCodec(&quot;a b+c&quot;).encodeForm();             // a+b%2Bc
+String rawQuery = new UrlCodec(&quot;a b+c&quot;).encodeQueryValue();  // a%20b%2Bc
+
+new UrlCodec(&quot;a+b%2Bc&quot;).decodeForm();          // &quot;a b+c&quot;
+new UrlCodec(&quot;a%20b+c&quot;).decodeQueryValue();    // &quot;a b+c&quot;
+</code></pre>
+<p>Percent escapes represent bytes in the codec charset (UTF-8 unless explicitly changed). A literal <code>%</code> is not treated
+as an escape during encoding: <code>new UrlCodec(&quot;%2F&quot;).encodeQueryValue()</code> produces <code>%252F</code>. Decode only text you know is
+encoded once; malformed <code>%</code> sequences fail fast with <code>IllegalArgumentException</code>.</p>
+<h2>Path joining and simple reads</h2>
+<p><code>concatUrl</code> removes at most one trailing slash from the first part and uses the leading slash of the second part when
+present. It is predictable for normal path fragments, but deliberately leaves repeated internal slashes, queries, and
+fragments alone.</p>
+<pre><code class="language-java">UrlCodec.concatUrl(&quot;https://host/api/&quot;, &quot;/users&quot;); // https://host/api/users
+UrlCodec.concatUrl(&quot;https://host/api&quot;, &quot;users&quot;);  // https://host/api/users
+</code></pre>
+<p><code>simpleGET</code> is suitable only for a small, trusted, best-effort read. It has no timeout, headers, status handling,
+redirect policy, authentication, or response-charset detection. A failure while constructing or opening the URL
+returns <code>null</code>; failure during content reading can still throw <code>UncheckedIOException</code>. Use the AJ HTTP API for normal
+network calls.</p>
+<h2>Implementation notes</h2>
+<p>Form methods delegate to the JDK's <code>URLEncoder</code>/<code>URLDecoder</code>. Query-value encoding begins with the form result, then
+converts <code>+</code> to <code>%20</code>, <code>*</code> to <code>%2A</code>, and <code>%7E</code> back to <code>~</code>. Query-value decoding protects literal plus signs by first
+rewriting them as <code>%2B</code> before invoking <code>URLDecoder</code>. This small adaptation preserves the JDK's robust percent-byte
+handling while providing RFC 3986-style value semantics.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

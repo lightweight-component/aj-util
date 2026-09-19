@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-util - AES 与基于密码的加密</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-util
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/" selected>aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-util/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                <h3>Common 常用模块</h3>
+                <ul>
+                    <li><a href="/aj-util/common/JsonUtil-cn/">JsonUtil</a></li>
+                    <li><a href="/aj-util/common/Base64Utils-cn/">Base64Utils</a></li>
+                    <li><a href="/aj-util/common/StringBytes-cn/">StringBytes</a></li>
+                    <li><a href="/aj-util/common/ConvertBasicValue-cn/">ConvertBasicValue</a></li>
+                    <li><a href="/aj-util/common/HashHelper-cn/">HashHelper</a></li>
+                    <li><a href="/aj-util/common/MapTool-cn/">MapTool</a></li>
+                    <li><a href="/aj-util/common/ObjectHelper-cn/">ObjectHelper</a></li>
+                    <li><a href="/aj-util/common/RandomTools-cn/">RandomTools</a></li>
+                    <li><a href="/aj-util/common/RegExpHelper-cn/">RegExpHelper</a></li>
+                    <li><a href="/aj-util/common/StrUtil-cn/">StrUtil</a></li>
+                    <li><a href="/aj-util/common/UrlCodec-cn/">UrlCodec</a></li>
+                    <li><a href="/aj-util/common/XmlHelper-cn/">XmlHelper</a></li>
+                </ul>
+                <h3>Date 日期处理</h3>
+                <ul>
+                    <li><a href="/aj-util/date/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/date/convert-cn/">万能日期类型转换</a></li>
+                    <li><a href="/aj-util/date/formatter-cn/">日期格式化</a></li>
+                </ul>
+                <h3>Reflection 反射</h3>
+                <ul>
+                    <li><a href="/aj-util/reflect/Methods-cn/">Methods</a></li>
+                    <li><a href="/aj-util/reflect/Types-cn/">Types</a></li>
+                    <li><a href="/aj-util/reflect/Clazz-cn/">Clazz</a></li>
+                    <li><a href="/aj-util/reflect/NewInstance-cn/">NewInstance</a></li>
+                    <li><a href="/aj-util/reflect/Fields-cn/">Fields</a></li>
+                </ul>
+
+                <h3>Input/Output 输入/输出</h3>
+                <ul>
+                    <li><a href="/aj-util/io/FileHelper-cn/">FileHelper</a></li>
+                    <li><a href="/aj-util/io/ResourceHelper-cn/">ResourceHelper</a></li>
+                    <li><a href="/aj-util/io/DataIO-cn/">DataReader/DataWriter</a></li>
+                    <li><a href="/aj-util/io/ZipHelper-cn/">ZipHelper</a></li>
+                    <li><a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a></li>
+                </ul>
+
+                <h3>加密/解密</h3>
+                <ul>
+                    <li><a href="/aj-util/cryptography/intro-cn/">简介</a></li>
+                    <li><a href="/aj-util/cryptography/flow-cn/">基本流程</a></li>
+                    <li><a href="/aj-util/cryptography/Cryptography-cn/">对称加密</a></li>
+                    <li><a href="/aj-util/cryptography/Rsa-cn/">RSA</a></li>
+                </ul>
+                <h3>其他</h3>
+               <ul>
+                <li><a href="/aj-util/misc/jackson3-cn/">升级到 Jackson3</a></li>
+                <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
+                <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
+               </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>AES 与基于密码的加密</h1>
+<p>这些类位于 <code>com.ajaxjs.util.cryptography.aes</code>。此 URL 沿用旧 <code>Cryptography</code> 页面；请使用下列当前类，而不是已删除的静态便捷方法。</p>
+<h2>AesGcm：新数据优先使用</h2>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.SecretKeyMgr;
+import com.ajaxjs.util.cryptography.aes.AesCipherResult;
+import com.ajaxjs.util.cryptography.aes.AesGcm;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+
+byte[] key = SecretKeyMgr.getSecretKey(&quot;AES&quot;, 128, new SecureRandom()).getEncoded();
+AesGcm aes = new AesGcm(key);
+byte[] aad = &quot;record:v1&quot;.getBytes(StandardCharsets.UTF_8);
+AesCipherResult encrypted = aes.encrypt(&quot;secret&quot;, aad);
+String ciphertextBase64 = encrypted.toBase64();
+byte[] nonce = encrypted.getNonce().getResult();
+String plaintext = aes.decrypt(ciphertextBase64, nonce, aad);
+</code></pre>
+<p><code>AesGcm(byte[])</code> 接受原始 AES 密钥字节；<code>AesGcm(String)</code> 接受 <strong>Base64 编码密钥</strong>，不是密码。密钥通常为 16/24/32 字节。<code>encrypt(String)</code> 和 <code>encrypt(String, byte[] associatedData)</code> 每次生成安全随机的 <strong>12 字节 nonce</strong>。双参数中的字节数组是 AAD，<strong>不是 nonce</strong>。<code>encrypt(String, byte[] nonce, byte[] associatedData)</code> 用于协议自行管理 nonce 的场景，并检查长度。</p>
+<p>转换为 <code>AES/GCM/NoPadding</code>，使用 <strong>128 位 tag</strong>。<code>AesCipherResult</code> 保存 <code>[密文][16 字节 tag]</code>；单独的 <code>getNonce()</code> 保存 nonce。Base64 输出<strong>不包含</strong> nonce。须同时保存/传输二者，以及密钥标识、格式版本和完全一致的 AAD（或可重建它的方法）。AAD 被认证但不加密，也不保存在结果中。nonce 不必保密，但同一密钥下绝不能重复；随机生成不是强制唯一性登记机制。</p>
+<p><code>decrypt(String base64Ciphertext, byte[] nonce, byte[] associatedData)</code> 返回 UTF-8 明文。错误密钥、nonce、AAD 或篡改导致认证失败，抛出 <code>IllegalArgumentException</code>。生产环境绝不能复用固定演示 nonce。</p>
+<h2>AesPbe：密码派生的 AES-GCM</h2>
+<p>以下完整方法从调用方接收密码；不要硬编码生产密码。</p>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.DoCipher;
+import com.ajaxjs.util.cryptography.aes.AesPbe;
+
+public class PasswordExample {
+    public static String roundTrip(String password) {
+        byte[] salt = DoCipher.randomBytes(AesPbe.PBE_SALT_LENGTH);
+        int iterations = AesPbe.MIN_PBE_ITERATIONS;
+        AesPbe pbe = new AesPbe(password, salt, iterations);
+        byte[] encrypted = pbe.encrypt(&quot;secret&quot;);
+        return new AesPbe(password, salt, iterations).decrypt(encrypted);
+    }
+}
+</code></pre>
+<p><code>AesPbe(String password, byte[] salt, int iterationCount)</code> 使用 <code>PBKDF2WithHmacSHA256</code> 派生 <strong>AES-128</strong>。它拒绝 null/空密码、少于 <strong>16 字节</strong>的盐和低于 <strong>100,000</strong> 的迭代次数，但不拒绝纯空白密码。此下限只是实现门槛，不是适用于所有部署的最新密码强化建议；应测量性能并选择合适的更高工作因子。</p>
+<p><code>encrypt(String)</code> 返回原始 <code>[12 字节 nonce][密文][16 字节 tag]</code>；<code>decrypt(byte[])</code> 要求此格式，拒绝 null 或不足 28 字节的数据。它<strong>不是</strong> <code>AesGcm</code> 的分离 nonce 格式。随机盐、迭代次数、KDF/格式版本和密钥策略须另行保存。每次独立派生使用新的随机盐。密码/盐/迭代次数错误或篡改会导致认证失败。这些 PBE 便捷方法没有 AAD 参数。</p>
+<p>对象保留派生密钥。内部 <code>PBEKeySpec</code> 的密码会清除，但调用方不可变 String 及所有密钥材料不会自动擦除。</p>
+<h2>AesCbc：仅用于互通</h2>
+<pre><code class="language-java">import com.ajaxjs.util.cryptography.SecretKeyMgr;
+import com.ajaxjs.util.cryptography.aes.AesCbc;
+import com.ajaxjs.util.cryptography.aes.AesCipherResult;
+import java.security.SecureRandom;
+
+AesCbc aes = new AesCbc(SecretKeyMgr.getSecretKey(&quot;AES&quot;, 128, new SecureRandom()).getEncoded());
+AesCipherResult encrypted = aes.encrypt(&quot;legacy protocol content&quot;);
+String plaintext = aes.decrypt(encrypted.toBase64(), encrypted.getNonce().toBase64());
+</code></pre>
+<p>CBC 使用 <code>AES/CBC/PKCS5Padding</code>，原始/Base64 密钥构造函数与 GCM 一致。<code>encrypt(String)</code> 生成随机 <strong>16 字节 IV</strong>；<code>encrypt(String, byte[] iv)</code> 要求恰好 16 字节。这里 <code>AesCipherResult.getNonce()</code> 实际保存 IV。<code>decrypt(String, String)</code> 要求 <strong>Base64 密文和 Base64 IV</strong>，不同于 GCM 的字节数组 nonce。</p>
+<p>CBC 不提供认证：填充/解密成功不能证明完整性。仅在已有认证协议中使用，并生成新的不可预测 IV；不要自行设计 CBC 协议或向攻击者暴露不同填充错误。新方案优先 GCM。</p>
+<h2>AesLegacy 与生命周期</h2>
+<p><code>new AesLegacy(keyString).encrypt(text)</code> 返回大写 hex；<code>decrypt(hex)</code> 返回 UTF-8。实际构造函数选择 <strong><code>AES/ECB/PKCS5Padding</code></strong>，并非旧注释所述的裸 <code>AES</code> 转换。它通过旧 <code>SecretKeyMgr.getRandom</code> 种子随机机制派生 AES-128，不是可移植的密码 KDF。仅用于验证过提供者兼容性的历史数据；ECB 泄漏重复块且没有认证。</p>
+<p>所有封装每次调用都会使用新 cipher 引擎。结果数组与 nonce 容器可变、未复制，详见 <a href="/aj-util/cryptography/flow-cn/">DoCipher/CipherResult</a>。它们不实现密钥轮换、安全存储、消息封装格式或自动销毁。测试依据：<code>aes/TestAes</code>、<code>aes/TestAesCipherResult</code> 和 <code>TestDoCipher</code> 覆盖参数拒绝、格式、AAD 及篡改/错误密码失败；测试中的固定/全零密钥不能用于生产。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-util，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

@@ -19,7 +19,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -38,7 +38,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                   | 🚀<a href="/aj-util/">英语版本</a>
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-util/io/ZipHelper/" aria-label="Switch language to English" title="Switch to English">EN</button>
                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
@@ -67,10 +67,6 @@
     <option value="/aj-image/cn/">aj-image</option>
     
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
-    
-    <option value="/image-combiner/cn/">image-combiner</option>
-    
-    <option value="/aj-parent/cn/">aj-parent</option>
     
 </select>
 
@@ -132,6 +128,10 @@
                 <li><a href="/aj-util/misc/Logging-cn/">日志工具</a></li>
                 <li><a href="/aj-util/misc/contact-cn/">联系</a></li>
                </ul>
+                
+                
+                
+                
                 
                 
             </menu>

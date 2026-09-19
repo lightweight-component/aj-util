@@ -1,5 +1,6 @@
 /* Theme surface for the documentation layouts. Theme state is maintained by AJUtils. */
-.theme-toggle {
+.theme-toggle,
+.language-toggle {
     margin-left: 4px;
     min-width: 30px;
     min-height: 30px;
@@ -14,7 +15,9 @@
 }
 
 .theme-toggle:hover,
-.theme-toggle:focus-visible {
+.theme-toggle:focus-visible,
+.language-toggle:hover,
+.language-toggle:focus-visible {
     border-color: #10af88;
     outline: none;
 }
@@ -91,6 +94,11 @@ html[data-theme="dark"] article blockquote {
 }
 
 html[data-theme="dark"] .theme-toggle {
+    border-color: #484f58;
+    color: #e6edf3;
+}
+
+html[data-theme="dark"] .language-toggle {
     border-color: #484f58;
     color: #e6edf3;
 }
@@ -204,7 +212,7 @@ html[data-theme="dark"] #project-select option {
     article pre {
         box-sizing: border-box;
         width: 100%;
-        padding: 14px;
+        padding: 14px 5px;
         font-size: 13px;
         line-height: 1.55;
     }

@@ -15,16 +15,8 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
-            // 获取用户的默认语言
-            var userLang = navigator.language || navigator.userLanguage;
-
-            // 检查是否为中文环境（包括简体和繁体）
-            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
-                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/aj-ftp/cn/');  // 如果是中文，则弹出提示
-            }
-
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -41,7 +33,7 @@
                     <a href="/">🏠 Home</a>
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/aj-ftp/cn/">Chinese Version</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-ftp/cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
                     | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
@@ -70,10 +62,6 @@
     
     <option value="/aj-qrcode/">aj-qrcode</option>
     
-    <option value="/image-combiner/">image-combiner</option>
-    
-    <option value="/aj-parent/">aj-parent</option>
-    
 </select>
 
                 <ul>
@@ -83,11 +71,94 @@
                 </ul>
                 
                 
+                
+                
+                
+                <h3>File transfer</h3>
+                <ul>
+                    <li><a href="/aj-ftp/upload/">Upload files</a></li>
+                    <li><a href="/aj-ftp/download/">Download files</a></li>
+                </ul>
+                
+                
             </menu>
             <article class="aj-text">
                 <h1>aj-ftp</h1>
-<p>Welcome to the aj-ftp documentation. Detailed documentation is coming soon.</p>
-<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-ftp">Source code</a></p>
+<p><code>aj-ftp</code> is a small Java 8+ client for plain FTP file transfers. It provides a concise API for connecting, authenticating, uploading, and downloading files, while retaining access to the lower-level FTP client when an application needs it.</p>
+<blockquote>
+<p>aj-ftp implements FTP only. It does not provide FTPS or SFTP support.</p>
+</blockquote>
+<h2>Add the dependency</h2>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-ftp&lt;/artifactId&gt;
+    &lt;version&gt;1.5&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2>Quick start</h2>
+<p>Create <code>SimpleFtpClient</code> with the FTP host and port, authenticate, perform the required operation, then let try-with-resources close the control connection. Port <code>21</code> is the usual FTP control port.</p>
+<pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
+
+try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
+    ftp.setConnectTimeout(10_000);
+    ftp.setReadTimeout(60_000);
+    ftp.login(&quot;username&quot;, &quot;password&quot;);
+    ftp.enableUtf8(); // Only when the server supports UTF-8 paths.
+
+    ftp.upload(&quot;C:/exports/report.zip&quot;, &quot;/incoming/report.zip&quot;);
+    ftp.getFile(&quot;/releases/client.zip&quot;, &quot;C:/downloads/client.zip&quot;);
+}
+</code></pre>
+<p>The constructor opens the control connection. <code>login</code> completes user authentication; both authentication and transfers report failures as <code>IOException</code>. Do not log credentials or place them directly in source code.</p>
+<h2>Choose an operation</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>High-level API</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Upload a local file</td>
+<td><code>upload(localPath, remotePath)</code></td>
+<td>Sends the file in binary mode and validates the final server reply.</td>
+</tr>
+<tr>
+<td>Download a remote file</td>
+<td><code>getFile(remotePath, localPath)</code></td>
+<td>Writes a temporary file before replacing the destination.</td>
+</tr>
+<tr>
+<td>Anonymous FTP</td>
+<td><code>anonymousLogin()</code></td>
+<td>Use only when the server explicitly permits anonymous access.</td>
+</tr>
+<tr>
+<td>Non-ASCII paths</td>
+<td><code>enableUtf8()</code></td>
+<td>Call after connecting, before sending non-ASCII credentials or paths.</td>
+</tr>
+</tbody>
+</table>
+<p>Continue with <a href="/aj-ftp/upload/">uploading files</a> or <a href="/aj-ftp/download/">downloading files</a>.</p>
+<h2>Connection and transfer notes</h2>
+<ul>
+<li>Use <code>anonymousLogin()</code> for FTP servers that permit anonymous access.</li>
+<li>Call <code>enableUtf8()</code> after login when file names contain non-ASCII characters and the server supports UTF-8.</li>
+<li><code>setConnectTimeout(milliseconds)</code> and <code>setReadTimeout(milliseconds)</code> configure the client connection.</li>
+<li>Transfers use binary mode. The built-in <code>ProgressListener</code> writes byte-count progress to the configured SLF4J logger.</li>
+<li>A <code>SimpleFtpClient</code> instance is intended for one caller at a time; do not share it between concurrent threads.</li>
+</ul>
+<h2>Low-level API</h2>
+<p><code>SimpleFtpClient</code> extends <code>com.ajaxjs.net.ftp.sun.ftp.FtpClient</code>. Prefer the high-level <code>upload</code> and <code>getFile</code> methods for normal application code. When using a low-level method that returns a data stream, consume or write the stream, close it, and then call <code>completePendingCommand()</code> to check the server's final reply.</p>
+<h2>Resources</h2>
+<ul>
+<li><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-ftp">Source code</a></li>
+<li><a href="https://central.sonatype.com/artifact/com.ajaxjs/aj-ftp">Maven Central</a></li>
+<li><a href="https://javadoc.io/doc/com.ajaxjs/ajaxjs-ftp">Javadoc</a></li>
+</ul>
 
             </article>
         </div>

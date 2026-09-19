@@ -8,7 +8,8 @@ const read = url => fs.readFileSync(path.join(output, url, 'index.html'), 'utf8'
 const source = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
 const httpSource = 'aj-http/src/main/java/com/ajaxjs/util/httpremote/';
 const cryptoSource = 'aj-util/src/main/java/com/ajaxjs/util/cryptography/';
-const httpPages = ['Base', 'Get', 'advanced-usage'];
+const httpPages = ['Base', 'Get', 'Transfer', 'ProxySecurity', 'advanced-usage'];
+const httpMenuPages = ['Base', 'Get', 'Transfer', 'ProxySecurity'];
 const cryptoPages = ['intro', 'flow', 'Cryptography', 'Rsa'];
 
 function checkLinks(html, page) {
@@ -21,9 +22,9 @@ function checkLinks(html, page) {
 }
 
 function checkMenu(html, project, suffix) {
-    const menu = html.match(/<menu>([\s\S]*?)<\/menu>/)[1];
+    const menu = html.match(/<menu\b[^>]*>([\s\S]*?)<\/menu>/)[1];
     assert.ok(!menu.includes('/aj-util/http_request/'), 'old HTTP menu URL');
-    for (const page of httpPages) {
+    for (const page of httpMenuPages) {
         assert.equal(menu.includes(`href="/aj-http/http_request/${page}${suffix}/"`), project === 'aj-http');
     }
     assert.equal(menu.includes('/aj-util/common/'), project === 'aj-util');
@@ -77,7 +78,9 @@ try {
     const httpTerms = {
         Base: ['httpremote.model', 'initData()', '200–299', 'UncheckedIOException', 'responseAsJsonList', 'DataReader'],
         Get: ['Get.text', 'Post.form', 'Put.api', 'Head', 'getContentLength()', 'disconnect'],
-        'advanced-usage': ['MultipartPost', 'MultipartWriter', 'HttpFileDownload', 'downloadAllAsync', 'CallHandler.create', '@HEAD', '@Url.config', 'create2()', 'SkipSSL', '460']
+        Transfer: ['MultipartPost', 'MultipartWriter', 'HttpFileDownload', 'downloadAllAsync'],
+        ProxySecurity: ['CallHandler.create', '@HEAD', '@Url.config', 'create2()', 'SkipSSL', '460'],
+        'advanced-usage': []
     };
     const cryptoTerms = {
         intro: ['DoCipher', 'CipherResult', 'AesGcm', 'AesCbc', 'AesPbe', 'AesLegacy', 'AesCipherResult', 'RestoreKey', 'PemUtils'],

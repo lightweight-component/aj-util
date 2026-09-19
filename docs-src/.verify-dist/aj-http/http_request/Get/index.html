@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-http - HTTP Method Helpers</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-http/http_request/Get-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-http
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/" selected>aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-http/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/aj-http/http_request/Base/">Lifecycle and Responses</a></li>
+                    <li><a href="/aj-http/http_request/Get/">HTTP Method Helpers</a></li>
+                    <li><a href="/aj-http/http_request/Transfer/">Uploads and Downloads</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity/">Proxy, Streams and TLS</a></li>
+                </ul>
+                
+            </menu>
+            <article class="aj-text">
+                <h1>GET, POST, PUT, DELETE and HEAD</h1>
+<p>All classes below belong to <code>com.ajaxjs.util.httpremote</code>. See <a href="/aj-http/http_request/Base/">lifecycle and errors</a> before using shortcuts: text/Map helpers do not enforce HTTP success, and do not expose a connection for explicit cleanup. Use <code>Request</code> when status, streaming or deterministic disconnection matters.</p>
+<h2>GET shortcuts</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.Get;
+import java.util.Map;
+
+String text = Get.text(&quot;https://example.com/&quot;);
+Map&lt;String, Object&gt; json = Get.api(&quot;https://example.com/api&quot;, connection -&gt; {
+    connection.setConnectTimeout(5_000);
+    connection.setReadTimeout(10_000);
+    connection.setRequestProperty(&quot;Accept&quot;, &quot;application/json&quot;);
+});
+Map&lt;String, String&gt; xml = Get.apiXml(&quot;https://example.com/data.xml&quot;,
+        connection -&gt; connection.setRequestProperty(&quot;Accept&quot;, &quot;application/xml&quot;));
+</code></pre>
+<p><code>Get.api(url, token)</code> adds <code>Authorization: Bearer &lt;token&gt;</code>. Bean variants are <code>Get.api(url, MyBean.class)</code> and overloads with a token or callback. Supply your actual bean class; non-success returns null. <code>new Get(url, callback)</code> sends immediately; there is no one-argument <code>Get(String)</code> constructor. For manual setup use <code>new Get(HttpMethod.GET, url)</code>.</p>
+<h2>POST and PUT</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.Post;
+import com.ajaxjs.util.httpremote.Put;
+import com.ajaxjs.util.httpremote.model.Response;
+import java.util.Collections;
+import java.util.Map;
+
+Map&lt;String, Object&gt; body = Collections.&lt;String, Object&gt;singletonMap(&quot;name&quot;, &quot;Ada&quot;);
+Map&lt;String, Object&gt; posted = Post.api(&quot;https://example.com/api&quot;, body);
+Map&lt;String, Object&gt; form = Post.form(&quot;https://example.com/form&quot;, body, null);
+Response updated = Put.api(&quot;https://example.com/api/1&quot;, body);
+</code></pre>
+<p><code>Post.api</code> returns a parsed Map; <code>Put.api</code> returns <code>Response</code>. Both have callback overloads. <code>new Post(url, data, contentType, callback)</code> and the equivalent <code>Put</code> constructor send immediately; a null content type defaults to JSON. Omit the callback with the three-argument constructor. Use <code>HttpConstant.CONTENT_TYPE_FORM</code> for form bodies. For uploads use <a href="/aj-http/http_request/advanced-usage/">MultipartPost</a>, not the regular Map body converter.</p>
+<h2>DELETE</h2>
+<p><code>Delete.api(url, token)</code> and <code>Delete.api(url, callback)</code> return a Map. Bean overloads take <code>(url, Class&lt;T&gt;, token/callback)</code>. There is no <code>Delete.api(url)</code> overload. For status/error handling use a manual <code>Request(HttpMethod.DELETE, url)</code> or <code>Delete(HttpMethod.DELETE, url)</code> lifecycle.</p>
+<h2>HEAD and connection helpers</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.Head;
+import com.ajaxjs.util.httpremote.model.Response;
+import java.net.HttpURLConnection;
+
+Head head = new Head(&quot;https://example.com/file.pdf&quot;);
+HttpURLConnection connection = head.init();
+try {
+    Response response = head.connect();
+    if (response.getEx() != null) {
+        throw new IllegalStateException(&quot;HEAD failed&quot;, response.getEx());
+    }
+    boolean missing = head.is404();
+    long size = head.getFileSize();
+    String location = head.get302redirect();
+} finally {
+    connection.disconnect();
+}
+</code></pre>
+<p><code>Head</code> disables automatic redirects unless the init callback overrides it. <code>get302redirect()</code> reads <code>Location</code> without checking for status 302. <code>getFileSize()</code> returns <code>long</code> but calls the int-based <code>getContentLength()</code>; unknown/too-large lengths can be <code>-1</code>. <code>is404()</code> can throw on I/O failure. These are <strong>instance</strong> methods, not static URL utilities.</p>
+<p><code>Head.map2header(map)</code>, <code>Head.json</code> and <code>Head.setBearerToken(token)</code> supply connection callbacks. Header values in <code>map2header</code> must be non-null. <code>HttpConstant.SET_USER_AGENT_DEFAULT</code> is another callback; set cookies or Referer with normal <code>setRequestProperty</code> rather than a nonexistent cookie utility.</p>
+<p>Source/tests: <code>Get</code>, <code>Post</code>, <code>Put</code>, <code>Delete</code>, <code>Head</code> and their <code>Test*</code> classes. Public-service tests illustrate calls, not guaranteed service availability or every edge case.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-http, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

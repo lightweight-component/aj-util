@@ -19,7 +19,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -38,7 +38,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                   | 🚀<a href="/aj-qrcode/">英语版本</a>
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-qrcode/aj-qrcode/" aria-label="Switch language to English" title="Switch to English">EN</button>
                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
@@ -68,10 +68,6 @@
     
     <option value="/aj-qrcode/cn/" selected>aj-qrcode</option>
     
-    <option value="/image-combiner/cn/">image-combiner</option>
-    
-    <option value="/aj-parent/cn/">aj-parent</option>
-    
 </select>
 
                 <ul>
@@ -81,11 +77,59 @@
                 </ul>
                 
                 
+                
+                <h3>二维码</h3>
+                <ul>
+                    <li><a href="/aj-qrcode/getting-started-cn/">快速开始</a></li>
+                    <li><a href="/aj-qrcode/rendering-cn/">PNG 与 SVG 渲染</a></li>
+                    <li><a href="/aj-qrcode/segments-cn/">文本、字节与分段</a></li>
+                    <li><a href="/aj-qrcode/advanced-cn/">高级编码与限制</a></li>
+                </ul>
+                
+                
+                
+                
             </menu>
             <article class="aj-text chinese">
                 <h1>aj-qrcode</h1>
-<p>本文档为 aj-qrcode 工程的首页，详细文档待补充。</p>
-<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-qrcode">源代码</a></p>
+<p><code>aj-qrcode</code> 是一个兼容 Java 8、无第三方运行时依赖的 QR Code Model 2 编码器。实现基于 <a href="https://github.com/nayuki/QR-Code-generator">Nayuki QR Code generator</a>，支持版本 1–40、四种纠错等级，并提供常规 API 与更紧凑的 <code>fast</code> 编码器。</p>
+<p>该模块只负责<strong>生成</strong>二维码，不提供扫描/解码、Web 响应输出、自动写入 SVG 文件或 Logo 叠加功能。</p>
+<h2>依赖</h2>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-qrcode&lt;/artifactId&gt;
+    &lt;version&gt;1.4&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2>文档导航</h2>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/aj-qrcode/getting-started-cn/">快速开始</a></td>
+<td>生成首个二维码、选择纠错等级、读取结果信息。</td>
+</tr>
+<tr>
+<td><a href="/aj-qrcode/rendering-cn/">PNG 与 SVG 渲染</a></td>
+<td>位图/矢量输出、颜色、安静区和安全写文件。</td>
+</tr>
+<tr>
+<td><a href="/aj-qrcode/segments-cn/">文本、字节与分段</a></td>
+<td>字节负载、数字/字母数字模式、ECI 和混合文本压缩。</td>
+</tr>
+<tr>
+<td><a href="/aj-qrcode/advanced-cn/">高级编码与限制</a></td>
+<td>优化分段、版本/掩码控制、fast 实现与异常。</td>
+</tr>
+</tbody>
+</table>
+<p>生成 PNG 请从<a href="/aj-qrcode/getting-started-cn/">快速开始</a>阅读；面向网页或文档输出请看 <a href="/aj-qrcode/rendering-cn/">PNG 与 SVG 渲染</a>。</p>
+<p><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-qrcode">源代码</a> · <a href="https://javadoc.io/doc/com.ajaxjs/aj-qrcode">Javadoc</a></p>
 
             </article>
         </div>

@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-ftp - 下载文件</title>
+        <meta name="description" content="Small Java utilities with many useful functions.  " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-ftp/download/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-ftp
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/" selected>aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/">aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-ftp/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                <h3>文件传输</h3>
+                <ul>
+                    <li><a href="/aj-ftp/upload-cn/">上传文件</a></li>
+                    <li><a href="/aj-ftp/download-cn/">下载文件</a></li>
+                </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1>下载文件</h1>
+<p><code>SimpleFtpClient.getFile(远端路径, 本地路径)</code> 使用 FTP <code>RETR</code> 命令获取一个远端文件。它以二进制模式传输，并避免失败传输破坏已有的本地目标文件。</p>
+<h2>基本下载</h2>
+<pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
+
+try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
+    ftp.login(&quot;reader&quot;, System.getenv(&quot;FTP_PASSWORD&quot;));
+    ftp.getFile(&quot;/releases/client-1.5.zip&quot;, &quot;C:/downloads/client-1.5.zip&quot;);
+}
+</code></pre>
+<p>远端路径由 FTP 服务端解释。本地目标文件的父目录必须已经存在，因为 aj-ftp 会在目标文件旁创建临时文件。请先创建目录：</p>
+<pre><code class="language-java">Path downloads = Paths.get(&quot;C:/downloads&quot;);
+Files.createDirectories(downloads);
+ftp.getFile(&quot;/releases/client.zip&quot;, downloads.resolve(&quot;client.zip&quot;).toString());
+</code></pre>
+<h2>安全发布本地文件</h2>
+<p>aj-ftp 不会直接写入最终目标。它会先向服务端查询文件大小，在目标文件的父目录中创建临时 <code>.part</code> 文件，再将远端内容流式写入临时文件。只有在数据流关闭且最终 FTP 响应成功后，临时文件才会移动到请求的目标路径。</p>
+<p>因此，中断或被拒绝的传输不会替换已有目标文件；失败时临时文件会被清理。最终移动会优先使用原子替换；当文件系统不支持原子移动时，则回退为普通替换。</p>
+<p>成功传输后，目标文件仍会被替换。建议使用带版本的目标文件名，或先下载至暂存目录，完成校验后再让其他进程使用。</p>
+<h2>文件不存在与未知大小</h2>
+<p>如果服务端拒绝获取文件、连接失败、无法创建本地临时文件，或不能发布已完成文件，<code>getFile</code> 会抛出 <code>IOException</code>。请在任务边界处理该异常，保留旧目标文件，等待重试成功后再更新。</p>
+<p>客户端会使用 <code>SIZE</code> 查询文件大小以记录传输进度。一些 FTP 服务端不会提供有效大小，传输仍可继续，但日志中的总大小未知。不要将进度日志视为完整性校验；FTP 本身不校验文件摘要，需要完整性保证时应从可信来源取得校验值。</p>
+<h2>UTF-8 文件名与超时</h2>
+<p>服务端支持 UTF-8 路径时，应在登录后、发送含非 ASCII 字符的请求前启用 UTF-8：</p>
+<pre><code class="language-java">ftp.login(user, password);
+ftp.enableUtf8();
+ftp.getFile(&quot;/发布/客户端.zip&quot;, &quot;C:/downloads/客户端.zip&quot;);
+</code></pre>
+<p>开始传输前配置连接和读取超时。读取超时过短可能在慢速网络上中断大文件，完全不设置超时则可能在网络故障后无限等待。</p>
+<pre><code class="language-java">ftp.setConnectTimeout(10_000);
+ftp.setReadTimeout(120_000);
+</code></pre>
+<h2>底层获取流</h2>
+<p>仅在需要自定义消费远端内容（例如解析远端文本文件）时使用 <code>get(远端路径)</code>。必须完整读取或关闭返回流，再调用 <code>completePendingCommand()</code>。</p>
+<pre><code class="language-java">ftp.binary();
+try (InputStream remote = ftp.get(&quot;/data/items.csv&quot;)) {
+    // 在此消费远端数据。
+}
+ftp.completePendingCommand();
+</code></pre>
+<p>高层 <code>getFile</code> 已处理这些步骤，是文件下载的首选。</p>
+<p>返回 <a href="/aj-ftp/cn/">aj-ftp 概览</a> 或继续阅读<a href="/aj-ftp/upload-cn/">上传文件</a>。</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-ftp，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

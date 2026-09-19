@@ -1,6 +1,7 @@
 ---
 title: HTTP 方法辅助类
 layout: layouts/aj-util-cn.njk
+alternate: /http_request/Get/
 ---
 
 # GET、POST、PUT、DELETE 和 HEAD

@@ -19,7 +19,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
             var _hmt = _hmt || [];
             (function() {
@@ -38,7 +38,7 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
                   
-                   | 🚀<a href="/aj-s3client/">英语版本</a>
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-s3client/" aria-label="Switch language to English" title="Switch to English">EN</button>
                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
                 </div>
                 <h1>
@@ -68,10 +68,6 @@
     
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
-    <option value="/image-combiner/cn/">image-combiner</option>
-    
-    <option value="/aj-parent/cn/">aj-parent</option>
-    
 </select>
 
                 <ul>
@@ -81,11 +77,125 @@
                 </ul>
                 
                 
+                
+                
+                <h3>S3 客户端</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4-cn/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2-cn/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories-cn/">厂商 Factory</a></li>
+                    <li><a href="/aj-s3client/api-cn/">API 与限制</a></li>
+                </ul>
+                
+                
+                
             </menu>
             <article class="aj-text chinese">
                 <h1>aj-s3client</h1>
-<p>本文档为 aj-s3client 工程的首页，详细文档待补充。</p>
-<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-s3client">源代码</a></p>
+<p><code>aj-s3client</code> 是一个面向 Java 8 及以上环境的轻量级 S3 兼容对象存储客户端，提供一组精简的存储桶和对象操作。它会根据所选厂商客户端使用 Signature Version 4（SigV4）或旧版 Signature Version 2（SigV2）对请求签名。</p>
+<blockquote>
+<p>本模块不是通用 AWS SDK；不实现分片上传、预签名 URL、对象元数据或 ACL 管理（Scaleway 上传 ACL 除外）、分页，也没有返回或保存对象字节的下载 API。</p>
+</blockquote>
+<h2>添加依赖</h2>
+<p>当前 POM 坐标为 <code>com.ajaxjs:aj-s3client:1.6</code>，并依赖 <code>com.ajaxjs:aj-net:2.1</code> 作为 HTTP 传输层。</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-s3client&lt;/artifactId&gt;
+    &lt;version&gt;1.6&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2>配置客户端</h2>
+<p>选择厂商实现后，为它设置 <code>Config</code>。端点必须是 HTTPS origin：可省略协议名，但不允许路径、用户信息、查询参数或片段。请勿提交或记录访问密钥与私钥。</p>
+<pre><code class="language-java">import com.ajaxjs.s3client.Config;
+import com.ajaxjs.s3client.factory.CloudflareR2;
+
+Config config = new Config();
+config.setEndPoint(&quot;&lt;account-id&gt;.r2.cloudflarestorage.com&quot;);
+config.setAccessKey(System.getenv(&quot;R2_ACCESS_KEY_ID&quot;));
+config.setSecretKey(System.getenv(&quot;R2_SECRET_ACCESS_KEY&quot;));
+config.setBucketName(&quot;reports&quot;);
+// Config 默认 region 为 &quot;auto&quot;，适合 R2。
+
+CloudflareR2 client = new CloudflareR2();
+client.setConfig(config);
+</code></pre>
+<p><code>bucketName</code> 用于只传对象键的便捷重载方法。存储桶名称不能包含 <code>/</code> 或 <code>\\</code>；对象键不能为空，且不能含控制字符。对象键会在签名和发送前按路径规则编码。</p>
+<h2>上传、列举和删除对象</h2>
+<p>通用操作只有在 HTTP 响应状态为 2xx 时才返回 <code>true</code>。请先读取待上传的字节；客户端不持有流，也未实现 <code>Closeable</code>。</p>
+<pre><code class="language-java">import java.nio.charset.StandardCharsets;
+
+boolean uploaded = client.putObject(
+        &quot;2026-09/summary.txt&quot;,
+        &quot;completed&quot;.getBytes(StandardCharsets.UTF_8));
+if (!uploaded) {
+    throw new IllegalStateException(&quot;Object upload was rejected&quot;);
+}
+
+String listXml = client.listBucket();
+boolean removed = client.deleteObject(&quot;2026-09/summary.txt&quot;);
+</code></pre>
+<p>目标不是默认存储桶时，使用包含存储桶名称的重载：</p>
+<pre><code class="language-java">boolean uploaded = client.putObject(&quot;archive&quot;, &quot;exports/report.csv&quot;, csvBytes);
+boolean deleted = client.deleteObject(&quot;archive&quot;, &quot;exports/report.csv&quot;);
+</code></pre>
+<p><code>listBucket()</code> 返回厂商的原始 XML；<code>listBucketXml()</code> 将 XML 转换为 <code>Map&lt;String, String&gt;</code>。<code>getObject(...)</code> 只发送已签名的 GET 请求并报告响应是否成功，<strong>不会</strong>返回对象内容或将其写入文件。可通过 <code>createBucket(name)</code> 和 <code>deleteBucket(name)</code> 创建、删除存储桶。</p>
+<h2>厂商客户端与签名方式</h2>
+<table>
+<thead>
+<tr>
+<th>客户端</th>
+<th>签名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CloudflareR2</code></td>
+<td>SigV4</td>
+<td>使用路径式对象 URL；<code>region</code> 默认值为 <code>auto</code>。</td>
+</tr>
+<tr>
+<td><code>Backblaze</code></td>
+<td>SigV4</td>
+<td>会将 <code>Host</code> 加入签名请求头；需配置厂商要求的区域。</td>
+</tr>
+<tr>
+<td><code>Scaleway</code></td>
+<td>SigV4</td>
+<td>每次上传都会添加并签名 <code>x-amz-acl: public-read</code>；需配置厂商要求的区域。</td>
+</tr>
+<tr>
+<td><code>AliyunOSS</code></td>
+<td>SigV2</td>
+<td>必须设置 <code>config.setRemark(&quot;OSS&quot;)</code>；使用虚拟主机式 URL。</td>
+</tr>
+<tr>
+<td><code>NeteaseOSS</code></td>
+<td>SigV2</td>
+<td>为兼容保留的旧客户端；必须设置 <code>config.setRemark(&quot;NOS&quot;)</code>，使用虚拟主机式 URL。</td>
+</tr>
+</tbody>
+</table>
+<p>对于 SigV4 客户端，若厂商不接受 <code>auto</code>，请将 <code>region</code> 设为其要求的值。SigV2 客户端同样要求 <code>remark</code>、访问密钥、私钥、端点和区域均为非空，并使用上表所列的前缀。支持范围仅限这些实现及其当前请求行为；上线前请针对所选服务验证凭据、端点格式、存储桶策略与区域要求。</p>
+<h2>文档目录</h2>
+<ul>
+<li><a href="/aj-s3client/signature-v4-cn/">Signature Version 4：请求构建与签名</a></li>
+<li><a href="/aj-s3client/signature-v2-cn/">Signature Version 2：旧版厂商行为</a></li>
+<li><a href="/aj-s3client/factories-cn/">厂商 Factory</a></li>
+<li><a href="/aj-s3client/api-cn/">API、URL 风格与功能限制</a></li>
+</ul>
+<h2>安全与运行说明</h2>
+<ul>
+<li>所有配置端点均强制使用 HTTPS；不要在底层传输层放宽 TLS 证书校验。</li>
+<li>应将凭据放在密钥管理服务或环境变量中。<code>Config</code> 是可变对象，应避免共享和日志输出。</li>
+<li><code>Scaleway.putObject</code> 会使上传的对象公开可读；如不希望公开，请选用 <code>CloudflareR2</code> 或其他符合策略的客户端。</li>
+<li>ETag 通常不保证是 MD5。只有旧版 NetEase 上传路径会将单段、未加密对象的 ETag 按 MD5 校验。</li>
+<li>厂商联调测试因需要私有凭据和远程资源而被禁用；签名与 URL 编码的单元测试可离线运行。</li>
+</ul>
+<h2>相关资源</h2>
+<ul>
+<li><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-s3client">源代码</a></li>
+</ul>
 
             </article>
         </div>

@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-http - Uploads and Downloads</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="/asset/css/docs-theme.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-http/http_request/Transfer-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-http
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/" selected>aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/">aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-http/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                <h3>HTTP Request</h3>
+                <ul>
+                    <li><a href="/aj-http/http_request/Base/">Lifecycle and Responses</a></li>
+                    <li><a href="/aj-http/http_request/Get/">HTTP Method Helpers</a></li>
+                    <li><a href="/aj-http/http_request/Transfer/">Uploads and Downloads</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity/">Proxy, Streams and TLS</a></li>
+                </ul>
+                
+                
+                
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1>Uploads and downloads</h1>
+<p>Use <code>MultipartPost</code> for <code>multipart/form-data</code> and <code>HttpFileDownload</code> for files received from an HTTP server. Both APIs stream data: they avoid first collecting an entire file in a Java byte array.</p>
+<h2>Multipart upload</h2>
+<p><code>MultipartPost.upload(...)</code> accepts a single map of text values and <code>File</code> values. The map must be non-empty. The callback is for connection configuration only; do not connect, read, or write in it.</p>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.MultipartPost;
+import com.ajaxjs.util.httpremote.model.Response;
+import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+Map&lt;String, Object&gt; parts = new LinkedHashMap&lt;&gt;();
+parts.put(&quot;title&quot;, &quot;Quarterly report&quot;);
+parts.put(&quot;document&quot;, new File(&quot;reports/q1.pdf&quot;));
+
+Response response = MultipartPost.upload(&quot;https://example.com/upload&quot;, parts, connection -&gt; {
+    connection.setConnectTimeout(5_000);
+    connection.setReadTimeout(30_000);
+    connection.setRequestProperty(&quot;Authorization&quot;, &quot;Bearer &quot; + token);
+});
+
+if (!response.isOk())
+    throw new IllegalStateException(&quot;Upload failed: &quot; + response.getHttpCode(), response.getEx());
+</code></pre>
+<p>For one file, use <code>uploadFile</code>. It supports <code>File</code>, <code>byte[]</code>, and <code>InputStream</code> input:</p>
+<pre><code class="language-java">Response response = MultipartPost.uploadFile(
+        &quot;https://example.com/avatar&quot;, &quot;avatar&quot;, &quot;me.png&quot;, imageBytes, null);
+
+try (InputStream content = Files.newInputStream(Paths.get(&quot;large-video.mp4&quot;))) {
+    // The supplied stream is not closed by MultipartPost; this try block owns it.
+    response = MultipartPost.uploadFile(
+            &quot;https://example.com/video&quot;, &quot;video&quot;, &quot;large-video.mp4&quot;, content, null);
+}
+</code></pre>
+<p>The helper creates a new boundary, applies the matching <code>Content-Type</code> after the callback, enables 8 KiB chunked streaming, closes the request output, reads/closes the response stream, and disconnects in <code>finally</code>. Redirects are deliberately disabled: automatically replaying a potentially large upload to an unreviewed destination is unsafe. A non-2xx status returns a failed <code>Response</code>; validation, callback, body-writing, and runtime errors can still throw.</p>
+<h2>MultipartWriter when an existing connection owns the stream</h2>
+<p><code>MultipartWriter</code> only serializes a complete multipart body. It does not create an HTTP connection, flush/close the output stream, or close a caller-supplied input stream. Set the request header from <code>getContentType()</code>.</p>
+<pre><code class="language-java">String boundary = &quot;upload-2026&quot;;
+MultipartWriter writer = new MultipartWriter(connection.getOutputStream(), boundary);
+connection.setRequestProperty(&quot;Content-Type&quot;, writer.getContentType());
+
+Map&lt;String, Object&gt; parts = new LinkedHashMap&lt;&gt;();
+parts.put(&quot;comment&quot;, &quot;hello&quot;);
+parts.put(&quot;file&quot;, new File(&quot;notes.txt&quot;));
+writer.write(parts);             // exactly one call writes the terminating boundary
+connection.getOutputStream().flush();
+</code></pre>
+<p>Each <code>write(...)</code> call ends the multipart body with the closing boundary. Put every field/file into one map and call it once; repeated calls cannot append another valid part. Boundaries must match <code>[A-Za-z0-9_-]{1,70}</code>. Text and headers use UTF-8; <code>null</code> text values become empty, CR/LF in names are rejected, and quotes/backslashes are escaped. Use dedicated byte-array or stream overloads when a file name is required; the map-key encoding used internally is not a public protocol.</p>
+<h2>Downloading a file</h2>
+<pre><code class="language-java">import com.ajaxjs.util.httpremote.HttpFileDownload;
+
+new HttpFileDownload(&quot;https://example.com/files/report.pdf&quot;, &quot;downloads/report.pdf&quot;)
+        .download();
+
+new HttpFileDownload(new String[] {
+        &quot;https://example.com/a.pdf&quot;,
+        &quot;https://example.com/b.pdf&quot;
+}, &quot;downloads&quot;).downloadAllAsync().join();
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>download()</code></td>
+<td>Downloads one URL on the calling thread.</td>
+</tr>
+<tr>
+<td><code>downloadAsync()</code></td>
+<td>Returns a future for one download.</td>
+</tr>
+<tr>
+<td><code>downloadAll()</code></td>
+<td>Downloads the supplied URLs in order.</td>
+</tr>
+<tr>
+<td><code>downloadAllAsync()</code></td>
+<td>Returns <code>CompletableFuture&lt;Void&gt;</code> for all queued downloads.</td>
+</tr>
+</tbody>
+</table>
+<p>Async work uses a shared four-thread daemon pool with an unbounded queue. Always <code>join</code>, <code>get</code>, or otherwise handle the returned future; <code>join()</code> reports a failed task as <code>CompletionException</code>. There is no public executor, cancellation policy, or returned filename list. Do not mutate the URL array passed to the batch constructor during use.</p>
+<h2>Target names, replacement, and trust boundaries</h2>
+<p>An explicit file target wins. For a directory target, the name priority is <code>Content-Disposition</code> (<code>filename*</code> first), URL path, then a generated fallback. Server/path names are reduced to a basename and control characters are removed. A String ending in <code>/</code> or <code>\\</code>, or an existing directory, is a directory target. A non-existing <code>Path</code> is treated as a file; a batch target is always a directory.</p>
+<p>Only HTTP/HTTPS URLs and 2xx results are accepted. The downloader uses fixed 10-second connect and 30-second read timeouts, follows redirects, streams to a temporary sibling file, then replaces the destination. It closes streams, disconnects, and attempts temporary cleanup. This reduces partial files but is not an atomic-move guarantee.</p>
+<p>There is no download-size cap, destination sandbox, or collision policy. Existing files can be overwritten and concurrent downloads resolving to the same name can race. Use a trusted destination directory and validate untrusted URLs/redirects to avoid SSRF or unwanted internal-network access.</p>
+<h2>Implementation notes</h2>
+<p>Regular <code>Request.setData(Map)</code> intentionally does not implement multipart conversion; it throws for multipart content type. Keeping body encoding in <code>MultipartWriter</code> and transport lifecycle in <code>MultipartPost</code> makes stream ownership explicit and prevents hidden in-memory buffering.</p>
+<p>Continue with <a href="/aj-http/http_request/ProxySecurity/">annotation proxy, streams and TLS</a>, or return to <a href="/aj-http/http_request/Base/">request lifecycle</a>.</p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-http, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

@@ -15,16 +15,8 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
-        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); });</script>
+        <script>AJUtils.initTheme(); AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });</script>
         <script>
-            // 获取用户的默认语言
-            var userLang = navigator.language || navigator.userLanguage;
-
-            // 检查是否为中文环境（包括简体和繁体）
-            if (userLang.startsWith('zh') && location.pathname.indexOf('cn') == -1) {
-                 confirm('欢迎！您可以改为访问中文内容。是否继续？') && location.assign('/{{ project }}/cn/');  // 如果是中文，则弹出提示
-            }
-
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -41,7 +33,7 @@
                     <a href="/">🏠 Home</a>
                     | ⚙️ Source:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
-                    | 🚀 <a href="/{{ project }}/cn/">Chinese Version</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="{% if alternate %}/{{ project }}{{ alternate }}{% else %}/{{ project }}/cn/{% endif %}" aria-label="Switch language to Chinese" title="切换至中文">中</button>
                     | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
                 </div>
                 <h1>
@@ -118,8 +110,38 @@
                 <ul>
                     <li><a href="/aj-http/http_request/Base/">Lifecycle and Responses</a></li>
                     <li><a href="/aj-http/http_request/Get/">HTTP Method Helpers</a></li>
-                    <li><a href="/aj-http/http_request/advanced-usage/">Uploads, Downloads and Proxies</a></li>
+                    <li><a href="/aj-http/http_request/Transfer/">Uploads and Downloads</a></li>
+                    <li><a href="/aj-http/http_request/ProxySecurity/">Proxy, Streams and TLS</a></li>
                 </ul>
+                {% endif %}
+                {% if project == "aj-qrcode" %}
+                <h3>QR Code</h3>
+                <ul>
+                    <li><a href="/aj-qrcode/getting-started/">Getting started</a></li>
+                    <li><a href="/aj-qrcode/rendering/">PNG and SVG rendering</a></li>
+                    <li><a href="/aj-qrcode/segments/">Text, bytes, and segments</a></li>
+                    <li><a href="/aj-qrcode/advanced/">Advanced encoding and limits</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-s3client" %}
+                <h3>S3 client</h3>
+                <ul>
+                    <li><a href="/aj-s3client/signature-v4/">Signature Version 4</a></li>
+                    <li><a href="/aj-s3client/signature-v2/">Signature Version 2</a></li>
+                    <li><a href="/aj-s3client/factories/">Provider factories</a></li>
+                    <li><a href="/aj-s3client/api/">API and limitations</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-ftp" %}
+                <h3>File transfer</h3>
+                <ul>
+                    <li><a href="/aj-ftp/upload/">Upload files</a></li>
+                    <li><a href="/aj-ftp/download/">Download files</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-json" %}
+                <h3>Learning JSON parsing</h3>
+                <ul><li><a href="/aj-json/parse/">Parse your first JSON</a></li><li><a href="/aj-json/how-it-works/">How the parser works</a></li></ul>
                 {% endif %}
             </menu>
             <article class="aj-text">
