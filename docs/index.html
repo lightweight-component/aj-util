@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="AJ-Utils — Lightweight Java 8 utility libraries.">
-    <meta name="keywords" content="AJ Utils, ajaxjs, java utilities, tools, helper, AJ Utilities,Java Utils,Documentation" />
+    <meta name="keywords" content="AJ Utils, ajaxjs, java utilities, tools, helper, AJ Utilities,Java Utils, Documentation" />
     <title>AJ-Utils | Lightweight Java utilities</title>
     <link rel="icon" type="image/png" href="https://framework.ajaxjs.com/aj-logo/logo.png">
     <link rel="stylesheet" href="https://framework.ajaxjs.com/static/font/font.css">
@@ -33,7 +33,7 @@
             <div class="nav-links"><a href="#modules"><span data-lang="zh">模块</span><span
                     data-lang="en">Modules</span></a><a href="#start"><span data-lang="zh">开始使用</span><span
                     data-lang="en">Get started</span></a></div>
-            <a class="docs-link" href="/aj-util/"><span data-lang="zh">阅读文档</span><span data-lang="en">Read docs</span></a>
+            <a class="docs-link" href="/aj-util/"><span data-lang="zh">文档</span><span data-lang="en">Read docs</span></a>
             <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme">☾</button>
             <button class="language-toggle" type="button" data-language-toggle aria-label="Switch language">EN</button>
         </div>
@@ -48,7 +48,7 @@
             <p class="intro"><span data-lang="zh">AJ-Utils 是一个面向 Java 8 的模块化工具库，坚持面向对象设计与高质量代码，提供通用、I/O、HTTP、密码学、FTP、S3 对象存储和二维码等能力。</span><span
                     data-lang="en">A modular Java 8 utility library built with object-oriented design and high-quality code, providing common helpers, I/O, HTTP, cryptography, FTP, S3-compatible storage, and QR codes.</span>
             </p>
-            <div class="actions"><a class="button primary" href="/aj-util/"><span data-lang="zh">阅读文档</span><span
+            <div class="actions"><a class="button primary" href="/aj-util/"><span data-lang="zh">文档</span><span
                     data-lang="en">Read the docs</span></a><a class="button" href="#start"><span data-lang="zh">开始使用</span><span
                     data-lang="en">Get started</span></a><a class="button"
                                                             href="https://github.com/lightweight-component/aj-util"
@@ -64,29 +64,29 @@
             <p class="section-lede"><span data-lang="zh">选择最贴合任务的组件，避免不必要的依赖。</span><span
                     data-lang="en">Use only the component you need and avoid unnecessary dependencies.</span></p>
             <div class="grid">
-                <a class="card" href="/aj-util/"><small>01 / CORE</small>
+                <a class="card" href="/aj-util/"><small>01 / CORE UTILITIES</small>
                     <h3>aj-util</h3>
-                    <p><span data-lang="zh">以面向对象设计组织的字符串、集合、日期、JSON、XML、I/O、反射等通用工具。</span><span data-lang="en">Object-oriented general utilities for strings, collections, dates, JSON, XML, I/O and reflection.</span>
+                    <p><span data-lang="zh">核心工具库，提供字符串、集合、日期、JSON、XML、I/O、反射与密码学等通用能力。</span><span data-lang="en">Core utilities for strings, collections, dates, JSON, XML, I/O, reflection and cryptography.</span>
                     </p></a>
-                <a class="card" href="/aj-ftp/"><small>02 / TRANSFER</small>
-                    <h3>aj-ftp</h3>
-                    <p><span data-lang="zh">支持上传、下载与进度追踪的轻量 FTP 客户端。</span><span data-lang="en">A lightweight FTP client with upload, download and progress tracking.</span>
+                <a class="card" href="/aj-http/"><small>02 / HTTP</small>
+                    <h3>aj-http</h3>
+                    <p><span data-lang="zh">基于 HttpURLConnection 的同步 HTTP 请求组件，支持常用请求、表单、JSON 与文件传输。</span><span data-lang="en">Synchronous HttpURLConnection-based requests, forms, JSON payloads and file transfer helpers.</span>
                     </p></a>
                 <a class="card" href="/aj-s3client/"><small>03 / STORAGE</small>
                     <h3>aj-s3client</h3>
-                    <p><span data-lang="zh">S3 兼容对象存储客户端。</span><span data-lang="en">A focused client for S3-compatible object storage.</span>
+                    <p><span data-lang="zh">轻量 S3 兼容对象存储客户端，覆盖 SigV2、SigV4 与多个厂商实现。</span><span data-lang="en">A focused S3-compatible storage client with SigV2, SigV4 and provider-specific implementations.</span>
                     </p></a>
-                <a class="card" href="/aj-qrcode/"><small>04 / ENCODE</small>
+                <a class="card" href="/aj-ftp/"><small>04 / FILE TRANSFER</small>
+                    <h3>aj-ftp</h3>
+                    <p><span data-lang="zh">面向纯 FTP 的轻量客户端，支持登录、上传、下载与传输进度。</span><span data-lang="en">A lightweight plain-FTP client for login, uploads, downloads and transfer progress.</span>
+                    </p></a>
+                <a class="card" href="/aj-qrcode/"><small>05 / QR CODE</small>
                     <h3>aj-qrcode</h3>
-                    <p><span data-lang="zh">支持 PNG、SVG 等格式的二维码生成组件。</span><span data-lang="en">QR code generation with PNG, SVG and other output formats.</span>
+                    <p><span data-lang="zh">二维码生成组件，支持 PNG、SVG 等多种输出格式。</span><span data-lang="en">QR-code generation with PNG, SVG and other output formats.</span>
                     </p></a>
-                <a class="card" href="/aj-util/cryptography/intro/"><small>05 / SECURITY</small>
-                    <h3>Cryptography</h3>
-                    <p><span data-lang="zh">支持 AES、DES、PBE、RSA 等加密与解密。</span><span data-lang="en">Cryptography helpers for AES, DES, PBE, RSA and more.</span>
-                    </p></a>
-                <a class="card" href="/aj-http/"><small>06 / NETWORK</small>
-                    <h3>aj-http</h3>
-                    <p><span data-lang="zh">简洁易用的 HTTP 请求组件。</span><span data-lang="en">A simple component for HTTP requests.</span>
+                <a class="card" href="/aj-image/"><small>06 / IMAGE</small>
+                    <h3>aj-image</h3>
+                    <p><span data-lang="zh">图像处理组件，提供图片合成、缩放、裁剪与格式处理等能力。</span><span data-lang="en">Image-processing helpers for composition, resizing, cropping and format handling.</span>
                     </p></a>
             </div>
         </div>
