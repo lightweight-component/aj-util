@@ -5,7 +5,7 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.ajaxjs/ajaxjs-util?label=Latest%20Release)](https://central.sonatype.com/artifact/com.ajaxjs/ajaxjs-util)
 ![Java Version](https://img.shields.io/badge/Java-8-blue)
-[![Javadoc](https://img.shields.io/badge/javadoc-1.3.8-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
+[![Javadoc](https://img.shields.io/badge/javadoc-1.3.9-brightgreen.svg?)](https://javadoc.io/doc/com.ajaxjs/ajaxjs-util )
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lightweight-component/aj-util)
 ![GitHub repo size](https://img.shields.io/github/repo-size/lightweight-component/aj-util)
@@ -44,7 +44,7 @@ AJ Utilities 是一个以 Java 8 为兼容基线的轻量级 Java 工具库。�
 <dependency>
     <groupId>com.ajaxjs</groupId>
     <artifactId>ajaxjs-util</artifactId>
-    <version>1.3.8</version>
+    <version>1.3.9</version>
 </dependency>
 ```
 
