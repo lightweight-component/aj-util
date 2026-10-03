@@ -41,7 +41,7 @@ Consult `aj-util/to_fix.md` before relying on edge cases.
 ## Cryptography
 
 Read [cryptography.md](cryptography.md) for current signatures and format/security boundaries. Prefer AesGcm; DoCipher takes transformation/key at construction and operation inputs per call. AES wrappers create a fresh engine per call, but result arrays/nonce holders are mutable and not copied.
-AesPbe uses PBKDF2-HMAC-SHA256 and AES-128-GCM, prepends its nonce, and requires external salt/iteration metadata. Rsa uses explicit OAEP-SHA256/MGF1-SHA256; only its protocol-specific OAEP helpers use SHA-1. AesLegacy explicitly uses AES/ECB/PKCS5Padding and seeded random key generation, not a portable password KDF.
+AesPbe uses PBKDF2-HMAC-SHA256 and AES-128-GCM, prepends its nonce, and requires external salt/iteration metadata. The key-bound Rsa defaults to explicit OAEP-SHA256/MGF1-SHA256; `Rsa.RSA_CIPHER_SHA1` is an explicit compatibility choice for protocols that require SHA-1 OAEP. AesLegacy explicitly uses AES/ECB/PKCS5Padding and seeded random key generation, not a portable password KDF.
 Removed Cryptography/KeyMgr APIs and DES/3DES helpers in test code are not public library APIs. Round trips do not prove security.
 Certificate parsing and validity-date checks are not trust-chain or hostname verification. getCert(InputStream) and RestoreKey.loadPrivateKey(InputStream) close the supplied stream.
 Never log keys, passwords, plaintext or full sensitive payloads.

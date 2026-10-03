@@ -14,6 +14,7 @@ import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.RandomTools;
 import com.ajaxjs.util.StringBytes;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.crypto.*;
@@ -69,6 +70,7 @@ public class DoCipher {
      * <p>The value may include the algorithm, operation mode and padding, for
      * example {@code AES/GCM/NoPadding}.</p>
      */
+    @Getter
     private final String algorithmName;
 
     /**
@@ -78,6 +80,7 @@ public class DoCipher {
      * {@link #algorithmName}. AES operations normally use a secret key, while
      * RSA operations normally use a public or private key.</p>
      */
+    @Getter
     private final Key key;
 
     /**
@@ -155,7 +158,7 @@ public class DoCipher {
     }
 
     /**
-     * Performs a cipher operation on UTF-8 text.
+     * Performs a cipher operation on a UTF-8 text.
      *
      * <p>The supplied string is converted to UTF-8 bytes and then delegated to
      * {@link #doCipher(int, byte[], AlgorithmParameterSpec, byte[])}.</p>

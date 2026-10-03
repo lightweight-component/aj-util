@@ -11,7 +11,7 @@ class TestPemUtils {
 
     @Test
     void convertsRsaKeysToRestorablePem() {
-        KeyPair pair = Rsa.generateKeyPair(2048);
+        KeyPair pair = RestoreKey.generateKeyPair(2048);
         String publicPem = PemUtils.publicKeyToPem(pair.getPublic());
         String privatePem = PemUtils.privateKeyToPem(pair.getPrivate());
 

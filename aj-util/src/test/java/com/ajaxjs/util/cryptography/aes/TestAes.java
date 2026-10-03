@@ -47,14 +47,14 @@ class TestAes {
 
     @Test
     void testPbeRoundTripAndRandomNonce() {
-        byte[] salt = DoCipher.randomBytes(AesPbe.PBE_SALT_LENGTH);
-        AesPbe aesPbe = new AesPbe("strong password", salt, AesPbe.MIN_PBE_ITERATIONS);
-        byte[] first = aesPbe.encrypt("secret");
-        byte[] second = aesPbe.encrypt("secret");
+byte[] salt = DoCipher.randomBytes(AesPbe.PBE_SALT_LENGTH);
+AesPbe aesPbe = new AesPbe("strong password", salt, AesPbe.MIN_PBE_ITERATIONS);
+byte[] first = aesPbe.encrypt("secret");
+byte[] second = aesPbe.encrypt("secret");
 
-        assertEquals(AesPbe.PBE_SALT_LENGTH, salt.length);
-        assertEquals("secret", aesPbe.decrypt(first));
-        assertFalse(Arrays.equals(first, second), "Each encryption must use a fresh GCM nonce");
+assertEquals(AesPbe.PBE_SALT_LENGTH, salt.length);
+assertEquals("secret", aesPbe.decrypt(first));
+assertFalse(Arrays.equals(first, second), "Each encryption must use a fresh GCM nonce");
     }
 
     @Test
@@ -104,7 +104,7 @@ class TestAes {
         String iv = "b/+OsOf6+y4Hl6RXJW+CjQ==";
         String ciphertext = "6fxmM2gjyAk5v9mzSnPXw3xv4WTYywHH/JK9A78Zb2K8i9kehzGLd3xalzx8qNgkZ/SG4/kfL8DgpvQBEoygi7K7YNguUW7HNYHkESUiGXId+DGpziBjmxmoPquFZ8N2XF71kn6MYfXVUiwxCHRu5YYlTbKr4IjA2xqKMgAhaK6YsyD1NE9iOH4eYnT9Ky7B54BW0yWVH3NFgkTmEBQTNg==";
         String decryptedText = new AesCbc(sessionKey).decrypt(ciphertext, iv);
-        // Add assertions to validate the decrypted text
+// Add assertions to validate the decrypted text
         System.out.println(decryptedText);
     }
 }

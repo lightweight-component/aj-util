@@ -86,7 +86,7 @@ try {
         intro: ['DoCipher', 'CipherResult', 'AesGcm', 'AesCbc', 'AesPbe', 'AesLegacy', 'AesCipherResult', 'RestoreKey', 'PemUtils'],
         flow: ['doCipherFromBase64', 'GCMParameterSpec', 'SecretKeyMgr', 'IllegalStateException', 'IllegalArgumentException', 'SHA1PRNG'],
         Cryptography: ['AesGcm', 'AesCbc', 'AesPbe', 'AesLegacy', 'AesCipherResult', 'getNonce()', 'PBKDF2WithHmacSHA256', '100,000', 'AES/ECB/PKCS5Padding'],
-        Rsa: ['Rsa.generateKeyPair', 'MGF1', '190', 'DoSignature', 'DoVerify', 'RestoreKey', 'PemUtils', 'PKCS#8', 'PKCS#1', 'CertificateUtils', 'deserializeToCerts']
+        Rsa: ['RestoreKey.generateKeyPair', 'new Rsa', 'MGF1', '190', 'DoSignature', 'DoVerify', 'RestoreKey', 'PemUtils', 'PKCS#8', 'PKCS#1', 'CertificateUtils', 'deserializeToCerts']
     };
     for (const suffix of ['', '-cn']) {
         for (const page of httpPages) {

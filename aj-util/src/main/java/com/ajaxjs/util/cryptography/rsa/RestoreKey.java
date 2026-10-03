@@ -20,10 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -72,6 +69,17 @@ import java.util.Objects;
  */
 public class RestoreKey {
     /**
+     * Base RSA key algorithm name.
+     *
+     * <p>This value is used with APIs such as
+     * {@link KeyPairGenerator#getInstance(String)} and
+     * {@link java.security.KeyFactory#getInstance(String)}.</p>
+     *
+     * <p>It is a key algorithm name, not a complete cipher transformation.</p>
+     */
+    static final String RSA = "RSA";// "RSA/ECB/PKCS1Padding"
+
+    /**
      * Restores an RSA public key from Base64 or PEM text.
      *
      * <p>The decoded key material must use the X.509 SubjectPublicKeyInfo
@@ -103,13 +111,13 @@ public class RestoreKey {
         byte[] bytes = decodePemOrBase64(key, "-----BEGIN PUBLIC KEY-----", "-----END PUBLIC KEY-----");
 
         try {
-            KeyFactory factory = KeyFactory.getInstance(Rsa.RSA);
+            KeyFactory factory = KeyFactory.getInstance(RSA);
 
             return factory.generatePublic(new X509EncodedKeySpec(bytes));
         } catch (InvalidKeySpecException e) {
             throw new IllegalArgumentException("Invalid RSA public key encoding. Expected X.509 SubjectPublicKeyInfo.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + Rsa.RSA, e);
+            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + RSA, e);
         }
     }
 
@@ -148,13 +156,13 @@ public class RestoreKey {
         byte[] bytes = decodePemOrBase64(key, "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
 
         try {
-            KeyFactory factory = KeyFactory.getInstance(Rsa.RSA);
+            KeyFactory factory = KeyFactory.getInstance(RSA);
 
             return factory.generatePrivate(new PKCS8EncodedKeySpec(bytes));
         } catch (InvalidKeySpecException e) {
             throw new IllegalArgumentException("Invalid RSA private key encoding. Expected PKCS#8.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + Rsa.RSA, e);
+            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + RSA, e);
         }
     }
 
@@ -271,5 +279,35 @@ public class RestoreKey {
         String fileContent = new FileHelper(filePath).getFileContent();
 
         return restorePrivateKey(fileContent);
+    }
+
+    /**
+     * Generates an RSA public/private key pair.
+     *
+     * <p>Supported key sizes are {@code 2048}, {@code 3072}, and
+     * {@code 4096} bits. The resulting {@link KeyPair} contains both the
+     * public key and its corresponding private key.</p>
+     *
+     * <p>The JCA provider supplies the secure random source used by
+     * {@link KeyPairGenerator} during key generation.</p>
+     *
+     * @param keySize the RSA modulus size in bits; must be {@code 2048},
+     *                {@code 3072}, or {@code 4096}
+     * @return the generated RSA key pair
+     * @throws IllegalArgumentException if {@code keySize} is unsupported
+     * @throws IllegalStateException    if the RSA key-pair generator is not available in the current runtime
+     */
+    public static KeyPair generateKeyPair(int keySize) {
+        if (keySize != 2048 && keySize != 3072 && keySize != 4096)
+            throw new IllegalArgumentException("RSA key size must be 2048, 3072, or 4096 bits: " + keySize);
+
+        try {
+            KeyPairGenerator generator = KeyPairGenerator.getInstance(RSA);
+            generator.initialize(keySize);
+
+            return generator.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(DoCipher.NO_SUCH_ALGORITHM + RSA, e);
+        }
     }
 }

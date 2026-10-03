@@ -14,6 +14,7 @@ import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.cryptography.DoCipher;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.*;
@@ -23,7 +24,7 @@ import java.util.Objects;
  * Verifies RSA digital signatures using a configured signature algorithm
  * and public key.
  *
- * <p>The default signature algorithm is {@link Rsa#SHA256_RSA}, which
+ * <p>The default signature algorithm is {@link DoSignature#SHA256_RSA}, which
  * typically represents {@code SHA256withRSA}. A different signature algorithm
  * may be supplied through the all-arguments constructor when compatibility
  * with another RSA signature scheme is required.</p>
@@ -64,10 +65,11 @@ public class DoVerify {
     /**
      * Signature algorithm used for verification.
      *
-     * <p>The default value is {@link Rsa#SHA256_RSA}. The value is passed
+     * <p>The default value is {@link DoSignature#SHA256_RSA}. The value is passed
      * directly to {@link Signature#getInstance(String)}.</p>
      */
-    private String algorithmName = Rsa.SHA256_RSA;
+    @Setter
+    private String algorithmName = DoSignature.SHA256_RSA;
 
     /**
      * Public key used to verify digital signatures.
@@ -93,7 +95,7 @@ public class DoVerify {
      *
      * <p>The supplied key is restored using
      * {@link RestoreKey#restorePublicKey(String)} with public-key mode enabled.
-     * The default signature algorithm {@link Rsa#SHA256_RSA} is used.</p>
+     * The default signature algorithm {@link DoSignature#SHA256_RSA} is used.</p>
      *
      * <p>The supported public-key encoding depends on
      * {@link RestoreKey#restorePublicKey(String)}. Typically, this includes X.509 SubjectPublicKeyInfo / PEM values using
@@ -119,12 +121,9 @@ public class DoVerify {
      * @param signatureBase64 the Base64-encoded signature
      * @return {@code true} if the signature is valid for the supplied data and public key; {@code false} otherwise
      * @throws NullPointerException     if {@code signatureBase64} is {@code null}
-     * @throws IllegalArgumentException if the Base64 signature is invalid,
-     *                                  the configured algorithm is invalid,
-     *                                  the public key is invalid, or required
-     *                                  verification data is missing
-     * @throws IllegalStateException    if the underlying signature engine
-     *                                  fails during verification
+     * @throws IllegalArgumentException if the Base64 signature is invalid, the configured algorithm is invalid,
+     *                                  the public key is invalid, or required verification data is missing
+     * @throws IllegalStateException    if the underlying signature engine fails during verification
      */
     public boolean verify(byte[] data, String signatureBase64) {
         Objects.requireNonNull(signatureBase64, "verify.signatureBase64");
@@ -190,38 +189,35 @@ public class DoVerify {
      * @return {@code true} if the signature is valid for the supplied data and
      * configured a public key; {@code false} if verification fails
      * because the signature does not match
-     * @throws IllegalArgumentException if the algorithm name is missing or
-     *                                  unsupported, the public key is invalid,
-     *                                  {@code data} is {@code null}, or
-     *                                  {@code signatureData} is {@code null}
-     * @throws IllegalStateException    if the signature engine fails while
-     *                                  processing or verifying the signature
+     * @throws IllegalArgumentException if the algorithm name is missing or unsupported, the public key is invalid,
+     *                                  {@code data} is {@code null}, or {@code signatureData} is {@code null}
+     * @throws IllegalStateException    if the signature engine fails while processing or verifying the signature
      */
-    public boolean verify(byte[] data, byte[] signatureData) {
-        if (ObjectHelper.isEmptyText(algorithmName))
-            throw new IllegalArgumentException("Signature algorithm is required.");
+public boolean verify(byte[] data, byte[] signatureData) {
+    if (ObjectHelper.isEmptyText(algorithmName))
+        throw new IllegalArgumentException("Signature algorithm is required.");
 
-        if (data == null)
-            throw new IllegalArgumentException("Data to verify is required.");
+    if (data == null)
+        throw new IllegalArgumentException("Data to verify is required.");
 
-        if (signatureData == null)
-            throw new IllegalArgumentException("Signature data is required.");
+    if (signatureData == null)
+        throw new IllegalArgumentException("Signature data is required.");
 
-        if (publicKey == null)
-            throw new IllegalArgumentException("Public key is required.");
+    if (publicKey == null)
+        throw new IllegalArgumentException("Public key is required.");
 
-        try {
-            Signature signature = Signature.getInstance(algorithmName);
-            signature.initVerify(publicKey);
-            signature.update(data);
+    try {
+        Signature signature = Signature.getInstance(algorithmName);
+        signature.initVerify(publicKey);
+        signature.update(data);
 
-            return signature.verify(signatureData);
-        } catch (SignatureException e) {
-            throw new IllegalStateException("Signature verification failed.", e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
-        } catch (InvalidKeyException e) {
-            throw new IllegalArgumentException("Invalid Public Key", e);
-        }
+        return signature.verify(signatureData);
+    } catch (SignatureException e) {
+        throw new IllegalStateException("Signature verification failed.", e);
+    } catch (NoSuchAlgorithmException e) {
+        throw new IllegalArgumentException(DoCipher.NO_SUCH_ALGORITHM + algorithmName, e);
+    } catch (InvalidKeyException e) {
+        throw new IllegalArgumentException("Invalid Public Key", e);
     }
+}
 }

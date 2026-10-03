@@ -16,6 +16,12 @@
 - Describe observable operation results precisely. In particular, distinguish a successful HTTP status from returning downloaded bytes, persisted files, or a provider-level business outcome.
 - Keep English and Chinese module pages structurally aligned, including provider-support tables and security warnings.
 
+## Cryptography API
+
+- `com.ajaxjs.util.cryptography.rsa.Rsa` is the current key-bound RSA cipher. Do not document or reintroduce the removed `RsaDefault` or the former stateful `Rsa` API.
+- Generate key pairs with `RestoreKey.generateKeyPair(int)`. For ordinary text transport, encrypt with a public-key `Rsa`, store or send `CipherResult.toBase64()`, and decrypt that Base64 value with a private-key `Rsa`.
+- The default `Rsa` transformation is OAEP SHA-256 with MGF1 SHA-256. Use `Rsa.RSA_CIPHER_SHA1` only when an external protocol explicitly requires the compatibility mode; RSA remains for short values, not bulk payloads.
+
 ## Validation
 
 - From `docs-src`, run `npm test` after documentation or layout changes.

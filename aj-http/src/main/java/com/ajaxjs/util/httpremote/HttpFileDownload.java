@@ -329,7 +329,6 @@ public class HttpFileDownload {
      * Maps common HTTP media types to filename extensions.
      */
     private static String extensionFromContentType(String contentType) {
-
         if (ObjectHelper.isEmptyText(contentType))
             return ".bin";
 

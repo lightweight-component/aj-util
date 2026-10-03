@@ -12,4 +12,11 @@ public class AesCipherResult extends CipherResult {
     @Getter
     @Setter
     private CipherResult nonce;
+
+    /**
+     * associatedData
+     */
+    @Getter
+    @Setter
+    private CipherResult aad;
 }

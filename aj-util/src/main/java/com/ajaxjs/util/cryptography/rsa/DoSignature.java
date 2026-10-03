@@ -14,6 +14,7 @@ import com.ajaxjs.util.Base64Utils;
 import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.cryptography.DoCipher;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.*;
@@ -54,13 +55,23 @@ import java.util.Objects;
 @AllArgsConstructor
 public class DoSignature {
     /**
+     * RSA digital-signature algorithm using SHA-256.
+     *
+     * <p>This value is intended for the JCA {@link Signature} API and is
+     * independent of the RSA encryption transformation used by this
+     * class.</p>
+     */
+    static final String SHA256_RSA = "SHA256withRSA";
+
+    /**
      * Signature algorithm used by this instance.
      *
      * <p>Typical RSA signature algorithms include {@code SHA256withRSA} and
      * {@code SHA512withRSA}. The exact set of supported algorithms depends on
      * the installed JCA security providers.</p>
      */
-    private String algorithmName = Rsa.SHA256_RSA;
+    @Setter
+    private String algorithmName = SHA256_RSA;
 
     /**
      * RSA private key used to generate digital signatures.
@@ -97,7 +108,7 @@ public class DoSignature {
      * {@link RestoreKey#restorePrivateKey(String)} explicitly provides PKCS#1
      * conversion support.</p>
      *
-     * @param privateKeyStr the Base64- or PEM-encoded RSA private key
+     * @param privateKeyStr the Base64- or PEM-encoded an RSA private key
      * @throws NullPointerException     if {@code privateKeyStr} is {@code null}
      * @throws IllegalArgumentException if the private-key encoding is invalid or cannot be restored as an RSA private key
      * @throws RuntimeException         if the RSA key factory algorithm is unavailable
@@ -116,7 +127,7 @@ public class DoSignature {
      * @param data the text to sign
      * @return the raw binary signature bytes
      * @throws IllegalArgumentException if {@code data} is {@code null}, the configured algorithm is unavailable, or the private key is invalid
-     * @throws IllegalStateException    if the underlying signature operation  fails
+     * @throws IllegalStateException    if the underlying signature operation fails
      */
     public byte[] sign(String data) {
         return sign(data.getBytes(StandardCharsets.UTF_8));

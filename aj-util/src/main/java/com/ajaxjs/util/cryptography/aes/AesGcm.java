@@ -197,6 +197,9 @@ public class AesGcm extends DoCipher {
         AesCipherResult ar = new AesCipherResult(result.getResult());
         ar.setNonce(new CipherResult(nonce));
 
+        if (associatedData != null)
+            ar.setAad(new CipherResult(associatedData));
+
         return ar;
     }
 
