@@ -1,5 +1,6 @@
 package com.ajaxjs.s3client;
 
+import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.date.DateTools;
 import com.ajaxjs.util.httpremote.Delete;
 import com.ajaxjs.util.httpremote.Get;
@@ -35,7 +36,7 @@ public abstract class BaseS3ClientSigV2 extends BaseS3Client {
         validateConfiguration(false);
         validateBucketName(bucketName);
         String now = DateTools.nowGMTDate();
-        String data = "PUT\n" + getCanonicalResource(now, bucketName, "");
+        String data = "PUT\n" + getCanonicalResource(now, bucketName, CommonConstant.EMPTY_STRING);
         String url = getFullEndPoint(bucketName);
 
         return check(new Put(url, null, HttpConstant.FILE_TYPE, setRequestHead(now, data)).getResp());
@@ -49,7 +50,7 @@ public abstract class BaseS3ClientSigV2 extends BaseS3Client {
         validateConfiguration(false);
         validateBucketName(bucketName);
         String now = DateTools.nowGMTDate();
-        String data = "DELETE\n" + getCanonicalResource(now, bucketName, "");
+        String data = "DELETE\n" + getCanonicalResource(now, bucketName, CommonConstant.EMPTY_STRING);
         String url = getFullEndPoint(bucketName);
 
         return check(new Delete(url, setRequestHead(now, data)).getResp());
