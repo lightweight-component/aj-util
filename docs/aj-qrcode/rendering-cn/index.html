@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-qrcode" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-qrcode">aj-qrcode</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-qrcode/cn/">首页</a>
@@ -90,16 +109,17 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>PNG 与 SVG 渲染</h1>
+                <h1 id="search-png-与-svg-渲染">PNG 与 SVG 渲染</h1>
 <p><code>Utils.toImage(qr, scale, border)</code> 将 <code>QrCode</code> 渲染为 <code>BufferedImage</code>。<code>scale</code> 是每模块像素边长，必须大于零；<code>border</code> 是四周浅色安静区的模块数，必须非负。通常建议使用四模块边框。</p>
 <pre><code class="language-java">QrCode qr = QrCode.encodeText(&quot;Invoice #2026-031&quot;, Ecc.QUARTILE);
 BufferedImage image = Utils.toImage(qr, 8, 4, 0xFFFFFF, 0x17365D);
 Utils.writePng(image, &quot;invoice-qr.png&quot;);
 </code></pre>
 <p>颜色使用 <code>0xRRGGBB</code> 形式的 24 位值，应保证足够对比度。<code>writePng()</code> 内部调用 <code>ImageIO.write()</code>，可能抛出 <code>IOException</code>；输出路径应由应用自行选择、校验和授权。</p>
-<h2>SVG</h2>
+<h2 id="search-svg">SVG</h2>
 <p><code>toSvgString()</code> 返回 XML 字符串而不是自动写文件。SVG 可在任意缩放下保持模块锐利，适合文档和浏览器资源。</p>
 <pre><code class="language-java">import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

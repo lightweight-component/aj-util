@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>DoCipher and CipherResult</h1>
+                <h1 id="search-docipher-and-cipherresult">DoCipher and CipherResult</h1>
 <p><code>new DoCipher(transformation, Key)</code> retains configuration, not input or a JCE cipher engine. Every operation creates a new <code>Cipher</code>. There are no mode/data setters or no-argument <code>doCipher()</code> in the current API.</p>
 <pre><code class="language-java">import com.ajaxjs.util.cryptography.CipherResult;
 import com.ajaxjs.util.cryptography.DoCipher;
@@ -153,7 +173,7 @@ CipherResult decrypted = cipher.doCipherFromBase64(
 String plaintext = decrypted.toUtf8();
 </code></pre>
 <p>The nonce above belongs to <strong>one encryption only</strong>. Use <a href="/aj-util/cryptography/Cryptography/">AesGcm</a> for automatic nonce generation. Generic <code>DoCipher</code> does not package or return provider-generated IVs; specify required parameters and store them yourself.</p>
-<h2>Inputs, outputs and errors</h2>
+<h2 id="search-inputs-outputs-and-errors">Inputs, outputs and errors</h2>
 <ul>
 <li><code>doCipher(int, byte[], AlgorithmParameterSpec, byte[])</code> handles raw bytes; the String overload encodes UTF-8. <code>doCipherFromBase64(...)</code> decodes binary input first. Pass null AAD for algorithms without AAD support.</li>
 <li><code>CipherResult.getResult()</code> returns raw bytes; <code>toBase64()</code> and uppercase <code>toHex()</code> encode binary ciphertext. <code>toUtf8()</code> is for decrypted UTF-8 plaintext, not arbitrary ciphertext.</li>
@@ -162,7 +182,7 @@ String plaintext = decrypted.toUtf8();
 <li>Unsupported transformations, invalid keys/parameters, block length, padding and GCM authentication failures are wrapped as <code>IllegalArgumentException</code> with cause. Authentication failure must abort processing; never accept unauthenticated output or fall back to a weaker mode.</li>
 </ul>
 <p>Unlike the old stateful API, <code>DoCipher</code> and AES wrappers create a fresh engine per call and retain only key/configuration. Do not infer a blanket thread-safety guarantee for caller-supplied keys, mutable result holders or arrays. There is no automatic key destruction; control key lifetime and do not log secrets.</p>
-<h2>SecretKeyMgr</h2>
+<h2 id="search-secretkeymgr">SecretKeyMgr</h2>
 <p><code>getSecretKey(&quot;AES&quot;, bits, secureRandom)</code> generates a random key. Positive sizes initialize the generator explicitly; zero <strong>or negative</strong> sizes fall through to provider defaults in the current body (do not rely on negative sizes being rejected). <code>getSecretKey(SecureRandom)</code> selects AES-128. Normal raw AES key lengths are 16/24/32 bytes, with provider validation during use.</p>
 <p><code>getSecretKey(algorithm, KeySpec)</code> delegates to <code>SecretKeyFactory</code>; <code>getSecretKey(KeySpec)</code> selects <code>PBKDF2WithHmacSHA256</code>. For raw AES bytes use <code>new SecretKeySpec(bytes, &quot;AES&quot;)</code> or an AES wrapper, not a password string pretending to be a key. <code>getSecretKeyAsStr(algorithm, bits, random)</code> <strong>generates another new key</strong> and returns its Base64 encoding; it does not encode a previously generated key. Non-exportable keys cannot be encoded this way.</p>
 <p><code>getRandom(algorithm, text)</code> / <code>getRandom(text)</code> (default <code>SHA1PRNG</code>) call <code>SecureRandom.setSeed</code> with UTF-8 text. This supplements state: it is <strong>not</strong> a portable deterministic password KDF. Use <code>AesPbe</code> for password-based encryption. <code>DoCipher.randomBytes(length)</code> uses <code>RandomTools.RANDOM</code> (<code>SecureRandom</code>) and requires a positive length; unrelated <code>RandomTools</code> convenience strings/numbers are not substitutes.</p>

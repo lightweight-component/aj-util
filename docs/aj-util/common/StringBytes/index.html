@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,12 +148,13 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>StringBytes</h1>
+                <h1 id="search-stringbytes">StringBytes</h1>
 <p><code>com.ajaxjs.util.StringBytes</code> converts text and bytes. Choose the constructor matching the direction: <code>String</code> for <code>getBytes(Charset)</code> / <code>getUTF8_Bytes()</code>, and <code>byte[]</code> for <code>getString(Charset)</code> / <code>getUTF8_String()</code>.</p>
 <p>The no-argument <code>getBytes()</code> / <code>getString()</code> and null charset use the platform default, reported by <code>showPlatformDefaultCharset()</code>. Prefer an explicit charset in protocols and files.</p>
-<h2>Hexadecimal</h2>
+<h2 id="search-hexadecimal">Hexadecimal</h2>
 <p><code>bytesToHex(byte[])</code> returns uppercase hex. <code>hexToBytes(String)</code> accepts upper/lowercase hex, returns empty bytes for empty input, and rejects odd length or non-hex characters with <code>IllegalArgumentException</code>. Null hex inputs are rejected.</p>
 <pre><code class="language-java">import com.ajaxjs.util.StringBytes;
 import com.ajaxjs.util.ObjectHelper;

@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-image - Image utilities and output</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="/asset/main.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                    | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-image/utilities-cn/" aria-label="Switch language to Chinese" title="切换至中文">中</button>
+                    | <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-image
+                </h1>
+                <h3>Java Tools Documentation</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <label for="project-select">Project</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/">aj-util</option>
+    
+    <option value="/aj-http/">aj-http</option>
+    
+    <option value="/aj-s3client/">aj-s3client</option>
+    
+    <option value="/aj-ftp/">aj-ftp</option>
+    
+    <option value="/aj-json/">aj-json</option>
+    
+    <option value="/aj-image/" selected>aj-image</option>
+    
+    <option value="/aj-qrcode/">aj-qrcode</option>
+    
+</select>
+
+                <section class="docs-search" data-doc-search data-project="aj-image" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-image">aj-image</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-image/">Home</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                
+                <h3>Image processing</h3>
+                <ul>
+                    <li><a href="/aj-image/composition/">Image composition</a></li>
+                    <li><a href="/aj-image/tutorial/">Composition tutorial and examples</a></li>
+                    <li><a href="/aj-image/utilities/">Image utilities and output</a></li>
+                </ul>
+                
+                
+            </menu>
+            <article class="aj-text">
+                <h1 id="search-image-utilities-and-output">Image utilities and output</h1>
+<h2 id="search-tool-overview">Tool overview</h2>
+<p>The <code>com.ajaxjs.image.utils</code> package also provides standalone image-processing tools.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>What it does</th>
+<th>Important details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ImageConvert</code></td>
+<td>Converts encoded formats such as JPG, PNG, GIF, and BMP; returns file bytes, writes to a stream, or saves a file; supports encoding quality</td>
+<td>Call <code>setImageFormat()</code> first; the filename extension does not select the format. JPG and BMP output do not preserve alpha</td>
+</tr>
+<tr>
+<td><code>ImageEffect</code></td>
+<td>Scaling by a factor, resizing, thumbnails, rounded corners, canvas padding, and square canvases</td>
+<td>Read the result through <code>getOutput()</code>; effects do not implicitly chain. Padding is black; square canvases keep the source at the top-left</td>
+</tr>
+<tr>
+<td><code>ImageMatrix</code></td>
+<td>Extracts raw RGB, BGR, RGBA, or grayscale bytes; crops three-channel matrices; creates images from matrices</td>
+<td>Raw pixels are not PNG/JPG file bytes. <code>cutMatrix()</code> only supports RGB/BGR. NV21 is not implemented; <code>createRGBAImage()</code> currently drops alpha</td>
+</tr>
+<tr>
+<td><code>ImageTypeHandler</code></td>
+<td>Reads dimensions and format information; decodes the whole image or a region, optionally using a reader-supported pixel type</td>
+<td>Requires complete encoded bytes and a format name. Reads only the first frame and cannot be reused after decoding. Manage it with try-with-resources</td>
+</tr>
+<tr>
+<td><code>ImageEncoder</code></td>
+<td>Encodes a <code>BufferedImage</code> into file bytes or a stream, or saves already encoded bytes</td>
+<td>Shared by conversion and composition. <code>writeFile()</code> takes encoded bytes; it does not convert an image itself</td>
+</tr>
+<tr>
+<td><code>ImageBase</code></td>
+<td>Common image loading, copying, and processed-result output</td>
+<td>Abstract base class, not instantiated directly. <code>ImageConvert</code>, <code>ImageEffect</code>, and <code>ImageMatrix</code> accept in-memory images, encoded bytes, local files, or HTTP/HTTPS URLs</td>
+</tr>
+</tbody>
+</table>
+<h3 id="search-example-convert-a-format">Example: convert a format</h3>
+<p>The result contains a complete PNG file, suitable for saving or uploading, not a raw pixel array.</p>
+<pre><code class="language-java">import com.ajaxjs.image.model.constant.ImageFormat;
+import com.ajaxjs.image.utils.ImageConvert;
+
+byte[] pngBytes = new ImageConvert(&quot;input.jpg&quot;)
+        .setImageFormat(ImageFormat.PNG)
+        .convert();
+</code></pre>
+<h3 id="search-example-thumbnail-followed-by-rounded-corners">Example: thumbnail followed by rounded corners</h3>
+<p>Each effect reads the image supplied to its constructor. To apply another effect to the previous result, create a new processor with <code>getOutput()</code> instead of directly chaining effect methods.</p>
+<pre><code class="language-java">import com.ajaxjs.image.model.constant.ImageFormat;
+import com.ajaxjs.image.utils.ImageEffect;
+import java.awt.image.BufferedImage;
+
+BufferedImage thumbnail = new ImageEffect(&quot;input.jpg&quot;)
+        .thumbnail(320, 240, 2.0)
+        .getOutput();
+
+new ImageEffect(thumbnail)
+        .roundCorner(24)
+        .outputAsFile(ImageFormat.PNG, 1.0f, &quot;thumbnail.png&quot;);
+</code></pre>
+<p>Thumbnails never enlarge the source and may be smaller than the requested bounds. Parent directories must already exist when saving files. For network input, restrict image sources and sizes yourself; current network-loading entry points have no configurable timeout or authentication.</p>
+<h2 id="search-behaviour-to-know">Behaviour to know</h2>
+<ul>
+<li><code>resize()</code> preserves indexed palettes and transparency. Aspect-ratio fitting keeps each dimension at least one pixel. Unrecognizable image bytes or HTTP image content are rejected during loading.</li>
+<li><code>getMatrix(MatType.RGBA)</code> returns straight RGBA values, including for premultiplied input, so RGB is not darkened a second time.</li>
+<li><code>ImageConvert.setQuality(null)</code> uses the encoder's default quality; explicit quality must be between <code>0</code> and <code>1</code>. <code>0</code> is a valid explicit quality value.</li>
+<li>Thumbnails stay inside the requested size without enlarging the source. Extreme aspect ratios use a centred crop. <code>scale()</code> preserves transparency when the source has an alpha channel.</li>
+<li>Region decoding returns an image sized to the selected region, including when an output pixel type is specified.</li>
+<li><code>getMatrix(MatType.BGR)</code> returns blue, green, red bytes in that order. NV21 conversion is not implemented and throws <code>UnsupportedOperationException</code>.</li>
+</ul>
+<h2 id="search-output-and-failure-handling">Output and failure handling</h2>
+<p>Conversion, effect output, and composition share the same image encoder for JPG, PNG, GIF, and BMP. Transparent input is explicitly converted to opaque RGB for JPG and BMP so that encoder differences between Java versions do not change the result.</p>
+<p>File output first completes encoding, then writes a temporary sibling file and replaces the destination. Encoding or temporary-write failures do not truncate an existing file. Replacement prefers an atomic move and falls back to a regular move when unsupported; failure guarantees for that fallback depend on the file system.</p>
+<p><code>combine()</code> publishes its result only after every drawing step succeeds. A later failed composition preserves the previous successful image; a failed first composition cannot be exported as a partial image. Encoding errors retain their original cause for diagnosis.</p>
+<p>Blur is computed into a separate image without changing the input pixels. Repeated drawing and tiling do not progressively blur the source.</p>
+<p><code>ImageTypeHandler</code> releases its reader and input stream after decoding succeeds or fails. For metadata-only use, use try-with-resources to release resources even without decoding. <code>ImageConvert.convert(OutputStream)</code> leaves the caller's output stream open.</p>
+<p>Use the module tests as small runnable examples of these behaviours.</p>
+<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-image">Source code</a></p>
+<p>Related: <a href="/aj-image/composition/">Image composition</a> · <a href="/aj-image/">Home</a></p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-image, a part of <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> open source. Mail:
+            frank@ajaxjs.com, visit <a href="https://blog.csdn.net/zhangxin09" target="_blank">my blog(In Chinese)</a>.
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

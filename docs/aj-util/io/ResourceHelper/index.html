@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>ResourceHelper</h1>
+                <h1 id="search-resourcehelper">ResourceHelper</h1>
 <p><code>ResourceHelper</code> locates resources on the Java classpath. Constructing it without a target class resolves names from
 the classpath root; constructing it with a class follows <code>Class.getResource</code> rules.</p>
 <pre><code class="language-java">String text = new ResourceHelper(&quot;config/application.properties&quot;).toString();
@@ -142,7 +162,7 @@ InputStream stream = new ResourceHelper(&quot;config.properties&quot;, MyService
 <p><code>getStream()</code> works for resources packaged in JAR files. <code>getPath(boolean)</code> and <code>list(Consumer&lt;File&gt;)</code> require a
 filesystem-backed resource and may not work for <code>jar:</code> URLs. <code>getJarDir()</code> returns the directory containing the running
 JAR when that location is available. Close streams returned by <code>getStream()</code> yourself.</p>
-<h2>Choosing a resource name</h2>
+<h2 id="search-choosing-a-resource-name">Choosing a resource name</h2>
 <p>The two constructors intentionally use different lookup roots. This is often the cause of a resource that exists in
 <code>src/test/resources</code> but cannot be found at runtime.</p>
 <table>
@@ -184,7 +204,7 @@ String rootText = new ResourceHelper(&quot;/test.txt&quot;, MyIoTest.class).toSt
 <p><code>getStream()</code>, <code>toString()</code> and <code>getProperties()</code> throw <code>IllegalArgumentException</code> when the resource is absent. This
 is deliberate: a required packaged configuration should fail at the lookup site instead of producing a later
 <code>NullPointerException</code>.</p>
-<h2>Reading text and properties</h2>
+<h2 id="search-reading-text-and-properties">Reading text and properties</h2>
 <p><code>toString()</code> delegates to <code>DataReader</code>, so it decodes with UTF-8, normalizes lines to the current platform separator,
 and closes its stream. <code>getProperties()</code> loads a standard Java <code>Properties</code> file and also closes its stream.</p>
 <pre><code class="language-java">Properties db = new ResourceHelper(&quot;test-demo.properties&quot;).getProperties();
@@ -194,7 +214,7 @@ String json = new ResourceHelper(&quot;fixtures/request.json&quot;).toString();
 </code></pre>
 <p>Use <code>getStream()</code> when another API needs the stream, for example an image decoder or certificate parser. In that case
 the caller owns closure; do not pass a stream to an API and then close it before that API has consumed it.</p>
-<h2>Filesystem and packaged-resource boundaries</h2>
+<h2 id="search-filesystem-and-packaged-resource-boundaries">Filesystem and packaged-resource boundaries</h2>
 <p>Classpath lookup returns a URL, not necessarily a <code>File</code>. A development build usually exposes <code>file:</code> URLs, while a
 deployed application commonly exposes <code>jar:</code> URLs. <code>getPath(true)</code> converts only the former into a usable filesystem
 path; it is therefore appropriate for tests or an unpacked application, not for a resource that must work from inside
@@ -202,7 +222,7 @@ an executable JAR. <code>list(Consumer&lt;File&gt;)</code> has the same <code>fi
 <p><code>getJarDir()</code> is a deployment helper for locating files next to the running artifact, not a way to locate a resource
 inside that artifact. <code>getClassName(File, String)</code> turns a <code>.class</code> file name plus a package prefix into a binary class
 name, and rejects non-<code>.class</code> inputs.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>The class does not copy resources to a temporary directory. It keeps the classpath abstraction intact and exposes a
 stream first; this is why JAR resources work reliably with <code>getStream()</code> but not with file-oriented APIs. Prefer a
 stream unless an external API truly requires a <code>Path</code> or <code>File</code>.</p>

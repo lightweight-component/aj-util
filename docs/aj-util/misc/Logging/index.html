@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,11 +148,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Logging utilities</h1>
+                <h1 id="search-logging-utilities">Logging utilities</h1>
 <p>The <code>com.ajaxjs.util.log</code> package contains small helpers intended to be used with SLF4J.</p>
-<h2>Trace context</h2>
+<h2 id="search-trace-context">Trace context</h2>
 <p><code>Trace</code> defines MDC keys <code>traceId</code>, <code>bizAction</code>, and <code>ENABLE_OPERATION_LOG</code>. <code>saveLogToMDC()</code> appends content only when <code>ENABLE_OPERATION_LOG</code> is already present in MDC.</p>
 <pre><code class="language-java">MDC.put(Trace.ENABLE_OPERATION_LOG, &quot;Start: &quot;);
 Trace.saveLogToMDC(&quot;created order; &quot;);
@@ -141,7 +161,7 @@ String operationLog = MDC.get(Trace.ENABLE_OPERATION_LOG);
 MDC.remove(Trace.ENABLE_OPERATION_LOG);
 </code></pre>
 <p>MDC is generally thread-local. Propagate or clear it explicitly when work crosses executor threads or request boundaries.</p>
-<h2>TextBox</h2>
+<h2 id="search-textbox">TextBox</h2>
 <p><code>TextBox</code> formats diagnostic key-value data using box-drawing characters and ANSI colors.</p>
 <pre><code class="language-java">String output = new TextBox()
         .boxStart(&quot;Request&quot;)
@@ -150,7 +170,7 @@ MDC.remove(Trace.ENABLE_OPERATION_LOG);
         .boxEnd();
 </code></pre>
 <p>It wraps long lines by default, counts common CJK characters as double width, and truncates a single value at 1,500 characters. <code>setWrapLongLines(false)</code> switches to truncation. ANSI output is appropriate for capable terminals, not for every structured log destination.</p>
-<h2>EnableOperationLog</h2>
+<h2 id="search-enableoperationlog">EnableOperationLog</h2>
 <p><code>@EnableOperationLog</code> is a runtime method annotation with an optional title:</p>
 <pre><code class="language-java">@EnableOperationLog(&quot;Create order&quot;)
 public void createOrder() {

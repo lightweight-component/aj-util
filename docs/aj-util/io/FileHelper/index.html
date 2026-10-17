@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,13 +148,14 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>FileHelper Tutorial</h1>
+                <h1 id="search-filehelper-tutorial">FileHelper Tutorial</h1>
 <p>FileHelper is a file operation utility class that provides methods for reading, writing, copying, moving, deleting, and
 manipulating files and directories. This class uses Java NIO Path and Files API for efficient file operations, and all
 methods throw UncheckedIOException for IO errors.</p>
-<h2>Main Features</h2>
+<h2 id="search-main-features">Main Features</h2>
 <ol>
 <li><strong>Multiple Construction Methods</strong>: Supports creating instances with Path, File, and String paths</li>
 <li><strong>File Read/Write Operations</strong>: Supports reading and writing text and byte content</li>
@@ -144,8 +164,8 @@ methods throw UncheckedIOException for IO errors.</p>
 <li><strong>File Chunking</strong>: Supports large file chunking and merging</li>
 <li><strong>Chainable Calls</strong>: Supports method chaining</li>
 </ol>
-<h2>Basic Usage</h2>
-<h3>1. Creating Instances</h3>
+<h2 id="search-basic-usage">Basic Usage</h2>
+<h3 id="search-1-creating-instances">1. Creating Instances</h3>
 <pre><code class="language-java">// Create with path string
 FileHelper helper1 = new FileHelper(&quot;path/to/file.txt&quot;);
 
@@ -157,22 +177,22 @@ FileHelper helper2 = new FileHelper(path);
 File file = new File(&quot;path/to/file.txt&quot;);
 FileHelper helper3 = new FileHelper(file);
 </code></pre>
-<h3>2. File Reading</h3>
+<h3 id="search-2-file-reading">2. File Reading</h3>
 <pre><code class="language-java">// Read file text content
 String content = new FileHelper(&quot;example.txt&quot;).getFileContent();
 
 // Read file byte content
 byte[] bytes = new FileHelper(&quot;example.txt&quot;).readFileBytes();
 </code></pre>
-<h3>3. File Writing</h3>
+<h3 id="search-3-file-writing">3. File Writing</h3>
 <pre><code class="language-java">// Write string content to file
 new FileHelper(&quot;output.txt&quot;).writeFileContent(&quot;Hello World&quot;);
 </code></pre>
-<h3>4. File Deletion</h3>
+<h3 id="search-4-file-deletion">4. File Deletion</h3>
 <pre><code class="language-java">// Delete file or directory (recursively delete directories)
 new FileHelper(&quot;file-or-directory&quot;).delete();
 </code></pre>
-<h3>5. Directory Operations</h3>
+<h3 id="search-5-directory-operations">5. Directory Operations</h3>
 <pre><code class="language-java">// List directory contents
 List&lt;String&gt; contents = new FileHelper(&quot;directory&quot;).listDirectoryContents();
 
@@ -182,7 +202,7 @@ new FileHelper(&quot;new/directory/path&quot;).createDirectory();
 // Get one path's metadata size (not recursive directory content size)
 long size = new FileHelper(&quot;file-or-directory&quot;).getFileSize();
 </code></pre>
-<h3>6. File Copying and Moving</h3>
+<h3 id="search-6-file-copying-and-moving">6. File Copying and Moving</h3>
 <pre><code class="language-java">// Copy file or directory
 new FileHelper(&quot;source.txt&quot;)
     .setTarget(&quot;destination.txt&quot;)
@@ -193,7 +213,7 @@ new FileHelper(&quot;old-location.txt&quot;)
     .setTarget(&quot;new-location.txt&quot;)
     .moveTo();
 </code></pre>
-<h3>7. File Chunking Operations</h3>
+<h3 id="search-7-file-chunking-operations">7. File Chunking Operations</h3>
 <pre><code class="language-java">// Chunk file (1MB per chunk)
 new FileHelper(&quot;large-file.zip&quot;).chunkFile(1024 * 1024);
 
@@ -201,13 +221,13 @@ new FileHelper(&quot;large-file.zip&quot;).chunkFile(1024 * 1024);
 Path[] chunks = {Paths.get(&quot;file-1&quot;), Paths.get(&quot;file-2&quot;)};
 new FileHelper(&quot;merged-file&quot;).mergeFile(chunks);
 </code></pre>
-<h2>Chainable Call Example</h2>
+<h2 id="search-chainable-call-example">Chainable Call Example</h2>
 <pre><code class="language-java">// Chainable call example
 FileHelper helper = new FileHelper(&quot;input.txt&quot;);
 helper.setTarget(&quot;backup.txt&quot;).copyTo();
 helper.setTarget(&quot;moved.txt&quot;).moveTo();
 </code></pre>
-<h2>Exception Handling</h2>
+<h2 id="search-exception-handling">Exception Handling</h2>
 <p>All IO operations throw <code>UncheckedIOException</code> when errors occur, which can be handled with try-catch:</p>
 <pre><code class="language-java">try {
     String content = new FileHelper(&quot;nonexistent.txt&quot;).getFileContent();
@@ -215,7 +235,7 @@ helper.setTarget(&quot;moved.txt&quot;).moveTo();
     System.err.println(&quot;File operation failed: &quot; + e.getMessage());
 }
 </code></pre>
-<h3>Notes</h3>
+<h3 id="search-notes">Notes</h3>
 <ol>
 <li>A target path must be set before copy and move operations; otherwise <code>IllegalStateException</code> is thrown.</li>
 <li>Directory copies reject symbolic links and targets located inside the source tree.</li>

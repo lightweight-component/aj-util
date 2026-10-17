@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,11 +148,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>MapTool</h1>
+                <h1 id="search-maptool">MapTool</h1>
 <p><code>MapTool</code> contains static operations for serializing simple string-keyed maps, parsing key/value inputs, converting map values, and flattening nested maps. XML conversion is not part of <code>MapTool</code>; use <code>XmlHelper</code> for XML work.</p>
-<h2>Join map entries</h2>
+<h2 id="search-join-map-entries">Join map entries</h2>
 <pre><code class="language-java">Map&lt;String, Object&gt; values = new LinkedHashMap&lt;&gt;();
 values.put(&quot;name&quot;, &quot;Ada&quot;);
 values.put(&quot;page&quot;, null);
@@ -142,7 +162,7 @@ String queryLike = MapTool.join(values); // name=Ada&amp;page=
 String custom = MapTool.join(values, &quot;;&quot;, value -&gt; String.valueOf(value));
 </code></pre>
 <p><code>join</code> writes <code>key=value</code> pairs in the map's iteration order. Its default delimiter is <code>&amp;</code>; null values become empty strings. It does not URL-encode keys or values—apply <code>UrlCodec</code> first when producing an HTTP query string.</p>
-<h2>Create maps from key/value input</h2>
+<h2 id="search-create-maps-from-key-value-input">Create maps from key/value input</h2>
 <pre><code class="language-java">Map&lt;String, Object&gt; fromPairs = MapTool.toMap(
         new String[]{&quot;id=42&quot;, &quot;page=3&quot;}, Integer::valueOf);
 
@@ -152,7 +172,7 @@ Map&lt;String, Object&gt; fromColumns = MapTool.toMap(
 Map&lt;String, String&gt; query = MapTool.toMap(&quot;name=Ada+Lovelace&amp;token=x%3D%3D&quot;);
 </code></pre>
 <p>For array pairs, only the first <code>=</code> separates key and value; <code>null</code> entries are ignored, and an entry without <code>=</code> is rejected. Parallel key/value arrays must have the same length. The query-string overload decodes form encoding through <code>UrlCodec</code>; duplicate keys are overwritten by later values.</p>
-<h2>Convert and flatten values</h2>
+<h2 id="search-convert-and-flatten-values">Convert and flatten values</h2>
 <pre><code class="language-java">Map&lt;String, Integer&gt; lengths = MapTool.as(values, value -&gt; value.toString().length());
 
 Map&lt;String, Object&gt; nested = new LinkedHashMap&lt;&gt;();
@@ -161,7 +181,7 @@ Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
 // {server.host=localhost}
 </code></pre>
 <p><code>as</code> converts non-null values with the supplied function and preserves null values. <code>flatten</code> joins nesting levels with <code>.</code>. A literal <code>.</code> in a source key is escaped as <code>\\.</code>, and a literal backslash is escaped as <code>\\\\</code>; empty nested maps remain values. Circular map references are rejected with <code>IllegalArgumentException</code>.</p>
-<h2>Detailed parsing behavior</h2>
+<h2 id="search-detailed-parsing-behavior">Detailed parsing behavior</h2>
 <p>The two <code>toMap</code> families intentionally differ when malformed input is encountered:</p>
 <pre><code class="language-java">Map&lt;String, Object&gt; strict = MapTool.toMap(
         new String[]{&quot;token=header.payload=signature==&quot;}, null);
@@ -182,7 +202,7 @@ Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
 </code></pre>
 <p><code>flatten(null)</code> returns an empty <code>LinkedHashMap</code>. Lists, arrays, primitive values, and null are leaves; only <code>Map</code>
 values are traversed.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p><code>join</code> is a direct iteration over <code>map.keySet()</code>, so its output order is the concrete map's iteration order. Use a
 <code>LinkedHashMap</code> when stable serialized order matters. The parser splits at most once (<code>split(&quot;=&quot;, 2)</code>), which is why
 Base64 values, JWT-like strings, and signatures containing <code>=</code> remain intact.</p>

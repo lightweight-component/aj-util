@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-ftp" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-ftp">aj-ftp</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-ftp/">Home</a>
@@ -82,11 +101,12 @@
                 </ul>
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Upload files</h1>
+                <h1 id="search-upload-files">Upload files</h1>
 <p><code>SimpleFtpClient.upload(localPath, remotePath)</code> sends one local file with the FTP <code>STOR</code> command. It selects binary mode, streams the file to the data connection, closes that connection, and checks the final FTP reply before reporting success.</p>
-<h2>Basic upload</h2>
+<h2 id="search-basic-upload">Basic upload</h2>
 <pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
 
 try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
@@ -95,14 +115,14 @@ try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21))
 }
 </code></pre>
 <p>The first argument must identify a readable local file. The second is the server-side filename and path as understood by the FTP server. Ensure the destination directory already exists and that the account has write permission; <code>upload</code> does not create remote directories.</p>
-<h2>Paths, names, and encoding</h2>
+<h2 id="search-paths-names-and-encoding">Paths, names, and encoding</h2>
 <p>Use <code>/</code> in remote paths unless the target server documents a different convention. On a server that supports UTF-8, call <code>enableUtf8()</code> after login and before sending non-ASCII path names:</p>
 <pre><code class="language-java">ftp.login(&quot;deploy&quot;, password);
 ftp.enableUtf8();
 ftp.upload(&quot;C:/exports/季度报告.zip&quot;, &quot;/incoming/季度报告.zip&quot;);
 </code></pre>
 <p>If the server rejects <code>OPTS UTF8 ON</code>, <code>enableUtf8()</code> throws <code>IOException</code>; do not assume a different encoding is safe without confirming the server's configuration.</p>
-<h2>Completion and failure handling</h2>
+<h2 id="search-completion-and-failure-handling">Completion and failure handling</h2>
 <p>An FTP transfer has a data connection and a final control-channel reply. <code>upload</code> handles both: it closes the data stream and calls <code>completePendingCommand()</code> internally. A return from <code>upload</code> therefore means the client received a successful final reply, not merely that it finished reading the local file.</p>
 <p><code>IOException</code> can indicate an unreadable local file, failed data connection, permission problem, lost connection, or negative FTP reply. Treat it as an incomplete upload. The server may retain a partial remote file, so use a remote temporary name and rename it only after upload succeeds when consumers must never see partial content:</p>
 <pre><code class="language-java">String finalName = &quot;/releases/app.zip&quot;;
@@ -115,13 +135,13 @@ try (SimpleFtpClient ftp = new SimpleFtpClient(host, 21)) {
 }
 </code></pre>
 <p><code>rename</code> needs server-side permission and may not be atomic on every FTP server. Clean up failed temporary uploads according to the server's retention policy.</p>
-<h2>Progress and timeouts</h2>
+<h2 id="search-progress-and-timeouts">Progress and timeouts</h2>
 <p>The built-in <code>ProgressListener</code> logs byte counts through SLF4J while copying data. It is not an application callback API. Configure your SLF4J backend if transfer progress should be retained or displayed.</p>
 <p>Set appropriate timeouts before long-running work. <code>setConnectTimeout</code> controls new socket connections; <code>setReadTimeout</code> controls socket reads. A timeout must account for the expected file size and network speed:</p>
 <pre><code class="language-java">ftp.setConnectTimeout(10_000);
 ftp.setReadTimeout(120_000);
 </code></pre>
-<h2>Low-level upload streams</h2>
+<h2 id="search-low-level-upload-streams">Low-level upload streams</h2>
 <p>Use <code>put(remotePath)</code> only when custom streaming is required. The caller owns the returned stream and must close it, then call <code>completePendingCommand()</code>; otherwise a successful byte write can be mistaken for a completed upload.</p>
 <pre><code class="language-java">ftp.binary();
 try (OutputStream remote = ftp.put(&quot;/incoming/data.bin&quot;)) {

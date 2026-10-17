@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-s3client" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-s3client">aj-s3client</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-s3client/">Home</a>
@@ -84,9 +103,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Provider factories</h1>
+                <h1 id="search-provider-factories">Provider factories</h1>
 <p>The <code>com.ajaxjs.s3client.factory</code> package contains concrete clients, not a factory-method API. Instantiate the provider class directly, create <code>Config</code>, and call <code>setConfig</code>.</p>
 <table>
 <thead>
@@ -130,15 +150,15 @@
 </tr>
 </tbody>
 </table>
-<h2>CloudflareR2</h2>
+<h2 id="search-cloudflarer2">CloudflareR2</h2>
 <p>Use this class for the module's default path-style SigV4 flow. All bucket methods use <code>https://endpoint/bucket</code>; all object methods append an encoded key. It has no provider-specific ACL or Host override.</p>
-<h2>Backblaze</h2>
+<h2 id="search-backblaze">Backblaze</h2>
 <p><code>Backblaze</code> is <code>CloudflareR2</code> with <code>isSetHost</code> enabled. Its signing builder includes <code>host</code> and the request callback sends the same header. Set the provider region explicitly. Do not use this subclass merely to force a Host header for another service unless that service's exact signature requirements have been validated.</p>
-<h2>Scaleway</h2>
+<h2 id="search-scaleway">Scaleway</h2>
 <p><code>Scaleway.putObject</code> is materially different from the other SigV4 uploads: it always sets <code>x-amz-acl: public-read</code>, includes that header in the canonical signature, and makes the uploaded object publicly readable if the provider honors the canned ACL. This policy is per upload and cannot be disabled through <code>Config</code>. Select another client when public-read is not acceptable.</p>
-<h2>AliyunOSS and NeteaseOSS</h2>
+<h2 id="search-aliyunoss-and-neteaseoss">AliyunOSS and NeteaseOSS</h2>
 <p>These classes use bucket-as-host addressing, so the configured endpoint is transformed to <code>https://{bucket}.{endpoint}</code>. Set <code>remark</code> to the exact factory prefix (<code>OSS</code> or <code>NOS</code>). <code>NeteaseOSS</code> is explicitly legacy compatibility code; its strict MD5 ETag check is only suitable for the single-part, unencrypted request path implemented here.</p>
-<h2>Selecting a client</h2>
+<h2 id="search-selecting-a-client">Selecting a client</h2>
 <p>Select by the service and its required request model, not just by a claim of “S3 compatibility.” In particular, confirm signing version, endpoint URL shape, required region, Host-header behavior, canned-ACL policy, and whether virtual-hosted bucket DNS is available. This package does not contain a generic AWS S3 client class or an automatic provider detector.</p>
 
             </article>

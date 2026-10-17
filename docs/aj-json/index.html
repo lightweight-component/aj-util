@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-json" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-json">aj-json</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-json/">Home</a>
@@ -76,22 +95,23 @@
                 
                 
                 
+                
                 <h3>Learning JSON parsing</h3>
                 <ul><li><a href="/aj-json/parse/">Parse your first JSON</a></li><li><a href="/aj-json/how-it-works/">How the parser works</a></li></ul>
                 
             </menu>
             <article class="aj-text">
-                <h1>aj-json: a JSON parser made for learning</h1>
+                <h1 id="search-aj-json-a-json-parser-made-for-learning">aj-json: a JSON parser made for learning</h1>
 <p>aj-json is a small project created to learn how JSON parsing works and to explore a small piece of compiler theory. It is <strong>not a production-ready JSON library</strong>. Treat it as readable study material: run it, change it, and follow the code from characters to Java objects.</p>
 <p>For production systems, choose a maintained JSON library such as Jackson, Gson, or JSON-B. Do not use aj-json for untrusted input, compatibility-sensitive APIs, or data that must be handled without surprises.</p>
-<h2>What you can learn here</h2>
+<h2 id="search-what-you-can-learn-here">What you can learn here</h2>
 <p>When a program receives JSON text, it needs to answer two simple questions:</p>
 <ol>
 <li>What does each piece of text mean? For example, <code>{</code> starts an object and <code>true</code> is a boolean.</li>
 <li>In what order may these pieces appear? For example, an object key must be followed by <code>:</code> and then a value.</li>
 </ol>
 <p>aj-json separates those jobs. <code>Lexer</code> reads the characters and produces small labels called tokens. <code>FMS</code> (the state machine) reads those tokens in order and builds ordinary Java values.</p>
-<h2>Important limits</h2>
+<h2 id="search-important-limits">Important limits</h2>
 <ul>
 <li>There is no supported object-to-JSON serializer in the current source tree.</li>
 <li>The parser is intentionally small, not a complete implementation or a compatibility promise for the JSON standard.</li>
@@ -100,7 +120,7 @@
 <li>Numbers become <code>Integer</code>, <code>Long</code>, or <code>Double</code>; this is unsuitable when exact decimal precision matters.</li>
 <li>It is not designed, tested, or hardened for production traffic or hostile input.</li>
 </ul>
-<h2>Start here</h2>
+<h2 id="search-start-here">Start here</h2>
 <p>Add the dependency only if you are following the example or reading the source:</p>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
@@ -109,7 +129,7 @@
 &lt;/dependency&gt;
 </code></pre>
 <p>Then continue to <a href="/aj-json/parse/">parse your first JSON</a>. When you are ready to see the moving parts, read <a href="/aj-json/how-it-works/">how the parser works</a>.</p>
-<h2>Source and references</h2>
+<h2 id="search-source-and-references">Source and references</h2>
 <ul>
 <li><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-json">Source code</a></li>
 <li><a href="https://central.sonatype.com/artifact/com.ajaxjs/aj-json">Maven Central</a></li>

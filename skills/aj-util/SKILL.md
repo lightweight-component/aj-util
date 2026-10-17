@@ -1,6 +1,6 @@
 ---
 name: aj-util
-description: Use and maintain the aj-util Java 8 utility library. Trigger for questions, implementation, debugging, review, tests, or documentation involving com.ajaxjs.util APIs, including strings, conversion, JSON/XML, URL encoding, date/time, reflection, I/O/ZIP, hashing, random values, and cryptography. HTTP client APIs in com.ajaxjs.util.httpremote belong to the separate aj-http skill.
+description: Use and maintain the aj-util Java 8 utility library and its aj-image module. Trigger for implementation, debugging, review, tests, or documentation involving com.ajaxjs.util or com.ajaxjs.image APIs. HTTP client APIs in com.ajaxjs.util.httpremote belong to the separate aj-http skill.
 ---
 
 # AJ Util
@@ -11,6 +11,7 @@ that may lag behind the implementation.
 ## Locate the project
 
 1. Find the repository directory containing `aj-util/` and `skills/`; `aj-util/pom.xml` is the module POM.
+   For `com.ajaxjs.image`, use `aj-image/` instead and follow the image guidance below; do not apply aj-util-only paths or test commands to it.
 2. Read the target class under `aj-util/src/main/java/com/ajaxjs/util` before proposing code.
 3. Read the matching English and Chinese pages under `docs-src/src` when changing public behavior or examples.
 4. Read nearby tests under `aj-util/src/test/java`; add a regression test for every bug fix.
@@ -25,6 +26,7 @@ for package navigation and ask for the project or dependency version when exact 
 - For refactored AES/RSA, signatures, key restoration and certificates, read [references/cryptography.md](references/cryptography.md).
 - For `com.ajaxjs.util.httpremote`, use [AJ HTTP](../aj-http/SKILL.md): source is in `aj-http/`, documentation in `docs-src/src/aj-http/`, not this module.
 - For implementation, testing, and documentation conventions, read [references/workflow.md](references/workflow.md).
+- For `aj-image` APIs, utilities, legacy-demo migration, or its bilingual documentation, read [references/image.md](references/image.md) and the module's `aj-image/AGENTS.md` when available. Keep image-specific guidance scoped to that module.
 
 Load only the references relevant to the task. For cross-package reviews or broad changes, read the module map, contracts and workflow, plus cryptography when applicable.
 

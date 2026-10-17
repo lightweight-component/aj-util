@@ -1,6 +1,7 @@
 package com.ajaxjs.image.utils;
 
-import com.ajaxjs.image.constant.ImageInfo;
+import com.ajaxjs.image.model.constant.ImageInfo;
+import lombok.Getter;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -10,146 +11,170 @@ import javax.imageio.stream.MemoryCacheImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URLConnection;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
- * 图像格式处理和信息提取工具类 - 提供对图像文件的高效解析、格式转换和区域解码功能
- * 主要作用
- * 1. 图像信息获取
- *
- *     无需完全解码图像即可获取基本信息
- *     提取图像格式、尺寸、MIME类型等元数据
- *     支持各种常见图像格式（JPEG、PNG、GIF等）
- *
- * 2. 智能图像解码
- *
- *     支持按指定区域解码图像（只解码感兴趣的部分）
- *     可以转换目标图像类型（如转为特定的 BufferedImage.TYPE）
- *     节省内存，提高处理效率
- *
- * 3. 格式转换支持
- *
- *     在解码过程中可以指定目标图像类型
- *     支持将图像转换为不同的颜色模型和数据格式
- *     便于后续的图像处理操作
- *
- * 4. 资源管理
- *
- *     自动管理图像读取器资源
- *     正确关闭输入流，防止内存泄漏
- *     实现了高效的缓存机制
- *
- * 应用场景
- *
- *     大图像处理：只需处理图像部分区域时，避免全图加载
- *     格式标准化：将不同格式图像统一转换为目标格式
- *     图像预览：快速获取图像基本信息用于显示
- *     批量处理：高效处理大量图像文件
- *
- * 技术优势
- *
- *     使用 Java I/O API 的高级特性，性能优异
- *     支持渐进式解码，内存占用低
- *     提供灵活的解码参数配置
- *
- * 这是一个专门为图像处理优化的工具类，特别适合需要高性能图像处理的应用场景。
+ * 读取图片尺寸、格式信息，并按完整区域或指定区域解码第一帧。
+ * <p>构造时通过格式名选择 ImageIO 读取器并读取头部，调用 read 时才解码像素。
+ * 可指定目标像素类型，但具体支持范围由读取器决定。</p>
+ * <p>read 完成后会释放读取器，实例按一次性读取使用；不要复用同一实例多次读取，
+ * 也不要在多个线程间共享。只读取元数据时，请使用 try-with-resources 或主动 close。</p>
  */
-public class ImageTypeHandler {
+public class ImageTypeHandler implements Closeable {
+    /**
+     * 构造阶段从图片头部取得的信息；MIME 类型按传入后缀推测。
+     */
+    @Getter
     ImageInfo imageInfo;
 
+    /**
+     * 输入的完整图片文件字节，保存调用方数组引用，不应在读取期间修改。
+     */
     byte[] imgBytes;
 
+    /**
+     * 本次图片格式对应的读取器；完成一次 read 后会被释放。
+     */
     private final ImageReader imageReader;
 
+    /**
+     * 包装输入字节的内存缓存流，供读取器定位图片数据。
+     */
     private MemoryCacheImageInputStream imgInput;
 
+    /**
+     * 使用已知的图片格式名读取头部信息。
+     *
+     * @param imgBytes 完整编码图片字节，不是像素矩阵
+     * @param suffix   ImageIO 支持的格式名或后缀，例如 png、jpg，不带点号
+     * @throws IllegalStateException 找不到对应格式的读取器时抛出
+     * @throws RuntimeException      读取图片头部失败时抛出
+     */
     public ImageTypeHandler(byte[] imgBytes, String suffix) {
-        this.imgBytes = imgBytes;
-        // 取图像基本信息，检查图像数据有效性
-        Iterator<ImageReader> it = ImageIO.getImageReadersByFormatName(suffix);
-
-        if (it.hasNext())
-            imageReader = it.next();
-        else
-            throw new IllegalStateException(String.format("invalid suffix %s", suffix));
-
-        if (imageReader.getInput() == null) {
-            imgInput = new MemoryCacheImageInputStream(new ByteArrayInputStream(imgBytes));
-            imageReader.setInput(imgInput, true, true);
-        }
+        this.imgBytes = Objects.requireNonNull(imgBytes, "imgBytes");
+        Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName(Objects.requireNonNull(suffix, "suffix"));
+        if (!readers.hasNext())
+            throw new IllegalStateException("invalid suffix " + suffix);
+        imageReader = readers.next();
 
         try {
-            imageInfo = new ImageInfo(); // 可以在不将图像全部解码加载到内存而获取图像的基本信息
-            imageInfo.setSuffix(imageReader.getFormatName().trim().toLowerCase());
+            imgInput = new MemoryCacheImageInputStream(new ByteArrayInputStream(imgBytes));
+            imageReader.setInput(imgInput, true, true);
+            imageInfo = new ImageInfo();
+            imageInfo.setSuffix(imageReader.getFormatName().trim().toLowerCase(java.util.Locale.ROOT));
             imageInfo.setMime(URLConnection.guessContentTypeFromName("x." + suffix));
             imageInfo.setWidth(imageReader.getWidth(0));
             imageInfo.setHeight(imageReader.getHeight(0));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            UncheckedIOException failure = new UncheckedIOException("Unable to read image header", e);
+            closeAfterFailure(failure);
+            throw failure;
+        } catch (RuntimeException | Error failure) {
+            closeAfterFailure(failure);
+            throw failure;
         }
     }
 
-    public ImageInfo getImageInfo() {
-        return imageInfo;
-    }
-
     /**
-     * @param param 图像读取参数对象
+     * 按读取参数解码第一帧，结束后释放读取器。
+     * <p>实例仅适合一次读取；需要再次解码时应创建新实例。</p>
+     *
+     * @param param 读取参数，null 时使用读取器默认值
+     * @return 解码后的图片
+     * @throws RuntimeException      图片解码或输入流关闭失败时抛出
+     * @throws IllegalStateException 已关闭或已经完成一次解码时抛出
      */
     public BufferedImage read(ImageReadParam param) {
-        BufferedImage b;
-
-        try {
-            b = imageReader.read(0, param == null ? imageReader.getDefaultReadParam() : param);
-
-            if (imgInput != null)
-                imgInput.close();
+        ensureOpen();
+        try (ImageTypeHandler ignored = this) {
+            return imageReader.read(0, param == null ? imageReader.getDefaultReadParam() : param);
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            imageReader.dispose();
+            throw new UncheckedIOException("Unable to decode image", e);
         }
-
-        return b;
     }
 
     /**
-     * 对图像数据指定的区域解码
+     * 读取第一帧的指定区域，可同时指定输出像素类型。
+     * <p>只设置源区域与目标类型，由读取器按实际区域分配结果图片；
+     * 不会额外创建原图尺寸的空白画布。目标类型必须被所选读取器支持。</p>
      *
-     * @param rect            解码区域对象, 默认({@code null})全图解码<br>
-     *                        参见 {@link ImageReadParam#setSourceRegion(Rectangle)}
-     * @param destinationType 目标图像的所需图像类型,默认为 null, <br>
-     *                        例如用此参数可以在解码时指定输出的图像类型为 RGB,<br>
-     *                        如下代码生成 destinationType 参数对象：<br>
-     *                        {@code
-     *                        ImageTypeSpecifier destinationType=ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_3BYTE_BGR);
-     *                        }<br>
-     *                        用上面的 ImageTypeSpecifier 对象来调用此方法返回的 BufferedImage 对象中的 raster 成员（通过 BufferedImage.getData() 获取）
-     *                        的 getDataElements() 方法返回的就是包含 RGB 数据 byte[] 类型的数组<br>
-     *                        而直接用 BufferedImage.getRGB() 方式只能获取 ARGB 类型的 int[] 数组 参见
+     * @param rect            要读取的源图区域，单位为像素；null 或完整范围表示整图
+     * @param destinationType 目标像素类型，null 使用默认类型
+     * @return 解码结果，尺寸由有效源区域决定
+     * @throws RuntimeException      区域、类型不兼容或解码失败时抛出
+     * @throws IllegalStateException 已关闭或已经完成一次解码时抛出
      */
     public BufferedImage read(Rectangle rect, ImageTypeSpecifier destinationType) {
-        ImageReadParam param = imageReader.getDefaultReadParam();
-
-        if (rect != null && !rect.equals(getRectangle()))
-            param.setSourceRegion(rect);
-
-        param.setDestinationType(destinationType);
-
-        if (destinationType != null)
-            param.setDestination(destinationType.createBufferedImage(imageInfo.getWidth(), imageInfo.getHeight()));
-
-        return read(param);
+        ensureOpen();
+        // 参数配置也可能失败，因此与解码一起放入资源保护范围。
+        try (ImageTypeHandler ignored = this) {
+            ImageReadParam param = imageReader.getDefaultReadParam();
+            if (rect != null && !rect.equals(getRectangle()))
+                param.setSourceRegion(rect);
+            param.setDestinationType(destinationType);
+            return imageReader.read(0, param);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Unable to decode image region", e);
+        }
     }
 
     /**
-     * 获取图像矩形对象
+     * 取得覆盖原始图片的矩形。
      *
-     * @return rectangle
+     * @return 原点为 0、0，宽高为原图尺寸的矩形
      */
     private Rectangle getRectangle() {
         return new Rectangle(0, 0, imageInfo.getWidth(), imageInfo.getHeight());
+    }
+
+    /**
+     * 是否已释放读取器和输入流；关闭后只能读取已有元数据。
+     */
+    private boolean closed;
+
+    /**
+     * 释放本实例的读取器及输入流，可重复调用。
+     *
+     * @throws IOException 输入流关闭失败时抛出
+     */
+    @Override
+    public void close() throws IOException {
+        if (closed)
+            return;
+        closed = true;
+        try {
+            imageReader.dispose();
+        } finally {
+            if (imgInput != null)
+                imgInput.close();
+        }
+    }
+
+    /**
+     * 拒绝在资源已释放后继续解码。
+     *
+     * @throws IllegalStateException 实例已关闭时抛出
+     */
+    private void ensureOpen() {
+        if (closed)
+            throw new IllegalStateException("Image reader is already closed");
+    }
+
+    /**
+     * 构造失败时释放部分创建的资源，同时保留最初的异常。
+     *
+     * @param failure 最初的读取或初始化异常
+     */
+    private void closeAfterFailure(Throwable failure) {
+        try {
+            close();
+        } catch (IOException | RuntimeException cleanupFailure) {
+            failure.addSuppressed(cleanupFailure);
+        }
     }
 }

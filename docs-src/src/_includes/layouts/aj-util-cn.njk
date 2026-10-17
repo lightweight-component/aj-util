@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -53,6 +54,7 @@
         <div class="docs-layout">
             <menu class="docs-navigation" aria-label="文档导航">
                 {% include "project-select.njk" %}
+                {% include "search.njk" %}
                 <ul>
                     <li class="selected">
                         <a href="/{{ project }}/cn/">首页</a>
@@ -144,6 +146,14 @@
                 <ul>
                     <li><a href="/aj-ftp/upload-cn/">上传文件</a></li>
                     <li><a href="/aj-ftp/download-cn/">下载文件</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-image" %}
+                <h3>图片处理</h3>
+                <ul>
+                    <li><a href="/aj-image/composition-cn/">图片合成</a></li>
+                    <li><a href="/aj-image/tutorial-cn/">合成教程与完整示例</a></li>
+                    <li><a href="/aj-image/utilities-cn/">图片工具与输出</a></li>
                 </ul>
                 {% endif %}
                 {% if project == "aj-json" %}

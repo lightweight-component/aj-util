@@ -1,6 +1,6 @@
 package com.ajaxjs.image.painter;
 
-import com.ajaxjs.image.embedd.ImageEmbedded;
+import com.ajaxjs.image.model.ImageEmbedded;
 import com.ajaxjs.image.constant.enums.Direction;
 import com.freewayso.image.combiner.ImageCombiner;
 

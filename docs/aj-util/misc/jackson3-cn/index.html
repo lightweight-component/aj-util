@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,13 +154,14 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>使用 Jackson 3</h1>
+                <h1 id="search-使用-jackson-3">使用 Jackson 3</h1>
 <p><code>aj-util</code> 默认集成了 Jackson 2.x 版本的 JSON 库，它与 Java 8 配合良好。然而，随着 JDK 11/17 的普及，升级到 Jackson 3.x
 变得很有必要。<code>aj-util</code> 支持新版本的 Jackson，并提供了一个统一的 JSON 工具函数接口。本文将向您展示如何在 <code>aj-util</code> 中使用
 Jackson 3。</p>
-<h3>第一步：排除 Jackson 2 依赖</h3>
+<h3 id="search-第一步-排除-jackson-2-依赖">第一步：排除 Jackson 2 依赖</h3>
 <p>首先，排除 Jackson 2 的依赖并添加 Jackson 3 的依赖。如果您使用的是 Spring，可以跳过此步骤，因为 Spring 框架已经包含了
 Jackson 3。</p>
 <pre><code class="language-xml">&lt;dependency&gt;
@@ -162,13 +182,13 @@ Jackson 3。</p>
 &lt;/dependency&gt;
 </code></pre>
 <p>由于旧版 Jackson 库的 Maven 作用域（scope）是 <code>provided</code>，实际上您不必排除上述依赖。但是，下一步是必须的。</p>
-<h3>第二步：配置 Java SPI</h3>
+<h3 id="search-第二步-配置-java-spi">第二步：配置 Java SPI</h3>
 <p>在 <code>src/main/resources/META-INF/services</code> 目录下创建一个名为 <code>com.ajaxjs.util.json.JsonEngineProvider</code> 的文件。这是一个
 Java SPI 配置文件。</p>
 <p>该文件的内容应为：</p>
 <pre><code class="language-text">com.ajaxjs.util.json.jackson3.Jackson3Provider
 </code></pre>
-<h3>第三步：添加 Jackson 3 适配器</h3>
+<h3 id="search-第三步-添加-jackson-3-适配器">第三步：添加 Jackson 3 适配器</h3>
 <p>Jackson 3 的适配器位于以下地址：</p>
 <ul>
 <li><a href="https://gitee.com/lightweight-components/ajaxjs/blob/master/aj-spring-base/src/main/java/com/ajaxjs/util/json/jackson3/Jackson3Engine.java">Jackson3Engine.java</a></li>
@@ -176,7 +196,7 @@ Java SPI 配置文件。</p>
 </ul>
 <p>只需将这两个文件复制到您的源代码中即可。</p>
 <p>至此，您已完成 <code>aj-util</code> 与 Jackson 3 的集成配置。</p>
-<h3>可选：排除不必要的库</h3>
+<h3 id="search-可选-排除不必要的库">可选：排除不必要的库</h3>
 <p>如果您的项目中不需要，还可以选择性地排除 SLF4j、Logback、JUnit 和 Jakarta Servlet 等库。</p>
 <pre><code class="language-xml">&lt;exclusion&gt;
     &lt;groupId&gt;org.slf4j&lt;/groupId&gt;

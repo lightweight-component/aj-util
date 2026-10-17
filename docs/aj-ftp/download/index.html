@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-ftp" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-ftp">aj-ftp</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-ftp/">Home</a>
@@ -82,11 +101,12 @@
                 </ul>
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Download files</h1>
+                <h1 id="search-download-files">Download files</h1>
 <p><code>SimpleFtpClient.getFile(remotePath, localPath)</code> retrieves one remote file with the FTP <code>RETR</code> command. It transfers in binary mode and protects an existing local target from a failed transfer.</p>
-<h2>Basic download</h2>
+<h2 id="search-basic-download">Basic download</h2>
 <pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
 
 try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
@@ -99,14 +119,14 @@ try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21))
 Files.createDirectories(downloads);
 ftp.getFile(&quot;/releases/client.zip&quot;, downloads.resolve(&quot;client.zip&quot;).toString());
 </code></pre>
-<h2>Safe local publication</h2>
+<h2 id="search-safe-local-publication">Safe local publication</h2>
 <p>aj-ftp does not write directly to the final target. It first asks the server for the file size, creates a temporary <code>.part</code> file in the target's parent directory, and streams the remote content there. Once the data stream is closed and the final FTP reply is successful, it moves the temporary file to the requested target.</p>
 <p>This means an interrupted or rejected transfer does not replace a pre-existing target file. The temporary file is removed on failure. The final move prefers an atomic replacement but falls back to a regular replacement when the file system does not support atomic moves.</p>
 <p>The target itself is still replaced after a successful transfer. Choose a versioned target name, or download to a staging directory and validate the file before making it available to other processes.</p>
-<h2>Missing files and unknown sizes</h2>
+<h2 id="search-missing-files-and-unknown-sizes">Missing files and unknown sizes</h2>
 <p><code>getFile</code> throws <code>IOException</code> if the server rejects retrieval, the connection fails, the local temporary file cannot be created, or the completed file cannot be published. Handle the exception at the job boundary and preserve the previous target until a retry succeeds.</p>
 <p>The client queries <code>SIZE</code> to report transfer progress. Some FTP servers do not provide a usable size; the transfer can still proceed, but the logged total is unknown. Do not use progress output as an integrity check. FTP itself does not verify checksums; obtain a trusted digest separately when file integrity matters.</p>
-<h2>UTF-8 names and timeouts</h2>
+<h2 id="search-utf-8-names-and-timeouts">UTF-8 names and timeouts</h2>
 <p>When a server supports UTF-8 path names, enable it after login before issuing a request with non-ASCII text:</p>
 <pre><code class="language-java">ftp.login(user, password);
 ftp.enableUtf8();
@@ -116,7 +136,7 @@ ftp.getFile(&quot;/发布/客户端.zip&quot;, &quot;C:/downloads/客户端.zip&
 <pre><code class="language-java">ftp.setConnectTimeout(10_000);
 ftp.setReadTimeout(120_000);
 </code></pre>
-<h2>Low-level retrieval streams</h2>
+<h2 id="search-low-level-retrieval-streams">Low-level retrieval streams</h2>
 <p>Use <code>get(remotePath)</code> for custom consumption such as parsing a remote text file without persisting it. The returned stream must be fully consumed or closed, followed by <code>completePendingCommand()</code>.</p>
 <pre><code class="language-java">ftp.binary();
 try (InputStream remote = ftp.get(&quot;/data/items.csv&quot;)) {

@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Date Formatting</h1>
+                <h1 id="search-date-formatting">Date Formatting</h1>
 <p>The new version recommends using <code>DateTimeFormatter</code> instead of <code>SimpleDateFormat</code> to achieve thread safety and a
 clearer API. Since <code>DateTimeFormatter.ofPattern()</code> instantiation has certain overhead, especially for custom patterns (
 such as &quot;yyyy-MM-dd HH:mm:ss&quot;), we can optimize by caching <code>DateTimeFormatter</code> instances.</p>
@@ -141,7 +161,7 @@ new Formatter(TemporalAccessor temporal).format(String format)
 </code></pre>
 <p>The <code>TemporalAccessor</code> interface is implemented by common date types, so we can pass them in the constructor and then
 specify the date format string.</p>
-<h1>Utility Functions</h1>
+<h1 id="search-utility-functions">Utility Functions</h1>
 <p>Mainly utility functions for <code>now()</code> that return the current time as a string.</p>
 <pre><code class="language-java">/**
  * Obtain current time by specified format.

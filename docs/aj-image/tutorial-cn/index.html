@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-image - 合成教程</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="/asset/main.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-image/tutorial/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-image
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/" selected>aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <section class="docs-search" data-doc-search data-project="aj-image" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-image">aj-image</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-image/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                
+                <h3>图片处理</h3>
+                <ul>
+                    <li><a href="/aj-image/composition-cn/">图片合成</a></li>
+                    <li><a href="/aj-image/tutorial-cn/">合成教程与完整示例</a></li>
+                    <li><a href="/aj-image/utilities-cn/">图片工具与输出</a></li>
+                </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1 id="search-图片合成教程">图片合成教程</h1>
+<p>本教程从一个简单的图片加文字示例开始，再逐步展示如何组合背景、商品图、头像、水印和二维码，制作一张海报。依赖配置见<a href="/aj-image/cn/">首页</a>，功能说明见<a href="/aj-image/composition-cn/">图片合成</a>。</p>
+<h2 id="search-基本使用流程">基本使用流程</h2>
+<p>使用 <code>ImageContainer</code>：先设置输出格式和背景，再创建元素并通过 <code>addElement()</code> 添加，最后调用 <code>combine()</code>。背景决定画布大小，后添加的元素覆盖前面的元素。</p>
+<p><code>combine()</code> 返回 <code>BufferedImage</code>；<code>getCombinedImageStream()</code> 返回编码后的图片文件流，可交给自己的上传服务；<code>save()</code> 保存到本地。获取流不等于上传，使用后需要关闭。</p>
+<p>配置元素时需要注意：</p>
+<ul>
+<li>图片、文字和矩形分别使用 <code>ImageEmbedded</code>、<code>TextEmbedded</code>、<code>RectangleEmbedded</code>。</li>
+<li>先创建元素，再逐项调用 setter 配置，最后通过 <code>addElement()</code> 添加到合成器。</li>
+<li>图片元素需要先读取为 <code>BufferedImage</code>，并设置 <code>ZoomMode</code>；文字需要明确设置 <code>Font</code>。</li>
+<li>背景字符串入口支持本地路径、HTTP/HTTPS；下面的示例辅助方法另外处理 <code>file:</code> URL，不能据此认为所有库入口都支持该协议。</li>
+<li>自动拆行和字间距尚未实现；多行文字需提前拆好，并设置每行位置和样式。</li>
+</ul>
+<h2 id="search-最简单的例子">最简单的例子</h2>
+<p>下面的方法与完整示例共用 <code>readImage()</code>、<code>text()</code> 辅助方法及 import，已包含在后面的完整类中。网址是占位地址，需要换成对应的真实素材。文字位于 Y=960，背景需足够高。</p>
+<pre><code class="language-java">public void simpleDemo() throws Exception {
+    ImageContainer container = new ImageContainer();
+    container.setOutputFormat(ImageFormat.JPG);
+    container.setBackgroundImage(readImage(&quot;http://xxx.com/image/bg.jpg&quot;),
+            ZoomMode.Origin, 0, 0);
+
+    ImageEmbedded product = new ImageEmbedded();
+    product.setImage(readImage(&quot;http://xxx.com/image/product.png&quot;));
+    product.setX(0);
+    product.setY(300);
+    product.setZoomMode(ZoomMode.Origin);
+    container.addElement(product);
+
+    TextEmbedded title = text(&quot;周末大放送&quot;,
+            new Font(Font.SANS_SERIF, Font.BOLD, 60), 100, 960);
+    container.addElement(title);
+
+    BufferedImage result = container.combine();
+    try (InputStream input = container.getCombinedImageStream()) {
+        // Pass input to your own upload service here.
+    }
+    // container.save(&quot;d:/image.jpg&quot;);
+}
+</code></pre>
+<h2 id="search-完整示例">完整示例</h2>
+<p>完整类展示了背景模糊、整图圆角、商品缩放、文字样式、预拆分多行、圆形头像、平铺水印、渐变底衬、边框、二维码和价格。</p>
+<ul>
+<li>背景按宽度缩放到 1500，使用 <code>ZoomMode.Width</code>；按高度缩放则需要使用 <code>Height</code> 并把高度传入第四个参数。缩放后画布需要足够容纳下面的元素（底衬延伸到 Y=2007）。</li>
+<li>整图圆角使用 PNG。质量参数由编码器解释，PNG 是无损格式，不能将其当作 JPEG 的画质百分比。</li>
+<li>标题选择水平居中，不同时设置右对齐；居中优先于方向设置。需要右对齐时关闭居中，使用 <code>Direction.RightLeft</code>，此时 X 表示右边缘。</li>
+<li>内容提前分成两行，通过 Y 坐标相差 60 像素控制行距。需要按宽度拆行时，由调用方先计算分行结果。</li>
+<li>圆形头像采用正方形绘制尺寸；边框与填充分开，避免设置边框后底衬变成空心。</li>
+<li>水印先于正文、头像和二维码绘制，避免覆盖它们；平铺会覆盖整个画布范围，而不是只出现在给定坐标之后。</li>
+<li>二维码使用独立素材，不添加模糊或透明效果；保留素材自身留白，并用最终图片实际验证扫码效果。</li>
+</ul>
+<pre><code class="language-java">import com.ajaxjs.image.ImageContainer;
+import com.ajaxjs.image.model.ImageEmbedded;
+import com.ajaxjs.image.model.RectangleEmbedded;
+import com.ajaxjs.image.model.TextEmbedded;
+import com.ajaxjs.image.model.constant.GradientDirection;
+import com.ajaxjs.image.model.constant.ImageFormat;
+import com.ajaxjs.image.model.constant.LineAlign;
+import com.ajaxjs.image.model.constant.ZoomMode;
+
+import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+
+public class ImageCompositionDemo {
+    public void simpleDemo() throws Exception {
+        ImageContainer container = new ImageContainer();
+        container.setOutputFormat(ImageFormat.JPG);
+        container.setBackgroundImage(readImage(&quot;http://xxx.com/image/bg.jpg&quot;),
+                ZoomMode.Origin, 0, 0);
+    
+        ImageEmbedded product = new ImageEmbedded();
+        product.setImage(readImage(&quot;http://xxx.com/image/product.png&quot;));
+        product.setX(0);
+        product.setY(300);
+        product.setZoomMode(ZoomMode.Origin);
+        container.addElement(product);
+    
+        TextEmbedded title = text(&quot;周末大放送&quot;,
+                new Font(Font.SANS_SERIF, Font.BOLD, 60), 100, 960);
+        container.addElement(title);
+    
+        BufferedImage result = container.combine();
+        try (InputStream input = container.getCombinedImageStream()) {
+            // Pass input to your own upload service here.
+        }
+        // container.save(&quot;d:/image.jpg&quot;);
+    }
+
+    public void demo() throws Exception {
+        String bgImageUrl = &quot;http://xxx.com/image/bg.jpg&quot;;
+        String productImageUrl = &quot;https://xxx.com/image/product.jpg&quot;;
+        String qrCodeUrl = &quot;file:///d:/qrCode.png&quot;;
+        BufferedImage background = readImage(bgImageUrl);
+        BufferedImage productImage = readImage(productImageUrl);
+        BufferedImage qrCodeImage = readImage(qrCodeUrl);
+        BufferedImage waterMark = readImage(&quot;https://xxx.com/image/waterMark.jpg&quot;);
+        BufferedImage avatar = readImage(&quot;d:/avatar.jpg&quot;);
+
+        // PNG preserves the transparent area outside rounded corners.
+        ImageContainer container = new ImageContainer();
+        container.setOutputFormat(ImageFormat.PNG);
+        container.setBackgroundImage(background, ZoomMode.Width, 1500, 0);
+        container.setBackgroundBlur(30);
+        container.setCanvasRoundCorner(100);
+        container.setQuality(.8f);
+
+        ImageEmbedded product = new ImageEmbedded();
+        product.setImage(productImage);
+        product.setX(0);
+        product.setY(160);
+        product.setWidth(837);
+        product.setZoomMode(ZoomMode.Width);
+        product.setCenter(true);
+        product.setRoundCorner(46);
+        container.addElement(product);
+
+        ImageEmbedded watermark = new ImageEmbedded();
+        watermark.setImage(waterMark);
+        watermark.setX(630);
+        watermark.setY(1200);
+        watermark.setZoomMode(ZoomMode.Origin);
+        watermark.setAlpha(.8f);
+        watermark.setRotate(45);
+        watermark.setBlur(20);
+        watermark.setRepeat(true);
+        watermark.setRepeatPaddingHorizontal(100);
+        watermark.setRepeatPaddingVertical(50);
+        container.addElement(watermark);
+
+        TextEmbedded title = text(&quot;# 最爱的家居&quot;,
+                new Font(Font.SANS_SERIF, Font.BOLD, 60), 150, 1400);
+        title.setCenter(true);
+        title.setAlpha(.8f);
+        title.setRotate(45);
+        title.setColor(Color.RED);
+        title.setAutoFitMaxWidth(200);
+        title.setAutoFitMinFontSize(24);
+        container.addElement(title);
+
+        // Supply this font file in src/main/resources/font/yahei.ttf.
+        Font subtitleFont = loadFont(&quot;/font/yahei.ttf&quot;, 40);
+        container.addElement(text(&quot;年度狂欢&quot;, subtitleFont, 150, 1450));
+
+        // Prepare each line explicitly: no automatic width-based wrapping.
+        Font contentFont = new Font(&quot;微软雅黑&quot;, Font.BOLD, 40);
+        TextEmbedded firstLine = text(&quot;苏格拉底说：“如果没有那个桌子，&quot;,
+                contentFont, 150, 1510);
+        firstLine.setStrikeThrough(true);
+        TextEmbedded secondLine = text(&quot;可能就没有那个水壶”&quot;,
+                contentFont, 150, 1570);
+        secondLine.setStrikeThrough(true);
+        TextEmbedded content = new TextEmbedded();
+        content.setAutoBreakLine(true);
+        content.setBreakLineElements(Arrays.asList(firstLine, secondLine));
+        content.setLineAlign(LineAlign.Left);
+        container.addElement(content);
+
+        ImageEmbedded avatarElement = image(avatar, 200, 1200, 130, 130);
+        avatarElement.setRoundCorner(200);
+        container.addElement(avatarElement);
+
+        // Fill and border must be separate elements.
+        RectangleEmbedded backing = rectangle(138, 1707, 300, 300);
+        backing.setRoundCorner(50);
+        backing.setAlpha(.8f);
+        backing.setFromColor(Color.YELLOW);
+        backing.setToColor(Color.BLUE);
+        backing.setGradientDirection(GradientDirection.LeftRight);
+        container.addElement(backing);
+        RectangleEmbedded border = rectangle(138, 1707, 300, 300);
+        border.setRoundCorner(50);
+        border.setColor(Color.WHITE);
+        border.setBorderSize(5);
+        container.addElement(border);
+
+        // Preserve the QR asset's quiet zone; verify scanning after resizing.
+        container.addElement(image(qrCodeImage, 195, 1764, 186, 186));
+
+        TextEmbedded price = text(&quot;￥1290&quot;,
+                new Font(Font.SANS_SERIF, Font.PLAIN, 60), 230, 1300);
+        price.setColor(Color.RED);
+        price.setStrikeThrough(true);
+        container.addElement(price);
+
+        BufferedImage result = container.combine();
+        try (InputStream input = container.getCombinedImageStream()) {
+            // Pass input to your own upload service here.
+        }
+        container.save(&quot;d:/image.png&quot;);
+    }
+
+    // These helpers belong to this example, not the library's public API.
+    private static TextEmbedded text(String value, Font font, int x, int y) {
+        TextEmbedded element = new TextEmbedded();
+        element.setText(value);
+        element.setFont(font);
+        element.setX(x);
+        element.setY(y);
+
+        return element;
+    }
+
+    private static ImageEmbedded image(BufferedImage image, int x, int y,
+                                       int width, int height) {
+        ImageEmbedded element = new ImageEmbedded();
+        element.setImage(image);
+        element.setX(x);
+        element.setY(y);
+        element.setWidth(width);
+        element.setHeight(height);
+        element.setZoomMode(ZoomMode.WidthHeight);
+
+        return element;
+    }
+
+    private static RectangleEmbedded rectangle(int x, int y, int width, int height) {
+        RectangleEmbedded element = new RectangleEmbedded();
+        element.setX(x);
+        element.setY(y);
+        element.setWidth(width);
+        element.setHeight(height);
+
+        return element;
+    }
+
+    private static BufferedImage readImage(String location) throws IOException {
+        BufferedImage image;
+        if (location.startsWith(&quot;http://&quot;) || location.startsWith(&quot;https://&quot;)
+                || location.startsWith(&quot;file:&quot;)) {
+            URLConnection connection = new URL(location).openConnection();
+            connection.setConnectTimeout(10_000);
+            connection.setReadTimeout(20_000);
+            try (InputStream input = connection.getInputStream()) {
+                image = ImageIO.read(input);
+            }
+        } else {
+            image = ImageIO.read(new File(location));
+        }
+        if (image == null)
+            throw new IOException(&quot;Unrecognized image: &quot; + location);
+
+        return image;
+    }
+
+    private static Font loadFont(String resource, float size) throws Exception {
+        try (InputStream input = ImageCompositionDemo.class.getResourceAsStream(resource)) {
+            if (input == null)
+                throw new IOException(&quot;Missing font resource: &quot; + resource);
+
+            return Font.createFont(Font.TRUETYPE_FONT, input).deriveFont(size);
+        }
+    }
+}
+</code></pre>
+<h2 id="search-运行前准备">运行前准备</h2>
+<p>准备对应图片、<code>src/main/resources/font/yahei.ttf</code> 字体文件和输出目录。示例中的 <code>text()</code>、<code>image()</code>、<code>rectangle()</code>、<code>readImage()</code>、<code>loadFont()</code> 都是教程辅助方法，不是库内置 API。</p>
+<p><code>readImage()</code> 的网络超时由示例自行设置；库的网络读取入口不提供可配置超时。生产环境还需限制可访问地址、下载大小和解码尺寸，不能直接使用不可信 URL。系统字体名称取决于服务器环境，稳定显示中文时应加载有合法使用权限的字体文件。</p>
+<p>示例按当前源码编写；占位网址、D 盘素材及字体需自行准备，编译通过不代表这些资源已经可用。</p>
+<p><a href="/aj-image/composition-cn/">图片合成与限制</a> · <a href="/aj-image/utilities-cn/">图片工具与输出</a> · <a href="/aj-image/cn/">返回首页</a></p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-image，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

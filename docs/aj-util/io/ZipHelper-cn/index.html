@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,16 +154,17 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>ZipHelper</h1>
+                <h1 id="search-ziphelper">ZipHelper</h1>
 <p><code>ZipHelper</code> 用于创建 ZIP 文件。通过目录、单个 <code>File</code> 或 <code>File[]</code> 构造对象后调用 <code>zip()</code>。解压功能由独立的 <a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a> 提供。</p>
 <pre><code class="language-java">import com.ajaxjs.util.io.ZipHelper;
 
 ZipHelper backup = new ZipHelper(&quot;C:/data&quot;, &quot;C:/backup.zip&quot;);
 backup.zip();
 </code></pre>
-<h2>数据源与压缩模式</h2>
+<h2 id="search-数据源与压缩模式">数据源与压缩模式</h2>
 <p>目录会被递归遍历，保留相对路径和空目录；符号链接与非普通文件会被拒绝。目标 ZIP 不能位于源目录内部。</p>
 <pre><code class="language-java">ZipHelper single = new ZipHelper(new File(&quot;report.csv&quot;), &quot;report.zip&quot;);
 single.zip();
@@ -155,7 +175,7 @@ files.zip();
 </code></pre>
 <p>默认使用 <code>DEFLATED</code>。调用 <code>setUseStore(true)</code> 后使用 <code>STORED</code> 模式；该模式会先计算文件大小与 CRC32，因此打包过程中源文件不应发生变化。多个文件会放在 ZIP 根目录，文件名必须互不重复。</p>
 <p>生成过程先写入目标文件同目录下的临时文件，成功后再替换目标文件。I/O 失败会抛出 <code>UncheckedIOException</code>。</p>
-<h2>压缩包目录结构示例</h2>
+<h2 id="search-压缩包目录结构示例">压缩包目录结构示例</h2>
 <p>目录输入在 ZIP 中以所选源目录为相对根，而不会包含源目录自身的名字。无论 ZIP 在 Windows 还是其他系统生成，条目
 分隔符都统一使用 <code>/</code>。</p>
 <table>
@@ -192,18 +212,18 @@ new ZipHelper(new File[]{new File(&quot;logs/app.log&quot;), new File(&quot;repo
         &quot;C:/out/files.zip&quot;).zip();
 </code></pre>
 <p>目录遍历会显式记录目录条目，因此解压后空目录仍然存在。这对于应用模板或目录结构本身具有意义的备份很重要。</p>
-<h2>压缩模式的选择</h2>
+<h2 id="search-压缩模式的选择">压缩模式的选择</h2>
 <p><code>DEFLATED</code> 是常规选择：ZIP 写入时同步压缩。<code>STORED</code> 则写入原始文件字节；ZIP 要求在写入前就提供精确大小和
 CRC32。因此 <code>ZipHelper</code> 会先读取每个文件计算元数据，再读取一次写入压缩包。</p>
 <p>只在确实不需要压缩时使用 <code>STORED</code>，例如已经压缩过的媒体文件且接收方兼容该模式。两次读取之间不要修改源文件，
 否则记录的 CRC 或长度可能与实际归档字节不一致。</p>
-<h2>安全性与失败行为</h2>
+<h2 id="search-安全性与失败行为">安全性与失败行为</h2>
 <p>该工具会拒绝符号链接与非普通文件，避免意外把源目录之外的文件打进包内；也拒绝把目标 ZIP 放在源目录内，避免归档
 递归包含自己。目标父目录不存在时会自动创建。</p>
 <p>它先写入目标同目录的临时文件，成功后才替换目标，降低失败时留下半成品目标文件的概率。这并不是跨所有文件系统的
 事务：进程崩溃或不支持原子移动时，仍应按普通文件系统故障方式处理。需要向用户提示或重试备份时，请捕获
 <code>UncheckedIOException</code>。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p><code>ZipHelper</code> 只负责创建压缩包，本身并不保证解压安全。处理不可信 ZIP 时请使用
 <a href="/aj-util/io/UnzipHelper-cn/">UnzipHelper</a>，并保留其目标路径校验，以防止 <code>../../outside.txt</code> 这类路径穿越条目。</p>
 

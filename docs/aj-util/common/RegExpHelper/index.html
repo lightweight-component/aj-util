@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,11 +148,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>RegExpHelper</h1>
+                <h1 id="search-regexphelper">RegExpHelper</h1>
 <p><code>RegExpHelper</code> is the current regular-expression API. It owns one compiled <code>Pattern</code> and exposes matching operations through an object. <code>RegExpUtils</code> has been removed.</p>
-<h2>Create and reuse a helper</h2>
+<h2 id="search-create-and-reuse-a-helper">Create and reuse a helper</h2>
 <p>Creating from a regular-expression string uses a shared thread-safe compiled-pattern cache. Reuse a helper when performing several operations with the same expression.</p>
 <pre><code class="language-java">RegExpHelper email = new RegExpHelper(&quot;[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}&quot;);
 
@@ -141,7 +161,7 @@ boolean found = email.contains(&quot;Contact a@ajaxjs.com&quot;);
 boolean exact = email.fullMatch(&quot;a@ajaxjs.com&quot;);
 </code></pre>
 <p><code>contains()</code> uses <code>Matcher.find()</code>; <code>fullMatch()</code> uses <code>Matcher.matches()</code> and therefore requires the entire input to match.</p>
-<h2>Extract matches</h2>
+<h2 id="search-extract-matches">Extract matches</h2>
 <pre><code class="language-java">RegExpHelper number = new RegExpHelper(&quot;item-(\\d+)&quot;);
 
 String first = number.match(&quot;item-42&quot;, 1);  // &quot;42&quot;
@@ -153,7 +173,7 @@ String[] all = number.matchAll(&quot;item-1,item-2&quot;);
 <pre><code class="language-java">RegExpHelper helper = new RegExpHelper(Pattern.compile(&quot;\\d+&quot;));
 </code></pre>
 <p>For compatibility-style one-off calls, <code>RegExpHelper.match(regexp, text)</code> and <code>RegExpHelper.regMatch(regexp, text, groupIndex)</code> delegate to the object API and use the same cache.</p>
-<h2>Matcher access and edge cases</h2>
+<h2 id="search-matcher-access-and-edge-cases">Matcher access and edge cases</h2>
 <p><code>getMatcher(text)</code> exposes a fresh <code>Matcher</code> when cursor-level operations are needed. <code>Pattern</code> is immutable and may
 be shared; <code>Matcher</code> is stateful, so do not share a <code>Matcher</code> between threads or reuse it after changing its state.</p>
 <pre><code class="language-java">RegExpHelper helper = new RegExpHelper(&quot;a(b)&quot;);
@@ -169,7 +189,7 @@ text receive the same <code>Pattern</code> instance. It is intended for repeated
 expressions. Invalid regular expressions throw the JDK <code>PatternSyntaxException</code>; null input follows JDK null checks.</p>
 <p><code>matchAll</code> returns group 0 for every non-overlapping <code>find()</code> result. It does not return capture groups—call
 <code>getMatcher</code> when all groups from all matches are required.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>Regular-expression compilation is relatively expensive compared with creating a <code>Matcher</code>. <code>RegExpHelper</code> therefore
 stores patterns in a <code>ConcurrentHashMap</code> and obtains them with <code>computeIfAbsent</code>: concurrent callers requesting the
 same expression reuse a compiled <code>Pattern</code> without external locking. The cache deliberately stores only patterns

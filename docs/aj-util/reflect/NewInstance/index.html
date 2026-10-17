@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>NewInstance</h1>
+                <h1 id="search-newinstance">NewInstance</h1>
 <p><code>NewInstance&lt;T&gt;</code> creates objects through public constructors. Interfaces cannot be instantiated.</p>
 <pre><code class="language-java">String value = new NewInstance&lt;&gt;(String.class).newInstance();
 
@@ -143,7 +163,7 @@ constructor accepting a superclass or interface is therefore not matched from a 
 containing <code>null</code> also require an explicitly obtained <code>Constructor</code>.</p>
 <p>The class argument must be non-null and concrete. A null class causes <code>IllegalArgumentException</code>; interfaces are
 rejected explicitly, while abstract classes fail later during constructor invocation.</p>
-<h2>Constructor helpers</h2>
+<h2 id="search-constructor-helpers">Constructor helpers</h2>
 <p><code>getConstructor(Class&lt;T&gt;, Class&lt;?&gt;...)</code> returns an exact public constructor and throws <code>RuntimeException</code> if it
 cannot be found. <code>newInstance(Constructor&lt;T&gt;, Object...)</code> invokes an already selected constructor and preserves
 the original failure as its cause. A null class or constructor is rejected with <code>IllegalArgumentException</code>.</p>

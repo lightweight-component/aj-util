@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,15 +154,16 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>Types</h1>
+                <h1 id="search-types">Types</h1>
 <p><code>Types</code> 类提供了检索泛型类型信息、转换类型以及处理参数化类型的方法。这些方法有助于在运行时高效、方便地操作 Java 类型。</p>
 <p><code>type2class(Type)</code> 支持所有标准反射 <code>Type</code> 实现。类型变量通过唯一上界解析；上界通配符和无界通配符
 通过唯一上界解析；泛型数组会先解析组件类型。下界通配符或多个上界不能确定唯一类，因此会抛出
 <code>IllegalArgumentException</code>。</p>
-<h2>方法</h2>
-<h3>1. <code>getActualType(Type type)</code></h3>
+<h2 id="search-方法">方法</h2>
+<h3 id="search-1-getactualtype-type-type">1. <code>getActualType(Type type)</code></h3>
 <p>检索参数化类型的实际类型参数。</p>
 <ul>
 <li><strong>参数说明：</strong>
@@ -173,7 +193,7 @@
 Type[] actualType = Types.getActualType(type);
 // actualType 将包含 String.class
 </code></pre>
-<h3>2. <code>getGenericReturnType(Method method)</code></h3>
+<h3 id="search-2-getgenericreturntype-method-method">2. <code>getGenericReturnType(Method method)</code></h3>
 <p>检索方法返回类型的实际类型参数。</p>
 <ul>
 <li><strong>参数说明：</strong>
@@ -188,7 +208,7 @@ Type[] actualType = Types.getActualType(type);
 Type[] actualType = Types.getGenericReturnType(method);
 // actualType 将包含方法的泛型返回类型
 </code></pre>
-<h3>3. <code>getGenericFirstReturnType(Method method)</code></h3>
+<h3 id="search-3-getgenericfirstreturntype-method-method">3. <code>getGenericFirstReturnType(Method method)</code></h3>
 <p>检索方法返回类型的第一个实际类型参数并将其转换为 <code>Class</code>。</p>
 <ul>
 <li><strong>参数说明：</strong>
@@ -204,7 +224,7 @@ Type[] actualType = Types.getGenericReturnType(method);
 Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 // actualType 将是方法的第一个泛型返回类型，作为 Class
 </code></pre>
-<h3>4. <code>getActualType(Class&lt;?&gt; clz)</code></h3>
+<h3 id="search-4-getactualtype-class-clz">4. <code>getActualType(Class&lt;?&gt; clz)</code></h3>
 <p>检索类的超类的实际类型参数。</p>
 <ul>
 <li><strong>参数说明：</strong>
@@ -218,7 +238,7 @@ Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 <pre><code class="language-java">Type[] actualType = Types.getActualType(ArrayList.class);
 // actualType 将包含 ArrayList 超类的泛型类型参数
 </code></pre>
-<h3>5. <code>getActualClass(Class&lt;?&gt; clz)</code></h3>
+<h3 id="search-5-getactualclass-class-clz">5. <code>getActualClass(Class&lt;?&gt; clz)</code></h3>
 <p>检索类的超类的第一个实际类型参数并将其转换为 <code>Class</code>。</p>
 <ul>
 <li><strong>参数说明：</strong>
@@ -239,7 +259,7 @@ Class&lt;?&gt; actualClass = Types.getActualClass(StringList.class);
 Types.getActualClass(String.class);
 // 抛出 IllegalArgumentException，不再发生 NullPointerException
 </code></pre>
-<h3>6. <code>type2class(Type type)</code></h3>
+<h3 id="search-6-type2class-type-type">6. <code>type2class(Type type)</code></h3>
 <p>按照以下规则将 <code>Type</code> 转换为 <code>Class</code>：</p>
 <ul>
 <li><code>Class</code>：直接返回；</li>

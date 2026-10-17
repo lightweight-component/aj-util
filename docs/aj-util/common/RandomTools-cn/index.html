@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,9 +154,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>RandomTools</h1>
+                <h1 id="search-randomtools">RandomTools</h1>
 <p><code>RandomTools</code> 用于生成普通随机数字和字符串，暴露共享 <code>SecureRandom</code>，并生成 UUID v7 字符串。</p>
 <pre><code class="language-java">int code = RandomTools.generateNumber();          // 六位数字，100000–999999
 String text = RandomTools.generateRandomString(8); // 八位字母数字
@@ -149,7 +169,7 @@ Date createdAt = RandomTools.showTime(compactId);
 <p><code>generateNumber(int)</code> 只接受 1 到 9 位，<code>generateRandomString(int)</code> 要求长度为正。二者均使用 <code>ThreadLocalRandom</code>，不能用于密码、验证码、令牌或密码学密钥。</p>
 <p><code>uuidV7</code> 使用 <code>RandomTools.RANDOM</code>（<code>SecureRandom</code>）生成随机部分，并写入当前的 epoch 毫秒时间。UUIDv7 按该时间戳有序，但同一毫秒内或系统时钟回拨时不保证单调递增。它是标识符，不是秘密令牌。<code>showTime</code> 接受带连字符或 32 字符的 UUIDv7，其他 UUID 版本会被拒绝。</p>
 <p>需要密码学强度的随机字节时，应使用 <code>RandomTools.RANDOM</code> 或 <code>DoCipher.randomBytes()</code>。</p>
-<h2>UUIDv7 格式与校验</h2>
+<h2 id="search-uuidv7-格式与校验">UUIDv7 格式与校验</h2>
 <p>UUIDv7 包含 48 位 Unix 毫秒时间戳、版本位、RFC UUID 变体位和 74 位随机数据。默认的 <code>uuidV7()</code> 等同于 <code>uuidV7(false)</code>，返回 32 位小写紧凑格式。与要求 <code>UUID.toString()</code> 格式的 API 互通时，应选择带连字符形式。</p>
 <pre><code class="language-java">String id = RandomTools.uuidV7(true);
 Date timestamp = RandomTools.showTime(id);
@@ -158,7 +178,7 @@ Date timestamp = RandomTools.showTime(id);
 Date sameTimestamp = RandomTools.showTime(id.replace(&quot;-&quot;, &quot;&quot;));
 </code></pre>
 <p><code>showTime</code> 不会裁剪空白；输入格式错误或 UUID 不是版本 7 时抛出 <code>IllegalArgumentException</code>。返回的 <code>Date</code> 是标识符中嵌入的时间戳，不能独立证明标识符实际创建时间。</p>
-<h2>随机性选择</h2>
+<h2 id="search-随机性选择">随机性选择</h2>
 <table>
 <thead>
 <tr>
@@ -186,7 +206,7 @@ Date sameTimestamp = RandomTools.showTime(id.replace(&quot;-&quot;, &quot;&quot;
 </tbody>
 </table>
 <p>这些 API 都不维护唯一性注册表。应用需要唯一性时，应自行存储并约束。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p>数字和字母数字字符串方法使用 <code>ThreadLocalRandom</code>，避免普通并发应用中竞争共享伪随机生成器。UUIDv7 则采用不同路径：先通过共享 <code>SecureRandom</code> 填充 16 字节，再按 UUIDv7 布局覆盖时间戳、版本和变体位置，最后借助 <code>UUID</code> 格式化。时间戳提取方法会从 UUID 的最高有效位按该布局反向读取。</p>
 <p>这一设计提供了可排序标识和强随机部分，但不会协调同一毫秒内的调用。若数据库需要严格排序，应额外保存序列或排序字段。</p>
 

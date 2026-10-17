@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,9 +154,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>UnzipHelper</h1>
+                <h1 id="search-unziphelper">UnzipHelper</h1>
 <p><code>UnzipHelper</code> 专门负责安全解压 ZIP，包含 Zip Slip、符号链接、条目数量、解压大小和压缩比保护；它与 <code>ZipHelper</code> 的压缩职责分离。</p>
 <pre><code class="language-java">import com.ajaxjs.util.io.UnzipHelper;
 
@@ -146,7 +166,7 @@ new UnzipHelper(&quot;C:/downloads/archive.zip&quot;).extract();
 <p>未指定目标目录时，<code>archive.zip</code> 默认解压到同级的 <code>archive</code> 目录。也可指定目标目录：</p>
 <pre><code class="language-java">new UnzipHelper(&quot;C:/downloads/archive.zip&quot;, &quot;C:/work/extracted&quot;).extract();
 </code></pre>
-<h2>限制与旧编码文件名</h2>
+<h2 id="search-限制与旧编码文件名">限制与旧编码文件名</h2>
 <p>默认限制为 10,000 个条目、单条目 1 GB、总量 10 GB、最大压缩比 100:1。可信压缩包可按实际需要配置限制：</p>
 <pre><code class="language-java">UnzipHelper.ExtractionLimits limits =
         new UnzipHelper.ExtractionLimits(2_000, 100L * 1024 * 1024, 500L * 1024 * 1024, 50.0);

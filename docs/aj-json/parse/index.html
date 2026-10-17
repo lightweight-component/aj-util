@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-json" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-json">aj-json</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-json/">Home</a>
@@ -76,12 +95,13 @@
                 
                 
                 
+                
                 <h3>Learning JSON parsing</h3>
                 <ul><li><a href="/aj-json/parse/">Parse your first JSON</a></li><li><a href="/aj-json/how-it-works/">How the parser works</a></li></ul>
                 
             </menu>
             <article class="aj-text">
-                <h1>Parse your first JSON</h1>
+                <h1 id="search-parse-your-first-json">Parse your first JSON</h1>
 <p>The public learning entry point is <code>FMS</code>. Give it a JSON-like string and call <code>parse()</code>.</p>
 <pre><code class="language-java">import com.ajaxjs.jsonparser.syntax.FMS;
 import java.util.List;
@@ -98,7 +118,7 @@ List&lt;Object&gt; scores = (List&lt;Object&gt;) person.get(&quot;scores&quot;);
 System.out.println(scores.get(0));             // 95
 </code></pre>
 <p>The cast is necessary because <code>parse()</code> can return several kinds of values. Check the root value before casting when you do not control the input.</p>
-<h2>What Java values are returned?</h2>
+<h2 id="search-what-java-values-are-returned">What Java values are returned?</h2>
 <table>
 <thead>
 <tr>
@@ -138,7 +158,7 @@ System.out.println(scores.get(0));             // 95
 </tbody>
 </table>
 <p>Objects and arrays may be nested. Each nested object is another <code>Map</code>; each nested array is another <code>List</code>.</p>
-<h2>Standard JSON versus this learning parser</h2>
+<h2 id="search-standard-json-versus-this-learning-parser">Standard JSON versus this learning parser</h2>
 <p>Standard JSON requires double-quoted keys and strings:</p>
 <pre><code class="language-json">{&quot;name&quot;:&quot;Ada&quot;,&quot;active&quot;:true}
 </code></pre>
@@ -146,7 +166,7 @@ System.out.println(scores.get(0));             // 95
 <pre><code class="language-text">{name: 'Ada', active: true}
 </code></pre>
 <p>When learning, try both forms and inspect the tokens. In a real API, always emit and expect standard JSON, then use a mature JSON library to handle it.</p>
-<h2>Errors are part of the lesson</h2>
+<h2 id="search-errors-are-part-of-the-lesson">Errors are part of the lesson</h2>
 <p>Malformed input usually throws <code>JsonParseException</code>. Its message includes a character, line, and column position to help you find where the parser became confused.</p>
 <pre><code class="language-java">try {
     new FMS(&quot;{name: }&quot;).parse();

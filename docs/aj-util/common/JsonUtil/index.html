@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,16 +148,17 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>JsonUtil Tutorial</h1>
+                <h1 id="search-jsonutil-tutorial">JsonUtil Tutorial</h1>
 <p><code>JsonUtil</code> is a static facade for JSON serialization, parsing, and object conversion. It delegates work to a
 <code>JsonEngine</code>, so callers do not need to expose implementation-specific types such as Jackson <code>ObjectMapper</code> or
 <code>JsonNode</code>.</p>
-<h2>Introduction</h2>
+<h2 id="search-introduction">Introduction</h2>
 <p><code>JsonUtil</code> provides common JSON operations between JSON strings, Java objects, Maps, and Lists through the configured
 JSON engine.</p>
-<h2>Main Features</h2>
+<h2 id="search-main-features">Main Features</h2>
 <ul>
 <li>Convert Java objects to JSON strings (pretty or compact)</li>
 <li>Parse JSON strings into Java objects</li>
@@ -147,41 +167,41 @@ JSON engine.</p>
 <li>A lazily initialized, safely published shared <code>JsonEngine</code></li>
 <li>An implementation-independent JSON tree returned as <code>Object</code></li>
 </ul>
-<h2>Methods</h2>
-<h3>1. Serialization (to JSON)</h3>
+<h2 id="search-methods">Methods</h2>
+<h3 id="search-1-serialization-to-json">1. Serialization (to JSON)</h3>
 <ol>
 <li><code>toJson(Object obj)</code> - Convert object to JSON string</li>
 <li><code>toJsonPretty(Object obj)</code> - Convert object to pretty-printed JSON</li>
 </ol>
-<h3>2. Deserialization (from JSON)</h3>
+<h3 id="search-2-deserialization-from-json">2. Deserialization (from JSON)</h3>
 <ol>
 <li><code>fromJson(String jsonStr, Class&lt;T&gt; valueType)</code> - Parse JSON to specified type</li>
 </ol>
-<h3>3. JSON ↔ Map Conversion</h3>
+<h3 id="search-3-json-map-conversion">3. JSON ↔ Map Conversion</h3>
 <ol>
 <li><code>json2map(String jsonStr)</code> - JSON to Map&lt;String, Object&gt;</li>
 <li><code>json2map(String jsonStr, Class&lt;T&gt; clazz)</code> - JSON to Map with typed values</li>
 <li><code>json2sortMap(String jsonStr, Class&lt;T&gt; clazz)</code> - JSON to LinkedHashMap preserving order</li>
 <li><code>json2StrMap(String jsonStr)</code> - JSON to Map&lt;String, String&gt;</li>
 </ol>
-<h3>4. JSON ↔ List Conversion</h3>
+<h3 id="search-4-json-list-conversion">4. JSON ↔ List Conversion</h3>
 <ol>
 <li><code>json2list(String jsonArrayStr, Class&lt;T&gt; clazz)</code> - JSON array to List<T></li>
 <li><code>json2mapList(String jsonArrayStr)</code> - JSON array to List<Map></li>
 </ol>
-<h3>5. Object Conversion</h3>
+<h3 id="search-5-object-conversion">5. Object Conversion</h3>
 <ol>
 <li><code>convertValue(Object obj, Class&lt;T&gt; clazz)</code> - Convert object types</li>
 <li><code>pojo2map(Object obj)</code> - Convert POJO to Map</li>
 <li><code>pojo2map(Object obj, Class&lt;T&gt; clazz)</code> - Convert POJO to typed Map</li>
 <li><code>map2pojo(Map&lt;String, Object&gt; map, Class&lt;T&gt; clazz)</code> - Convert Map to POJO</li>
 </ol>
-<h3>6. JSON Tree Model</h3>
+<h3 id="search-6-json-tree-model">6. JSON Tree Model</h3>
 <ol>
 <li><code>json2Node(String jsonStr)</code> - Parse JSON to an engine-specific tree object</li>
 </ol>
-<h2>Usage Examples</h2>
-<h3>Basic Serialization</h3>
+<h2 id="search-usage-examples">Usage Examples</h2>
+<h3 id="search-basic-serialization">Basic Serialization</h3>
 <pre><code class="language-java">User user = new User(&quot;John&quot;, 30);
 String json = JsonUtil.toJson(user); 
 // {&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}
@@ -194,11 +214,11 @@ String prettyJson = JsonUtil.toJsonPretty(user);
 }
 */
 </code></pre>
-<h3>Basic Deserialization</h3>
+<h3 id="search-basic-deserialization">Basic Deserialization</h3>
 <pre><code class="language-java">String json = &quot;{\&quot;name\&quot;:\&quot;John\&quot;,\&quot;age\&quot;:30}&quot;;
 User user = JsonUtil.fromJson(json, User.class);
 </code></pre>
-<h3>Map Conversion</h3>
+<h3 id="search-map-conversion">Map Conversion</h3>
 <pre><code class="language-java">Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
 map.put(&quot;name&quot;, &quot;John&quot;);
 map.put(&quot;age&quot;, 30);
@@ -206,11 +226,11 @@ map.put(&quot;age&quot;, 30);
 String json = JsonUtil.toJson(map);
 Map&lt;String, Object&gt; map2 = JsonUtil.json2map(json);
 </code></pre>
-<h3>List Conversion</h3>
+<h3 id="search-list-conversion">List Conversion</h3>
 <pre><code class="language-java">String jsonArray = &quot;[{\&quot;name\&quot;:\&quot;John\&quot;}, {\&quot;name\&quot;:\&quot;Alice\&quot;}]&quot;;
 List&lt;User&gt; users = JsonUtil.json2list(jsonArray, User.class);
 </code></pre>
-<h2>Engine configuration</h2>
+<h2 id="search-engine-configuration">Engine configuration</h2>
 <p>On first use, <code>JsonUtil.getEngine()</code> loads <code>JsonEngineProvider</code> implementations through Java <code>ServiceLoader</code> and
 selects the provider with the highest priority. The project provides a Jackson 2 engine when its optional Jackson
 dependencies are present, but the facade itself is not tied to Jackson.</p>
@@ -220,7 +240,7 @@ dependencies are present, but the facade itself is not tied to Jackson.</p>
 <p><code>setEngine(null)</code> is rejected. Replacing the engine changes subsequent calls globally, so configure it during
 application startup rather than concurrently with ordinary JSON work. Date support, duplicate-key handling, time zone
 behavior, and the concrete tree-model type are engine-specific rather than guarantees of <code>JsonUtil</code>.</p>
-<h2>Map, bean, and tree examples</h2>
+<h2 id="search-map-bean-and-tree-examples">Map, bean, and tree examples</h2>
 <pre><code class="language-java">Map&lt;String, Object&gt; source = new LinkedHashMap&lt;&gt;();
 source.put(&quot;name&quot;, &quot;Ada&quot;);
 source.put(&quot;age&quot;, 36);
@@ -234,12 +254,12 @@ Map&lt;String, Object&gt; userValues = JsonUtil.pojo2map(user);
 <p><code>json2sortMap</code> requests a <code>LinkedHashMap</code> so parsed key order is retained. <code>convertValue</code> delegates to the selected
 engine's object-conversion facility and is useful when the desired target type is known at runtime. <code>json2Node</code> is for
 engine-specific tree traversal; cast its result only when the chosen engine is known.</p>
-<h2>Lifecycle and failures</h2>
+<h2 id="search-lifecycle-and-failures">Lifecycle and failures</h2>
 <p>The first engine is cached in a volatile field after lazy creation. If no <code>JsonEngineProvider</code> is visible to the
 runtime class loader, <code>getEngine()</code> throws <code>IllegalStateException</code>. <code>fromJson</code> wraps parser/mapper failures in a
 <code>RuntimeException</code> with the original cause. Other methods delegate directly and may expose provider-specific
 exceptions. Do not log untrusted raw JSON merely because a conversion failed.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p><code>JsonUtil</code> keeps the selected engine in a <code>volatile</code> field and uses synchronized double-checked initialization. This
 means normal calls avoid locking after startup while still publishing a fully created engine safely. Providers are
 discovered through Java's standard <code>ServiceLoader</code>, then compared by their declared priority; this lets applications
@@ -247,7 +267,7 @@ replace the JSON backend without changing <code>JsonUtil</code> callers.</p>
 <p>The facade deliberately exposes <code>Object</code> for <code>json2Node</code>: returning a library-specific tree type here would make the
 common module permanently depend on that library. The trade-off is that tree processing code must know which provider
 is active.</p>
-<h2>Conclusion</h2>
+<h2 id="search-conclusion">Conclusion</h2>
 <p>The <code>JsonUtil</code> class provides comprehensive utility methods for working with JSON data, making it easier to serialize,
 deserialize, and convert between JSON and Java objects.</p>
 

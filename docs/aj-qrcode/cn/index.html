@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-qrcode" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-qrcode">aj-qrcode</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-qrcode/cn/">首页</a>
@@ -90,19 +109,20 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>aj-qrcode</h1>
+                <h1 id="search-aj-qrcode">aj-qrcode</h1>
 <p><code>aj-qrcode</code> 是一个兼容 Java 8、无第三方运行时依赖的 QR Code Model 2 编码器。实现基于 <a href="https://github.com/nayuki/QR-Code-generator">Nayuki QR Code generator</a>，支持版本 1–40、四种纠错等级，并提供常规 API 与更紧凑的 <code>fast</code> 编码器。</p>
 <p>该模块只负责<strong>生成</strong>二维码，不提供扫描/解码、Web 响应输出、自动写入 SVG 文件或 Logo 叠加功能。</p>
-<h2>依赖</h2>
+<h2 id="search-依赖">依赖</h2>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
     &lt;artifactId&gt;aj-qrcode&lt;/artifactId&gt;
     &lt;version&gt;1.4&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
-<h2>文档导航</h2>
+<h2 id="search-文档导航">文档导航</h2>
 <table>
 <thead>
 <tr>

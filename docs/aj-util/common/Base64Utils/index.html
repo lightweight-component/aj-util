@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,11 +148,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Base64Utils</h1>
+                <h1 id="search-base64utils">Base64Utils</h1>
 <p><code>com.ajaxjs.util.Base64Utils</code> wraps Java's standard and URL-safe Base64 codecs. Base64 is encoding, not encryption.</p>
-<h2>Input and output</h2>
+<h2 id="search-input-and-output">Input and output</h2>
 <p>Construct with <code>byte[]</code>, <code>String</code> (UTF-8), or <code>String, Charset</code>. Inputs and the constructor charset must be non-null. The byte array is retained, not copied.</p>
 <p><code>setUrlSafe(true)</code> selects the URL alphabet for encoding <strong>and decoding</strong>. <code>setWithoutPadding(true)</code> only removes encoding padding. Both setters return the instance.</p>
 <p><code>encode()</code> and <code>decode()</code> return bytes; <code>encodeAsString()</code> returns ASCII Base64. <code>decodeAsString()</code> uses UTF-8; its <code>Charset</code> overload controls decoded text. Invalid Base64 raises <code>IllegalArgumentException</code>.</p>
@@ -145,7 +165,7 @@ String encoded = new Base64Utils(&quot;你好&quot;, StandardCharsets.UTF_16)
 String decoded = new Base64Utils(encoded).setUrlSafe(true)
         .decodeAsString(StandardCharsets.UTF_16);
 </code></pre>
-<h2>Standard, URL-safe, and padding modes</h2>
+<h2 id="search-standard-url-safe-and-padding-modes">Standard, URL-safe, and padding modes</h2>
 <p>Standard Base64 uses <code>+</code> and <code>/</code>. URL-safe Base64 substitutes <code>-</code> and <code>_</code>, avoiding characters that would otherwise
 need escaping in a URL value. Padding (<code>=</code>) completes groups of four output characters. It is optional in formats such
 as JWT, but the receiving protocol decides whether omitted padding is accepted.</p>
@@ -159,7 +179,7 @@ byte[] original = new Base64Utils(urlToken).setUrlSafe(true).decode();
 </code></pre>
 <p>The selected <code>urlSafe</code> mode must match the encoded alphabet for decoding. <code>withoutPadding</code> is an encoder setting;
 decoding accepts the representation supported by the JDK decoder, but it does not select the alphabet for you.</p>
-<h2>Binary data versus text</h2>
+<h2 id="search-binary-data-versus-text">Binary data versus text</h2>
 <p>Base64 carries bytes. The <code>String</code> constructors and <code>decodeAsString(...)</code> are convenience boundaries that turn text
 into bytes or bytes back into text. Use a <code>byte[]</code> constructor for a file, digest, key, or other binary material.</p>
 <pre><code class="language-java">byte[] digest = MessageDigest.getInstance(&quot;SHA-256&quot;)
@@ -171,7 +191,7 @@ byte[] restoredDigest = new Base64Utils(wireValue).decode();
 <p>A <code>byte[]</code> supplied to the constructor is retained by reference. Do not mutate it between construction and
 <code>encode()</code>/<code>decode()</code> unless that change is intentional. Base64 is not confidentiality protection: anyone who receives
 the encoded text can decode it. It also expands data to roughly four output characters per three input bytes.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>The implementation delegates to <code>java.util.Base64</code> rather than maintaining a custom codec. That gives it the JDK's
 validation behavior (<code>IllegalArgumentException</code> for malformed input) and keeps standard and URL-safe behavior aligned
 with the runtime. <code>encodeAsString()</code> explicitly uses US-ASCII because Base64 output is ASCII by definition.</p>

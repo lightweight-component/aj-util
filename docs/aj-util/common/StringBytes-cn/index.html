@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,12 +154,13 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>StringBytes</h1>
+                <h1 id="search-stringbytes">StringBytes</h1>
 <p><code>com.ajaxjs.util.StringBytes</code> 转换文本与字节。按方向选择构造器：<code>String</code> 对应 <code>getBytes(Charset)</code> / <code>getUTF8_Bytes()</code>；<code>byte[]</code> 对应 <code>getString(Charset)</code> / <code>getUTF8_String()</code>。</p>
 <p>无参数的 <code>getBytes()</code> / <code>getString()</code> 及 null 字符集使用平台默认值，可通过 <code>showPlatformDefaultCharset()</code> 查询。协议和文件应明确字符集。</p>
-<h2>十六进制</h2>
+<h2 id="search-十六进制">十六进制</h2>
 <p><code>bytesToHex(byte[])</code> 输出大写。<code>hexToBytes(String)</code> 接受大小写，空字符串返回空数组；奇数长度或非法字符抛出 <code>IllegalArgumentException</code>。十六进制相关方法不接受 null。</p>
 <pre><code class="language-java">import com.ajaxjs.util.StringBytes;
 import com.ajaxjs.util.ObjectHelper;

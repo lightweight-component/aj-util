@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-http" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-http">aj-http</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-http/cn/">首页</a>
@@ -90,9 +109,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>HTTP 高级用法索引</h1>
+                <h1 id="search-http-高级用法索引">HTTP 高级用法索引</h1>
 <p>本页为已有书签保留。原先将多个主题混在一起的高级用法已拆分，便于按任务查找，并缩短每页的阅读路径。</p>
 <table>
 <thead>

@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-s3client" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-s3client">aj-s3client</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-s3client/cn/">首页</a>
@@ -90,11 +109,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>Signature Version 2</h1>
+                <h1 id="search-signature-version-2">Signature Version 2</h1>
 <p><code>AliyunOSS</code> 和旧版 <code>NeteaseOSS</code> 继承 <code>BaseS3ClientSigV2</code>，使用<strong>虚拟主机式</strong> URL。<code>reports</code> 存储桶中的对象会请求 <code>https://reports.endpoint/object-key</code>；因此配置端点必须是厂商域名本身，不能包含存储桶或路径。</p>
-<h2>必需配置</h2>
+<h2 id="search-必需配置">必需配置</h2>
 <p>SigV2 除端点和凭据外，还需要在 <code>Config.remark</code> 中设置厂商授权前缀：<code>AliyunOSS</code> 使用 <code>OSS</code>，<code>NeteaseOSS</code> 使用 <code>NOS</code>。共享配置校验同样要求区域非空；默认 <code>auto</code> 满足该校验，但 SigV2 授权值本身不包含区域 scope。</p>
 <pre><code class="language-java">Config config = new Config();
 config.setEndPoint(&quot;oss-cn-example.aliyuncs.com&quot;);
@@ -107,15 +127,15 @@ AliyunOSS client = new AliyunOSS();
 client.setConfig(config);
 </code></pre>
 <p>如果厂商要求每个存储桶使用不同域名，只配置公共端点；<code>BaseS3ClientSigV2</code> 会自行构建存储桶主机名。</p>
-<h2>签名构建</h2>
+<h2 id="search-签名构建">签名构建</h2>
 <p>每个请求都带有 GMT <code>Date</code> 请求头。规范资源包含 <code>/{bucket}/{encoded-object-key}</code>；对象键仍按 SigV4 相同的 UTF-8 路径规则编码。基类将 Authorization 组织为：</p>
 <pre><code class="language-text">{remark} {accessKey}:{signature}
 </code></pre>
 <p><code>AliyunOSS</code> 使用 HMAC-SHA1 并对结果 Base64 编码；<code>NeteaseOSS</code> 使用其旧版 HMAC-SHA256 实现。这些是具体 Factory 的实现行为，并不表示任意 S3 SigV2 服务都可直接使用。</p>
-<h2>上传完整性行为</h2>
+<h2 id="search-上传完整性行为">上传完整性行为</h2>
 <p><code>AliyunOSS.putObject</code> 以 HTTP 成功状态作为上传结果。<code>NeteaseOSS.putObject</code> 还会发送 <code>Content-MD5</code>，并且只在响应成功且未加引号的单段 ETag 等于内容 MD5 时返回成功。该检查会拒绝含 <code>-</code> 的分片式 ETag，不能推广到加密或经过转换的上传。</p>
 <p>两个客户端都没有可由调用方配置的 Content-Type 或元数据 Map；二进制上传使用共享 HTTP 文件类型。</p>
-<h2>运行注意事项</h2>
+<h2 id="search-运行注意事项">运行注意事项</h2>
 <ul>
 <li>虚拟主机式存储桶地址依赖 <code>bucket.endpoint</code> 的 DNS 和 TLS 证书，应使用实际厂商验证存储桶名称。</li>
 <li><code>getObject</code> 只发起 GET 并返回是否成功，响应正文会被丢弃，因此它不是下载功能。</li>

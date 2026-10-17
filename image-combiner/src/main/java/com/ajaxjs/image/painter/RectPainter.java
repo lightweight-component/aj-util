@@ -1,6 +1,6 @@
 package com.ajaxjs.image.painter;
 
-import com.ajaxjs.image.embedd.RectangleEmbedded;
+import com.ajaxjs.image.model.RectangleEmbedded;
 import com.ajaxjs.image.constant.enums.Direction;
 
 import java.awt.*;

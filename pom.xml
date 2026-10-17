@@ -14,6 +14,7 @@
 <!--        <module>aj-json</module>-->
 <!--        <module>aj-ftp</module>-->
         <module>aj-s3client</module>
+<!--        <module>aj-image</module>-->
 <!--        <module>aj-qrcode</module>-->
     </modules>
 </project>

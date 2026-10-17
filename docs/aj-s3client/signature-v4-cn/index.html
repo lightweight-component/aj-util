@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-s3client" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-s3client">aj-s3client</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-s3client/cn/">首页</a>
@@ -90,11 +109,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>Signature Version 4</h1>
+                <h1 id="search-signature-version-4">Signature Version 4</h1>
 <p><code>CloudflareR2</code>、<code>Backblaze</code> 和 <code>Scaleway</code> 均继承 <code>BaseS3ClientSigV4</code>，使用<strong>路径式</strong> URL。例如，<code>reports</code> 存储桶中键名为 <code>2026/a b.txt</code> 的对象地址为 <code>https://endpoint/reports/2026/a%20b.txt</code>；存储桶位于路径中，而不是主机名中。</p>
-<h2>必需配置</h2>
+<h2 id="search-必需配置">必需配置</h2>
 <p>SigV4 需要端点、访问密钥、私钥和区域。<code>Config</code> 的 <code>region</code> 默认是 <code>auto</code>，适合 Cloudflare R2，但并非所有服务都接受该值。使用 Backblaze、Scaleway 或其他兼容端点时，应设置厂商要求的签名区域。</p>
 <pre><code class="language-java">Config config = new Config();
 config.setEndPoint(&quot;s3.example-provider.com&quot;);
@@ -107,7 +127,7 @@ CloudflareR2 client = new CloudflareR2();
 client.setConfig(config);
 </code></pre>
 <p>端点会被规范化为 <code>https://…</code>，且必须仅是 origin。<code>https://host/prefix</code> 这类带路径的端点会被拒绝；本客户端不支持端点路径前缀。</p>
-<h2>签名内容</h2>
+<h2 id="search-签名内容">签名内容</h2>
 <p>每个操作都会生成 <code>x-amz-date</code> 与 <code>x-amz-content-sha256</code>。上传时对传入字节计算 SHA-256；GET、DELETE、创建/删除存储桶和根路径列举使用空正文的 SHA-256。随后由以下内容构成规范请求：</p>
 <ol>
 <li>HTTP 方法。</li>
@@ -117,12 +137,12 @@ client.setConfig(config);
 </ol>
 <p><code>SignBuilder</code> 为 <code>date/region/s3/aws4_request</code> 派生 AWS4 密钥，并生成 <code>Authorization: AWS4-HMAC-SHA256 …</code>。请求头名称不区分大小写并排序；值会去首尾空白并合并连续空白。包含 CR 或 LF 的请求头值会被拒绝。</p>
 <p>基础客户端参与签名的请求头是 <code>x-amz-date</code> 与 <code>x-amz-content-sha256</code>。<code>Backblaze</code> 还会签名 <code>Host</code>；<code>Scaleway</code> 上传时会添加参与签名的 <code>x-amz-acl</code>。所有参与签名的请求头都必须以相同值实际发送，仅加入签名而未发送是不够的。</p>
-<h2>编码与对象键</h2>
+<h2 id="search-编码与对象键">编码与对象键</h2>
 <p>键名按 S3 规范使用 UTF-8 百分号编码：空格变为 <code>%20</code>，绝不变为 <code>+</code>；<code>/</code> 保留为路径分隔符；查询参数名和参数值分别编码、排序。不要预先编码键名：传入 <code>folder/a%20b.txt</code> 会将 <code>%</code> 当作数据再次编码，应传入 <code>folder/a b.txt</code>。</p>
 <pre><code class="language-java">client.putObject(&quot;reports&quot;, &quot;exports/September report.csv&quot;, csvBytes);
 </code></pre>
 <p>客户端允许以 <code>/</code> 分隔的键名，但拒绝空键名和控制字符。对 S3 签名不会规范化 <code>.</code> 或 <code>..</code> 路径段，因为它们可能是有意义的对象键字节。</p>
-<h2>排查签名失败</h2>
+<h2 id="search-排查签名失败">排查签名失败</h2>
 <ul>
 <li>确认端点不带路径，并且是服务的 S3 API 端点，而不是公开对象 URL。</li>
 <li>使用厂商要求的区域；错误区域会改变 credential scope 和签名。</li>

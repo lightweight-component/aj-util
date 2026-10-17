@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,12 +148,13 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>HashHelper</h1>
+                <h1 id="search-hashhelper">HashHelper</h1>
 <p><code>com.ajaxjs.util.HashHelper</code> computes digests and HMACs. Hashing is not reversible encryption; MD5 and SHA-1 are legacy digests, unsuitable for collision-resistant security decisions. Plain hashes are not password-storage schemes.</p>
 <p>Construct with an algorithm name and <code>String</code> (UTF-8) or <code>byte[]</code>. <code>hash()</code> dispatches names beginning exactly with <code>Hmac</code> to <code>getMac()</code>, otherwise to <code>getMessageDigest()</code>. <code>hashAsStr()</code> returns lowercase hex; <code>hashAsBase64()</code> returns padded Base64, and <code>hashAsBase64(true)</code> omits padding.</p>
-<h2>HMAC keys</h2>
+<h2 id="search-hmac-keys">HMAC keys</h2>
 <p><code>setKey(String)</code> uses UTF-8 key bytes; <code>setKeyBase64(String)</code> decodes key material. They return the instance. A missing key throws <code>IllegalStateException</code>; no random key is generated. Unsupported algorithms fail rather than returning null.</p>
 <pre><code class="language-java">import com.ajaxjs.util.HashHelper;
 
@@ -143,10 +163,10 @@ String mac = new HashHelper(HashHelper.HMAC_SHA256, &quot;hello&quot;)
         .setKey(&quot;example-only-key&quot;).hashAsBase64();
 String sameMac = HashHelper.hmacSHA256(&quot;hello&quot;, &quot;example-only-key&quot;, false);
 </code></pre>
-<h2>Convenience methods</h2>
+<h2 id="search-convenience-methods">Convenience methods</h2>
 <p><code>md5(String)</code>, <code>md5(byte[])</code>, <code>md5(InputStream)</code>, <code>sha1(String)</code> and <code>sha256(String)</code> return lowercase hex. <code>hmacMD5</code>, <code>hmacSHA1</code> and <code>hmacSHA256</code> take <code>(String data, String key, boolean isWithoutPadding)</code> and return Base64.</p>
 <p><strong>Stream ownership:</strong> current <code>md5(InputStream)</code> uses <code>DataReader</code> and closes the input stream, despite its Javadoc saying otherwise. Do not reuse it afterward. It processes chunks instead of loading the entire file. Protect real HMAC keys; the example key is not a production secret.</p>
-<h2>Digest or HMAC?</h2>
+<h2 id="search-digest-or-hmac">Digest or HMAC?</h2>
 <p>A message digest is an unkeyed fingerprint: the same bytes always produce the same result, so it is useful for an
 integrity check where the expected digest comes from a trusted source. HMAC combines data with a shared secret and is
 used to authenticate a message. HMAC is not selected by a separate method family internally: the exact algorithm name
@@ -166,7 +186,7 @@ String mac = new HashHelper(HashHelper.HMAC_SHA256, payloadBytes)
         .setKeyBase64(keyFromConfig)
         .hashAsBase64();
 </code></pre>
-<h2>Output formats and interoperability</h2>
+<h2 id="search-output-formats-and-interoperability">Output formats and interoperability</h2>
 <p><code>hashAsStr()</code> is lowercase hexadecimal and is usually convenient for logs or a checksum file. <code>hashAsBase64()</code> is
 shorter for a binary digest and retains <code>=</code> padding by default. Choose the format required by the remote protocol;
 changing hex letter case or Base64 padding can cause a signature comparison to fail even when the underlying bytes are
@@ -174,7 +194,7 @@ identical.</p>
 <p><code>String</code> data is consistently converted with UTF-8. For a protocol that signs a canonical byte sequence, construct
 the helper with <code>byte[]</code> after producing that exact sequence. Avoid signing a Java object string representation unless
 the protocol explicitly specifies it.</p>
-<h2>Stream checksums</h2>
+<h2 id="search-stream-checksums">Stream checksums</h2>
 <p><code>md5(InputStream)</code> updates a <code>MessageDigest</code> per chunk, so it does not retain the entire file in memory:</p>
 <pre><code class="language-java">try (InputStream in = Files.newInputStream(Paths.get(&quot;release.zip&quot;))) {
     String checksum = HashHelper.md5(in);
@@ -183,7 +203,7 @@ the protocol explicitly specifies it.</p>
 </code></pre>
 <p>The method closes the stream itself. The surrounding try-with-resources is harmless but redundant; use it when the
 same code path may change to another stream API later.</p>
-<h2>Security guidance and implementation notes</h2>
+<h2 id="search-security-guidance-and-implementation-notes">Security guidance and implementation notes</h2>
 <p>Prefer SHA-256 or HMAC-SHA-256 for new designs. MD5 and SHA-1 may remain necessary for legacy interoperability or a
 non-security checksum, but do not use them for password storage, signatures, or collision-resistant identity checks.
 For passwords, use a dedicated adaptive password-hashing scheme supplied by an appropriate security library.</p>

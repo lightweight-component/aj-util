@@ -1,0 +1,17 @@
+<section class="docs-search" data-doc-search data-project="{{ project }}" data-language="{% if isChinese %}zh{% else %}en{% endif %}">
+    <form role="search">
+        <label for="doc-search-input">{% if isChinese %}搜索文档{% else %}Search documentation{% endif %}</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="{% if isChinese %}关键词或方法名{% else %}Keyword or method name{% endif %}" />
+            <button type="submit">{% if isChinese %}搜索{% else %}Search{% endif %}</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">{% if isChinese %}范围{% else %}Scope{% endif %}</label>
+        <select id="doc-search-scope">
+            <option value="{{ project }}">{{ project }}</option>
+            <option value="">{% if isChinese %}全部项目{% else %}All projects{% endif %}</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>{% if isChinese %}启用 JavaScript 后可搜索文档。{% else %}Enable JavaScript to search documentation.{% endif %}</noscript>
+</section>

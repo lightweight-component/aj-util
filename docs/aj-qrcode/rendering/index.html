@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-qrcode" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-qrcode">aj-qrcode</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-qrcode/">Home</a>
@@ -84,16 +103,17 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>PNG and SVG rendering</h1>
+                <h1 id="search-png-and-svg-rendering">PNG and SVG rendering</h1>
 <p><code>Utils.toImage(qr, scale, border)</code> renders a <code>QrCode</code> as <code>BufferedImage</code>. <code>scale</code> is pixels per module and must be positive; <code>border</code> is the light quiet-zone width in modules and must be non-negative. A border of four is the usual interoperable choice.</p>
 <pre><code class="language-java">QrCode qr = QrCode.encodeText(&quot;Invoice #2026-031&quot;, Ecc.QUARTILE);
 BufferedImage image = Utils.toImage(qr, 8, 4, 0xFFFFFF, 0x17365D);
 Utils.writePng(image, &quot;invoice-qr.png&quot;);
 </code></pre>
 <p>The colors are 24-bit <code>0xRRGGBB</code>. Ensure strong contrast. <code>writePng()</code> delegates to <code>ImageIO.write()</code> and can throw <code>IOException</code>; choose, validate, and authorize output locations in application code.</p>
-<h2>SVG</h2>
+<h2 id="search-svg">SVG</h2>
 <p><code>toSvgString()</code> returns XML rather than writing a file. SVG preserves sharp module edges at any scale and is usually suitable for documents or browser assets.</p>
 <pre><code class="language-java">import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

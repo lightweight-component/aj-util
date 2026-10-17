@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-http" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-http">aj-http</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-http/cn/">首页</a>
@@ -90,9 +109,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>请求生命周期</h1>
+                <h1 id="search-请求生命周期">请求生命周期</h1>
 <p>请安装 <a href="/aj-http/cn/">AJ HTTP</a>，而不只是 AJ Util。<code>Request</code> 位于 <code>com.ajaxjs.util.httpremote</code>；<code>Response</code>、<code>HttpMethod</code>、<code>HttpConstant</code> 和 <code>PayloadType</code> 位于 <code>com.ajaxjs.util.httpremote.model</code>。</p>
 <ol>
 <li>创建 <code>new Request(HttpMethod.GET, url)</code>（或方法类的 <code>(HttpMethod, String)</code> 构造函数），此时<strong>不会</strong>发送请求。</li>
@@ -102,7 +122,7 @@
 <li><code>connect()</code> 读取状态和响应。自行管理生命周期时，处理响应后在 <code>finally</code> 中断开连接。</li>
 </ol>
 <p><code>Get(String, Consumer)</code>、<code>Delete(String, Consumer)</code> 以及带数据的 <code>Post</code>/<code>Put</code> 构造函数会立即发送。<code>Head(String)</code> 则仅配置对象，需要调用 <code>init()</code> 和 <code>connect()</code>。不要在自动发送的构造函数之后再次发送。请求对象可变，不要在并发操作间共享。</p>
-<h2>显式生命周期的 JSON POST</h2>
+<h2 id="search-显式生命周期的-json-post">显式生命周期的 JSON POST</h2>
 <pre><code class="language-java">import com.ajaxjs.util.httpremote.Request;
 import com.ajaxjs.util.httpremote.model.HttpConstant;
 import com.ajaxjs.util.httpremote.model.HttpMethod;
@@ -126,7 +146,7 @@ try {
     connection.disconnect();
 }
 </code></pre>
-<h3>正文转换</h3>
+<h3 id="search-正文转换">正文转换</h3>
 <ul>
 <li><code>setData(byte[])</code> 不转换内容，直接发送字节。单独设置正确的内容类型；任意文本、XML 或二进制内容优先使用此方法。</li>
 <li><code>setData(String)</code> 接受类似 JSON 的文本（去除首尾空白后以 <code>{</code> 或 <code>[</code> 开头，不是完整校验）。JSON 类型原样以 UTF-8 发送；表单类型先解析为对象再连接字段。</li>
@@ -135,7 +155,7 @@ try {
 <li>非字节重载须先设置内容类型。此处的 multipart Map 转换会抛出 <code>UnsupportedOperationException</code>，请改用 <code>MultipartPost</code>。</li>
 <li>自动发送的 <code>BasePost</code> 构造函数只处理无外围空白的 JSON 形状字符串或含 <code>=</code> 的字符串。其他字符串可能不生成正文。优先使用明确的 Map 或 UTF-8 字节数组。</li>
 </ul>
-<h2>响应与失败</h2>
+<h2 id="search-响应与失败">响应与失败</h2>
 <p><code>Response.isOk()</code> 表示 200–299。其他状态读取错误流（如果有）；禁止重定向时，3xx 可能没有文本。除非另行配置，否则采用 <code>HttpURLConnection</code> 的重定向行为。<code>Response.isOk(Map)</code> 是不同的 AJ-Spring 业务辅助方法，检查 <code>status.toString()</code> 是否为 <code>&quot;1&quot;</code>。</p>
 <ul>
 <li><code>connect()</code> 捕获受检 <code>IOException</code>，设置 <code>isOk=false</code> 和 <code>ex</code>；HTTP 错误通常没有异常。未取得状态时 <code>httpCode</code> 可能为 null。</li>

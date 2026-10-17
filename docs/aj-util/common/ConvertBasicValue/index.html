@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,20 +148,21 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>ConvertBasicValue Tutorial</h1>
+                <h1 id="search-convertbasicvalue-tutorial">ConvertBasicValue Tutorial</h1>
 <p>This tutorial provides an overview of the <code>ConvertBasicValue</code> class, which is part of
 the <code>lightweight-component/aj-util</code> library. <code>ConvertBasicValue</code> offers a collection of utility methods for converting
 objects to
 basic Java types. This guide will cover the purpose of each method and provide usage examples.</p>
-<h2>Introduction</h2>
+<h2 id="search-introduction">Introduction</h2>
 <p>The <code>ConvertBasicValue</code> class provides methods for safely converting objects to various basic Java types
 like <code>String</code>, <code>boolean</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>Date</code>, and <code>BigDecimal</code>. These methods handle null
 values and attempt to parse string representations where appropriate, providing a more robust alternative to direct
 casting.</p>
-<h2>Methods</h2>
-<h3>1. <code>basicCast(Object value, Class&lt;T&gt; clz)</code></h3>
+<h2 id="search-methods">Methods</h2>
+<h3 id="search-1-basiccast-object-value-class-t-clz">1. <code>basicCast(Object value, Class&lt;T&gt; clz)</code></h3>
 <p>Safely casts an object to a specified class type. This method leverages <code>basicConvert</code> to perform the initial conversion
 and then casts the result to the desired type.</p>
 <ul>
@@ -158,7 +178,7 @@ and then casts the result to the desired type.</p>
 <pre><code class="language-java">Integer intValue = ConvertBasicValue.basicCast(&quot;123&quot;, Integer.class);
 // intValue will be 123
 </code></pre>
-<h3>2. <code>basicConvert(Object value, Class&lt;?&gt; clz)</code></h3>
+<h3 id="search-2-basicconvert-object-value-class-clz">2. <code>basicConvert(Object value, Class&lt;?&gt; clz)</code></h3>
 <p>Converts an object to a specified class type. This method handles <code>null</code> values and performs type-specific conversions.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -184,7 +204,7 @@ handles:</p>
 <li><strong>Enum:</strong> Converts a name or integer ordinal to the corresponding enum constant. Ordinal conversion returns the enum
 value, not its numeric ordinal.</li>
 </ul>
-<h3>3. <code>toBoolean(Object value)</code></h3>
+<h3 id="search-3-toboolean-object-value">3. <code>toBoolean(Object value)</code></h3>
 <p>Converts an object to a boolean. This method handles various input types, including strings, numbers, and booleans.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -201,7 +221,7 @@ assertTrue(ConvertBasicValue.toBoolean(&quot;1&quot;));
 assertFalse(ConvertBasicValue.toBoolean(&quot;false&quot;));
 assertFalse(ConvertBasicValue.toBoolean(0));
 </code></pre>
-<h3>4. <code>object2int(Object value)</code></h3>
+<h3 id="search-4-object2int-object-value">4. <code>object2int(Object value)</code></h3>
 <p>Converts an object to an integer. This method handles <code>null</code> values and attempts to parse string representations.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -217,7 +237,7 @@ assertFalse(ConvertBasicValue.toBoolean(0));
 assertEquals(123, ConvertBasicValue.object2int(&quot;123&quot;));
 assertEquals(-456, ConvertBasicValue.object2int(&quot;-456&quot;));
 </code></pre>
-<h3>5. <code>object2long(Object value)</code></h3>
+<h3 id="search-5-object2long-object-value">5. <code>object2long(Object value)</code></h3>
 <p>Converts an object to a long. This method handles <code>null</code> values and attempts to parse string representations.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -233,7 +253,7 @@ assertEquals(-456, ConvertBasicValue.object2int(&quot;-456&quot;));
 assertEquals(123L, ConvertBasicValue.object2long(&quot;123&quot;));
 assertEquals(-456L, ConvertBasicValue.object2long(&quot;-456&quot;));
 </code></pre>
-<h3>6. <code>object2double(Object value)</code></h3>
+<h3 id="search-6-object2double-object-value">6. <code>object2double(Object value)</code></h3>
 <p>Converts an object to a double. This method handles <code>null</code> values and attempts to parse string representations.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -249,7 +269,7 @@ assertEquals(3.14, ConvertBasicValue.object2double(&quot;3.14&quot;), 0.0001);
 </code></pre>
 <p><code>toJavaValue(String)</code> recognizes booleans, <code>null</code>, integers, longs, and decimal values, including negative decimals such
 as <code>-3.14</code>.</p>
-<h2>Unit Test Examples</h2>
+<h2 id="search-unit-test-examples">Unit Test Examples</h2>
 <p>Here are some examples from the unit tests:</p>
 <pre><code class="language-java">import org.junit.jupiter.api.Test;
 import static com.ajaxjs.util.ConvertBasicValue.*;
@@ -292,7 +312,7 @@ public class TestConvertBasicValue {
     }
 }
 </code></pre>
-<h2>Conclusion</h2>
+<h2 id="search-conclusion">Conclusion</h2>
 <p>The <code>ConvertBasicValue</code> class provides a useful set of utilities for safely converting objects to basic Java types. By
 using these methods, you can simplify your code and handle potential <code>null</code> values and parsing errors
 more gracefully. Remember to consult the library's Javadoc for the most up-to-date information and additional methods.</p>

@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,11 +154,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>日志工具</h1>
+                <h1 id="search-日志工具">日志工具</h1>
 <p><code>com.ajaxjs.util.log</code> 包提供与 SLF4J 配合使用的小型辅助工具。</p>
-<h2>Trace 上下文</h2>
+<h2 id="search-trace-上下文">Trace 上下文</h2>
 <p><code>Trace</code> 定义了 <code>traceId</code>、<code>bizAction</code> 和 <code>ENABLE_OPERATION_LOG</code> 等 MDC 键。仅当 MDC 已存在 <code>ENABLE_OPERATION_LOG</code> 时，<code>saveLogToMDC()</code> 才会追加内容。</p>
 <pre><code class="language-java">MDC.put(Trace.ENABLE_OPERATION_LOG, &quot;Start: &quot;);
 Trace.saveLogToMDC(&quot;created order; &quot;);
@@ -147,7 +167,7 @@ String operationLog = MDC.get(Trace.ENABLE_OPERATION_LOG);
 MDC.remove(Trace.ENABLE_OPERATION_LOG);
 </code></pre>
 <p>MDC 通常是线程本地上下文。任务跨线程池或请求边界时，需要自行传播或清理。</p>
-<h2>TextBox</h2>
+<h2 id="search-textbox">TextBox</h2>
 <p><code>TextBox</code> 使用制表框字符和 ANSI 颜色格式化诊断用键值数据。</p>
 <pre><code class="language-java">String output = new TextBox()
         .boxStart(&quot;Request&quot;)
@@ -156,7 +176,7 @@ MDC.remove(Trace.ENABLE_OPERATION_LOG);
         .boxEnd();
 </code></pre>
 <p>它默认换行长文本、将常见 CJK 字符按双宽度计算，并将单个值截断到 1,500 个字符。<code>setWrapLongLines(false)</code> 改为截断模式。ANSI 输出适合支持它的终端，并不适用于所有结构化日志目标。</p>
-<h2>EnableOperationLog</h2>
+<h2 id="search-enableoperationlog">EnableOperationLog</h2>
 <p><code>@EnableOperationLog</code> 是带可选标题的运行时方法注解：</p>
 <pre><code class="language-java">@EnableOperationLog(&quot;创建订单&quot;)
 public void createOrder() {

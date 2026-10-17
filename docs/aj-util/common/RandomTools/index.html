@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>RandomTools</h1>
+                <h1 id="search-randomtools">RandomTools</h1>
 <p><code>RandomTools</code> generates ordinary random numbers and strings, exposes a shared <code>SecureRandom</code>, and creates UUID version 7 strings.</p>
 <pre><code class="language-java">int code = RandomTools.generateNumber();          // six digits, 100000–999999
 String text = RandomTools.generateRandomString(8); // eight letters/digits
@@ -143,7 +163,7 @@ Date createdAt = RandomTools.showTime(compactId);
 <p><code>generateNumber(int)</code> accepts 1 through 9 digits, and <code>generateRandomString(int)</code> requires a positive length. Both use <code>ThreadLocalRandom</code> and are not suitable for passwords, authentication codes, tokens, or cryptographic keys.</p>
 <p><code>uuidV7</code> uses <code>RandomTools.RANDOM</code> (<code>SecureRandom</code>) for its random portion and embeds the current epoch millisecond. UUIDv7 is time-ordered by that timestamp but is not guaranteed monotonic inside the same millisecond or if the system clock moves backward. It is an identifier, not a secret token. <code>showTime</code> accepts hyphenated or 32-character UUIDv7 input and rejects other UUID versions.</p>
 <p>Use <code>RandomTools.RANDOM</code> or <code>DoCipher.randomBytes()</code> when cryptographically strong random bytes are needed.</p>
-<h2>UUIDv7 format and validation</h2>
+<h2 id="search-uuidv7-format-and-validation">UUIDv7 format and validation</h2>
 <p>UUIDv7 includes a 48-bit Unix-millisecond timestamp, version bits, RFC UUID variant bits, and 74 random bits. The
 default <code>uuidV7()</code> is equivalent to <code>uuidV7(false)</code>; it returns a compact 32-character lowercase value. Choose the
 hyphenated form when interoperating with APIs that expect <code>UUID.toString()</code> format.</p>
@@ -156,7 +176,7 @@ Date sameTimestamp = RandomTools.showTime(id.replace(&quot;-&quot;, &quot;&quot;
 <p><code>showTime</code> does not trim whitespace and throws <code>IllegalArgumentException</code> for malformed input or a UUID that is not
 version 7. The returned <code>Date</code> is the timestamp embedded in the identifier; it is not independent proof of the actual
 creation time.</p>
-<h2>Randomness choices</h2>
+<h2 id="search-randomness-choices">Randomness choices</h2>
 <table>
 <thead>
 <tr>
@@ -184,7 +204,7 @@ creation time.</p>
 </tbody>
 </table>
 <p>None of these APIs keeps a uniqueness registry. Store and enforce uniqueness where the application requires it.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>The numeric and alphanumeric helpers use <code>ThreadLocalRandom</code>, avoiding contention on a shared pseudo-random generator
 in ordinary concurrent application code. UUIDv7 takes a different path: it fills 16 bytes from a shared
 <code>SecureRandom</code>, then overwrites the timestamp, version, and variant positions according to UUIDv7 layout before

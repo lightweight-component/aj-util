@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,11 +148,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>XmlHelper</h1>
+                <h1 id="search-xmlhelper">XmlHelper</h1>
 <p><code>XmlHelper</code> parses XML strings, queries DOM nodes, and converts simple XML structures to and from maps. It does not read file paths: every <code>xml</code> argument is XML content.</p>
-<h2>Secure parsing and queries</h2>
+<h2 id="search-secure-parsing-and-queries">Secure parsing and queries</h2>
 <p><code>initBuilder()</code> creates a <code>DocumentBuilder</code> with DTD declarations, external entities, external DTD/schema access, XInclude, and entity expansion disabled. <code>initBuilder(boolean namespaceAware)</code> controls namespace awareness while retaining these security settings. Parsing failures use sanitized messages and do not append the full XML input.</p>
 <pre><code class="language-java">String xml = &quot;&lt;root&gt;&lt;item id=\&quot;7\&quot;&gt;value&lt;/item&gt;&lt;/root&gt;&quot;;
 
@@ -142,14 +162,14 @@ XmlHelper.xPath(xml, &quot;/root/item&quot;, node -&gt; System.out.println(node.
 XmlHelper.parseXML(xml, rootNode -&gt; System.out.println(rootNode.getNodeName()));
 </code></pre>
 <p><code>xPath</code> invokes the consumer for each selected node. <code>parseXML</code> invokes its <code>Consumer&lt;Node&gt;</code> once with the root element. <code>nodeAsMap(xml, xpath)</code> returns the selected node's attributes; <code>getNodeAttribute(node, name)</code> returns <code>null</code> if the attribute is absent or the node has no attributes. <code>getInnerXml(node)</code> returns the node's child markup.</p>
-<h2>Map and bean conversion</h2>
+<h2 id="search-map-and-bean-conversion">Map and bean conversion</h2>
 <pre><code class="language-java">String generated = XmlHelper.mapToXml(Collections.singletonMap(&quot;name&quot;, &quot;Ada&quot;));
 Map&lt;String, String&gt; values = XmlHelper.xmlToMap(&quot;&lt;xml&gt;&lt;name&gt;Ada&lt;/name&gt;&lt;/xml&gt;&quot;);
 Map&lt;String, Object&gt; repeated = XmlHelper.xmlToMultiValueMap(
         &quot;&lt;xml&gt;&lt;tag&gt;a&lt;/tag&gt;&lt;tag&gt;b&lt;/tag&gt;&lt;/xml&gt;&quot;);
 </code></pre>
 <p><code>mapToXml</code> produces an <code>&lt;xml&gt;</code> root and serializes map entries as elements. <code>xmlToMap</code> keeps one value per element name; <code>xmlToMultiValueMap</code> preserves repeated names as collections. <code>beanToXml</code> serializes JavaBean properties. XML element names must be valid; these helpers are for simple data exchange rather than arbitrary XML schema processing.</p>
-<h2>Node-level operations</h2>
+<h2 id="search-node-level-operations">Node-level operations</h2>
 <pre><code class="language-java">String xml = &quot;&lt;root&gt;&lt;user id=\&quot;7\&quot;&gt;&lt;name&gt;Ada&lt;/name&gt;&lt;/user&gt;&lt;/root&gt;&quot;;
 Element root = XmlHelper.getRoot(xml);
 Element user = (Element) root.getElementsByTagName(&quot;user&quot;).item(0);
@@ -162,12 +182,12 @@ Map&lt;String, String&gt; attributes = XmlHelper.nodeAsMap(xml, &quot;/root/user
 attribute whose value is absent. <code>nodeAsMap</code> is useful for attributes only—element text belongs to the node content.
 XPath expressions use the JDK XPath implementation; pass a namespace-aware builder only when directly working with
 namespaced DOM documents.</p>
-<h2>Conversion limits</h2>
+<h2 id="search-conversion-limits">Conversion limits</h2>
 <p><code>mapToXml</code>, <code>xmlToMap</code>, and <code>xmlToMultiValueMap</code> are deliberately simple conventions rather than a general XML
 binding framework. They do not preserve arbitrary mixed content, namespace semantics, comments, processing
 instructions, schema constraints, or every possible Java object graph. Use a dedicated binding library when those
 features are required.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>The parser is built from the JDK DOM APIs. Before parsing, <code>XmlHelper</code> disables known XXE entry points on the factory
 and builder configuration: DTD processing, external general/parameter entities, external DTD/schema access, XInclude,
 and entity expansion. This is defense in depth for ordinary XML input, not a substitute for resource limits or a

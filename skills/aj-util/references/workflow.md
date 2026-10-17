@@ -2,6 +2,8 @@
 
 ## Establish scope
 
+For aj-image work, use [image.md](image.md) for module paths, commands, fixtures and documentation pairs. The aj-util-specific paths below apply only to the utility module.
+
 1. Locate the repository root and module separately. Read local instructions and code-style.md.
 2. Read the relevant source, callers and tests; use references/modules.md for refactoring migrations.
 3. Read aj-util/to_fix.md. Treat it as a dated baseline, not proof that current code still has every issue.

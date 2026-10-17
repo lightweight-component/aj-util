@@ -741,10 +741,9 @@ public class AppTest {
     /**
      * 测试绘制连续的方框，填充数组，自动调整文字宽度
      *
-     * @throws Exception
      */
     @Test
-    public void testRectangles() throws Exception {
+    public void testRectangles() {
         ImageCombiner combiner = new ImageCombiner("https://img.thebeastshop.com/combine_image/funny_topic/resource/bg_3x4.png", OutputFormat.JPG);
         int offsetX = 100;
         int y = 200;

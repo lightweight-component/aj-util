@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npx @11ty/eleventy --serve",
     "build": "eleventy",
-    "test": "eleventy --output=.test-dist && node test-docs.js"
+    "test": "node test-search.js && eleventy --output=.test-dist && node test-docs.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
   "description": "",
   "dependencies": {
     "@11ty/eleventy": "^3.0.0",
-    "eleventy-plugin-less": "^1.0.1"
+    "eleventy-plugin-less": "^1.0.1",
+    "markdown-it": "14.1.0"
   }
 }

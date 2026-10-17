@@ -16,7 +16,7 @@ public class TestUtils {
             if (bytesRead <= 0)
                 bytes = new byte[0]; // Handle empty files
             else if (bytesRead < bytes.length) {
-                // Resize array if needed
+                // Resize an array if needed
                 byte[] actualBytes = new byte[bytesRead];
                 System.arraycopy(bytes, 0, actualBytes, 0, bytesRead);
                 bytes = actualBytes;

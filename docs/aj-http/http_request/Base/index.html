@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-http" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-http">aj-http</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-http/">Home</a>
@@ -84,9 +103,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Request lifecycle</h1>
+                <h1 id="search-request-lifecycle">Request lifecycle</h1>
 <p>Install <a href="/aj-http/">AJ HTTP</a>, not just AJ Util. <code>Request</code> is in <code>com.ajaxjs.util.httpremote</code>; <code>Response</code>, <code>HttpMethod</code>, <code>HttpConstant</code> and <code>PayloadType</code> are in <code>com.ajaxjs.util.httpremote.model</code>.</p>
 <ol>
 <li>Construct <code>new Request(HttpMethod.GET, url)</code> (or a method class's <code>(HttpMethod, String)</code> constructor). Construction does <strong>not</strong> send.</li>
@@ -96,7 +116,7 @@
 <li><code>connect()</code> reads status and response. Consume the response, then disconnect the connection in <code>finally</code> when managing this lifecycle yourself.</li>
 </ol>
 <p><code>Get(String, Consumer)</code>, <code>Delete(String, Consumer)</code> and the data-taking <code>Post</code>/<code>Put</code> constructors send immediately. In contrast, <code>Head(String)</code> only configures an object: call <code>init()</code> and <code>connect()</code>. Do not send a second time after an auto-sending constructor. Requests are mutable; do not share across concurrent operations.</p>
-<h2>JSON POST with explicit lifecycle</h2>
+<h2 id="search-json-post-with-explicit-lifecycle">JSON POST with explicit lifecycle</h2>
 <pre><code class="language-java">import com.ajaxjs.util.httpremote.Request;
 import com.ajaxjs.util.httpremote.model.HttpConstant;
 import com.ajaxjs.util.httpremote.model.HttpMethod;
@@ -120,7 +140,7 @@ try {
     connection.disconnect();
 }
 </code></pre>
-<h3>Body conversion</h3>
+<h3 id="search-body-conversion">Body conversion</h3>
 <ul>
 <li><code>setData(byte[])</code> sends exact bytes without conversion. Set an appropriate content type separately; use bytes for arbitrary text, XML or binary data.</li>
 <li><code>setData(String)</code> accepts JSON-looking text (a leading <code>{</code> or <code>[</code> after trimming, not full validation). For JSON it sends UTF-8 unchanged; for form data it parses an object then joins fields.</li>
@@ -129,7 +149,7 @@ try {
 <li>Set content type first for non-byte overloads. Multipart Map conversion here throws <code>UnsupportedOperationException</code>; use <code>MultipartPost</code> instead.</li>
 <li>Auto-sending <code>BasePost</code> constructors dispatch String bodies only when they look like JSON without surrounding whitespace or contain <code>=</code>. Other strings can silently produce no body. Prefer an explicit Map or UTF-8 byte array.</li>
 </ul>
-<h2>Responses and failures</h2>
+<h2 id="search-responses-and-failures">Responses and failures</h2>
 <p><code>Response.isOk()</code> means 200–299. Other statuses use the error stream, if any; a 3xx with redirects disabled may have no text. Normal <code>HttpURLConnection</code> redirect behavior applies unless configured otherwise. <code>Response.isOk(Map)</code> is a different, AJ-Spring-specific helper checking whether <code>status.toString()</code> equals <code>&quot;1&quot;</code>.</p>
 <ul>
 <li><code>connect()</code> catches checked <code>IOException</code>, sets <code>isOk=false</code> and <code>ex</code>; HTTP errors usually have no exception. <code>httpCode</code> can be null if no status was received.</li>

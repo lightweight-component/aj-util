@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-qrcode" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-qrcode">aj-qrcode</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-qrcode/">Home</a>
@@ -84,19 +103,20 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>aj-qrcode</h1>
+                <h1 id="search-aj-qrcode">aj-qrcode</h1>
 <p><code>aj-qrcode</code> is a dependency-free, Java 8 compatible encoder for QR Code Model 2. It is based on <a href="https://github.com/nayuki/QR-Code-generator">Nayuki's QR Code generator</a>, supports versions 1–40 and all four error-correction levels, and offers both a normal API and a compact <code>fast</code> encoder.</p>
 <p>The module generates symbols only. It does not scan/decode QR codes, create web responses, write SVG files automatically, or overlay logos.</p>
-<h2>Dependency</h2>
+<h2 id="search-dependency">Dependency</h2>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
     &lt;artifactId&gt;aj-qrcode&lt;/artifactId&gt;
     &lt;version&gt;1.4&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
-<h2>Documentation map</h2>
+<h2 id="search-documentation-map">Documentation map</h2>
 <table>
 <thead>
 <tr>

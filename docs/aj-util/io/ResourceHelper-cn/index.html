@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,9 +154,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>ResourceHelper</h1>
+                <h1 id="search-resourcehelper">ResourceHelper</h1>
 <p><code>ResourceHelper</code> 用于定位类路径资源。不传目标类时，资源名相对于 classpath 根目录；传入目标类时，解析规则与 <code>Class.getResource</code> 一致。</p>
 <pre><code class="language-java">String text = new ResourceHelper(&quot;config/application.properties&quot;).toString();
 Properties properties = new ResourceHelper(&quot;config/application.properties&quot;).getProperties();
@@ -145,7 +165,7 @@ Properties properties = new ResourceHelper(&quot;config/application.properties&q
 InputStream stream = new ResourceHelper(&quot;config.properties&quot;, MyService.class).getStream();
 </code></pre>
 <p><code>getStream()</code> 可读取打包在 JAR 内的资源。<code>getPath(boolean)</code> 和 <code>list(Consumer&lt;File&gt;)</code> 需要资源实际位于文件系统中，对 <code>jar:</code> URL 不一定可用。<code>getJarDir()</code> 在运行位置可确定时返回 JAR 所在目录。调用方需要自行关闭 <code>getStream()</code> 返回的流。</p>
-<h2>如何选择资源名</h2>
+<h2 id="search-如何选择资源名">如何选择资源名</h2>
 <p>两个构造器的查找根目录不同。这正是资源明明在 <code>src/test/resources</code> 中、运行时却找不到的常见原因。</p>
 <table>
 <thead>
@@ -185,7 +205,7 @@ String rootText = new ResourceHelper(&quot;/test.txt&quot;, MyIoTest.class).toSt
 </code></pre>
 <p>当资源不存在时，<code>getStream()</code>、<code>toString()</code> 与 <code>getProperties()</code> 会抛出 <code>IllegalArgumentException</code>。这样可以在
 定位资源的位置立即暴露必需配置缺失的问题，而不是在后面以 <code>NullPointerException</code> 的形式失败。</p>
-<h2>读取文本和 properties</h2>
+<h2 id="search-读取文本和-properties">读取文本和 properties</h2>
 <p><code>toString()</code> 委托给 <code>DataReader</code>：以 UTF-8 解码、把换行规范化为当前平台分隔符，并关闭流。<code>getProperties()</code>
 加载标准 Java <code>Properties</code> 文件，也会关闭流。</p>
 <pre><code class="language-java">Properties db = new ResourceHelper(&quot;test-demo.properties&quot;).getProperties();
@@ -195,13 +215,13 @@ String json = new ResourceHelper(&quot;fixtures/request.json&quot;).toString();
 </code></pre>
 <p>当图片解码器、证书解析器等下游 API 需要流时，请使用 <code>getStream()</code>。此时由调用方负责关闭，且不要在下游 API
 尚未读取完之前提前关闭它。</p>
-<h2>文件系统与打包资源的边界</h2>
+<h2 id="search-文件系统与打包资源的边界">文件系统与打包资源的边界</h2>
 <p>classpath 查找返回的是 URL，并不一定对应一个 <code>File</code>。开发环境通常是 <code>file:</code> URL；部署后的应用常常是 <code>jar:</code>
 URL。<code>getPath(true)</code> 只能把前者转换为可用的文件系统路径，因此它适用于测试或未打包应用，却不适合必须从可执行
 JAR 内读取的资源。<code>list(Consumer&lt;File&gt;)</code> 也有同样的 <code>file:</code> 限制，并且枚举的是 classpath 根目录。</p>
 <p><code>getJarDir()</code> 用来定位运行产物旁边的文件，不是用于查找产物内部资源。<code>getClassName(File, String)</code> 根据 <code>.class</code>
 文件名与包前缀生成二进制类名，并会拒绝非 <code>.class</code> 文件。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p>该类不会把资源复制到临时目录，而是优先保留 classpath 的抽象并暴露流。因此，<code>getStream()</code> 能可靠读取 JAR 内
 资源，而面向文件的 API 则不能保证可用。除非外部 API 确实要求 <code>Path</code> 或 <code>File</code>，否则优先使用流。</p>
 

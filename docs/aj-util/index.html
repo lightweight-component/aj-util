@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>AJ Utilities</h1>
+                <h1 id="search-aj-utilities">AJ Utilities</h1>
 <p>AJ Utilities is a lightweight Java 8+ library. Its APIs favour small, focused objects where state or configuration is
 needed, while keeping stateless operations convenient. The project provides source code, Javadoc, and unit tests for
 common application tasks.</p>
@@ -187,11 +207,11 @@ common application tasks.</p>
 </tbody>
 </table>
 <p>HTTP requests, uploads, downloads and annotation proxies now belong to the separate <a href="/aj-http/">AJ HTTP project</a>. Its Java package remains <code>com.ajaxjs.util.httpremote</code>, but it requires its own dependency; see the AJ HTTP installation guide.</p>
-<h2>Source code</h2>
+<h2 id="search-source-code">Source code</h2>
 <p><a href="https://github.com/lightweight-component/aj-util">GitHub</a> | <a href="https://gitcode.com/lightweight-component/aj-util">GitCode</a> | <a href="https://gitee.com/lightweight-components/aj-util">Gitee</a></p>
-<h2>Links</h2>
+<h2 id="search-links">Links</h2>
 <p><a href="https://aj-util.ajaxjs.com">User Manual</a> | <a href="https://deepwiki.com/lightweight-component/aj-util">Ask DeepWiki</a> | <a href="https://javadoc.io/doc/com.ajaxjs/ajaxjs-util">Java Documents</a></p>
-<h2>Install</h2>
+<h2 id="search-install">Install</h2>
 <p>Runs on Java 8+. Maven:</p>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;

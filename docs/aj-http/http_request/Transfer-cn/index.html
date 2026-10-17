@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-http" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-http">aj-http</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-http/cn/">首页</a>
@@ -90,11 +109,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>上传与下载</h1>
+                <h1 id="search-上传与下载">上传与下载</h1>
 <p><code>MultipartPost</code> 用于 <code>multipart/form-data</code> 上传，<code>HttpFileDownload</code> 用于接收 HTTP 服务器提供的文件。两者都以流方式传输，不会先把整个文件收集到 Java 字节数组中。</p>
-<h2>Multipart 上传</h2>
+<h2 id="search-multipart-上传">Multipart 上传</h2>
 <p><code>MultipartPost.upload(...)</code> 接收一个同时包含文本和 <code>File</code> 值的 Map，且 Map 不能为空。回调只用于配置连接；不要在其中连接、读取或写入。</p>
 <pre><code class="language-java">import com.ajaxjs.util.httpremote.MultipartPost;
 import com.ajaxjs.util.httpremote.model.Response;
@@ -126,7 +146,7 @@ try (InputStream content = Files.newInputStream(Paths.get(&quot;large-video.mp4&
 }
 </code></pre>
 <p>该工具会创建新的 boundary，在回调之后重新写入匹配的 <code>Content-Type</code>，启用 8 KiB 分块传输，关闭请求输出，读取并关闭响应流，最后在 <code>finally</code> 断开连接。它有意禁用重定向：把可能很大的上传自动重放到未经审核的地址并不安全。非 2xx 状态返回失败的 <code>Response</code>；校验、回调、正文写入和运行时错误仍可能直接抛出。</p>
-<h2>由既有连接持有输出流时：MultipartWriter</h2>
+<h2 id="search-由既有连接持有输出流时-multipartwriter">由既有连接持有输出流时：MultipartWriter</h2>
 <p><code>MultipartWriter</code> 只序列化完整的 multipart 正文，不创建 HTTP 连接、不刷新/关闭输出流，也不关闭调用方传入的输入流。请求头应使用 <code>getContentType()</code>。</p>
 <pre><code class="language-java">String boundary = &quot;upload-2026&quot;;
 MultipartWriter writer = new MultipartWriter(connection.getOutputStream(), boundary);
@@ -139,7 +159,7 @@ writer.write(parts);             // 一次调用会写入结束 boundary
 connection.getOutputStream().flush();
 </code></pre>
 <p>每次 <code>write(...)</code> 都会以结束 boundary 收尾。所有字段和文件应放在一个 Map 中并只调用一次；多次调用不能再追加合法条目。boundary 必须匹配 <code>[A-Za-z0-9_-]{1,70}</code>。头部和文本使用 UTF-8；null 文本值会成为空文本，名称中的 CR/LF 会被拒绝，引号和反斜杠会转义。需要文件名的字节数组/流请使用专用重载；内部使用的 Map key 编码不是公开协议。</p>
-<h2>下载文件</h2>
+<h2 id="search-下载文件">下载文件</h2>
 <pre><code class="language-java">import com.ajaxjs.util.httpremote.HttpFileDownload;
 
 new HttpFileDownload(&quot;https://example.com/files/report.pdf&quot;, &quot;downloads/report.pdf&quot;)
@@ -177,11 +197,11 @@ new HttpFileDownload(new String[] {
 </tbody>
 </table>
 <p>异步任务使用共享的四线程守护线程池与无界队列。必须 <code>join</code>、<code>get</code> 或以其他方式处理返回的 future；<code>join()</code> 会以 <code>CompletionException</code> 报告任务失败。没有公开执行器、取消策略或结果文件名列表。批量构造器保留传入的 URL 数组，使用期间不要修改它。</p>
-<h2>目标名称、覆盖与信任边界</h2>
+<h2 id="search-目标名称-覆盖与信任边界">目标名称、覆盖与信任边界</h2>
 <p>显式指定文件目标时该目标优先。目录目标的文件名顺序为 <code>Content-Disposition</code>（优先 <code>filename*</code>）、URL 路径、生成的后备名。服务端/路径名称会被压缩为 basename 并移除控制字符。以 <code>/</code> 或 <code>\\</code> 结尾的 String，或一个已存在的目录，视为目录目标；尚不存在的 <code>Path</code> 视为文件；批量目标总是目录。</p>
 <p>仅接受 HTTP/HTTPS URL 和 2xx 响应。下载器使用固定的 10 秒连接、30 秒读取超时，跟随重定向，流式写入同目录临时文件后再替换目标。它会关闭流、断开连接，并尝试清理临时文件；这降低了半成品概率，但<strong>不保证原子移动</strong>。</p>
 <p>没有下载大小上限、目标沙箱或重名策略。已有文件可能被覆盖；并发下载得到相同名称时可能竞争。请使用可信目标目录，并校验不可信 URL/重定向，避免 SSRF 或访问不希望暴露的内网地址。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p>普通 <code>Request.setData(Map)</code> 有意不实现 multipart 转换，面对 multipart 内容类型会抛出异常。将正文编码放在 <code>MultipartWriter</code>、传输生命周期放在 <code>MultipartPost</code>，让流所有权清晰可见，并避免隐藏的全量内存缓冲。</p>
 <p>继续阅读<a href="/aj-http/http_request/ProxySecurity-cn/">注解代理、流与 TLS</a>，或返回<a href="/aj-http/http_request/Base-cn/">请求生命周期</a>。</p>
 

@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,11 +154,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>Base64Utils</h1>
+                <h1 id="search-base64utils">Base64Utils</h1>
 <p><code>com.ajaxjs.util.Base64Utils</code> 封装 Java 标准及 URL-safe Base64 编解码。Base64 是编码，不是加密。</p>
-<h2>输入和输出</h2>
+<h2 id="search-输入和输出">输入和输出</h2>
 <p>构造器接收 <code>byte[]</code>、<code>String</code>（UTF-8）或 <code>String, Charset</code>。输入和构造器字符集不能为 null。字节数组保留引用，不会复制。</p>
 <p><code>setUrlSafe(true)</code> 同时选择编码和解码的 URL 字母表；<code>setWithoutPadding(true)</code> 仅影响编码填充。两个 setter 都返回当前实例。</p>
 <p><code>encode()</code>、<code>decode()</code> 返回字节；<code>encodeAsString()</code> 返回 ASCII Base64。<code>decodeAsString()</code> 默认 UTF-8，<code>Charset</code> 重载指定解码后文本的字符集。非法 Base64 抛出 <code>IllegalArgumentException</code>。</p>
@@ -151,7 +171,7 @@ String encoded = new Base64Utils(&quot;你好&quot;, StandardCharsets.UTF_16)
 String decoded = new Base64Utils(encoded).setUrlSafe(true)
         .decodeAsString(StandardCharsets.UTF_16);
 </code></pre>
-<h2>标准、URL-safe 与填充模式</h2>
+<h2 id="search-标准-url-safe-与填充模式">标准、URL-safe 与填充模式</h2>
 <p>标准 Base64 使用 <code>+</code> 和 <code>/</code>。URL-safe Base64 改用 <code>-</code> 与 <code>_</code>，避免作为 URL 参数时还要转义这些字符。填充字符
 <code>=</code> 用于补足四个输出字符一组；JWT 等格式可能省略填充，但是否接受由接收协议决定。</p>
 <pre><code class="language-java">byte[] tokenBytes = new byte[]{(byte) 0xfb, (byte) 0xff};
@@ -164,7 +184,7 @@ byte[] original = new Base64Utils(urlToken).setUrlSafe(true).decode();
 </code></pre>
 <p>解码时，<code>urlSafe</code> 的选择必须与输入文本使用的字母表一致。<code>withoutPadding</code> 只是编码设置；解码可否接受无填充表示由
 JDK 解码器决定，它不会自动替你选择 URL-safe 字母表。</p>
-<h2>二进制数据与文本的边界</h2>
+<h2 id="search-二进制数据与文本的边界">二进制数据与文本的边界</h2>
 <p>Base64 传递的是字节。<code>String</code> 构造器和 <code>decodeAsString(...)</code> 是便利的文本边界，分别把文本转为字节、把字节转回文本。
 文件、摘要、密钥等二进制材料应使用 <code>byte[]</code> 构造器。</p>
 <pre><code class="language-java">byte[] digest = MessageDigest.getInstance(&quot;SHA-256&quot;)
@@ -175,7 +195,7 @@ byte[] restoredDigest = new Base64Utils(wireValue).decode();
 </code></pre>
 <p>传给构造器的 <code>byte[]</code> 会按引用保留。除非有意让结果随之改变，否则不要在构造后、调用 <code>encode()</code>/<code>decode()</code> 前修改数组。
 Base64 不提供保密性：任何拿到文本的人都可以解码；同时它会把数据扩展为大约每 3 个输入字节对应 4 个输出字符。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p>实现直接委托 <code>java.util.Base64</code>，而非维护自定义编解码器。因此可获得 JDK 的输入校验行为（非法输入抛出
 <code>IllegalArgumentException</code>），并让标准与 URL-safe 行为始终与运行时保持一致。<code>encodeAsString()</code> 明确使用
 US-ASCII，因为 Base64 输出天生就是 ASCII。</p>

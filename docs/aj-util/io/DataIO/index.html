@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>DataReader and DataWriter</h1>
+                <h1 id="search-datareader-and-datawriter">DataReader and DataWriter</h1>
 <p><code>DataReader</code> consumes an <code>InputStream</code>; <code>DataWriter</code> writes bytes or an input stream to an <code>OutputStream</code>.</p>
 <pre><code class="language-java">String text = new DataReader(inputStream).readAsString();
 
@@ -144,7 +164,7 @@ writing to a caller-owned response, file, or in-memory stream. Its default buffe
 <code>setBuffered(boolean)</code>.</p>
 <p><code>readStreamAsBytes(int, BiConsumer&lt;Integer, byte[]&gt;)</code> passes the number of valid bytes together with a reusable buffer;
 consume only the range <code>[0, readSize)</code> before the next callback.</p>
-<h2>Reading text, bytes, and chunks</h2>
+<h2 id="search-reading-text-bytes-and-chunks">Reading text, bytes, and chunks</h2>
 <p>Choose the reading API by the size and shape of the data. <code>readAsBytes()</code> collects the whole stream in memory, which is
 convenient for a small resource but unsuitable for an unbounded upload or a large file. <code>readAsString()</code> reads line by
 line using the configured charset (UTF-8 by default), then appends <code>System.lineSeparator()</code> after every line. Use the
@@ -165,7 +185,7 @@ new DataReader(input).readStreamAsBytes(8 * 1024,
 // For &quot;abcdefghij&quot; and a buffer size of 4, callback sizes are 4, 4, 2.
 </code></pre>
 <p>The buffer size must be positive. I/O failures are wrapped as <code>UncheckedIOException</code>, while close failures are logged.</p>
-<h2>Copying to an output stream</h2>
+<h2 id="search-copying-to-an-output-stream">Copying to an output stream</h2>
 <p><code>new DataWriter(out).write(in)</code> copies an input stream in 1 KiB chunks and flushes the output. It uses a buffered
 output wrapper by default; turn it off only when the destination already has suitable buffering or the flushing
 behavior is significant.</p>
@@ -183,7 +203,7 @@ the input is closed when copying completes; callers should regard that input as 
 stream.</p>
 <p>For <code>write(byte[], off, length)</code>, <code>(0, 0)</code> is a special shorthand meaning <strong>write the entire array</strong>; it is not a
 zero-byte write. Pass an explicit non-zero length for a slice, such as <code>write(bytes, 7, 5)</code>.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>Both classes are deliberately small adapters around JDK streams. <code>DataReader</code> adds a buffered character reader only
 for line-oriented text, while byte transfer uses one reusable byte array to avoid allocating a new array for each
 chunk. <code>DataWriter</code> flushes instead of closing so that callers can compose several writes or retain ownership of an

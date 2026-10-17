@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,11 +154,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>StrUtil</h1>
+                <h1 id="search-strutil">StrUtil</h1>
 <p><code>StrUtil</code> 当前提供简单模板替换以及数组、列表拼接；不再提供填充、字符计数或成员判断方法。</p>
-<h2>模板</h2>
+<h2 id="search-模板">模板</h2>
 <p>Map 重载替换 <code>${name}</code> 占位符，Map 中缺失或为 null 的值替换为空字符串。</p>
 <pre><code class="language-java">Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();
 values.put(&quot;name&quot;, &quot;Ada&quot;);
@@ -149,14 +169,14 @@ String message = StrUtil.simpleTpl(&quot;Hello, ${name}! ${missing}&quot;, value
 <p>JavaBean 重载替换可读属性对应的 <code>#{property}</code> 占位符。Bean 属性为 null 时替换为文本 <code>null</code>，只写属性会跳过。替换值按字面量处理，<code>$</code> 和反斜杠可安全使用。getter 执行失败时，抛出的 <code>RuntimeException</code> 会标明属性名并保留原始异常作为 cause。</p>
 <pre><code class="language-java">String message = StrUtil.simpleTpl(&quot;Hello, #{name}!&quot;, user);
 </code></pre>
-<h2>拼接数组和列表</h2>
+<h2 id="search-拼接数组和列表">拼接数组和列表</h2>
 <pre><code class="language-java">String array = StrUtil.join(new String[]{&quot;a&quot;, null, &quot;c&quot;}, &quot;&amp;&quot;);
 String list = StrUtil.join(Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;[%s]&quot;, &quot;, &quot;);
 // a&amp;&amp;c
 // [a], [b], [c]
 </code></pre>
 <p>可用重载包括泛型数组、带格式模板的字符串数组，以及带可选模板的字符串列表。null 元素会输出为空字符串。</p>
-<h2>占位符和格式规则</h2>
+<h2 id="search-占位符和格式规则">占位符和格式规则</h2>
 <p>两类模板重载刻意使用不同的占位符语法：</p>
 <table>
 <thead>
@@ -186,9 +206,9 @@ String result = StrUtil.simpleTpl(&quot;path=${path}&quot;, values);
 // path=$1\temp
 </code></pre>
 <p>之所以能够安全处理 <code>$1</code>，是因为替换内容在调用 <code>Matcher.appendReplacement</code> 前会被引用；<code>$1</code> 只是数据，不是正则反向引用。列表拼接的模板会传入 <code>String.format</code>，因此应包含如 <code>%s</code> 的合适转换符。</p>
-<h2>选择合适的工具</h2>
+<h2 id="search-选择合适的工具">选择合适的工具</h2>
 <p><code>StrUtil</code> 专注于小型格式化操作。正则替换使用 <code>RegExpHelper</code>；URL/表单编码使用 <code>UrlCodec</code>；字节、字符集和十六进制转换使用 <code>StringBytes</code>。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p>Map 模板重载使用一个预编译 <code>Pattern</code> 扫描 <code>${word}</code>，再通过 <code>Matcher.appendReplacement</code> / <code>appendTail</code> 构造结果。对替换文本进行引用后，正则引擎不会把值中的 <code>$</code> 或反斜杠解释为特殊语法。Bean 重载则使用 JavaBeans 内省，并针对每个可读属性调用普通 <code>String.replace</code>；这也解释了它为何使用 <code>#{property}</code> 语法，以及为什么 null 行为不同。</p>
 <p>拼接方法使用 <code>StringBuilder</code>，仅在元素之间附加分隔符，从而避免尾部分隔符。它们刻意不转义值、也不进行依赖 Locale 的格式化；需要时应在拼接前完成这些转换。</p>
 

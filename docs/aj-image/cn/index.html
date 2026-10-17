@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-image" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-image">aj-image</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-image/cn/">首页</a>
@@ -82,10 +101,41 @@
                 
                 
                 
+                <h3>图片处理</h3>
+                <ul>
+                    <li><a href="/aj-image/composition-cn/">图片合成</a></li>
+                    <li><a href="/aj-image/tutorial-cn/">合成教程与完整示例</a></li>
+                    <li><a href="/aj-image/utilities-cn/">图片工具与输出</a></li>
+                </ul>
+                
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>aj-image</h1>
-<p>本文档为 aj-image 工程的首页，详细文档待补充。</p>
+                <h1 id="search-aj-image">aj-image</h1>
+<p>aj-image 是一个用于 Java 服务端图片处理与合成的轻量级工具，提供图片、文字、矩形三种素材，可以用于海报拼合、图片水印等场景。合成入口是 <code>ImageContainer</code>，此外还提供图片格式转换、缩略图、圆角和像素矩阵等工具。</p>
+<h2 id="search-maven-引入">Maven 引入</h2>
+<p>支持 Java 8 及以上版本。当前发布版本为 <code>1.0</code>，已发布到 Maven 中央仓库，在项目的 <code>pom.xml</code> 中加入：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-image&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>通常无需额外配置仓库地址。</p>
+<h2 id="search-能够做什么">能够做什么？</h2>
+<ul>
+<li>图片：定位、缩放、旋转、圆角、透明度和模糊。</li>
+<li>文字：字体、字号、颜色、透明度、旋转、删除线、基线定位，以及超宽时缩小字号或添加省略号。</li>
+<li>矩形：尺寸、纯色、渐变、透明度、圆角和边框；设置边框后只绘制轮廓，不同时填充内部。</li>
+<li>三种素材都支持水平居中、水平定位方向和重复平铺。绘制方向用于决定坐标如何定位，不是图片镜像或文字倒序。</li>
+</ul>
+<h2 id="search-阅读导航">阅读导航</h2>
+<ul>
+<li><a href="/aj-image/composition-cn/">图片合成</a>：背景、图片、文字和矩形的绘制，以及现有功能限制。</li>
+<li><a href="/aj-image/tutorial-cn/">合成教程与完整示例</a>：从简单例子开始，按步骤完成海报合成。</li>
+<li><a href="/aj-image/utilities-cn/">图片工具与输出</a>：格式转换、缩略图、圆角、像素矩阵、区域解码及文件保存。</li>
+</ul>
+<p>不需要合成图片时，可以直接使用 <code>utils</code> 包中的工具。</p>
 <p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-image">源代码</a></p>
 
             </article>

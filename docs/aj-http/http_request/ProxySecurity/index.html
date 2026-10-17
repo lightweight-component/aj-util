@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-http" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-http">aj-http</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-http/">Home</a>
@@ -84,11 +103,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Annotation proxy, streams and TLS</h1>
+                <h1 id="search-annotation-proxy-streams-and-tls">Annotation proxy, streams and TLS</h1>
 <p>The annotation proxy is a small convenience layer over the direct HTTP API. It is useful for simple JSON/form endpoints, but it does not expose the full request lifecycle, raw status handling, or every annotation declared in the package. Prefer <code>Request</code> for critical integrations.</p>
-<h2>A supported proxy interface</h2>
+<h2 id="search-a-supported-proxy-interface">A supported proxy interface</h2>
 <pre><code class="language-java">import com.ajaxjs.util.httpremote.call.CallHandler;
 import com.ajaxjs.util.httpremote.call.annotation.GET;
 import com.ajaxjs.util.httpremote.call.annotation.POST;
@@ -109,7 +129,7 @@ String health = api.health();
 Map&lt;String, Object&gt; created = api.createUser(user);
 </code></pre>
 <p><code>CallHandler</code> currently dispatches <code>@GET</code>, <code>@POST</code>, <code>@PUT</code>, and <code>@DELETE</code>. Return types are limited to <code>String</code>, raw <code>Map</code>, or a bean class. For POST/PUT it selects the <strong>first <code>Map</code> argument</strong> as the request body. POST defaults to form data; PUT defaults to JSON. A method-level connection initializer runs after the class-level <code>@Url.initConnection</code> initializer. Initializer instances are cached, so they need a public no-argument constructor and must be safe to reuse.</p>
-<h2>Path variables and configuration limits</h2>
+<h2 id="search-path-variables-and-configuration-limits">Path variables and configuration limits</h2>
 <pre><code class="language-java">@GET(&quot;/users/{id}&quot;)
 Map&lt;String, Object&gt; find(String id);
 </code></pre>
@@ -146,7 +166,7 @@ Map&lt;String, Object&gt; find(String id);
 </tbody>
 </table>
 <p>Proxy calls do not return a status-aware raw <code>Response</code> or an explicit connection handle. Use the <a href="/aj-http/http_request/Base/">direct lifecycle</a> when status, retry policy, request headers, or resource cleanup are part of correctness.</p>
-<h2>Streaming and gzip</h2>
+<h2 id="search-streaming-and-gzip">Streaming and gzip</h2>
 <p>For binary responses, install a stream consumer before connecting. Read the stream synchronously within the callback: <code>Request</code> closes it when the callback returns.</p>
 <pre><code class="language-java">Request request = new Request(HttpMethod.GET, downloadUrl);
 request.setInputStreamConsumer(in -&gt; {
@@ -169,10 +189,10 @@ try {
 }
 </code></pre>
 <p><code>Head.gzip(connection, in)</code> wraps only one, case-insensitive <code>gzip</code> content-encoding token; absent or chained encodings return the original stream. Gzip is not automatic. An error while creating <code>GZIPInputStream</code> becomes <code>UncheckedIOException</code>; later reads may still throw <code>IOException</code> for corrupt/truncated data.</p>
-<h2>TLS and logging boundaries</h2>
+<h2 id="search-tls-and-logging-boundaries">TLS and logging boundaries</h2>
 <p>Keep the JDK's normal certificate and hostname validation in production. <code>SkipSSL.init()</code> changes JVM-wide defaults to trust every server certificate and hostname. <code>SkipSSL.setSSL_Ignore(...)</code> disables both checks for one HTTPS connection. These methods are suitable only for controlled local diagnostics, never as a production certificate workaround. <code>getSocketFactory(...)</code> also trusts all server certificates even if client key managers are supplied; <code>loadCert</code> is package-private, not a public client-certificate API.</p>
 <p><code>Request.printLog</code> writes the URL, UTF-8 request body, HTTP status, and up to 460 response characters at info level, and stores formatted text in MDC. Response truncation is not redaction. Avoid logging credentials, bearer tokens, cookies, personal information, signed URLs, or private response fields.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>This module intentionally stays on Java 8's <code>HttpURLConnection</code>. The convenience proxy favors a compact API over a full declarative-client feature set; direct request objects remain the escape hatch for streaming, status-aware decisions, connection configuration, and safer integration policy.</p>
 <p>See <a href="/aj-http/http_request/Transfer/">uploads and downloads</a> for file transfer, or <a href="/aj-http/http_request/Get/">method helpers</a> for normal API calls.</p>
 

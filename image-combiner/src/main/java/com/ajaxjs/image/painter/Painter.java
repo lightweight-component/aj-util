@@ -1,6 +1,6 @@
 package com.ajaxjs.image.painter;
 
-import com.ajaxjs.image.embedd.EmbeddedElement;
+import com.ajaxjs.image.model.EmbeddedElement;
 
 import java.awt.*;
 

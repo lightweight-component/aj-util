@@ -28,6 +28,9 @@ function checkMenu(html, project, suffix) {
         assert.equal(menu.includes(`href="/aj-http/http_request/${page}${suffix}/"`), project === 'aj-http');
     }
     assert.equal(menu.includes('/aj-util/common/'), project === 'aj-util');
+    for (const page of ['composition', 'tutorial', 'utilities']) {
+        assert.equal(menu.includes(`href="/aj-image/${page}${suffix}/"`), project === 'aj-image');
+    }
 }
 
 function checkGuide(file, terms, forbidden) {
@@ -50,11 +53,14 @@ try {
             const html = read(`${project}/${language}`);
             assert.ok(html.includes(`<title>${project} - `));
             assert.ok(html.includes(`value="/${project}/${language}" selected`));
-            assert.equal((html.match(/<option /g) || []).length, projects.length);
+            const projectSelect = html.match(/<select\b[^>]*id="project-select"[^>]*>[\s\S]*?<\/select>/)[0];
+            assert.equal((projectSelect.match(/<option /g) || []).length, projects.length);
             for (const other of projects) {
                 assert.ok(html.includes(`value="/${other}/${language}"`));
             }
             checkMenu(html, project, language ? '-cn' : '');
+            assert.ok(html.includes('data-doc-search'), 'missing documentation search');
+            assert.ok(html.includes('src="/asset/js/search.js"'), 'missing search client');
             checkLinks(html, `${project}/${language}`);
             if (project === 'aj-http') {
                 assert.ok(!html.includes('coming soon') && !html.includes('详细文档待补充'));
@@ -62,6 +68,22 @@ try {
                     assert.ok(html.includes(term), `HTTP home missing ${term}`);
                 }
             }
+        }
+    }
+    for (const suffix of ['', '-cn']) {
+        for (const page of ['composition', 'tutorial', 'utilities']) {
+            const route = `aj-image/${page}${suffix}/`;
+            const html = read(route);
+            checkLinks(html, route);
+            checkMenu(html, 'aj-image', suffix);
+            const alternate = `/aj-image/${page}${suffix ? '' : '-cn'}/`;
+            assert.ok(html.includes(`data-language-target="${alternate}"`), `${route}: wrong language target`);
+            assert.ok(fs.readFileSync(path.join(output, 'sitemap.xml'), 'utf8')
+                .includes(`https://aj-util.ajaxjs.com/${route}`), `${route}: missing from sitemap`);
+        }
+        const utilities = read(`aj-image/utilities${suffix}/`);
+        for (const name of ['ImageConvert', 'ImageEffect', 'ImageMatrix', 'ImageTypeHandler', 'ImageEncoder', 'ImageBase']) {
+            assert.ok(utilities.includes(name), `image utilities missing ${name}`);
         }
     }
     for (const route of legacyRoutes) {
@@ -122,6 +144,22 @@ try {
     for (const [file, terms] of contracts) {
         const text = source(file);
         for (const term of terms) assert.ok(text.includes(term), `${file}: changed source contract ${term}`);
+    }
+    for (const language of ['en', 'zh']) {
+        const index = JSON.parse(fs.readFileSync(path.join(output, 'search', language + '.json'), 'utf8'));
+        assert.equal(index.version, 1);
+        assert.ok(index.entries.length > 0);
+        for (const project of projects)
+            assert.ok(index.entries.some(entry => entry.project === project), `search missing ${project}/${language}`);
+
+        for (const entry of index.entries) {
+            assert.equal(entry.language, language);
+            const [url, anchor] = entry.url.split('#');
+            assert.ok(!redirectSources.has(url), 'search contains redirect');
+            const html = read(url);
+            if (anchor)
+                assert.ok(html.includes(`id="${decodeURIComponent(anchor)}"`), `missing search anchor ${entry.url}`);
+        }
     }
     const pom = source('aj-http/pom.xml');
     assert.ok(pom.includes('<artifactId>aj-net</artifactId>') && pom.includes('<version>2.1</version>'));

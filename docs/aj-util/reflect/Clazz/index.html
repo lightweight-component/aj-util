@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,12 +148,13 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Clazz</h1>
+                <h1 id="search-clazz">Clazz</h1>
 <p><code>Clazz</code> contains class-loading and type-hierarchy helpers. Object construction is provided separately by
 <code>NewInstance</code>.</p>
-<h2>Loading classes</h2>
+<h2 id="search-loading-classes">Loading classes</h2>
 <p><code>getClassByName(String)</code> loads a class by its fully qualified name and throws <code>RuntimeException</code> if it cannot be
 found. The original <code>ClassNotFoundException</code> is retained as the cause. The typed overload also verifies assignability:</p>
 <pre><code class="language-java">Class&lt;CharSequence&gt; type =
@@ -144,14 +164,14 @@ found. The original <code>ClassNotFoundException</code> is retained as the cause
 Clazz.getClassByName(&quot;java.lang.String&quot;, Number.class);
 </code></pre>
 <p>Passing a <code>null</code> target type throws <code>IllegalArgumentException</code>.</p>
-<h2>Converting arguments to classes</h2>
+<h2 id="search-converting-arguments-to-classes">Converting arguments to classes</h2>
 <p><code>args2class(Object[])</code> returns the runtime class of each argument. A <code>null</code> or empty array produces <code>null</code>.
 An individual <code>null</code> element causes <code>IllegalArgumentException</code> identifying its index; use an explicit <code>Class&lt;?&gt;[]</code>
 when a parameter value is <code>null</code>.</p>
 <pre><code class="language-java">Class&lt;?&gt;[] types = Clazz.args2class(new Object[]{&quot;text&quot;, 1});
 // [String.class, Integer.class]
 </code></pre>
-<h2>Inspecting interfaces and superclasses</h2>
+<h2 id="search-inspecting-interfaces-and-superclasses">Inspecting interfaces and superclasses</h2>
 <p><code>getDeclaredInterface(Class&lt;?&gt;)</code> returns every interface implemented by the class and its superclasses. Parent
 interfaces are traversed recursively. A <code>Set&lt;Class&lt;?&gt;&gt;</code> prevents duplicates in diamond-shaped interface graphs.</p>
 <p><code>getAllSuperClass(Class&lt;?&gt;)</code> returns the superclass chain, excluding the input class and <code>Object</code>. It is safe to

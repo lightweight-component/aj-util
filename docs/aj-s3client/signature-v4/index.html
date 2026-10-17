@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-s3client" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-s3client">aj-s3client</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-s3client/">Home</a>
@@ -84,11 +103,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Signature Version 4</h1>
+                <h1 id="search-signature-version-4">Signature Version 4</h1>
 <p><code>CloudflareR2</code>, <code>Backblaze</code>, and <code>Scaleway</code> extend <code>BaseS3ClientSigV4</code>. They use <strong>path-style</strong> addresses: an object in <code>reports</code> with key <code>2026/a b.txt</code> is addressed as <code>https://endpoint/reports/2026/a%20b.txt</code>. The bucket name is part of the path, not the host name.</p>
-<h2>Required configuration</h2>
+<h2 id="search-required-configuration">Required configuration</h2>
 <p>SigV4 needs an endpoint, access key, secret key, and region. <code>Config</code> defaults <code>region</code> to <code>auto</code>; this is appropriate for Cloudflare R2, but it is not a universal value. Set the service's required signing region for Backblaze, Scaleway, or any other compatible endpoint.</p>
 <pre><code class="language-java">Config config = new Config();
 config.setEndPoint(&quot;s3.example-provider.com&quot;);
@@ -101,7 +121,7 @@ CloudflareR2 client = new CloudflareR2();
 client.setConfig(config);
 </code></pre>
 <p>The endpoint is normalized to <code>https://…</code> and must be an origin only. An endpoint such as <code>https://host/prefix</code> is rejected: this client does not support endpoint path prefixes.</p>
-<h2>What is signed</h2>
+<h2 id="search-what-is-signed">What is signed</h2>
 <p>For each operation, the implementation creates an <code>x-amz-date</code> timestamp and an <code>x-amz-content-sha256</code> value. Uploads hash the supplied bytes with SHA-256; GET, DELETE, bucket creation, deletion, and root listing use the SHA-256 digest of an empty payload. It then builds a canonical request from:</p>
 <ol>
 <li>HTTP method.</li>
@@ -111,12 +131,12 @@ client.setConfig(config);
 </ol>
 <p><code>SignBuilder</code> derives the AWS4 key for <code>date/region/s3/aws4_request</code> and writes an <code>Authorization: AWS4-HMAC-SHA256 …</code> header. Header names are case-insensitive, sorted, and values are trimmed with whitespace runs collapsed. Header values containing CR or LF are rejected.</p>
 <p>The exact headers used by the base client are <code>x-amz-date</code> and <code>x-amz-content-sha256</code>. <code>Backblaze</code> additionally signs <code>Host</code>; <code>Scaleway</code> adds the signed <code>x-amz-acl</code> header for uploads. Every signed header must also be sent unchanged—adding a header to the signature alone is insufficient.</p>
-<h2>Encoding and object keys</h2>
+<h2 id="search-encoding-and-object-keys">Encoding and object keys</h2>
 <p>Keys are UTF-8 percent-encoded using S3 canonical rules. A space becomes <code>%20</code>, never <code>+</code>; <code>/</code> remains a path separator; query names and values are encoded separately and sorted. Do not pre-encode a key: passing <code>folder/a%20b.txt</code> treats <code>%</code> as data and encodes it again. Pass <code>folder/a b.txt</code> instead.</p>
 <pre><code class="language-java">client.putObject(&quot;reports&quot;, &quot;exports/September report.csv&quot;, csvBytes);
 </code></pre>
 <p>The client permits slash-delimited keys but rejects blank keys and control characters. It does not normalize <code>.</code> or <code>..</code> segments for S3 signing, because they can be significant object-key bytes.</p>
-<h2>Diagnosing signature failures</h2>
+<h2 id="search-diagnosing-signature-failures">Diagnosing signature failures</h2>
 <ul>
 <li>Confirm that the endpoint has no path and is the service's S3 API endpoint, not a public object URL.</li>
 <li>Use the provider's required region; a wrong region changes the credential scope and signature.</li>

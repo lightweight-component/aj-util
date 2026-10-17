@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-qrcode" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-qrcode">aj-qrcode</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-qrcode/cn/">首页</a>
@@ -90,9 +109,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>快速开始</h1>
+                <h1 id="search-快速开始">快速开始</h1>
 <p><code>QrCode.encodeText()</code> 是默认入口。它会选择可容纳数据的最小二维码版本；若不增大版本，也可能提高请求的纠错等级。</p>
 <pre><code class="language-java">import com.ajaxjs.qr_code.Ecc;
 import com.ajaxjs.qr_code.QrCode;
@@ -102,7 +122,7 @@ QrCode qr = QrCode.encodeText(&quot;https://example.com/welcome?from=qr&quot;, E
 Utils.writePng(Utils.toImage(qr, 10, 4), &quot;welcome.png&quot;);
 </code></pre>
 <p><code>QrCode</code> 是不可变对象。公共字段 <code>version</code>、<code>size</code>、<code>errorCorrectionLevel</code>、<code>mask</code> 描述最终二维码；模块边长公式为 <code>version * 4 + 17</code>，范围 21–177。接入其他 UI 工具时可调用 <code>getModule(x, y)</code> 读取黑白网格；越界坐标返回 <code>false</code>（白色），所以不应把它当作坐标校验。</p>
-<h2>纠错等级</h2>
+<h2 id="search-纠错等级">纠错等级</h2>
 <table>
 <thead>
 <tr>

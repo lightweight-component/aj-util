@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-s3client" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-s3client">aj-s3client</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-s3client/cn/">首页</a>
@@ -90,11 +109,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>API 与限制</h1>
+                <h1 id="search-api-与限制">API 与限制</h1>
 <p><code>S3Client</code> 是公开操作接口。<code>BaseS3Client</code> 提供配置校验、URL 编码、默认存储桶重载与 HTTP 2xx 结果校验；两个签名基类再实现具体 HTTP 操作。</p>
-<h2>操作约定</h2>
+<h2 id="search-操作约定">操作约定</h2>
 <table>
 <thead>
 <tr>
@@ -142,13 +162,13 @@
 </tbody>
 </table>
 <p>不带存储桶的重载使用 <code>Config.bucketName</code>，未配置默认存储桶时会被拒绝。<code>listBucket</code> 不接收存储桶或前缀参数，因此此版本公开 API 只请求服务根路径，并不是针对指定存储桶的对象列举 API。</p>
-<h2>校验与 URL 规则</h2>
+<h2 id="search-校验与-url-规则">校验与 URL 规则</h2>
 <p><code>Config</code> 必须提供端点、访问密钥、私钥和区域。端点仅接受 HTTPS，可省略 <code>https://</code>，但不能含用户信息、查询参数、片段或非根路径。存储桶名称不能为空，不能含 <code>/</code>、<code>\\</code> 或控制字符；对象键不能为空，不能含控制字符。</p>
 <p><code>BaseS3ClientSigV4</code> 构建路径式 URL，<code>BaseS3ClientSigV2</code> 构建虚拟主机式 URL。两者都会由客户端对键名编码一次；应输入原始对象键，而不是已 URL 转义的值。</p>
-<h2>错误模型</h2>
+<h2 id="search-错误模型">错误模型</h2>
 <p>配置错误会在发送请求前抛出 <code>IllegalStateException</code> 或 <code>IllegalArgumentException</code>。底层 HTTP 层无法完成请求时也可能抛出运行时异常。获得响应后，<code>check(response)</code> 将 200 至 299 的任意状态视为成功，不解析厂商错误 XML。</p>
 <p>因此，若调用方需要响应正文、状态码、错误码、重试策略、超时控制、流式上传/下载或可观测性，应使用或扩展更底层的实现，而不能仅依赖这些布尔方法。</p>
-<h2>不在范围内的能力</h2>
+<h2 id="search-不在范围内的能力">不在范围内的能力</h2>
 <ul>
 <li>AWS SDK 常见能力：分片上传、拷贝、预签名 URL、版本、标签、生命周期配置和 STS 凭据。</li>
 <li>按存储桶、前缀、分隔符或 continuation token 列举对象。</li>

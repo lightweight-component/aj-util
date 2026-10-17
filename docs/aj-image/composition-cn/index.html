@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-image - 图片合成</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="/asset/main.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-image/composition/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-image
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/" selected>aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <section class="docs-search" data-doc-search data-project="aj-image" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-image">aj-image</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-image/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                
+                <h3>图片处理</h3>
+                <ul>
+                    <li><a href="/aj-image/composition-cn/">图片合成</a></li>
+                    <li><a href="/aj-image/tutorial-cn/">合成教程与完整示例</a></li>
+                    <li><a href="/aj-image/utilities-cn/">图片工具与输出</a></li>
+                </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1 id="search-图片合成">图片合成</h1>
+<p>使用 <code>ImageContainer</code> 先设置背景以确定画布尺寸，再添加元素，调用 <code>combine()</code> 合成，最后输出。后添加的元素覆盖先添加的元素。元素 setter 不支持链式调用。</p>
+<h2 id="search-最小示例">最小示例</h2>
+<p>需要带图片、文字、水印和二维码的完整示例？请阅读<a href="/aj-image/tutorial-cn/">合成教程</a>。</p>
+<pre><code class="language-java">import com.ajaxjs.image.ImageContainer;
+import com.ajaxjs.image.model.TextEmbedded;
+import com.ajaxjs.image.model.constant.ImageFormat;
+import com.ajaxjs.image.model.constant.ZoomMode;
+import java.awt.Font;
+
+ImageContainer container = new ImageContainer();
+container.setOutputFormat(ImageFormat.PNG);
+container.setBackgroundImage(&quot;background.jpg&quot;, ZoomMode.Origin, 0, 0);
+
+TextEmbedded title = new TextEmbedded();
+title.setText(&quot;Hello aj-image&quot;);
+title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 32));
+title.setX(30);
+title.setY(40);
+container.addElement(title);
+
+container.combine();
+container.save(&quot;poster.png&quot;);
+</code></pre>
+<p>示例读取已有的 <code>background.jpg</code>，并保存为 <code>poster.png</code>。实际项目可替换素材和文字；输出父目录需要预先存在。透明背景和整图圆角请使用 PNG。</p>
+<h2 id="search-能够做什么">能够做什么？</h2>
+<ul>
+<li>图片：定位、缩放、旋转、圆角、透明度和模糊。</li>
+<li>文字：字体、字号、颜色、透明度、旋转、删除线、基线定位，以及超宽时缩小字号或添加省略号。</li>
+<li>矩形：尺寸、纯色、渐变、透明度、圆角和边框；设置边框后只绘制轮廓，不同时填充内部。</li>
+<li>三种素材都支持水平居中、水平定位方向和重复平铺。绘制方向用于决定坐标如何定位，不是图片镜像或文字倒序。</li>
+</ul>
+<h2 id="search-当前限制">当前限制</h2>
+<ul>
+<li>可以绘制预先拆分好的多行文字，但还不能根据指定宽度自动换行。启用 <code>setAutoBreakLine(true)</code> 时，仍需提供 <code>breakLineElements</code>，并设置每行的位置和样式；<code>setSpace()</code> 暂不生效。</li>
+<li>图片元素需要先通过 <code>setImage()</code> 提供 <code>BufferedImage</code>；仅设置 <code>setImgUrl()</code> 不会自动加载图片。背景图入口 <code>ImageContainer.setBackgroundImage(String, ...)</code> 则支持本地路径和 HTTP/HTTPS 地址，但网络读取没有可配置的超时或身份认证，请勿直接传入不可信的地址。</li>
+<li>图片模糊采用加权平滑，并非严格的高斯模糊；只平滑颜色，保留原有透明度。</li>
+</ul>
+<h2 id="search-使用时需要了解的行为">使用时需要了解的行为</h2>
+<ul>
+<li><code>setBackgroundImage(image, zoomMode, width, height)</code> 按指定模式计算画布大小，并将背景图绘制到对应尺寸。</li>
+<li>背景图也可以传入本地路径或 HTTP/HTTPS 地址；读取失败会立即报错，不添加背景。网络读取没有可配置的超时或身份认证，请勿直接传入不可信的地址。</li>
+<li>绘制会保留元素坐标和调用方的画笔状态。重复使用同一个元素时，位置不会越画越偏；文字平铺时，文字基线也会跟随每一格移动。</li>
+<li>文字自动适应宽度时，每次调整局部字体大小后都会重新测量。连 <code>...</code> 都放不下时，绘制为空文字。原始文本、字体和坐标不会被改写，方便再次绘制。</li>
+</ul>
+<p><code>combine()</code> 只有全部绘制成功后才更新结果；再次合成失败时，上一次成功结果仍可输出。模糊在副本上计算，不会修改原图，也不会因平铺而反复累积。</p>
+<p>下一步：<a href="/aj-image/utilities-cn/">图片工具与输出</a> · <a href="/aj-image/cn/">返回首页</a></p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-image，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

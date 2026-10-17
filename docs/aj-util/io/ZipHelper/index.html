@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,9 +148,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>ZipHelper</h1>
+                <h1 id="search-ziphelper">ZipHelper</h1>
 <p><code>ZipHelper</code> creates ZIP archives. Construct it with a directory, a single <code>File</code>, or an array of files, then call
 <code>zip()</code>. ZIP extraction is provided separately by <a href="/aj-util/io/UnzipHelper/">UnzipHelper</a>.</p>
 <pre><code class="language-java">import com.ajaxjs.util.io.ZipHelper;
@@ -139,7 +159,7 @@
 ZipHelper backup = new ZipHelper(&quot;C:/data&quot;, &quot;C:/backup.zip&quot;);
 backup.zip();
 </code></pre>
-<h2>Sources and compression mode</h2>
+<h2 id="search-sources-and-compression-mode">Sources and compression mode</h2>
 <p>Directory sources are traversed recursively; relative paths and empty directories are preserved. Symbolic links and
 non-regular files are rejected. The destination ZIP must be outside the source directory.</p>
 <pre><code class="language-java">ZipHelper single = new ZipHelper(new File(&quot;report.csv&quot;), &quot;report.zip&quot;);
@@ -154,7 +174,7 @@ before writing, so source files must not change during the operation. Multiple f
 because they are stored at the archive root.</p>
 <p>The archive is first written to a temporary sibling file, then replaces the target only after a successful write.
 I/O failures are reported as <code>UncheckedIOException</code>.</p>
-<h2>Archive layout examples</h2>
+<h2 id="search-archive-layout-examples">Archive layout examples</h2>
 <p>Directory input is represented relative to the selected source directory, rather than including the source directory
 name itself. All entry separators are <code>/</code>, including when the archive is created on Windows.</p>
 <table>
@@ -192,14 +212,14 @@ new ZipHelper(new File[]{new File(&quot;logs/app.log&quot;), new File(&quot;repo
 </code></pre>
 <p>The directory walker records directory entries explicitly, so an empty directory remains visible after extraction.
 This matters for application templates and backup archives where directory structure is meaningful.</p>
-<h2>Compression choice</h2>
+<h2 id="search-compression-choice">Compression choice</h2>
 <p><code>DEFLATED</code> is the normal choice: the ZIP writer compresses while it writes. <code>STORED</code> writes raw file bytes; ZIP
 requires the exact size and CRC32 in the entry header before those bytes are written. <code>ZipHelper</code> therefore reads each
 file once to calculate metadata and again to archive it.</p>
 <p>Use <code>STORED</code> only when no compression is desired (for example, an already-compressed media file and a compatible
 consumer). Do not modify input files between those two passes. A changed file can make the recorded CRC or length
 inconsistent with the archived bytes.</p>
-<h2>Safety and failure behavior</h2>
+<h2 id="search-safety-and-failure-behavior">Safety and failure behavior</h2>
 <p>The helper intentionally rejects symbolic links and non-regular files, avoiding accidental inclusion of a file outside
 the selected tree. It also rejects a destination placed within the source tree, which would otherwise risk recursively
 adding the archive to itself. The destination parent directory is created when needed.</p>
@@ -207,7 +227,7 @@ adding the archive to itself. The destination parent directory is created when n
 leaves a half-written target. It is not a transaction across every filesystem: a process crash or an unsupported atomic
 move can still leave normal filesystem-level recovery considerations. Handle <code>UncheckedIOException</code> when the caller
 needs to surface or retry a failed backup.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p><code>ZipHelper</code> is a creation-only API; it does not make extraction safe by itself. When consuming untrusted ZIP files,
 use <a href="/aj-util/io/UnzipHelper/">UnzipHelper</a> and keep its destination validation in place to defend against path
 traversal entries such as <code>../../outside.txt</code>.</p>

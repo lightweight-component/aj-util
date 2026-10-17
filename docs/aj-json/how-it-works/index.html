@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-json" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-json">aj-json</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-json/">Home</a>
@@ -76,22 +95,23 @@
                 
                 
                 
+                
                 <h3>Learning JSON parsing</h3>
                 <ul><li><a href="/aj-json/parse/">Parse your first JSON</a></li><li><a href="/aj-json/how-it-works/">How the parser works</a></li></ul>
                 
             </menu>
             <article class="aj-text">
-                <h1>How the parser works</h1>
+                <h1 id="search-how-the-parser-works">How the parser works</h1>
 <p>The easiest way to read aj-json is to think of it as a small assembly line. A string enters at one end; Java collections come out at the other.</p>
 <pre><code class="language-text">JSON text  →  Lexer  →  tokens  →  FMS state machine  →  Map / List / value
 </code></pre>
-<h2>Step 1: split text into meaningful pieces</h2>
+<h2 id="search-step-1-split-text-into-meaningful-pieces">Step 1: split text into meaningful pieces</h2>
 <p><code>Lexer</code> moves through the input one character at a time. It turns punctuation such as <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, <code>,</code>, and <code>:</code> into tokens. It also groups nearby characters into strings, numbers, and the words <code>true</code>, <code>false</code>, and <code>null</code>.</p>
 <p>For <code>{name: 7}</code>, the important pieces are roughly: object start, <code>name</code>, colon, <code>7</code>, object end. The lexer also records line and column information, so later errors can point back to the place that caused trouble.</p>
-<h2>Step 2: check the order</h2>
+<h2 id="search-step-2-check-the-order">Step 2: check the order</h2>
 <p>Seeing valid pieces is not enough. <code>{ name 7 }</code> has familiar pieces but is missing <code>:</code>. <code>FMS</code> is a finite-state machine: at each moment it knows what may come next. After an object key it expects <code>:</code>; after a value in an array it expects either <code>,</code> or <code>]</code>.</p>
 <p>This is the small compiler idea at the heart of the project: first recognise words, then check that their order forms a sentence.</p>
-<h2>Step 3: build values with stacks</h2>
+<h2 id="search-step-3-build-values-with-stacks">Step 3: build values with stacks</h2>
 <p><code>Operator</code> keeps a few stacks while the state machine runs:</p>
 <ul>
 <li>an object stack for maps and lists currently being built;</li>
@@ -99,12 +119,12 @@
 <li>a state stack for returning to the surrounding array or object.</li>
 </ul>
 <p>When it sees <code>{</code>, it starts a <code>HashMap</code>. When it sees <code>[</code>, it starts an <code>ArrayList</code>. When a nested value ends, it is placed into the collection that was being built around it. That is why arrays and objects can sit inside each other.</p>
-<h2>A useful experiment</h2>
+<h2 id="search-a-useful-experiment">A useful experiment</h2>
 <p>Start with a tiny input, put a breakpoint in <code>Lexer.next()</code>, then step through calls to <code>FMS.parse()</code>:</p>
 <pre><code class="language-java">Object value = new FMS(&quot;{a:[1, true]}&quot;).parse();
 </code></pre>
 <p>Watch how each token changes the state and how the <code>Map</code> and <code>List</code> grow. Next, remove the comma or closing bracket and see where <code>JsonParseException</code> is produced. This is more useful than memorising the state table.</p>
-<h2>Why not use this design in an application?</h2>
+<h2 id="search-why-not-use-this-design-in-an-application">Why not use this design in an application?</h2>
 <p>The code is deliberately compact and educational. Production JSON processing needs strict standards behaviour, predictable numeric handling, security review, performance work, broad test coverage, streaming options, and long-term compatibility. aj-json does not aim to provide those things.</p>
 <p>Return to <a href="/aj-json/parse/">parse your first JSON</a> or the <a href="/aj-json/">overview</a>.</p>
 

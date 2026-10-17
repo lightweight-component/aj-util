@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,12 +154,13 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>HashHelper</h1>
+                <h1 id="search-hashhelper">HashHelper</h1>
 <p><code>com.ajaxjs.util.HashHelper</code> 计算摘要与 HMAC。哈希不是可逆加密；MD5、SHA-1 属于旧摘要算法，不适合需要抗碰撞的安全判断。普通哈希不是密码存储方案。</p>
 <p>构造器接收算法名称和 <code>String</code>（UTF-8）或 <code>byte[]</code>。<code>hash()</code> 将以区分大小写的 <code>Hmac</code> 开头的名称分派给 <code>getMac()</code>，其余交给 <code>getMessageDigest()</code>。<code>hashAsStr()</code> 输出小写十六进制；<code>hashAsBase64()</code> 保留填充，<code>hashAsBase64(true)</code> 去掉填充。</p>
-<h2>HMAC 密钥</h2>
+<h2 id="search-hmac-密钥">HMAC 密钥</h2>
 <p><code>setKey(String)</code> 使用 UTF-8 密钥字节；<code>setKeyBase64(String)</code> 解码密钥材料，均返回实例。未设置密钥抛出 <code>IllegalStateException</code>，不会生成随机密钥。不支持的算法会失败而非返回 null。</p>
 <pre><code class="language-java">import com.ajaxjs.util.HashHelper;
 
@@ -149,10 +169,10 @@ String mac = new HashHelper(HashHelper.HMAC_SHA256, &quot;hello&quot;)
         .setKey(&quot;example-only-key&quot;).hashAsBase64();
 String sameMac = HashHelper.hmacSHA256(&quot;hello&quot;, &quot;example-only-key&quot;, false);
 </code></pre>
-<h2>便捷方法</h2>
+<h2 id="search-便捷方法">便捷方法</h2>
 <p><code>md5(String)</code>、<code>md5(byte[])</code>、<code>md5(InputStream)</code>、<code>sha1(String)</code>、<code>sha256(String)</code> 返回小写十六进制。<code>hmacMD5</code>、<code>hmacSHA1</code>、<code>hmacSHA256</code> 接收 <code>(String data, String key, boolean isWithoutPadding)</code>，返回 Base64。</p>
 <p><strong>流所有权：</strong> 当前 <code>md5(InputStream)</code> 通过 <code>DataReader</code> 关闭输入流，与源码 Javadoc 的说法不同，调用后不要复用。它分块处理而非加载整个文件。请保护真实 HMAC 密钥；示例密钥不是生产秘密。</p>
-<h2>使用摘要还是 HMAC？</h2>
+<h2 id="search-使用摘要还是-hmac">使用摘要还是 HMAC？</h2>
 <p>消息摘要是不带密钥的指纹：相同字节总会得到相同结果，适合在预期摘要来自可信来源时进行完整性校验。HMAC 将数据与共享
 秘密结合，用于认证消息。内部不会通过另一套方法自动判断 HMAC，算法名称必须以精确大小写的 <code>Hmac</code> 开头，例如
 <code>HmacSHA256</code>。</p>
@@ -170,12 +190,12 @@ String mac = new HashHelper(HashHelper.HMAC_SHA256, payloadBytes)
         .setKeyBase64(keyFromConfig)
         .hashAsBase64();
 </code></pre>
-<h2>输出格式与互操作</h2>
+<h2 id="search-输出格式与互操作">输出格式与互操作</h2>
 <p><code>hashAsStr()</code> 输出小写十六进制，适合日志或校验和文件。<code>hashAsBase64()</code> 对二进制摘要更短，默认保留 <code>=</code> 填充。应选择
 远端协议规定的格式；即使底层字节相同，改变十六进制大小写或 Base64 填充也可能导致签名比较失败。</p>
 <p>字符串数据一律按 UTF-8 转字节。若协议要求对规范化字节序列签名，请先构造出精确的 <code>byte[]</code> 再创建 helper。除非协议
 明确规定，否则不要签名 Java 对象的字符串表示。</p>
-<h2>流式校验和</h2>
+<h2 id="search-流式校验和">流式校验和</h2>
 <p><code>md5(InputStream)</code> 每块更新一次 <code>MessageDigest</code>，不会将整个文件保留在内存中：</p>
 <pre><code class="language-java">try (InputStream in = Files.newInputStream(Paths.get(&quot;release.zip&quot;))) {
     String checksum = HashHelper.md5(in);
@@ -184,7 +204,7 @@ String mac = new HashHelper(HashHelper.HMAC_SHA256, payloadBytes)
 </code></pre>
 <p>该方法自身会关闭流。外层的 try-with-resources 无害但属于冗余；当同一段代码日后可能换用其他流 API 时，保留它也能让
 资源所有权更直观。</p>
-<h2>安全建议与实现原理</h2>
+<h2 id="search-安全建议与实现原理">安全建议与实现原理</h2>
 <p>新设计应优先 SHA-256 或 HMAC-SHA-256。MD5、SHA-1 可以用于遗留互操作或非安全校验和，但不要用于密码存储、签名或
 需要抗碰撞的身份判断。密码应使用合适安全库提供的专门、可调成本的密码哈希算法。</p>
 <p>每次操作都会向 JDK 安全提供者获取 <code>MessageDigest</code> 或 <code>Mac</code>、初始化并返回结果；实例不缓存可变摘要状态。不支持的

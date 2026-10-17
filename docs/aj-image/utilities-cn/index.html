@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>aj-image - 图片工具与输出</title>
+        <meta name="description" content="Small Java utilities with many useful functions. " />
+        <meta name="keywords" content="AJ Utils, ajaxjs, ajaxjs framework, java utilities, tools, helper, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" /> 
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="/asset/main.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
+
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?208c5aea11c52991bd1c3283e62ad0ce";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-util">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-util">Gitcode</a>
+                  
+                   | <button class="language-toggle" type="button" data-document-language-toggle data-language-target="/aj-image/utilities/" aria-label="Switch language to English" title="Switch to English">EN</button>
+                   | <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" title="切换深色模式">☾</button>
+                </div>
+                <h1>
+                    <img src="https://framework.ajaxjs.com/aj-logo/logo.png" style="vertical-align: middle;height: 45px;margin-bottom: 6px;" />
+                    aj-image
+                </h1>
+                <h3>Java 工具项目文档
+                </h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <label for="project-select">选择工程</label>
+<select id="project-select" onchange="window.location.assign(this.value)">
+    
+    <option value="/aj-util/cn/">aj-util</option>
+    
+    <option value="/aj-http/cn/">aj-http</option>
+    
+    <option value="/aj-s3client/cn/">aj-s3client</option>
+    
+    <option value="/aj-ftp/cn/">aj-ftp</option>
+    
+    <option value="/aj-json/cn/">aj-json</option>
+    
+    <option value="/aj-image/cn/" selected>aj-image</option>
+    
+    <option value="/aj-qrcode/cn/">aj-qrcode</option>
+    
+</select>
+
+                <section class="docs-search" data-doc-search data-project="aj-image" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-image">aj-image</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
+                <ul>
+                    <li class="selected">
+                        <a href="/aj-image/cn/">首页</a>
+                    </li>
+                </ul>
+                
+                
+                
+                
+                
+                
+                <h3>图片处理</h3>
+                <ul>
+                    <li><a href="/aj-image/composition-cn/">图片合成</a></li>
+                    <li><a href="/aj-image/tutorial-cn/">合成教程与完整示例</a></li>
+                    <li><a href="/aj-image/utilities-cn/">图片工具与输出</a></li>
+                </ul>
+                
+                
+            </menu>
+            <article class="aj-text chinese">
+                <h1 id="search-图片工具与输出">图片工具与输出</h1>
+<h2 id="search-工具一览">工具一览</h2>
+<p><code>com.ajaxjs.image.utils</code> 不只是合成器的辅助代码，也提供可以独立使用的图片处理工具。</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>能做什么</th>
+<th>使用时注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ImageConvert</code></td>
+<td>在 JPG、PNG、GIF、BMP 等编码格式间转换；返回文件字节、写入输出流或保存文件；可设置编码质量</td>
+<td>先调用 <code>setImageFormat()</code>；文件扩展名不会自动决定格式。JPG、BMP 输出不保留透明度</td>
+</tr>
+<tr>
+<td><code>ImageEffect</code></td>
+<td>按倍数缩放、指定尺寸缩放、缩略图、圆角、扩展画布和补成正方形</td>
+<td>通过 <code>getOutput()</code> 取结果；多个效果不会自动连续叠加。扩展画布新增区域为黑色，补正方形时原图放在左上角</td>
+</tr>
+<tr>
+<td><code>ImageMatrix</code></td>
+<td>提取 RGB、BGR、RGBA、灰度原始像素字节；裁剪三通道矩阵；从矩阵创建图片</td>
+<td>原始像素不是 PNG/JPG 文件字节；<code>cutMatrix()</code> 仅适用于 RGB/BGR；NV21 未实现，<code>createRGBAImage()</code> 当前会丢弃透明度</td>
+</tr>
+<tr>
+<td><code>ImageTypeHandler</code></td>
+<td>读取图片宽高、格式信息，解码整图或指定区域，可指定读取器支持的目标像素类型</td>
+<td>输入完整图片字节和格式名；只处理第一帧，一次解码后不能复用。用 try-with-resources 管理资源</td>
+</tr>
+<tr>
+<td><code>ImageEncoder</code></td>
+<td>直接把 <code>BufferedImage</code> 编码成文件字节、写入流，或保存已编码字节</td>
+<td>是转换器与合成器共用的编码工具；<code>writeFile()</code> 接收编码后的字节，不会自行转换图片</td>
+</tr>
+<tr>
+<td><code>ImageBase</code></td>
+<td>提供图片读取、复制和处理结果输出的公共能力</td>
+<td>抽象基类，不直接实例化；<code>ImageConvert</code>、<code>ImageEffect</code>、<code>ImageMatrix</code> 可从内存图片、完整图片字节、本地文件或 HTTP/HTTPS 地址创建</td>
+</tr>
+</tbody>
+</table>
+<h3 id="search-示例-转换格式">示例：转换格式</h3>
+<p>下面返回的是完整 PNG 文件内容，可以保存为文件或用于上传，并不是原始像素数组。</p>
+<pre><code class="language-java">import com.ajaxjs.image.model.constant.ImageFormat;
+import com.ajaxjs.image.utils.ImageConvert;
+
+byte[] pngBytes = new ImageConvert(&quot;input.jpg&quot;)
+        .setImageFormat(ImageFormat.PNG)
+        .convert();
+</code></pre>
+<h3 id="search-示例-缩略图再加圆角">示例：缩略图再加圆角</h3>
+<p>每个效果方法都读取构造时的输入图片。要把上一步结果交给下一步处理，需要用 <code>getOutput()</code> 创建新的处理器，而不是直接串联两个效果方法。</p>
+<pre><code class="language-java">import com.ajaxjs.image.model.constant.ImageFormat;
+import com.ajaxjs.image.utils.ImageEffect;
+import java.awt.image.BufferedImage;
+
+BufferedImage thumbnail = new ImageEffect(&quot;input.jpg&quot;)
+        .thumbnail(320, 240, 2.0)
+        .getOutput();
+
+new ImageEffect(thumbnail)
+        .roundCorner(24)
+        .outputAsFile(ImageFormat.PNG, 1.0f, &quot;thumbnail.png&quot;);
+</code></pre>
+<p>缩略图不会放大原图，也不保证正好填满指定宽高。保存到文件时，父目录需要预先存在。若改为读取网络图片，请自行限制来源和图片大小；当前网络读取入口不提供可配置的超时或身份认证。</p>
+<h2 id="search-使用时需要了解的行为">使用时需要了解的行为</h2>
+<ul>
+<li><code>resize()</code> 保留索引图片的调色板和透明度；等比例缩放细长图片时，宽高至少保留一个像素。无法识别的图片字节或网络图片会在读取时直接报错。</li>
+<li><code>getMatrix(MatType.RGBA)</code> 返回普通 RGBA 颜色值，即使原图内部使用预乘透明度，也不会把 RGB 再压暗一次。</li>
+<li><code>ImageConvert.setQuality(null)</code> 使用编码器默认质量；手动指定的质量必须在 <code>0</code> 到 <code>1</code> 之间，<code>0</code> 也是有效的明确质量值。</li>
+<li>缩略图不会超过指定尺寸，也不会放大原图；长宽比较极端时使用居中裁剪。原图带透明通道时，<code>scale()</code> 会保留透明度。</li>
+<li>区域解码会按选中区域返回图片，指定输出像素类型时也一样。</li>
+<li><code>getMatrix(MatType.BGR)</code> 按蓝、绿、红的顺序返回字节。NV21 转换尚未实现，调用时会抛出 <code>UnsupportedOperationException</code>。</li>
+</ul>
+<h2 id="search-输出与失败处理">输出与失败处理</h2>
+<p>格式转换、效果输出和合成器使用相同的图片编码逻辑，支持 JPG、PNG、GIF 和 BMP；透明图片输出为 JPG 或 BMP 时，主动转成不透明 RGB，避免不同 Java 版本的编码器产生不同结果。</p>
+<p>保存文件时先完成编码，再写入目标同目录的临时文件，成功后替换目标。编码或临时写入失败不会提前清空旧文件。替换优先使用原子移动，不支持时使用普通移动，其故障保证取决于文件系统。</p>
+<p><code>combine()</code> 只有全部绘制成功后才更新结果。后续合成失败时，仍可输出上次成功的图片；如果第一次合成就失败，则不能输出半成品。编码错误会保留原始异常原因，方便排查。</p>
+<p>模糊在独立图片上计算，不会改写输入图片；同一图片重复绘制或平铺时，模糊不会逐次累积。</p>
+<p><code>ImageTypeHandler</code> 解码完成或失败后都会释放读取器和输入流。只读取宽高等元数据时，请使用 try-with-resources，确保没有执行解码也能释放资源。<code>ImageConvert.convert(OutputStream)</code> 不关闭调用方传入的流。</p>
+<p>模块测试提供了这些行为的小型可运行示例。</p>
+<p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-image">源代码</a></p>
+<p>相关：<a href="/aj-image/composition-cn/">图片合成</a> · <a href="/aj-image/cn/">返回首页</a></p>
+
+            </article>
+        </div>
+
+       <footer>
+            aj-image，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+            frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+            <br />
+            <br />
+            Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

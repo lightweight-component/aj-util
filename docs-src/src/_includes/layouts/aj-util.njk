@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -47,6 +48,7 @@
         <div class="docs-layout">
             <menu class="docs-navigation" aria-label="Documentation navigation">
                 {% include "project-select.njk" %}
+                {% include "search.njk" %}
                 <ul>
                     <li class="selected">
                         <a href="/{{ project }}/">Home</a>
@@ -138,6 +140,14 @@
                 <ul>
                     <li><a href="/aj-ftp/upload/">Upload files</a></li>
                     <li><a href="/aj-ftp/download/">Download files</a></li>
+                </ul>
+                {% endif %}
+                {% if project == "aj-image" %}
+                <h3>Image processing</h3>
+                <ul>
+                    <li><a href="/aj-image/composition/">Image composition</a></li>
+                    <li><a href="/aj-image/tutorial/">Composition tutorial and examples</a></li>
+                    <li><a href="/aj-image/utilities/">Image utilities and output</a></li>
                 </ul>
                 {% endif %}
                 {% if project == "aj-json" %}

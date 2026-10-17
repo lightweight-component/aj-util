@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-image" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-image">aj-image</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-image/">Home</a>
@@ -76,10 +95,41 @@
                 
                 
                 
+                <h3>Image processing</h3>
+                <ul>
+                    <li><a href="/aj-image/composition/">Image composition</a></li>
+                    <li><a href="/aj-image/tutorial/">Composition tutorial and examples</a></li>
+                    <li><a href="/aj-image/utilities/">Image utilities and output</a></li>
+                </ul>
+                
+                
             </menu>
             <article class="aj-text">
-                <h1>aj-image</h1>
-<p>Welcome to the aj-image documentation. Detailed documentation is coming soon.</p>
+                <h1 id="search-aj-image">aj-image</h1>
+<p>aj-image is a lightweight tool for server-side image processing and composition in Java. It combines images, text, and rectangles for tasks such as posters and watermarks. <code>ImageContainer</code> is the composition entry point; other utilities cover format conversion, thumbnails, rounded corners, and pixel matrices.</p>
+<h2 id="search-maven-dependency">Maven dependency</h2>
+<p>Requires Java 8 or later. Version <code>1.0</code> is published to Maven Central. Add this dependency to your project's <code>pom.xml</code>:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+    &lt;artifactId&gt;aj-image&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>No additional repository configuration is normally needed.</p>
+<h2 id="search-what-can-it-do">What can it do?</h2>
+<ul>
+<li>Images: positioning, scaling, rotation, rounded corners, opacity, and blur.</li>
+<li>Text: fonts, font sizes, colours, opacity, rotation, strikethrough, baseline positioning, and shrinking or ellipsis when a single line is too wide.</li>
+<li>Rectangles: dimensions, solid colours, gradients, opacity, rounded corners, and borders. Setting a border draws only the outline, without filling the interior.</li>
+<li>All three support horizontal centring, horizontal positioning directions, and repeated tiling. Direction controls coordinate anchoring, not image mirroring or reversed text.</li>
+</ul>
+<h2 id="search-documentation">Documentation</h2>
+<ul>
+<li><a href="/aj-image/composition/">Image composition</a>: drawing backgrounds, images, text, and rectangles, plus current limitations.</li>
+<li><a href="/aj-image/tutorial/">Composition tutorial and examples</a>: start with a simple example and build a poster step by step.</li>
+<li><a href="/aj-image/utilities/">Image utilities and output</a>: conversion, thumbnails, rounded corners, pixel matrices, region decoding, and saving files.</li>
+</ul>
+<p>The <code>utils</code> tools can be used independently of composition.</p>
 <p><a href="https://github.com/lightweight-component/aj-util/tree/master/aj-image">Source code</a></p>
 
             </article>

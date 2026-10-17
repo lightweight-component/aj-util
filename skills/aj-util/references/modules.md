@@ -40,6 +40,8 @@ HTTP client code now lives under `aj-http/src/main/java/com/ajaxjs/util/httpremo
 
 ## Navigation
 
+`aj-image` is a separate Java 8 module using `com.ajaxjs.image`, not a package under `com.ajaxjs.util`. For its composition, standalone image tools, test fixtures and split bilingual guides, read [image.md](image.md). Use its own POM and tests rather than the aj-util commands below.
+
 - Implementation: `aj-util/src/main/java/com/ajaxjs/util/`.
 - Tests and fixtures: `aj-util/src/test/java/`, `aj-util/src/test/resources/`.
 - Overview: `aj-util/README.md` (English), `aj-util/README.zh-CN.md` (Chinese).

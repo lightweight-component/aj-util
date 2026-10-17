@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,14 +148,15 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Working with Jackson 3</h1>
+                <h1 id="search-working-with-jackson-3">Working with Jackson 3</h1>
 <p><code>aj-util</code> ships with the Jackson JSON library by default, currently at version 2.x, which works well with Java 8.
 However, as JDK 11/17 becomes more popular, upgrading to Jackson 3.x is necessary. <code>aj-util</code> supports newer versions of
 Jackson and provides a unified interface for JSON utility functions. This article will show you how to use Jackson 3
 with <code>aj-util</code>.</p>
-<h3>Step 1: Exclude Jackson 2 Dependencies</h3>
+<h3 id="search-step-1-exclude-jackson-2-dependencies">Step 1: Exclude Jackson 2 Dependencies</h3>
 <p>First, exclude the Jackson 2 dependencies and add the Jackson 3 dependencies. If you're using Spring, you can omit this
 step because the Spring framework already includes Jackson 3.</p>
 <pre><code class="language-xml">&lt;dependency&gt;
@@ -158,13 +178,13 @@ step because the Spring framework already includes Jackson 3.</p>
 </code></pre>
 <p>Since the Maven scope of the old Jackson library is <code>provided</code>, you don't actually have to exclude the dependencies
 mentioned above. However, the next step is necessary.</p>
-<h3>Step 2: Configure Java SPI</h3>
+<h3 id="search-step-2-configure-java-spi">Step 2: Configure Java SPI</h3>
 <p>Create a file named <code>com.ajaxjs.util.json.JsonEngineProvider</code> under the folder <code>src/main/resources/META-INF/services</code>.
 This is a Java SPI configuration file.</p>
 <p>The content of this file should be:</p>
 <pre><code class="language-text">com.ajaxjs.util.json.jackson3.Jackson3Provider
 </code></pre>
-<h3>Step 3: Add the Jackson 3 Adapter</h3>
+<h3 id="search-step-3-add-the-jackson-3-adapter">Step 3: Add the Jackson 3 Adapter</h3>
 <p>The Jackson 3 adapter is located at:</p>
 <ul>
 <li><a href="https://gitee.com/lightweight-components/ajaxjs/blob/master/aj-spring-base/src/main/java/com/ajaxjs/util/json/jackson3/Jackson3Engine.java">Jackson3Engine.java</a></li>
@@ -172,7 +192,7 @@ This is a Java SPI configuration file.</p>
 </ul>
 <p>Simply copy these two files into your source code.</p>
 <p>With that, you have finished configuring <code>aj-util</code> to work with Jackson 3.</p>
-<h3>Optional: Exclude Unnecessary Libraries</h3>
+<h3 id="search-optional-exclude-unnecessary-libraries">Optional: Exclude Unnecessary Libraries</h3>
 <p>Optionally, you can also exclude libraries such as SLF4j, Logback, JUnit, and Jakarta Servlet if they are not needed in
 your project.</p>
 <pre><code class="language-xml">&lt;exclusion&gt;

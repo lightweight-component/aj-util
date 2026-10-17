@@ -1,6 +1,7 @@
 package com.ajaxjs.image.utils;
 
-import com.ajaxjs.image.constant.MatType;
+import com.ajaxjs.image.model.constant.MatType;
+import lombok.Getter;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -8,41 +9,77 @@ import java.awt.image.*;
 import java.io.File;
 import java.util.Arrays;
 
+/**
+ * 在图片与逐像素字节矩阵之间转换。
+ * <p>矩阵按行排列，颜色值通过字节保存；它与 PNG、JPEG 文件字节不是同一种数据。
+ * 先提取矩阵，再按需要裁剪或创建图片。内部保存最近一次矩阵和图片结果，不适合并发操作。</p>
+ */
 public class ImageMatrix extends ImageBase {
+    /**
+     * 直接使用内存图片创建处理器。
+     *
+     * @param source 已读取的图片，不应为 null；不会自动复制像素
+     */
     public ImageMatrix(BufferedImage source) {
         super(source);
     }
 
+    /**
+     * 从图片文件字节创建处理器，ImageIO 根据文件头识别编码格式。
+     *
+     * @param imageBytes PNG、JPEG 等完整编码数据，不是原始像素矩阵
+     * @throws java.io.UncheckedIOException 解码发生 I/O 错误时抛出
+     */
     public ImageMatrix(byte[] imageBytes) {
         super(imageBytes);
     }
 
+    /**
+     * 从本地图片文件创建处理器。
+     *
+     * @param file 图片文件，须存在且具有受支持的编码格式
+     * @throws IllegalArgumentException     无法识别图片格式时抛出
+     * @throws java.io.UncheckedIOException 文件读取失败时抛出
+     */
     public ImageMatrix(File file) {
         super(file);
     }
 
+    /**
+     * 从本地路径或以 http 开头的网络地址创建处理器。
+     * <p>网络读取使用 ImageIO 的默认连接行为；本构造方法不提供超时或身份认证参数。</p>
+     *
+     * @param file 本地文件路径或 HTTP/HTTPS 图片地址
+     * @throws RuntimeException 图片读取失败时抛出
+     */
     public ImageMatrix(String file) {
         super(file);
     }
 
     /**
-     * 图像的矩阵数据
+     * 最近一次提取的像素字节，初始为 null。
+     * <p>长度和通道顺序由提取格式决定；getMatrix 返回实际数组，创建图片时可能直接共享此数组。</p>
      */
+    @Getter
     byte[] matrix;
 
-    public byte[] getMatrix() {
-        return matrix;
-    }
-
     /**
-     * 对图像解码返回指定的格式矩阵数据
+     * 将源图转换为指定的像素矩阵并保存到 matrix。
+     * <p>通过无参数 getMatrix 取得结果数组；RGB、BGR、RGBA、GRAY 分别对应
+     * 每像素 3、3、4、1 个字节。RGBA 为非预乘颜色，透明度不会提前乘入 RGB。
+     * NV21 尚未实现。</p>
      *
-     * @return 指定的格式矩阵数据
+     * @param target 目标通道格式，不应为 null
+     * @return 当前处理器，供继续读取或处理 matrix
+     * @throws UnsupportedOperationException 请求尚未支持的格式时抛出
      */
     public ImageMatrix getMatrix(MatType target) {
         int width = source.getWidth(), height = source.getHeight();
 
         switch (target) {
+            case BGR:
+                matrix = getMatrixBGR();
+                break;
             case RGB:
                 if (equalBandOffsetWith3Byte(source, new int[]{2, 1, 0}))
                     matrix = bufferedImageToBytes(source, width, height);
@@ -50,10 +87,15 @@ public class ImageMatrix extends ImageBase {
                     matrix = to(BufferedImage.TYPE_3BYTE_BGR, width, height);
                 break;
             case RGBA:
-                if (source.getType() == BufferedImage.TYPE_4BYTE_ABGR || source.getType() == BufferedImage.TYPE_4BYTE_ABGR_PRE)
-                    matrix = bufferedImageToBytes(source, width, height);
-                else
-                    matrix = to(BufferedImage.TYPE_4BYTE_ABGR, width, height);
+                // getRGB 会把预乘颜色还原成普通颜色，避免调用方再次应用透明度后变暗。
+                int[] rgba = source.getRGB(0, 0, width, height, null, 0, width);
+                matrix = new byte[rgba.length * 4];
+                for (int i = 0; i < rgba.length; i++) {
+                    matrix[i * 4] = (byte) (rgba[i] >>> 16);
+                    matrix[i * 4 + 1] = (byte) (rgba[i] >>> 8);
+                    matrix[i * 4 + 2] = (byte) rgba[i];
+                    matrix[i * 4 + 3] = (byte) (rgba[i] >>> 24);
+                }
                 break;
             case GRAY:
                 if (source.getType() == BufferedImage.TYPE_BYTE_GRAY)
@@ -61,15 +103,18 @@ public class ImageMatrix extends ImageBase {
                 else
                     matrix = to(BufferedImage.TYPE_BYTE_GRAY, width, height);
                 break;
+            default:
+                throw new UnsupportedOperationException("Unsupported matrix format: " + target);
         }
 
         return this;
     }
 
     /**
-     * 对图像解码返回 BGR 格式矩阵数据
+     * 提取蓝、绿、红顺序的三通道像素数据，同时更新 matrix。
+     * <p>每个像素占 3 字节，不保留透明度。颜色分量可通过 {@code value & 0xff} 转为无符号整数。</p>
      *
-     * @return BGR 格式矩阵数据
+     * @return 按行排列、长度为宽乘高乘 3 的 BGR 字节数组
      */
     public byte[] getMatrixBGR() {
         int width = source.getWidth(), height = source.getHeight();
@@ -92,11 +137,12 @@ public class ImageMatrix extends ImageBase {
     }
 
     /**
-     * 判断给定的 BufferedImage 是否为 3 字节 BGR 类型，并且其通道偏移量与指定的 bandOffset 数组相匹配
+     * 判断源图是否为三字节 BGR 类型且通道偏移与期望值一致。
+     * <p>偏移描述各颜色分量在样本存储中的位置，不应直接当作 getDataElements 的输出顺序。</p>
      *
-     * @param image      要检查的 BufferedImage 对象
-     * @param bandOffset 用于判断通道顺序的偏移量数组，例如 [0, 1, 2] 表示 BGR 顺序，[2, 1, 0] 表示 RGB 顺序
-     * @return 如果图像类型为 TYPE_3BYTE_BGR 且其通道偏移量与提供的 bandOffset 匹配则返回 true，否则返回 false
+     * @param image      待检查的图片
+     * @param bandOffset 期望的通道偏移数组
+     * @return 类型和通道偏移均匹配时为 true
      */
     private static boolean equalBandOffsetWith3Byte(BufferedImage image, int[] bandOffset) {
         // 检查图像类型是否为 3 字节 BGR 格式 (TYPE_3BYTE_BGR)
@@ -108,9 +154,11 @@ public class ImageMatrix extends ImageBase {
                 // 将采样模型转换为 ComponentSampleModel 以便访问其特定方法
                 ComponentSampleModel sampleModel = (ComponentSampleModel) image.getData().getSampleModel();
 
-                // 获取图像的实际通道偏移量数组并与传入的 bandOffset 进行比较
-                // 通道偏移量定义了颜色分量在内存中的排列顺序
-                // 例如：对于 BGR 图像，通常偏移量为 [0, 1, 2]，表示蓝色在第 0 位，绿色在第 1 位，红色在第 2 位
+                /*
+                 获取图像的实际通道偏移量数组并与传入的 bandOffset 进行比较
+                 通道偏移量定义了颜色分量在内存中的排列顺序
+                 例如：对于 BGR 图像，通常偏移量为 [0, 1, 2]，表示蓝色在第 0 位，绿色在第 1 位，红色在第 2 位
+                 */
                 return Arrays.equals(sampleModel.getBandOffsets(), bandOffset);
             }
         }
@@ -120,12 +168,13 @@ public class ImageMatrix extends ImageBase {
 
 
     /**
-     * 将 BufferedImage 对象转换为字节数组
+     * 提取指定矩形区域的像素数据元素。
+     * <p>结果由图像采样模型定义，不能只凭 BufferedImage 类型名称推断原始内存字节顺序。</p>
      *
-     * @param source 要转换的 BufferedImage 源图像
-     * @param width  要提取数据的区域宽度（通常应与图像宽度相同）
-     * @param height 要提取数据的区域高度（通常应与图像高度相同）
-     * @return 包含图像像素数据的字节数组，字节顺序和格式取决于图像的 SampleModel
+     * @param source 使用字节型像素存储的源图
+     * @param width  从左上角读取的区域宽度，单位为像素
+     * @param height 从左上角读取的区域高度，单位为像素
+     * @return 由 Raster 导出的像素字节数组
      */
     private static byte[] bufferedImageToBytes(BufferedImage source, int width, int height) {
         /*
@@ -143,12 +192,12 @@ public class ImageMatrix extends ImageBase {
     }
 
     /**
-     * 将源图像转换为指定类型并返回其原始像素数据的字节数组
+     * 将源图颜色转换到指定像素类型，再提取字节数据。
      *
-     * @param imageType 目标图像类型（如 BufferedImage.TYPE_INT_RGB, TYPE_3BYTE_BGR 等）
-     * @param width     目标图像的宽度
-     * @param height    目标图像的高度
-     * @return 包含转换后图像像素数据的字节数组
+     * @param imageType 目标字节型 BufferedImage 类型
+     * @param width     目标宽度，应与源图宽度一致
+     * @param height    目标高度，应与源图高度一致
+     * @return 转换后的像素数据元素
      */
     private byte[] to(int imageType, int width, int height) {
         // 创建一个新的 BufferedImage 对象，具有指定的宽度、高度和图像类型
@@ -168,6 +217,15 @@ public class ImageMatrix extends ImageBase {
         return bufferedImageToBytes(img, width, height);
     }
 
+    /**
+     * 检查裁剪矩形是否完全位于父矩形内。
+     *
+     * @param parent    可读取的矩阵范围
+     * @param argParent 父范围的名称，用于错误信息
+     * @param sub       要裁剪的范围
+     * @param argSub    裁剪范围的名称，用于错误信息
+     * @throws IllegalArgumentException 裁剪区域未完全包含在父范围内时抛出
+     */
     private static void assertContains(Rectangle parent, String argParent, Rectangle sub, String argSub) {
         if (!parent.contains(sub))
             throw new IllegalArgumentException(String.format("the %s(X%d,Y%d,W%d,H%d) not contained by %s(X%d,Y%d,W%d,H%d)",
@@ -175,11 +233,14 @@ public class ImageMatrix extends ImageBase {
     }
 
     /**
-     * 从 3byte(RGB/BGR) 图像矩阵中截取 rect 指定区域的子矩阵
+     * 从当前 RGB 或 BGR 三通道矩阵中复制一个矩形区域。
+     * <p>应先提取每像素 3 字节的矩阵；本方法不能用于灰度或 RGBA 数据。
+     * 不更新 matrix，完整区域或 null 裁剪区域会直接返回原数组。</p>
      *
-     * @param matrixRect 矩阵尺寸
-     * @param rect       截取区域
-     * @return 截取的图像矩阵数据
+     * @param matrixRect 整个矩阵的尺寸范围，当前索引计算要求原点为 0、0
+     * @param rect       裁剪范围，使用原矩阵坐标；null 表示完整区域
+     * @return 裁剪字节数组，完整区域时为原数组引用
+     * @throws IllegalArgumentException 裁剪范围超出父范围时抛出
      */
     public byte[] cutMatrix(Rectangle matrixRect, Rectangle rect) {
         if ((rect == null || rect.equals(matrixRect))) // 解码区域为 null 或与图像尺寸相等时直接返回 matrix
@@ -198,11 +259,13 @@ public class ImageMatrix extends ImageBase {
     }
 
     /**
-     * 从 RGB 格式图像矩阵数据创建一个 BufferedImage
-     * matrix 此时应为 RGB 格式图像矩阵数据,为 null 则创建一个指定尺寸的空图像
-
-     * @param width     宽度
-     * @param height    高度
+     * 将当前 RGB 三通道矩阵包装为不透明图片，并更新 output。
+     * <p>矩阵为 null 时创建空白图片；非 null 时数组须容纳指定尺寸的像素。
+     * 图片可能共享矩阵数组，修改一方的数据会影响另一方。</p>
+     *
+     * @param width  图片宽度，单位为像素，应大于零
+     * @param height 图片高度，单位为像素，应大于零
+     * @return 当前处理器，output 为生成的图片
      */
     public ImageMatrix createRGBImage(int width, int height) {
         int bytePerPixel = 3;
@@ -221,12 +284,13 @@ public class ImageMatrix extends ImageBase {
     }
 
     /**
-     * 从 RGBA 格式图像矩阵数据创建一个 BufferedImage
-     * 该方法删除了 alpha 通道
-     * matrix 此时应为 RGBA 格式图像矩阵数据，为 null 则创建一个指定尺寸的空图像
+     * 以每像素 4 字节的 RGBA 矩阵创建图片，但当前实现丢弃透明度。
+     * <p>仅使用红、绿、蓝分量，结果为不透明图片，不能用于透明图片的无损恢复。
+     * 矩阵为 null 时分配空白存储，否则可能与生成图片共享数组。</p>
      *
-     * @param width  宽度
-     * @param height 高度
+     * @param width  图片宽度，单位为像素，应大于零
+     * @param height 图片高度，单位为像素，应大于零
+     * @return 当前处理器，output 为生成的不透明图片
      */
     public ImageMatrix createRGBAImage(int width, int height) {
         int bytePerPixel = 4;

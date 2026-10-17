@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-ftp" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-ftp">aj-ftp</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-ftp/cn/">首页</a>
@@ -88,11 +107,12 @@
                 </ul>
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>下载文件</h1>
+                <h1 id="search-下载文件">下载文件</h1>
 <p><code>SimpleFtpClient.getFile(远端路径, 本地路径)</code> 使用 FTP <code>RETR</code> 命令获取一个远端文件。它以二进制模式传输，并避免失败传输破坏已有的本地目标文件。</p>
-<h2>基本下载</h2>
+<h2 id="search-基本下载">基本下载</h2>
 <pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
 
 try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
@@ -105,14 +125,14 @@ try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21))
 Files.createDirectories(downloads);
 ftp.getFile(&quot;/releases/client.zip&quot;, downloads.resolve(&quot;client.zip&quot;).toString());
 </code></pre>
-<h2>安全发布本地文件</h2>
+<h2 id="search-安全发布本地文件">安全发布本地文件</h2>
 <p>aj-ftp 不会直接写入最终目标。它会先向服务端查询文件大小，在目标文件的父目录中创建临时 <code>.part</code> 文件，再将远端内容流式写入临时文件。只有在数据流关闭且最终 FTP 响应成功后，临时文件才会移动到请求的目标路径。</p>
 <p>因此，中断或被拒绝的传输不会替换已有目标文件；失败时临时文件会被清理。最终移动会优先使用原子替换；当文件系统不支持原子移动时，则回退为普通替换。</p>
 <p>成功传输后，目标文件仍会被替换。建议使用带版本的目标文件名，或先下载至暂存目录，完成校验后再让其他进程使用。</p>
-<h2>文件不存在与未知大小</h2>
+<h2 id="search-文件不存在与未知大小">文件不存在与未知大小</h2>
 <p>如果服务端拒绝获取文件、连接失败、无法创建本地临时文件，或不能发布已完成文件，<code>getFile</code> 会抛出 <code>IOException</code>。请在任务边界处理该异常，保留旧目标文件，等待重试成功后再更新。</p>
 <p>客户端会使用 <code>SIZE</code> 查询文件大小以记录传输进度。一些 FTP 服务端不会提供有效大小，传输仍可继续，但日志中的总大小未知。不要将进度日志视为完整性校验；FTP 本身不校验文件摘要，需要完整性保证时应从可信来源取得校验值。</p>
-<h2>UTF-8 文件名与超时</h2>
+<h2 id="search-utf-8-文件名与超时">UTF-8 文件名与超时</h2>
 <p>服务端支持 UTF-8 路径时，应在登录后、发送含非 ASCII 字符的请求前启用 UTF-8：</p>
 <pre><code class="language-java">ftp.login(user, password);
 ftp.enableUtf8();
@@ -122,7 +142,7 @@ ftp.getFile(&quot;/发布/客户端.zip&quot;, &quot;C:/downloads/客户端.zip&
 <pre><code class="language-java">ftp.setConnectTimeout(10_000);
 ftp.setReadTimeout(120_000);
 </code></pre>
-<h2>底层获取流</h2>
+<h2 id="search-底层获取流">底层获取流</h2>
 <p>仅在需要自定义消费远端内容（例如解析远端文本文件）时使用 <code>get(远端路径)</code>。必须完整读取或关闭返回流，再调用 <code>completePendingCommand()</code>。</p>
 <pre><code class="language-java">ftp.binary();
 try (InputStream remote = ftp.get(&quot;/data/items.csv&quot;)) {

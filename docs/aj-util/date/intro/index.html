@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,16 +148,17 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>A Clean and Clear Java Date API</h1>
+                <h1 id="search-a-clean-and-clear-java-date-api">A Clean and Clear Java Date API</h1>
 <p>Date and time values are trickier to handle than primitive values such as numbers, booleans, and strings.
 The word “date” may mean a calendar date, a date and time, or even a time of day. The legacy
 <code>java.util.Date</code> type does not distinguish these concepts, which contributes to confusion in older date APIs.
 Date/time values also have many textual formats, such as <code>2025-12-22 11:05</code>, <code>2025-12-22 11-05</code>, and
 <code>3 Jun 2025 11:05</code>. Time zones add another dimension, as shown by
 <code>2024-12-03T10:15:30+01:00[Europe/Paris]</code> and <code>Tue, 3 Jun 2025 11:05:30 GMT</code>.</p>
-<h2>About the <code>Date</code> Type</h2>
+<h2 id="search-about-the-date-type">About the <code>Date</code> Type</h2>
 <p>In early Java versions, the <code>java.util.Date</code> type dominated everything, with many date processing methods built around
 it (before Java 1.1). In later version refactoring, many of these methods were deprecated and replaced
 by <code>java.util.Calendar</code> and <code>java.text.DateFormat</code>. Did Calendar solve the tricky date problems? Not really. Although
@@ -149,7 +169,7 @@ finally integrated into Java 8 as <code>java.time</code>!</p>
 <p>In summary, the date types we advocate using are <code>Instant</code> and <code>LocalDateTime</code> from <code>java.time</code>. <code>Instant</code> represents a
 moment in time, roughly corresponding to a timestamp, and can support nanosecond precision. <code>LocalDateTime</code> might be
 more commonly used by us, along with its other derived precise types.</p>
-<h3>📅 New Java Common Date/Time Types</h3>
+<h3 id="search-new-java-common-date-time-types">📅 New Java Common Date/Time Types</h3>
 <table>
 <thead>
 <tr>
@@ -231,7 +251,7 @@ as early as after Java 1.1, this doesn't mean the Date type itself is deprecated
 you find the <code>@Deprecated</code> annotation in the new JDK17? This indicates that the type is still retained. Using Date as a
 value object (Value Object) itself isn't problematic. For example, two constructor usages are still
 retained: <code>new Date()</code> and <code>new Date(long timestamp)</code>.</p>
-<h2>API Introduction</h2>
+<h2 id="search-api-introduction">API Introduction</h2>
 <p>This date API encapsulated by the author mainly has three functions:</p>
 <ol>
 <li>Date type conversion. Facing such a variety of date types: Date, Instant, Int/Long/String,
@@ -240,7 +260,7 @@ input <code>T returned date = input(Object anyType).to(Class&lt;T&gt; expected t
 <li>Universal date formatting.</li>
 <li><code>now()</code> function that returns the current date and other utility functions.</li>
 </ol>
-<h3><code>DateTools.object2Date</code></h3>
+<h3 id="search-datetools-object2date"><code>DateTools.object2Date</code></h3>
 <p><code>DateTools.object2Date(Object)</code> accepts <code>Date</code>, epoch milliseconds as <code>Long</code>, epoch seconds as <code>Integer</code>,
 <code>LocalDate</code>, <code>LocalDateTime</code>, and strings in <code>yyyy-MM-dd</code>, <code>yyyy-MM-dd HH:mm</code>, or
 <code>yyyy-MM-dd HH:mm:ss</code> form. It returns <code>null</code> for <code>null</code>, blank, or unsupported inputs. A non-blank string

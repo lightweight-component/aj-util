@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-qrcode" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-qrcode">aj-qrcode</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-qrcode/cn/">首页</a>
@@ -90,9 +109,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>高级编码与限制</h1>
+                <h1 id="search-高级编码与限制">高级编码与限制</h1>
 <p><code>QrSegmentAdvanced.makeSegmentsOptimally()</code> 会在数字、字母数字、UTF-8 字节和 Kanji 模式之间搜索，在指定纠错等级、版本范围内最小化编码位数。它适合较长的日文/ASCII 混合内容。</p>
 <pre><code class="language-java">import com.ajaxjs.qr_code.QrSegmentAdvanced;
 import java.util.List;
@@ -124,9 +144,9 @@ QrCode qr = QrCode.encodeSegments(segments, Ecc.MEDIUM, 1, 20, -1, true);
 </tbody>
 </table>
 <p>手工掩码和底层码字属于特殊互操作/测试能力。除非外部格式明确要求，否则应使用自动掩码和高层 API。</p>
-<h2>fast 编码器</h2>
+<h2 id="search-fast-编码器">fast 编码器</h2>
 <p><code>com.ajaxjs.qr_code.fast</code> 包提供 <code>QrCodeFast</code> 等平行实现，以更紧凑的方式保存模块/模板，并缓存模板和 Reed–Solomon 生成器，适合反复生成。默认应使用常规 API：<code>Utils.toImage()</code>、<code>Utils.toSvgString()</code> 接收 <code>QrCode</code>，不接收 <code>QrCodeFast</code>。应先性能分析，再使用 fast 包；其结果通过 <code>getModule(x, y)</code> 自行绘制，且不要混用两套分段类型。</p>
-<h2>异常和安全边界</h2>
+<h2 id="search-异常和安全边界">异常和安全边界</h2>
 <ul>
 <li>数据放不进当前版本范围/纠错等级时会抛出 <code>DataTooLongException</code>。应缩短数据、降低纠错或允许更大版本，不能静默截断 URL、令牌或业务内容。</li>
 <li>非法版本范围、掩码、边框、缩放值和分段内容会抛出 <code>IllegalArgumentException</code>；<code>null</code> 通常抛出 <code>NullPointerException</code>。</li>

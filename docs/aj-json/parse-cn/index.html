@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-json" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-json">aj-json</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-json/cn/">首页</a>
@@ -82,12 +101,13 @@
                 
                 
                 
+                
                 <h3>学习 JSON 解析</h3>
                 <ul><li><a href="/aj-json/parse-cn/">动手解析 JSON</a></li><li><a href="/aj-json/how-it-works-cn/">解析器如何工作</a></li></ul>
                 
             </menu>
             <article class="aj-text chinese">
-                <h1>动手解析 JSON</h1>
+                <h1 id="search-动手解析-json">动手解析 JSON</h1>
 <p>用于学习的公开入口是 <code>FMS</code>。将一段 JSON（或接近 JSON 的文本）交给它，再调用 <code>parse()</code>。</p>
 <pre><code class="language-java">import com.ajaxjs.jsonparser.syntax.FMS;
 import java.util.List;
@@ -104,7 +124,7 @@ List&lt;Object&gt; scores = (List&lt;Object&gt;) person.get(&quot;scores&quot;);
 System.out.println(scores.get(0));             // 95
 </code></pre>
 <p>之所以需要类型转换，是因为 <code>parse()</code> 可能返回多种 Java 值。不完全确定输入内容时，应先判断根节点类型，再进行转换。</p>
-<h2>会得到哪些 Java 值？</h2>
+<h2 id="search-会得到哪些-java-值">会得到哪些 Java 值？</h2>
 <table>
 <thead>
 <tr>
@@ -144,7 +164,7 @@ System.out.println(scores.get(0));             // 95
 </tbody>
 </table>
 <p>对象和数组可以嵌套：嵌套对象仍然是 <code>Map</code>，嵌套数组仍然是 <code>List</code>。</p>
-<h2>标准 JSON 与这个学习解析器</h2>
+<h2 id="search-标准-json-与这个学习解析器">标准 JSON 与这个学习解析器</h2>
 <p>标准 JSON 要求键和字符串使用双引号：</p>
 <pre><code class="language-json">{&quot;name&quot;:&quot;Ada&quot;,&quot;active&quot;:true}
 </code></pre>
@@ -152,7 +172,7 @@ System.out.println(scores.get(0));             // 95
 <pre><code class="language-text">{name: 'Ada', active: true}
 </code></pre>
 <p>学习时可以分别尝试两种写法，再观察 token 的差异。真实接口里始终应收发标准 JSON，并交给成熟的 JSON 库处理。</p>
-<h2>出错也是学习的一部分</h2>
+<h2 id="search-出错也是学习的一部分">出错也是学习的一部分</h2>
 <p>格式不正确时通常会抛出 <code>JsonParseException</code>。异常信息会带上字符位置、行和列，帮助定位解析器在哪个地方无法继续。</p>
 <pre><code class="language-java">try {
     new FMS(&quot;{name: }&quot;).parse();

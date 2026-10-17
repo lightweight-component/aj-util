@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,9 +154,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>DataReader 与 DataWriter</h1>
+                <h1 id="search-datareader-与-datawriter">DataReader 与 DataWriter</h1>
 <p><code>DataReader</code> 用于消费 <code>InputStream</code>，<code>DataWriter</code> 用于向 <code>OutputStream</code> 写入字节或输入流。</p>
 <pre><code class="language-java">String text = new DataReader(inputStream).readAsString();
 
@@ -146,7 +166,7 @@ new DataWriter(output).write(&quot;hello&quot;.getBytes(StandardCharsets.UTF_8))
 </code></pre>
 <p><code>DataReader</code> 在 <code>readStreamAsBytes</code>、<code>readAsLineString</code>、<code>readAsString</code> 和 <code>readAsBytes</code> 完成后会关闭输入流，因此输入流不能再复用。<code>DataWriter</code> 会刷新但不会关闭输出流，适合调用方持有的响应流、文件流或内存流；默认缓冲可通过 <code>setBuffered(boolean)</code> 修改。</p>
 <p><code>readStreamAsBytes(int, BiConsumer&lt;Integer, byte[]&gt;)</code> 会传入有效字节数和可复用缓冲区；每次回调只能处理 <code>[0, readSize)</code> 范围，下一次回调会复用该数组。</p>
-<h2>读取文本、字节和分块数据</h2>
+<h2 id="search-读取文本-字节和分块数据">读取文本、字节和分块数据</h2>
 <p>应按数据的大小与形态选择读取 API。<code>readAsBytes()</code> 会把整个流收集到内存，适合小资源，但不适合无限制上传或大文件。
 <code>readAsString()</code> 使用指定字符集（默认 UTF-8）逐行读取，并在每一行后追加 <code>System.lineSeparator()</code>。来源不是 UTF-8
 时，使用 <code>DataReader(InputStream, Charset)</code> 构造器。</p>
@@ -166,7 +186,7 @@ new DataReader(input).readStreamAsBytes(8 * 1024,
 // 对 &quot;abcdefghij&quot; 使用大小为 4 的缓冲区时，回调大小依次为 4、4、2。
 </code></pre>
 <p>缓冲区大小必须为正数。I/O 失败会包装为 <code>UncheckedIOException</code>，关闭流失败则会被记录日志。</p>
-<h2>复制到输出流</h2>
+<h2 id="search-复制到输出流">复制到输出流</h2>
 <p><code>new DataWriter(out).write(in)</code> 以 1 KiB 块复制输入流并刷新输出流。默认会为输出增加缓冲包装；仅当目标已具备合适
 缓冲或需要严格控制刷新行为时才考虑关闭它。</p>
 <pre><code class="language-java">try (InputStream in = Files.newInputStream(source);
@@ -182,7 +202,7 @@ new DataWriter(memory).write(&quot;hello&quot;.getBytes(StandardCharsets.UTF_8))
 不刷新，也不关闭任一流。</p>
 <p>对于 <code>write(byte[], off, length)</code>，<code>(0, 0)</code> 是一个特殊简写，含义是<strong>写入整个数组</strong>，并不是写入零字节。写片段时请
 传入明确的非零长度，例如 <code>write(bytes, 7, 5)</code>。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p>两个类都是对 JDK 流的小型适配。<code>DataReader</code> 仅在逐行读取文本时增加缓冲字符读取器；字节传输则复用一个数组，避免
 每一块都分配新数组。<code>DataWriter</code> 刷新而不关闭，便于调用方组合多次写入或继续拥有 HTTP 响应流。对于不需要 Java 8
 兼容的 Java 9+ 项目，简单的流复制可直接使用 JDK 的 <code>InputStream.transferTo</code>。</p>

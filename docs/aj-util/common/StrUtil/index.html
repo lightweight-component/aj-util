@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,11 +148,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>StrUtil</h1>
+                <h1 id="search-strutil">StrUtil</h1>
 <p><code>StrUtil</code> currently provides simple template replacement and array/list joining. It does not provide padding, character counting, or membership helpers.</p>
-<h2>Templates</h2>
+<h2 id="search-templates">Templates</h2>
 <p>The Map overload replaces <code>${name}</code> placeholders. Missing or null map values become empty strings.</p>
 <pre><code class="language-java">Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();
 values.put(&quot;name&quot;, &quot;Ada&quot;);
@@ -143,14 +163,14 @@ String message = StrUtil.simpleTpl(&quot;Hello, ${name}! ${missing}&quot;, value
 <p>The JavaBean overload replaces <code>#{property}</code> placeholders with readable bean properties. A null bean property becomes the text <code>null</code>; write-only properties are skipped. Replacement values are literal, so <code>$</code> and backslashes are safe. If a getter fails, the thrown <code>RuntimeException</code> identifies the property and retains the getter exception as its cause.</p>
 <pre><code class="language-java">String message = StrUtil.simpleTpl(&quot;Hello, #{name}!&quot;, user);
 </code></pre>
-<h2>Join arrays and lists</h2>
+<h2 id="search-join-arrays-and-lists">Join arrays and lists</h2>
 <pre><code class="language-java">String array = StrUtil.join(new String[]{&quot;a&quot;, null, &quot;c&quot;}, &quot;&amp;&quot;);
 String list = StrUtil.join(Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;[%s]&quot;, &quot;, &quot;);
 // a&amp;&amp;c
 // [a], [b], [c]
 </code></pre>
 <p>Available overloads accept a generic array, a string array with a format template, and string lists with an optional template. Null elements are rendered as empty strings.</p>
-<h2>Placeholder and formatting rules</h2>
+<h2 id="search-placeholder-and-formatting-rules">Placeholder and formatting rules</h2>
 <p>The two template forms deliberately use different placeholder syntax:</p>
 <table>
 <thead>
@@ -184,11 +204,11 @@ String result = StrUtil.simpleTpl(&quot;path=${path}&quot;, values);
 <p>This works because replacements are quoted before applying <code>Matcher.appendReplacement</code>; <code>$1</code> is data, not a regex
 back-reference. For list joins, the template is passed to <code>String.format</code>, so it should contain an appropriate
 conversion such as <code>%s</code>.</p>
-<h2>Choosing the right helper</h2>
+<h2 id="search-choosing-the-right-helper">Choosing the right helper</h2>
 <p><code>StrUtil</code> intentionally focuses on small formatting operations. For regular-expression replacement use
 <code>RegExpHelper</code>; for URL/form encoding use <code>UrlCodec</code>; for bytes, character sets, and hexadecimal conversion use
 <code>StringBytes</code>.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>The Map template overload scans <code>${word}</code> with one precompiled <code>Pattern</code> and builds the result with
 <code>Matcher.appendReplacement</code> / <code>appendTail</code>. Quoting replacement text prevents the regex engine from interpreting <code>$</code>
 or backslashes in a value. The Bean overload instead uses JavaBeans introspection and ordinary <code>String.replace</code> for

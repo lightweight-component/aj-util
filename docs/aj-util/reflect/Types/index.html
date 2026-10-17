@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,17 +148,18 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Types</h1>
+                <h1 id="search-types">Types</h1>
 <p>The <code>Types</code> class provides methods for retrieving generic type information, converting types, and handling parameterized
 types. These methods facilitate efficient and convenient manipulation of Java types at runtime.</p>
 <p><code>type2class(Type)</code> handles all standard reflection <code>Type</code> implementations. Type variables resolve through their
 single upper bound, upper-bounded and unbounded wildcards resolve through their single upper bound, and generic
 arrays resolve after their component type. A lower-bounded wildcard or multiple upper bounds cannot identify one
 unique class and therefore cause <code>IllegalArgumentException</code>.</p>
-<h2>Methods</h2>
-<h3>1. <code>getActualType(Type type)</code></h3>
+<h2 id="search-methods">Methods</h2>
+<h3 id="search-1-getactualtype-type-type">1. <code>getActualType(Type type)</code></h3>
 <p>Retrieves the actual type arguments of a parameterized type.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -170,7 +190,7 @@ parameterized type.</li>
 Type[] actualType = Types.getActualType(type);
 // actualType will contain String.class
 </code></pre>
-<h3>2. <code>getGenericReturnType(Method method)</code></h3>
+<h3 id="search-2-getgenericreturntype-method-method">2. <code>getGenericReturnType(Method method)</code></h3>
 <p>Retrieves the actual type arguments of a method's return type.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -185,7 +205,7 @@ Type[] actualType = Types.getActualType(type);
 Type[] actualType = Types.getGenericReturnType(method);
 // actualType will contain the generic return type of the method
 </code></pre>
-<h3>3. <code>getGenericFirstReturnType(Method method)</code></h3>
+<h3 id="search-3-getgenericfirstreturntype-method-method">3. <code>getGenericFirstReturnType(Method method)</code></h3>
 <p>Retrieves the first actual type argument of a method's return type and converts it to a <code>Class</code>.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -201,7 +221,7 @@ Type[] actualType = Types.getGenericReturnType(method);
 Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 // actualType will be the first generic return type of the method as a Class
 </code></pre>
-<h3>4. <code>getActualType(Class&lt;?&gt; clz)</code></h3>
+<h3 id="search-4-getactualtype-class-clz">4. <code>getActualType(Class&lt;?&gt; clz)</code></h3>
 <p>Retrieves the actual type arguments of a class's superclass.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -215,7 +235,7 @@ Class&lt;?&gt; actualType = Types.getGenericFirstReturnType(method);
 <pre><code class="language-java">Type[] actualType = Types.getActualType(ArrayList.class);
 // actualType will contain the generic type arguments of ArrayList's superclass
 </code></pre>
-<h3>5. <code>getActualClass(Class&lt;?&gt; clz)</code></h3>
+<h3 id="search-5-getactualclass-class-clz">5. <code>getActualClass(Class&lt;?&gt; clz)</code></h3>
 <p>Retrieves the first actual type argument of a class's superclass and converts it to a <code>Class</code>.</p>
 <ul>
 <li><strong>Parameters:</strong>
@@ -237,7 +257,7 @@ Class&lt;?&gt; actualClass = Types.getActualClass(StringList.class);
 Types.getActualClass(String.class);
 // throws IllegalArgumentException instead of failing with NullPointerException
 </code></pre>
-<h3>6. <code>type2class(Type type)</code></h3>
+<h3 id="search-6-type2class-type-type">6. <code>type2class(Type type)</code></h3>
 <p>Converts a <code>Type</code> to a <code>Class</code> according to these rules:</p>
 <ul>
 <li><code>Class</code>: returned directly;</li>

@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,9 +154,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>NewInstance</h1>
+                <h1 id="search-newinstance">NewInstance</h1>
 <p><code>NewInstance&lt;T&gt;</code> 通过 public 构造器创建对象。接口不能实例化。</p>
 <pre><code class="language-java">String value = new NewInstance&lt;&gt;(String.class).newInstance();
 
@@ -148,7 +168,7 @@ StringBuilder builder =
 public 构造器；包含 <code>null</code> 的参数也需要调用方显式取得 <code>Constructor</code>。</p>
 <p>类参数必须非 <code>null</code> 且可实例化。null 类参数会触发 <code>IllegalArgumentException</code>；接口会被明确拒绝；
 抽象类在实际调用构造器时失败。</p>
-<h2>构造器辅助方法</h2>
+<h2 id="search-构造器辅助方法">构造器辅助方法</h2>
 <p><code>getConstructor(Class&lt;T&gt;, Class&lt;?&gt;...)</code> 返回参数类型精确匹配的 public 构造器；找不到时抛出
 <code>RuntimeException</code>。<code>newInstance(Constructor&lt;T&gt;, Object...)</code> 调用已经选定的构造器，并将原始异常
 保留为 cause。null 类参数或构造器会触发 <code>IllegalArgumentException</code>。</p>

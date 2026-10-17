@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -65,6 +66,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-http" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-http">aj-http</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-http/">Home</a>
@@ -84,11 +103,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Uploads and downloads</h1>
+                <h1 id="search-uploads-and-downloads">Uploads and downloads</h1>
 <p>Use <code>MultipartPost</code> for <code>multipart/form-data</code> and <code>HttpFileDownload</code> for files received from an HTTP server. Both APIs stream data: they avoid first collecting an entire file in a Java byte array.</p>
-<h2>Multipart upload</h2>
+<h2 id="search-multipart-upload">Multipart upload</h2>
 <p><code>MultipartPost.upload(...)</code> accepts a single map of text values and <code>File</code> values. The map must be non-empty. The callback is for connection configuration only; do not connect, read, or write in it.</p>
 <pre><code class="language-java">import com.ajaxjs.util.httpremote.MultipartPost;
 import com.ajaxjs.util.httpremote.model.Response;
@@ -120,7 +140,7 @@ try (InputStream content = Files.newInputStream(Paths.get(&quot;large-video.mp4&
 }
 </code></pre>
 <p>The helper creates a new boundary, applies the matching <code>Content-Type</code> after the callback, enables 8 KiB chunked streaming, closes the request output, reads/closes the response stream, and disconnects in <code>finally</code>. Redirects are deliberately disabled: automatically replaying a potentially large upload to an unreviewed destination is unsafe. A non-2xx status returns a failed <code>Response</code>; validation, callback, body-writing, and runtime errors can still throw.</p>
-<h2>MultipartWriter when an existing connection owns the stream</h2>
+<h2 id="search-multipartwriter-when-an-existing-connection-owns-the-stream">MultipartWriter when an existing connection owns the stream</h2>
 <p><code>MultipartWriter</code> only serializes a complete multipart body. It does not create an HTTP connection, flush/close the output stream, or close a caller-supplied input stream. Set the request header from <code>getContentType()</code>.</p>
 <pre><code class="language-java">String boundary = &quot;upload-2026&quot;;
 MultipartWriter writer = new MultipartWriter(connection.getOutputStream(), boundary);
@@ -133,7 +153,7 @@ writer.write(parts);             // exactly one call writes the terminating boun
 connection.getOutputStream().flush();
 </code></pre>
 <p>Each <code>write(...)</code> call ends the multipart body with the closing boundary. Put every field/file into one map and call it once; repeated calls cannot append another valid part. Boundaries must match <code>[A-Za-z0-9_-]{1,70}</code>. Text and headers use UTF-8; <code>null</code> text values become empty, CR/LF in names are rejected, and quotes/backslashes are escaped. Use dedicated byte-array or stream overloads when a file name is required; the map-key encoding used internally is not a public protocol.</p>
-<h2>Downloading a file</h2>
+<h2 id="search-downloading-a-file">Downloading a file</h2>
 <pre><code class="language-java">import com.ajaxjs.util.httpremote.HttpFileDownload;
 
 new HttpFileDownload(&quot;https://example.com/files/report.pdf&quot;, &quot;downloads/report.pdf&quot;)
@@ -171,11 +191,11 @@ new HttpFileDownload(new String[] {
 </tbody>
 </table>
 <p>Async work uses a shared four-thread daemon pool with an unbounded queue. Always <code>join</code>, <code>get</code>, or otherwise handle the returned future; <code>join()</code> reports a failed task as <code>CompletionException</code>. There is no public executor, cancellation policy, or returned filename list. Do not mutate the URL array passed to the batch constructor during use.</p>
-<h2>Target names, replacement, and trust boundaries</h2>
+<h2 id="search-target-names-replacement-and-trust-boundaries">Target names, replacement, and trust boundaries</h2>
 <p>An explicit file target wins. For a directory target, the name priority is <code>Content-Disposition</code> (<code>filename*</code> first), URL path, then a generated fallback. Server/path names are reduced to a basename and control characters are removed. A String ending in <code>/</code> or <code>\\</code>, or an existing directory, is a directory target. A non-existing <code>Path</code> is treated as a file; a batch target is always a directory.</p>
 <p>Only HTTP/HTTPS URLs and 2xx results are accepted. The downloader uses fixed 10-second connect and 30-second read timeouts, follows redirects, streams to a temporary sibling file, then replaces the destination. It closes streams, disconnects, and attempts temporary cleanup. This reduces partial files but is not an atomic-move guarantee.</p>
 <p>There is no download-size cap, destination sandbox, or collision policy. Existing files can be overwritten and concurrent downloads resolving to the same name can race. Use a trusted destination directory and validate untrusted URLs/redirects to avoid SSRF or unwanted internal-network access.</p>
-<h2>Implementation notes</h2>
+<h2 id="search-implementation-notes">Implementation notes</h2>
 <p>Regular <code>Request.setData(Map)</code> intentionally does not implement multipart conversion; it throws for multipart content type. Keeping body encoding in <code>MultipartWriter</code> and transport lifecycle in <code>MultipartPost</code> makes stream ownership explicit and prevents hidden in-memory buffering.</p>
 <p>Continue with <a href="/aj-http/http_request/ProxySecurity/">annotation proxy, streams and TLS</a>, or return to <a href="/aj-http/http_request/Base/">request lifecycle</a>.</p>
 

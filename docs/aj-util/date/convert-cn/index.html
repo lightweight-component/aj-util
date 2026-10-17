@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,9 +154,10 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>日期类型转换</h1>
+                <h1 id="search-日期类型转换">日期类型转换</h1>
 <p><code>DateTypeConvert</code> 可转换传统 <code>Date</code>、<code>Calendar</code>、SQL 日期类型、毫秒时间戳以及 Java 8 的 <code>java.time</code>
 类型。凡是涉及本地日期时间的转换，都应明确传入 <code>ZoneId</code>。</p>
 <pre><code class="language-java">Instant instant = Instant.now();
@@ -146,7 +166,7 @@ ZoneId zone = ZoneId.of(&quot;Asia/Shanghai&quot;);
 LocalDateTime local = new DateTypeConvert(instant).to(LocalDateTime.class, zone);
 Calendar calendar = new DateTypeConvert(instant).to(Calendar.class, zone);
 </code></pre>
-<h2>重要语义</h2>
+<h2 id="search-重要语义">重要语义</h2>
 <ul>
 <li>时间戳 <code>0</code> 是合法输入，表示 <code>1970-01-01T00:00:00Z</code>。</li>
 <li>纯日期字符串按日期格式解析，不再强制套用日期时间格式。</li>

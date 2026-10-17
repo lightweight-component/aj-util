@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,11 +154,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>Methods</h1>
+                <h1 id="search-methods">Methods</h1>
 <p><code>Methods</code> 用于在指定类或对象上查找并调用方法。</p>
-<h2>声明方法查找</h2>
+<h2 id="search-声明方法查找">声明方法查找</h2>
 <p><code>findDeclaredMethodByTypes(String, Class&lt;?&gt;...)</code> 从指定类开始沿父类向上查找，但不包含 <code>Object</code>。它可以返回
 private 等非 public 声明，并将找到的方法设为可访问。该入口按精确参数类型查找，找不到时返回 <code>null</code>。</p>
 <pre><code class="language-java">Methods methods = new Methods(MyService.class);
@@ -148,7 +168,7 @@ Method method = methods.findDeclaredMethodByTypes(&quot;handle&quot;, String.cla
 <p><code>findDeclaredMethod(String, Object...)</code> 会把每个参数值转换成精确运行时类型。它不进行父类、接口或
 基本类型与包装类型的兼容匹配。参数值为 <code>null</code> 时无法推断精确类型，因此返回 <code>null</code>；调用方已知
 null 参数的声明类型时，应使用 <code>findDeclaredMethodByTypes(...)</code>。</p>
-<h2>兼容 public 方法查找</h2>
+<h2 id="search-兼容-public-方法查找">兼容 public 方法查找</h2>
 <p><code>findCompatibleMethod(String, Object...)</code> 搜索 public 方法，包括继承的方法。它支持：</p>
 <ul>
 <li>精确运行时类型；</li>
@@ -169,7 +189,7 @@ Method method =
 </code></pre>
 <p>方法会选择类型层次距离最小的候选项。如果互不相关的重载得到相同分数，当前实现会选择反射返回的
 第一个方法；可能产生重载歧义时，应显式传入参数类型。当前不支持基本数值类型扩宽和可变参数展开。</p>
-<h2>精确 public 方法查找</h2>
+<h2 id="search-精确-public-方法查找">精确 public 方法查找</h2>
 <p><code>findPublicExactMethod(String, Object[])</code> 按每个实参的精确运行时类型查找 public 方法。参数中包含
 <code>null</code> 时无法推断精确类型，因此返回 <code>null</code>；调用方随后可使用支持引用类型 <code>null</code> 参数的
 <code>findCompatibleMethod(...)</code>。</p>
@@ -180,7 +200,7 @@ Method method =
 </code></pre>
 <p>两个入口都使用 <code>Class.getMethod</code>，因此只搜索 public 方法，包括继承的类方法和接口方法。显式类型
 数组包含 <code>null</code> 元素时会抛出 <code>IllegalArgumentException</code>。</p>
-<h2>调用方法</h2>
+<h2 id="search-调用方法">调用方法</h2>
 <p>按方法名调用的 <code>execute(instance, methodName, parameters)</code> 会先尝试精确 public 方法查找，找不到
 时再回退到兼容 public 方法查找。最终仍找不到时抛出 <code>IllegalArgumentException</code>。带 <code>Class&lt;?&gt;[]</code>
 参数的重载按调用者给出的类型执行精确 public 方法查找，例如可以明确区分 <code>int.class</code> 与

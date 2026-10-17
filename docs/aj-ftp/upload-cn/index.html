@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-ftp" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-ftp">aj-ftp</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-ftp/cn/">首页</a>
@@ -88,11 +107,12 @@
                 </ul>
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>上传文件</h1>
+                <h1 id="search-上传文件">上传文件</h1>
 <p><code>SimpleFtpClient.upload(本地路径, 远端路径)</code> 使用 FTP <code>STOR</code> 命令上传一个本地文件。它会切换到二进制模式，将文件流式写入数据连接，关闭数据连接，并在报告成功前检查最终 FTP 响应。</p>
-<h2>基本上传</h2>
+<h2 id="search-基本上传">基本上传</h2>
 <pre><code class="language-java">import com.ajaxjs.net.ftp.SimpleFtpClient;
 
 try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21)) {
@@ -101,14 +121,14 @@ try (SimpleFtpClient ftp = new SimpleFtpClient(&quot;ftp.example.com&quot;, 21))
 }
 </code></pre>
 <p>第一个参数必须是可读取的本地文件；第二个参数是 FTP 服务端理解的远端文件名和路径。请确保目标目录已存在，且账户具有写权限；<code>upload</code> 不会创建远端目录。</p>
-<h2>路径、文件名与编码</h2>
+<h2 id="search-路径-文件名与编码">路径、文件名与编码</h2>
 <p>除非目标服务端另有约定，远端路径应使用 <code>/</code>。服务端支持 UTF-8 时，请在登录后、发送非 ASCII 路径前调用 <code>enableUtf8()</code>：</p>
 <pre><code class="language-java">ftp.login(&quot;deploy&quot;, password);
 ftp.enableUtf8();
 ftp.upload(&quot;C:/exports/季度报告.zip&quot;, &quot;/incoming/季度报告.zip&quot;);
 </code></pre>
 <p>如果服务端拒绝 <code>OPTS UTF8 ON</code>，<code>enableUtf8()</code> 会抛出 <code>IOException</code>。未确认服务端配置时，不应擅自假定其他编码可用。</p>
-<h2>完成确认与失败处理</h2>
+<h2 id="search-完成确认与失败处理">完成确认与失败处理</h2>
 <p>FTP 传输同时包含数据连接和控制连接的最终响应。<code>upload</code> 会关闭数据流，并在内部调用 <code>completePendingCommand()</code>。因此，<code>upload</code> 正常返回代表客户端已经收到成功的最终响应，而不只是本地文件已经读完。</p>
 <p><code>IOException</code> 可能表示本地文件不可读、数据连接失败、权限不足、连接中断或服务端返回失败。应将其视为不完整上传。服务端可能留下部分远端文件；若下游消费者不能看到半成品，可先上传到临时名称，成功后再重命名：</p>
 <pre><code class="language-java">String finalName = &quot;/releases/app.zip&quot;;
@@ -121,13 +141,13 @@ try (SimpleFtpClient ftp = new SimpleFtpClient(host, 21)) {
 }
 </code></pre>
 <p><code>rename</code> 需要服务端允许，且并非每种 FTP 服务端都保证原子操作。失败的临时文件应按服务端保留策略清理。</p>
-<h2>进度和超时</h2>
+<h2 id="search-进度和超时">进度和超时</h2>
 <p>内置 <code>ProgressListener</code> 会在复制数据时通过 SLF4J 记录字节数，它不是业务回调 API。需要保存或显示传输进度时，请配置相应的 SLF4J 日志后端。</p>
 <p>长时间传输前应设置合适的超时：<code>setConnectTimeout</code> 控制新建 Socket 连接，<code>setReadTimeout</code> 控制 Socket 读取。超时应覆盖预期文件大小和网络速度：</p>
 <pre><code class="language-java">ftp.setConnectTimeout(10_000);
 ftp.setReadTimeout(120_000);
 </code></pre>
-<h2>底层上传流</h2>
+<h2 id="search-底层上传流">底层上传流</h2>
 <p>仅在需要自定义流写入时使用 <code>put(远端路径)</code>。调用方负责关闭其返回的流，并调用 <code>completePendingCommand()</code>；否则，即使字节已写入，也可能误以为上传已经完成。</p>
 <pre><code class="language-java">ftp.binary();
 try (OutputStream remote = ftp.put(&quot;/incoming/data.bin&quot;)) {

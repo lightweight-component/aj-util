@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,15 +154,16 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>一个简洁、清晰的 Java 日期 API</h1>
+                <h1 id="search-一个简洁-清晰的-java-日期-api">一个简洁、清晰的 Java 日期 API</h1>
 <p>日期时间类型比数字、布尔值和字符串等基础值更难处理。“日期”可能指纯日期、日期时间，
 也可能只指一天中的某个时间。传统的 <code>java.util.Date</code> 没有区分这些概念，这是旧日期 API
 容易产生混乱的原因之一。日期时间还有多种文本格式，例如 <code>2025-12-22 11:05</code>、
 <code>2025-12-22 11-05</code> 和 <code>3 Jun 2025 11:05</code>；时区则进一步增加了复杂度，例如
 <code>2024-12-03T10:15:30+01:00[Europe/Paris]</code> 和 <code>Tue, 3 Jun 2025 11:05:30 GMT</code>。</p>
-<h2>关于<code>Date</code>类型</h2>
+<h2 id="search-关于-date-类型">关于<code>Date</code>类型</h2>
 <p>早期 Java 版本中就是基于<code>java.util.Date</code>类型一统天下，很多日期处理方法都是围绕它进行的（Java 1.1
 之前）。后来版本重构中废弃了很多的这些方法，改由<code>java.util.Calendar</code>与<code>java.text.DateFormat</code>完成。Calendar
 解决了日期的棘手问题了吗？并没有，虽然 Calendar 处理日期起来更灵活但是使用仍然过于复杂，设置、比较、格式化仍旧比较麻烦、冗长，所以社区又有了代替品
@@ -151,7 +171,7 @@ Joda-Time，被许多项目所采用。于是这个优秀的开源项目渐渐�
 中变成<code>java.time</code>！</p>
 <p>总之，我们主张使用的日期类型就是<code>java.time</code>里面的 Instant 及 LocalDateTime，其中 Instant
 表示某一时刻的时间，大致对应时间戳，可支持纳秒的级别。LocalDateTime 可能更我们更常用一些，以及它衍生的其他精确类型。</p>
-<h3>📅 新 Java 常用日期时间类型</h3>
+<h3 id="search-新-java-常用日期时间类型">📅 新 Java 常用日期时间类型</h3>
 <table>
 <thead>
 <tr>
@@ -231,7 +251,7 @@ Joda-Time，被许多项目所采用。于是这个优秀的开源项目渐渐�
 <p>那么 Date 类型就不用，完全废弃了吗？——并不是，虽然围绕 Date 的相关 API 早在 Java 1.1 之后就被废弃，但是不代表 Date
 本身被废弃。如果废弃了，为什么你在新版 JDK17 上找不到<code>@Deprecated</code>注解？说明该类型还是保留着的。作为值对象（Value Object）使用
 Date 本身没什么问题，例如两种构造器的用法仍保留：<code>new Date()</code>以及<code>new Date(long timestamp)</code>。</p>
-<h2>API 简介</h2>
+<h2 id="search-api-简介">API 简介</h2>
 <p>这套笔者封装的 日期 API，主要功能有以下三点：</p>
 <ol>
 <li>日期类型的转换。面对如此繁多的日期类型：Date、Instant、Int/Long/String、LocalDate/LocalDateTime/LocalTime、ZonedDateTime
@@ -239,7 +259,7 @@ Date 本身没什么问题，例如两种构造器的用法仍保留：<code>new
 <li>通用的日期格式化。</li>
 <li>返回当前日期的<code>now()</code>函数及其他工具函数。</li>
 </ol>
-<h3><code>DateTools.object2Date</code></h3>
+<h3 id="search-datetools-object2date"><code>DateTools.object2Date</code></h3>
 <p><code>DateTools.object2Date(Object)</code> 支持 <code>Date</code>、以毫秒为单位的 <code>Long</code> 时间戳、以秒为单位的 <code>Integer</code>
 时间戳、<code>LocalDate</code>、<code>LocalDateTime</code>，以及 <code>yyyy-MM-dd</code>、<code>yyyy-MM-dd HH:mm</code>、
 <code>yyyy-MM-dd HH:mm:ss</code> 三种字符串。输入为 <code>null</code>、空白字符串或不支持的类型时返回 <code>null</code>；

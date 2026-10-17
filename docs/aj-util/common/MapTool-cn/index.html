@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -70,6 +71,24 @@
     <option value="/aj-qrcode/cn/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -135,11 +154,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>MapTool</h1>
+                <h1 id="search-maptool">MapTool</h1>
 <p><code>MapTool</code> 提供静态方法，用于简单字符串键 Map 的序列化、键值输入解析、Map 值转换和嵌套 Map 扁平化。XML 转换不属于 <code>MapTool</code>；XML 操作请使用 <code>XmlHelper</code>。</p>
-<h2>拼接 Map 条目</h2>
+<h2 id="search-拼接-map-条目">拼接 Map 条目</h2>
 <pre><code class="language-java">Map&lt;String, Object&gt; values = new LinkedHashMap&lt;&gt;();
 values.put(&quot;name&quot;, &quot;Ada&quot;);
 values.put(&quot;page&quot;, null);
@@ -148,7 +168,7 @@ String queryLike = MapTool.join(values); // name=Ada&amp;page=
 String custom = MapTool.join(values, &quot;;&quot;, value -&gt; String.valueOf(value));
 </code></pre>
 <p><code>join</code> 按 Map 的迭代顺序写出 <code>key=value</code> 条目，默认分隔符为 <code>&amp;</code>，null 值转换为空字符串。它不会对键和值进行 URL 编码；生成 HTTP 查询串时应先使用 <code>UrlCodec</code> 编码。</p>
-<h2>由键值输入创建 Map</h2>
+<h2 id="search-由键值输入创建-map">由键值输入创建 Map</h2>
 <pre><code class="language-java">Map&lt;String, Object&gt; fromPairs = MapTool.toMap(
         new String[]{&quot;id=42&quot;, &quot;page=3&quot;}, Integer::valueOf);
 
@@ -158,7 +178,7 @@ Map&lt;String, Object&gt; fromColumns = MapTool.toMap(
 Map&lt;String, String&gt; query = MapTool.toMap(&quot;name=Ada+Lovelace&amp;token=x%3D%3D&quot;);
 </code></pre>
 <p>数组键值对只以第一个 <code>=</code> 分隔键和值；<code>null</code> 条目会被忽略，缺少 <code>=</code> 的条目会被拒绝。并行键值数组必须等长。查询串重载通过 <code>UrlCodec</code> 解码表单编码，重复键以后一个值覆盖前一个值。</p>
-<h2>转换和扁平化值</h2>
+<h2 id="search-转换和扁平化值">转换和扁平化值</h2>
 <pre><code class="language-java">Map&lt;String, Integer&gt; lengths = MapTool.as(values, value -&gt; value.toString().length());
 
 Map&lt;String, Object&gt; nested = new LinkedHashMap&lt;&gt;();
@@ -167,7 +187,7 @@ Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
 // {server.host=localhost}
 </code></pre>
 <p><code>as</code> 使用指定函数转换非 null 值，并保留 null 值。<code>flatten</code> 使用 <code>.</code> 连接嵌套层级：源键中的 <code>.</code> 会转义为 <code>\\.</code>，反斜杠会转义为 <code>\\\\</code>；空嵌套 Map 会保留为值。循环引用的 Map 会抛出 <code>IllegalArgumentException</code>。</p>
-<h2>详细解析行为</h2>
+<h2 id="search-详细解析行为">详细解析行为</h2>
 <p>两类 <code>toMap</code> 在面对格式不完整的输入时，有意采用不同策略：</p>
 <pre><code class="language-java">Map&lt;String, Object&gt; strict = MapTool.toMap(
         new String[]{&quot;token=header.payload=signature==&quot;}, null);
@@ -185,7 +205,7 @@ Map&lt;String, Object&gt; flat = MapTool.flatten(nested);
 // {a\\.b.c=42}
 </code></pre>
 <p><code>flatten(null)</code> 返回空的 <code>LinkedHashMap</code>。List、数组、基本值和 null 都是叶子节点，只有 <code>Map</code> 值会继续遍历。</p>
-<h2>实现原理与取舍</h2>
+<h2 id="search-实现原理与取舍">实现原理与取舍</h2>
 <p><code>join</code> 直接遍历 <code>map.keySet()</code>，因此输出顺序取决于具体 Map 的迭代顺序；需要稳定序列化顺序时应使用 <code>LinkedHashMap</code>。解析器最多只切分一次（<code>split(&quot;=&quot;, 2)</code>），因此 Base64、类似 JWT 的字符串和包含 <code>=</code> 的签名能够保持完整。</p>
 <p><code>flatten</code> 使用深度优先递归，并使用基于对象身份的集合记录当前递归路径中的 Map。使用 identity 而非 <code>equals()</code>，可以识别真实对象环，而不会把两个内容相等但相互独立的 Map 误判为环。每个分支结束后都会移除当前路径，因此同一个非循环子 Map 可以在不同分支中复用。</p>
 

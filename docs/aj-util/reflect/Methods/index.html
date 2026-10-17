@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,11 +148,12 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>Methods</h1>
+                <h1 id="search-methods">Methods</h1>
 <p><code>Methods</code> locates and invokes methods on a configured class or object.</p>
-<h2>Declared-method lookup</h2>
+<h2 id="search-declared-method-lookup">Declared-method lookup</h2>
 <p><code>findDeclaredMethodByTypes(String, Class&lt;?&gt;...)</code> searches the configured class and then its superclasses, excluding
 <code>Object</code>. It can return private and other non-public declarations and makes the selected method accessible.
 The lookup uses exact parameter types and returns <code>null</code> when no method exists.</p>
@@ -143,7 +163,7 @@ Method method = methods.findDeclaredMethodByTypes(&quot;handle&quot;, String.cla
 <p><code>findDeclaredMethod(String, Object...)</code> converts each value to its exact runtime class. It does not perform
 superclass, interface, or primitive-wrapper matching. If a value is <code>null</code>, the method returns <code>null</code> because its
 exact type cannot be inferred; use <code>findDeclaredMethodByTypes(...)</code> when a null argument has a known declared type.</p>
-<h2>Compatible public-method lookup</h2>
+<h2 id="search-compatible-public-method-lookup">Compatible public-method lookup</h2>
 <p><code>findCompatibleMethod(String, Object...)</code> searches public methods, including inherited methods. It supports:</p>
 <ul>
 <li>exact runtime types;</li>
@@ -165,7 +185,7 @@ Method method =
 <p>The candidate with the lowest type-hierarchy distance is selected. If unrelated overloads receive the same score,
 the current implementation selects the first method returned by reflection; callers should use explicit parameter
 types when overload ambiguity is possible. Numeric primitive widening and varargs expansion are not supported.</p>
-<h2>Exact public-method lookup</h2>
+<h2 id="search-exact-public-method-lookup">Exact public-method lookup</h2>
 <p><code>findPublicExactMethod(String, Object[])</code> looks up a public method using the exact runtime class of every argument.
 It returns <code>null</code> when an argument is <code>null</code>, because an exact type cannot be inferred. The caller can then use
 <code>findCompatibleMethod(...)</code>, which supports <code>null</code> for reference parameters.</p>
@@ -176,7 +196,7 @@ value is boxed but the declaration is primitive:</p>
 </code></pre>
 <p>Both methods use <code>Class.getMethod</code>, so they search only public methods, including inherited class and interface
 methods. A <code>null</code> element in the explicit type array is rejected with <code>IllegalArgumentException</code>.</p>
-<h2>Invocation</h2>
+<h2 id="search-invocation">Invocation</h2>
 <p>The name-based <code>execute(instance, methodName, parameters)</code> overload first attempts exact public-method lookup and
 then falls back to compatible public-method lookup. A missing method ultimately raises <code>IllegalArgumentException</code>.
 The overload accepting <code>Class&lt;?&gt;[]</code> performs exact public-method lookup with the supplied types. For example, it

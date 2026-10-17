@@ -18,6 +18,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico" />
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -71,6 +72,24 @@
     
 </select>
 
+                <section class="docs-search" data-doc-search data-project="aj-s3client" data-language="zh">
+    <form role="search">
+        <label for="doc-search-input">搜索文档</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="关键词或方法名" />
+            <button type="submit">搜索</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">范围</label>
+        <select id="doc-search-scope">
+            <option value="aj-s3client">aj-s3client</option>
+            <option value="">全部项目</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>启用 JavaScript 后可搜索文档。</noscript>
+</section>
+
                 <ul>
                     <li class="selected">
                         <a href="/aj-s3client/cn/">首页</a>
@@ -90,14 +109,15 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text chinese">
-                <h1>aj-s3client</h1>
+                <h1 id="search-aj-s3client">aj-s3client</h1>
 <p><code>aj-s3client</code> 是一个面向 Java 8 及以上环境的轻量级 S3 兼容对象存储客户端，提供一组精简的存储桶和对象操作。它会根据所选厂商客户端使用 Signature Version 4（SigV4）或旧版 Signature Version 2（SigV2）对请求签名。</p>
 <blockquote>
 <p>本模块不是通用 AWS SDK；不实现分片上传、预签名 URL、对象元数据或 ACL 管理（Scaleway 上传 ACL 除外）、分页，也没有返回或保存对象字节的下载 API。</p>
 </blockquote>
-<h2>添加依赖</h2>
+<h2 id="search-添加依赖">添加依赖</h2>
 <p>当前 POM 坐标为 <code>com.ajaxjs:aj-s3client:1.6</code>，并依赖 <code>com.ajaxjs:aj-net:2.1</code> 作为 HTTP 传输层。</p>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
@@ -105,7 +125,7 @@
     &lt;version&gt;1.6&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
-<h2>配置客户端</h2>
+<h2 id="search-配置客户端">配置客户端</h2>
 <p>选择厂商实现后，为它设置 <code>Config</code>。端点必须是 HTTPS origin：可省略协议名，但不允许路径、用户信息、查询参数或片段。请勿提交或记录访问密钥与私钥。</p>
 <pre><code class="language-java">import com.ajaxjs.s3client.Config;
 import com.ajaxjs.s3client.factory.CloudflareR2;
@@ -121,7 +141,7 @@ CloudflareR2 client = new CloudflareR2();
 client.setConfig(config);
 </code></pre>
 <p><code>bucketName</code> 用于只传对象键的便捷重载方法。存储桶名称不能包含 <code>/</code> 或 <code>\\</code>；对象键不能为空，且不能含控制字符。对象键会在签名和发送前按路径规则编码。</p>
-<h2>上传、列举和删除对象</h2>
+<h2 id="search-上传-列举和删除对象">上传、列举和删除对象</h2>
 <p>通用操作只有在 HTTP 响应状态为 2xx 时才返回 <code>true</code>。请先读取待上传的字节；客户端不持有流，也未实现 <code>Closeable</code>。</p>
 <pre><code class="language-java">import java.nio.charset.StandardCharsets;
 
@@ -140,7 +160,7 @@ boolean removed = client.deleteObject(&quot;2026-09/summary.txt&quot;);
 boolean deleted = client.deleteObject(&quot;archive&quot;, &quot;exports/report.csv&quot;);
 </code></pre>
 <p><code>listBucket()</code> 返回厂商的原始 XML；<code>listBucketXml()</code> 将 XML 转换为 <code>Map&lt;String, String&gt;</code>。<code>getObject(...)</code> 只发送已签名的 GET 请求并报告响应是否成功，<strong>不会</strong>返回对象内容或将其写入文件。可通过 <code>createBucket(name)</code> 和 <code>deleteBucket(name)</code> 创建、删除存储桶。</p>
-<h2>厂商客户端与签名方式</h2>
+<h2 id="search-厂商客户端与签名方式">厂商客户端与签名方式</h2>
 <table>
 <thead>
 <tr>
@@ -178,14 +198,14 @@ boolean deleted = client.deleteObject(&quot;archive&quot;, &quot;exports/report.
 </tbody>
 </table>
 <p>对于 SigV4 客户端，若厂商不接受 <code>auto</code>，请将 <code>region</code> 设为其要求的值。SigV2 客户端同样要求 <code>remark</code>、访问密钥、私钥、端点和区域均为非空，并使用上表所列的前缀。支持范围仅限这些实现及其当前请求行为；上线前请针对所选服务验证凭据、端点格式、存储桶策略与区域要求。</p>
-<h2>文档目录</h2>
+<h2 id="search-文档目录">文档目录</h2>
 <ul>
 <li><a href="/aj-s3client/signature-v4-cn/">Signature Version 4：请求构建与签名</a></li>
 <li><a href="/aj-s3client/signature-v2-cn/">Signature Version 2：旧版厂商行为</a></li>
 <li><a href="/aj-s3client/factories-cn/">厂商 Factory</a></li>
 <li><a href="/aj-s3client/api-cn/">API、URL 风格与功能限制</a></li>
 </ul>
-<h2>安全与运行说明</h2>
+<h2 id="search-安全与运行说明">安全与运行说明</h2>
 <ul>
 <li>所有配置端点均强制使用 HTTPS；不要在底层传输层放宽 TLS 证书校验。</li>
 <li>应将凭据放在密钥管理服务或环境变量中。<code>Config</code> 是可变对象，应避免共享和日志输出。</li>
@@ -193,7 +213,7 @@ boolean deleted = client.deleteObject(&quot;archive&quot;, &quot;exports/report.
 <li>ETag 通常不保证是 MD5。只有旧版 NetEase 上传路径会将单段、未加密对象的 ETag 按 MD5 校验。</li>
 <li>厂商联调测试因需要私有凭据和远程资源而被禁用；签名与 URL 编码的单元测试可离线运行。</li>
 </ul>
-<h2>相关资源</h2>
+<h2 id="search-相关资源">相关资源</h2>
 <ul>
 <li><a href="https://github.com/lightweight-component/aj-util/tree/main/aj-s3client">源代码</a></li>
 </ul>

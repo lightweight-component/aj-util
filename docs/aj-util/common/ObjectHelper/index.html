@@ -14,6 +14,7 @@
         <link rel="icon" type="image/x-icon" href="https://framework.ajaxjs.com/aj-logo/logo.ico"/>
         <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
         <script src="/asset/js/common.js"></script>
+        <script defer src="/asset/js/search.js"></script>
         <script>
             AJUtils.initTheme();
             AJUtils.onReady(function () { AJUtils.bindThemeToggle(); AJUtils.bindDocumentationLanguageToggle(); });
@@ -64,6 +65,24 @@
     <option value="/aj-qrcode/">aj-qrcode</option>
     
 </select>
+
+                <section class="docs-search" data-doc-search data-project="aj-util" data-language="en">
+    <form role="search">
+        <label for="doc-search-input">Search documentation</label>
+        <div class="docs-search-controls">
+            <input id="doc-search-input" type="search" maxlength="200" autocomplete="off" aria-controls="doc-search-results" placeholder="Keyword or method name" />
+            <button type="submit">Search</button>
+        </div>
+        <label class="docs-search-scope" for="doc-search-scope">Scope</label>
+        <select id="doc-search-scope">
+            <option value="aj-util">aj-util</option>
+            <option value="">All projects</option>
+        </select>
+    </form>
+    <p class="docs-search-status" role="status" aria-live="polite"></p>
+    <ol id="doc-search-results" class="docs-search-results" hidden></ol>
+    <noscript>Enable JavaScript to search documentation.</noscript>
+</section>
 
                 <ul>
                     <li class="selected">
@@ -129,20 +148,21 @@
                 
                 
                 
+                
             </menu>
             <article class="aj-text">
-                <h1>ObjectHelper Tutorial</h1>
+                <h1 id="search-objecthelper-tutorial">ObjectHelper Tutorial</h1>
 <p><code>ObjectHelper</code> is an object utility class that provides common utility methods for working with Java objects,
 collections, maps, and various data structures.</p>
-<h3>Main Features</h3>
+<h3 id="search-main-features">Main Features</h3>
 <ol>
 <li><strong>Text content checking and validation</strong></li>
 <li><strong>Collection and array emptiness checks</strong></li>
 <li><strong>Convenient factory methods for creating collections (maps, lists, sets)</strong></li>
 <li><strong>Capacity calculation utilities</strong></li>
 </ol>
-<h3>Text Checking Methods</h3>
-<h4>1. hasText Method</h4>
+<h3 id="search-text-checking-methods">Text Checking Methods</h3>
+<h4 id="search-1-hastext-method">1. hasText Method</h4>
 <p>Checks if the given string has actual text content:</p>
 <pre><code class="language-java">// Check if string has non-whitespace content
 boolean result1 = ObjectHelper.hasText(&quot;Hello&quot;);     // true
@@ -150,7 +170,7 @@ boolean result2 = ObjectHelper.hasText(&quot;   &quot;);       // false
 boolean result3 = ObjectHelper.hasText(&quot;&quot;);          // false
 boolean result4 = ObjectHelper.hasText(null);        // false
 </code></pre>
-<h4>2. isEmptyText Method</h4>
+<h4 id="search-2-isemptytext-method">2. isEmptyText Method</h4>
 <p>Checks if the given string is empty or contains only whitespace:</p>
 <pre><code class="language-java">// Check if string is empty or contains only whitespace
 boolean result1 = ObjectHelper.isEmptyText(&quot;Hello&quot;); // false
@@ -158,8 +178,8 @@ boolean result2 = ObjectHelper.isEmptyText(&quot;   &quot;);   // true
 boolean result3 = ObjectHelper.isEmptyText(&quot;&quot;);      // true
 boolean result4 = ObjectHelper.isEmptyText(null);    // true
 </code></pre>
-<h3>Emptiness Checking Methods</h3>
-<h4>1. Array Emptiness Check</h4>
+<h3 id="search-emptiness-checking-methods">Emptiness Checking Methods</h3>
+<h4 id="search-1-array-emptiness-check">1. Array Emptiness Check</h4>
 <pre><code class="language-java">// Check if array is empty
 String[] array1 = null;
 String[] array2 = new String[0];
@@ -169,7 +189,7 @@ boolean result1 = ObjectHelper.isEmpty(array1); // true
 boolean result2 = ObjectHelper.isEmpty(array2); // true
 boolean result3 = ObjectHelper.isEmpty(array3); // false
 </code></pre>
-<h4>2. Collection Emptiness Check</h4>
+<h4 id="search-2-collection-emptiness-check">2. Collection Emptiness Check</h4>
 <pre><code class="language-java">// Check if collection is empty
 List&lt;String&gt; list1 = null;
 List&lt;String&gt; list2 = new ArrayList&lt;&gt;();
@@ -179,7 +199,7 @@ boolean result1 = ObjectHelper.isEmpty(list1); // true
 boolean result2 = ObjectHelper.isEmpty(list2); // true
 boolean result3 = ObjectHelper.isEmpty(list3); // false
 </code></pre>
-<h4>3. Map Emptiness Check</h4>
+<h4 id="search-3-map-emptiness-check">3. Map Emptiness Check</h4>
 <pre><code class="language-java">// Check if map is empty
 Map&lt;String, String&gt; map1 = null;
 Map&lt;String, String&gt; map2 = new HashMap&lt;&gt;();
@@ -190,8 +210,8 @@ boolean result1 = ObjectHelper.isEmpty(map1); // true
 boolean result2 = ObjectHelper.isEmpty(map2); // true
 boolean result3 = ObjectHelper.isEmpty(map3); // false
 </code></pre>
-<h3>Collection Creation Methods</h3>
-<h4>1. Creating Maps</h4>
+<h3 id="search-collection-creation-methods">Collection Creation Methods</h3>
+<h4 id="search-1-creating-maps">1. Creating Maps</h4>
 <pre><code class="language-java">// Create single key-value pair map
 Map&lt;String, String&gt; map1 = ObjectHelper.mapOf(&quot;key1&quot;, &quot;value1&quot;);
 
@@ -206,13 +226,13 @@ Map&lt;String, String&gt; map4 = ObjectHelper.mapOf(10); // HashMap with optimiz
 </code></pre>
 <p><code>getInitialCapacity(int)</code> uses overflow-safe capacity calculation. Negative sizes cause
 <code>IllegalArgumentException</code>; capacities exceeding the practical <code>HashMap</code> limit saturate at <code>1 &lt;&lt; 30</code>.</p>
-<h4>2. Creating Lists</h4>
+<h4 id="search-2-creating-lists">2. Creating Lists</h4>
 <pre><code class="language-java">// Create immutable list
 List&lt;String&gt; list1 = ObjectHelper.listOf(&quot;item1&quot;);
 List&lt;String&gt; list2 = ObjectHelper.listOf(&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;);
 List&lt;String&gt; list3 = ObjectHelper.listOf(); // Empty list
 </code></pre>
-<h4>3. Creating Sets</h4>
+<h4 id="search-3-creating-sets">3. Creating Sets</h4>
 <pre><code class="language-java">// Create immutable set
 Set&lt;String&gt; set1 = ObjectHelper.setOf(&quot;item1&quot;);
 Set&lt;String&gt; set2 = ObjectHelper.setOf(&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;);
@@ -221,12 +241,12 @@ Set&lt;String&gt; set3 = ObjectHelper.setOf(); // Empty set
 // Automatic deduplication
 Set&lt;String&gt; set4 = ObjectHelper.setOf(&quot;item1&quot;, &quot;item1&quot;, &quot;item2&quot;); // Contains only &quot;item1&quot; and &quot;item2&quot;
 </code></pre>
-<h3>Constants</h3>
+<h3 id="search-constants">Constants</h3>
 <ul>
 <li><code>EMPTY_PARAMS_MAP</code>: An empty, immutable map useful as a default or sentinel value when no parameters are needed</li>
 <li><code>DEFAULT_LOAD_FACTOR</code>: Default load factor for hash maps, optimized for time and space efficiency</li>
 </ul>
-<h3>Notes</h3>
+<h3 id="search-notes">Notes</h3>
 <ol>
 <li><code>listOf</code> methods create immutable collections</li>
 <li><code>setOf</code> method does not allow null elements</li>
